@@ -30,6 +30,12 @@ export default function PasswordScreen({navigation,route}){
     const [userId, setUserId] = useState('')
 
     function navigate(){
+        console.log("==========When Load=========")
+        console.log("First Name : " + route.params.firstName)
+        console.log("Last Name : " +route.params.lastName)
+        console.log("Age: " + route.params.age)
+        console.log("Gender: " + route.params.gender)
+        console.log("==========When Load=========")
         console.log("navigating to otp")
         navigation.navigate("PhoneNumber",
         {
@@ -72,8 +78,9 @@ export default function PasswordScreen({navigation,route}){
             name: 'someName',
         });
        
-       
+        console.log("Tryin to sign up.")
         if(route.params.email != ""){
+            console.log("Inside Signup")
             const res =  await fetch('https://sublease-app.herokuapp.com/users/signup', {
                 method: 'POST',
                 headers: {
@@ -83,10 +90,15 @@ export default function PasswordScreen({navigation,route}){
                 body: formData
             }).then(res => res.json()).then(async data =>{
                 console.log("User ID");
-                await SecureStorage.setItem("userId", data.createdUser._id)
+               await SecureStorage.setItem("userId", data.createdUser._id)
                 navigate()
               
-            })
+            }).catch(e=>
+                console.log(e)
+            )
+        }
+        else{
+            console.log("Something is missing.")
         }
 
     }

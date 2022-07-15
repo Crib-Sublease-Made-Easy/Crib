@@ -15,6 +15,7 @@ import {
   
 
 import styled from 'styled-components/native';
+import { MEDIUMGREY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
 
 const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
@@ -66,8 +67,7 @@ export const EditProfilePressable = styled.Pressable`
     align-items: center
     alignSelf: center
 `
-export const SlidingContainer = styled.View`
-    margin-top: ${HEIGHT*0.03}px    
+export const SlidingContainer = styled.View`  
     width: ${WIDTH*0.9}px;
     height: ${HEIGHT*0.1}px;
     flex-direction: row;
@@ -111,3 +111,21 @@ export const DefaultPostFavText = styled.Text`
     font-weight: 700
     font-size: ${HEIGHT*0.015}px;
 `
+
+export const PostedPropertyInfoContainer = styled.Pressable`
+    width:${WIDTH*0.9}px;
+    align-self: center;
+    padding-vertical: ${HEIGHT*0.01}px;
+`
+export const PropertyName = styled.Text`
+  font-size: ${HEIGHT*0.0175}px;
+  padding-vertical: ${HEIGHT*0.005}px
+  font-weight: 500;
+`
+export const DatePriceText = styled.Text`
+  fontSize: ${HEIGHT*0.015}px;
+  padding-vertical: ${HEIGHT*0.005}px
+  color: #4d4b4b
+  font-weight: 400;
+`
+

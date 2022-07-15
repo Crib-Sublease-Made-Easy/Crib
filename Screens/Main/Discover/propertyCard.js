@@ -22,6 +22,11 @@ import styled from 'styled-components/native';
 import { SharedElement } from 'react-navigation-shared-element';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
+
+//Icons
+import Ionicons from 'react-native-vector-icons/Ionicons';
+Ionicons.loadFont()
+
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, runOnJS, FadeIn, Layout,  FadeInUp, SlideInLeft,} from 'react-native-reanimated';
 
 import { FlatList, Gesture, GestureDetector, TouchableOpacity,  } from 'react-native-gesture-handler';
@@ -90,6 +95,17 @@ const OpenMapIconContainer = styled.Pressable`
   background-color: rgba(0,0,0,0.8);
   bottom: ${HEIGHT*0.02}px;
   right: ${WIDTH*0.05}px;
+  position: absolute;
+  justify-content:center;
+  align-items: center
+`
+const FavIconContainer = styled.Pressable`
+  height: ${HEIGHT*0.05}px;
+  width: ${HEIGHT*0.05}px;
+  border-radius: ${HEIGHT*0.025}px;
+  background-color: rgba(0,0,0,0.8);
+  bottom: ${HEIGHT*0.02}px;
+  left: ${WIDTH*0.05}px;
   position: absolute;
   justify-content:center;
   align-items: center
@@ -180,6 +196,9 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                         <OpenMapIconContainer onPress={()=>MoveMapToPin(data)}>
                             <FontAwesome name='location-arrow' size={HEIGHT*0.02} color='white'/>
                         </OpenMapIconContainer>
+                        <FavIconContainer >
+                            <Ionicons name="heart" size={20} color='white'/>
+                        </FavIconContainer>
                     </PropertyImageContainer>
                 {/* </SharedElement> */}
                 <PropertyInfoContainer>
@@ -195,7 +214,6 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                 <SharedElement id="view">
                     <View style={{backgroundColor:'white'}}></View>
                 </SharedElement>
-               
             </Animated.View>
         )
     },[filteredPropertiesData])

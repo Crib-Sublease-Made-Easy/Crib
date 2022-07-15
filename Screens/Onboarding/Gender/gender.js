@@ -27,8 +27,11 @@ import { AgeContainer, Header, ProgressBarContainer, SubtitleText, TitleText, Ge
     GenderInputContainer, ContinueText, ContinueButton } from './genderStyle';
 
 export default function GenderScreen({navigation, route}){
-    console.log(route.params.firstName)
-    console.log(route.params.lastName)
+    console.log("==========When Load=========")
+    console.log("First Name : " + route.params.firstName)
+    console.log("Last Name : " +route.params.lastName)
+    console.log("Age: " + route.params.age)
+    console.log("==========When Load=========")
     const [gender, setGender] = useState("")
 
     function checkInput(){

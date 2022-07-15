@@ -80,8 +80,8 @@ export const InputNameContainer = styled.View`
 `
 
 export const InputName = styled.Text`
-    font-size: ${HEIGHT*0.025}px;
-    font-weight: 600;
+    font-size: ${HEIGHT*0.02}px;
+    font-weight: 700;
 `
 export const InputOptionContainer = styled.View`
     width: ${WIDTH*0.9}px;
@@ -108,7 +108,7 @@ export const BedroomOptionsText = styled(Text)`
 `
 
 export const PropertyTypeName = styled.Text`
-    font-size: ${HEIGHT*0.02}px;
+    font-size: ${HEIGHT*0.0175}px;
     font-weight: 400;
 `
 
@@ -120,7 +120,7 @@ export const TypeContainer = styled.View`
 
 export const TypeOption = styled.View`
     width: ${WIDTH*0.9}px;
-    height: ${HEIGHT*0.06}px
+    height: ${HEIGHT*0.05}px
     flex-direction: row;
     justify-content: space-between;
     align-self: center
@@ -142,7 +142,7 @@ export const InputPriceRangeContainer = styled.View`
 
 export const PriceRangeText = styled.Text`
    
-    font-size: ${HEIGHT*0.02}px;
+    font-size: ${HEIGHT*0.0175}px;
     color: ${PRIMARYGREY};
     font-weight: 500;
    

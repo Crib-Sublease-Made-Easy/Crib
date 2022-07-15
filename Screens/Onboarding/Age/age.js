@@ -20,8 +20,8 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR } from '../../../shar
 import { AgeContainer, Header, ProgressBarContainer, SubtitleText, TitleText, ContinueButton, ContinueText, DatePlaceHolder } from './ageStyle';
 
 export default function AgeScreen({navigation, route}){
-    console.log(route.params.firstName)
-    console.log(route.params.lastName)
+    console.log("First Name : " + route.params.firstName)
+    console.log("Last Name : " +route.params.lastName)
     const [age, setAge] = useState(new Date())
     const [datePickerModal, setDatePickerModal] = useState(false)
 
@@ -32,13 +32,13 @@ export default function AgeScreen({navigation, route}){
         // else{
         //     navigation.navigate('Gender')
         // }
-        console.log("hello")
-        console.log(route.params.firstName)
-        console.log(route.params.lastName)
-        console.log(route.params.gender)
-        console.log(route.params.school)
-        console.log(route.params.occupation)
-        console.log(route.params.email)
+        console.log("On Age Page");
+        console.log("firstName " + route.params.firstName)
+        console.log("lastName " + route.params.lastName)
+        console.log("gender " + route.params.gender)
+        console.log("school " +route.params.school)
+        console.log("occupation " + route.params.occupation)
+        console.log("email " + route.params.email)
        
         navigation.navigate('Gender',
         {

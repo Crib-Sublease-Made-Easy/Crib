@@ -29,23 +29,26 @@ export const Heading = styled.Text`
     width: ${WIDTH*0.9}px;
     color: white
 `
+export const ReviewHeading = styled.Text`
+    font-size: ${HEIGHT*0.025}px;
+    font-weight:500;
+    text-align: left;
+    width: ${WIDTH*0.9}px;
+    color: white
+`
 
 export const ButtonContainer = styled.View`
     width: ${WIDTH*0.9}px;
-    justify-content: flex-start;
+    justify-content: space-between;
     height: ${HEIGHT*0.1}px;
-    justify-content: center
+    flex-direction: row
+    align-items: center
 `
-
-export const ImageContainer = styled.View`
+export const ImageText = styled.Text`
+    color: white
+    font-weight: 300
+    align-self:center
     width: ${WIDTH*0.9}px
-    border-radius: 10px;
-    background-color: transparent
-    shadow-offset: 0 0
-    shadow-color: white;
-    shadow-radius: 20px;
-    shadow-opacity: 0.5;
-    align-self: center
 `
 
 export const NextContainer = styled.View`
@@ -144,6 +147,7 @@ export const Subheading = styled.Text`
     text-align: left;
     width: ${WIDTH*0.9}px;
     color: white
+    align-self:center
 `
 
 export const InputContainer = styled.View`
@@ -233,17 +237,18 @@ export const AmenitiesItem = styled.View`
 
 export const PropertyPhotoContainer = styled.View`
     width: ${WIDTH*0.9}px;
-    height: ${HEIGHT*0.15}px;
+    height: ${HEIGHT*0.125}px;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+   
 `
 
 export const PhotoContainer = styled.View`
     width: ${WIDTH*0.15}px;
     height: ${WIDTH*0.15}px
     border-radius:15px;
-    background-color: white;
+    background-color: ${MEDIUMGREY};
     justify-content:center
     align-items:center
 `
@@ -304,33 +309,35 @@ export const Divider = styled.View`
 `
 
 export const ReviewInfoText = styled.Text`
-    width: ${WIDTH*0.9}px;
-    font-size: ${HEIGHT*0.02}px;
-    font-weight: 300;
-    color: #E0E0E0
+   
+    font-size: ${HEIGHT*0.018}px;
+    font-weight: 400;
+    color: white
     margin-top: ${HEIGHT*0.01}px;
 `
 export const ReviewSectionContainer = styled.View`
-    padding-top: ${HEIGHT*0.02}px;
-    padding-bottom: ${HEIGHT*0.02}px;;
+    padding-vertical: ${HEIGHT*0.02}px;
 `
 
 export const BedAndBathContainer = styled.View`
-    margin-top: ${HEIGHT*0.02}px;
+    
     height: ${HEIGHT*0.1}px;
-    width: ${WIDTH*0.8}px;
+    width: ${WIDTH*0.9}px;
     flex-direction: row
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
 `
 
 export const BedBathLogo = styled.View`
-    height: ${HEIGHT*0.1}px;
-    width: ${WIDTH*0.375}px;
+    height: ${HEIGHT*0.06}px;
+    width: ${WIDTH*0.43}px;
     border-width: 1px;
-    border-color: ${PRIMARYGREY};
-    border-radius: 20px;
+    border-color: white;
+    border-radius: 15px;
     padding: ${WIDTH*0.02}px;
+    flex-direction: row
+    align-items: center
+    justify-content: space-around
 `
 export const LocationText = styled.Text`
     font-size: ${HEIGHT*0.02}px;
@@ -341,7 +348,8 @@ export const LocationText = styled.Text`
 export const ReviewPropertyDescriptionInput = styled.TextInput`
     width: ${WIDTH*0.9}px;
     height: ${HEIGHT*0.2}px;
-    background-color: ${PRIMARYGREY};
+    border-width: 1px;
+    border-color: white;
     border-radius: 15px;
     margin-top: ${HEIGHT*0.02}px;
     padding-left: ${HEIGHT*0.02}px;
@@ -372,4 +380,34 @@ export const PricePerMonth = styled.Text`
     font-size: ${HEIGHT*0.025}px;
     font-weight: 700;
     color: white
+`
+
+export const ReviewLocationContainer = styled.View`
+    padding-vertical: ${HEIGHT*0.01}px
+    flex-direction: row;
+    align-items: center
+    width: ${WIDTH*0.9}px
+`
+
+export const ReviewDateContainer = styled.View`
+    padding-vertical: ${HEIGHT*0.01}px
+    width: ${WIDTH*0.9}px;
+    justify-content: space-between
+    flex-direction: row;
+    align-items: center
+`
+
+export const ImageSelectionContainer = styled.View`
+    padding-vertical: ${HEIGHT*0.03}px;
+`
+
+export const ImageContainer = styled.Pressable`
+    width: ${WIDTH*0.9}px
+    height: ${HEIGHT*0.2}px
+    margin-top: ${HEIGHT*0.015}px
+    border-radius: 10px;
+    background-color: ${LIGHTGREY}
+    align-self: center
+    justify-content: center;
+    align-items: center
 `

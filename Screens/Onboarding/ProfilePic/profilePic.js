@@ -34,6 +34,12 @@ import { Header, TitleText, SubtitleText, ProgressBarContainer, ProfilePicContai
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 export default function ProfilePicScreen({navigation, route}){
+    console.log("==========When Load=========")
+    console.log("First Name : " + route.params.firstName)
+    console.log("Last Name : " +route.params.lastName)
+    console.log("Age: " + route.params.age)
+    console.log("Gender: " + route.params.gender)
+    console.log("==========When Load=========")
     const [profilePic, setProfilePic] = useState('')
 
     function checkInput(){
