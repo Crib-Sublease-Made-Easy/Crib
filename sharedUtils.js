@@ -8,11 +8,15 @@ export const PRIMARYCOLOR = '#8559E3'
 //Dark Grey
 export const TEXTINPUTBORDERCOLOR = '#989898'
 
+export const DARKREY = '#989898'
+
 //Medium Grey 
 export const MEDIUMGREY = '#D9D9D9'
 
 //Light Grey
 export const LIGHTGREY = '#E0E0E0'
+
+export const EXTRALIGHT = '#EFEFEF'
 
 //Dimensions
 export const HEIGHT = Dimensions.get('screen').height;

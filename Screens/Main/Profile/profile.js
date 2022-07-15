@@ -36,9 +36,10 @@ Ionicons.loadFont()
 
 import { Header,Container, NameText, OccupationText,EditProfilePressable,SlidingContainer,
     PostContainer, FavContainer, PostedText, FavText,  DefaultPostFavText, PostedPropertyInfoContainer,
-    PropertyName, DatePriceText
+    PropertyName, DatePriceText, InformationContainer, IconContainer, IconsContainer
  } from './profileStyle';
 import { useEvent } from 'react-native-reanimated';
+import { LIGHTGREY } from '../../../sharedUtils';
 export default function ProfileScreen({navigation}){
     const scrollviewRef = useRef(null)
     const {user, logout} = useContext(UserContext)
@@ -80,7 +81,7 @@ export default function ProfileScreen({navigation}){
         'Authorization': 'Bearer ' + accessToken,
         }
         }) 
-        .then(res => res.json()).then(userData =>{
+        .then(res => res.json()).then(async userData =>{
             setUserData(userData)
             console.log(userData)
             
@@ -148,9 +149,21 @@ export default function ProfileScreen({navigation}){
             <Container>
                 <Image source={{uri: userData.profilePic}} 
                 style={{width:WIDTH*0.35, height: WIDTH*0.35, borderRadius: WIDTH*0.175, alignSelf:'center', backgroundColor:'pink'}} />
-            
-                <NameText>{userData.firstName} {""} {userData.lastName}</NameText>
-                <OccupationText>{userData.occupation}</OccupationText>
+                <InformationContainer>
+                    <View style={{ width: WIDTH*0.5, justifyContent: 'flex-start'}}>
+                        <NameText>{userData.firstName} {""} {userData.lastName}</NameText>
+                        <OccupationText>{userData.occupation}</OccupationText>
+                    </View>
+                    <IconsContainer>
+                        <IconContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
+                            <Ionicons name="create-outline"  size={25}/>
+                        </IconContainer>
+                        <IconContainer onPress={()=> navigation.navigate("PropertyPosting")}>
+                            <Ionicons name="add"  size={25} color={PRIMARYCOLOR}/>
+                        </IconContainer>
+                    </IconsContainer>
+                </InformationContainer>
+               
 
                 {/* <EditProfilePressable onPress={()=>navigation.navigate("ProfileEdit")}>
                     <Text style={{color:'white',}}>Edit Profile</Text>
@@ -173,7 +186,7 @@ export default function ProfileScreen({navigation}){
                 <View style={{ width:WIDTH, height:HEIGHT*0.4, justifyContent:'center', alignItems:'center'}}>
                     {postedProperties != "" ?
                         <View>
-                            <Image source={{uri: postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:'red', alignSelf:'center', borderRadius:10}}/>
+                            <Image source={{uri: postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
                             <PostedPropertyInfoContainer>
                                 <PropertyName>{postedProperties.propertyInfo.loc.secondaryTxt}</PropertyName>
                                 <DatePriceText>

@@ -8,8 +8,7 @@ import {
 } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-import Modal from "react-native-modal";
-import { SlideInUp, SlideOutDown } from 'react-native-reanimated';
+
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
@@ -22,7 +21,11 @@ import { DARKGREY, HEIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR, WIDTH, EXTRALIGH
 import {HeaderContainer, Header, BackButtonContainer, NameContainer, ResetButtonContainer, TopContainer, ImageContainer
         ,NameJobContainer, JobText, RowContainer, CategoryName, AboutMeInput, RowName, RowContainerCol} from './profileEditStyle';
 
-export default function ProfileEditScreen({navigation}){
+export default function ProfileEditScreen({navigation, route}){
+    const userData = route.params.userData
+    console.log(userData)
+   
+
     return(
         
         <SafeAreaView style={{flex: 1, backgroundColor:'white'}}>
@@ -49,14 +52,14 @@ export default function ProfileEditScreen({navigation}){
                         <Image style={{width: WIDTH*0.35, height:WIDTH*0.35, borderRadius:WIDTH*0.175, backgroundColor: EXTRALIGHT}}/>
                     </ImageContainer>
                     <NameJobContainer>
-                        <Header>James Deen</Header>
+                        <Header>{userData.firstName}  {userData.lastName}</Header>
                         <JobText style={{color:DARKGREY}}>Joined May 2021</JobText>
                     </NameJobContainer>
             </TopContainer>
             
             <RowContainerCol>
                 <CategoryName>About me</CategoryName>
-                <AboutMeInput multiline={true} >
+                <AboutMeInput multiline>
                 After informing the parties of your intent to make an introduction, 
                 state the name of the person you are introducing. In most situations, this is usually the younger person
                 </AboutMeInput>
@@ -65,7 +68,7 @@ export default function ProfileEditScreen({navigation}){
 
             <CategoryName>Pronouns</CategoryName>
             <RowContainer>
-                <RowName>He / Him / His</RowName>
+                <RowName>{userData.gender}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
 
@@ -77,7 +80,7 @@ export default function ProfileEditScreen({navigation}){
 
             <CategoryName>Occupation</CategoryName>
             <RowContainer onPress={()=> navigation.navigate("EditOccupation")}>
-                <RowName>Software Engineer @ Google</RowName>
+                <RowName>{userData.occupation}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
         </SafeAreaView>

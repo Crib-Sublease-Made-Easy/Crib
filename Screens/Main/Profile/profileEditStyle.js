@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, EXTRALIGHT, DARKGREY } from '../../../sharedUtils'
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY,DARKGREY, EXTRALIGHT } from '../../../sharedUtils'
 export const HeaderContainer = styled.View`
     width: ${WIDTH}px;
     height: ${HEIGHT*0.05}px;
@@ -90,8 +90,8 @@ export const AboutMeInput = styled.TextInput`
     width: ${WIDTH*0.9}px;
     height: ${HEIGHT*0.15}px;
     border-radius: 10px
-    color: ${DARKGREY}
-    background-color: ${EXTRALIGHT};
+    color: black
+    background-color: ${EXTRALIGHT}
     padding-top: ${HEIGHT*0.01}px;
     padding-horizontal: ${HEIGHT*0.02}px;
 `
