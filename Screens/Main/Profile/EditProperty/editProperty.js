@@ -7,7 +7,8 @@ import {
   View,
   Text,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Modal
 } from 'react-native';
 import { User } from 'realm';
 
@@ -28,6 +29,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 export default function EditPropertyScreen({navigation, route}){
     const propData = route.params.propertyData
+    console.log(propData)
     const [propType, setPropType] = useState(route.params.propertyData.type)
     const [propLocation, setPropLocation] = useState(route.params.propertyData.loc.streetAddr)
     const [propPrice, setPropPrice] = useState(route.params.propertyData.price)
@@ -37,6 +39,7 @@ export default function EditPropertyScreen({navigation, route}){
     const [propAmen, setPropAmen] = useState(route.params.propertyData.amenities)
     const [headerImage, setHeaderImage] = useState(route.params.propertyData.imgList[0])
 
+    const [typeModal, setTypeModal] = useState(false)
 
 
     // useEffect(()=>{
@@ -44,7 +47,7 @@ export default function EditPropertyScreen({navigation, route}){
     // },[])
     
     return(
-        <View style={{flex:1, backgroundColor:'white'}}>
+      
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
             <HeaderContainer>
                 <BackButtonContainer>
@@ -84,7 +87,7 @@ export default function EditPropertyScreen({navigation, route}){
                 {/* <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/> */}
             </RowContainer>
             <CategoryName>Type</CategoryName>
-            <RowContainer onPress={()=>navigation.navigate("EditPropertyType", {type:propData.type})}>
+            <RowContainer onPress={()=>navigation.navigate("EditPropertyType", {type: propData.price})}>
                 <RowName>{propType}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
@@ -94,7 +97,7 @@ export default function EditPropertyScreen({navigation, route}){
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Availability</CategoryName>
-            <RowContainer>
+            <RowContainer onPress={()=> navigation.navigate("EditPropertyAvail",{from: propData.availableFrom, to: propData.availableTo})}>
                 <DatePriceText>
                     {new Date(propDateFrom).getUTCMonth()}- 
                     {new Date(propDateFrom).getFullYear()}
@@ -105,20 +108,20 @@ export default function EditPropertyScreen({navigation, route}){
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Description</CategoryName>
-            <RowContainer>
+            <RowContainer onPress={()=> navigation.navigate("EditPropertyDescription",{description: "Hello"})}>
                 <RowName>{propDescription}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Amenities</CategoryName>
-            <RowContainer>
+            <RowContainer  onPress={()=> navigation.navigate("EditPropertyAmenities",{amenities: propData.amenities})}>
                 <RowName>
                     Swimming Pool, Furnished, Wifi
                 </RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
         </ScrollView>
-        
+       
         </SafeAreaView>
-        </View>
+      
     )
 }

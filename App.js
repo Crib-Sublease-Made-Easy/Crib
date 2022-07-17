@@ -56,6 +56,9 @@ import OTPEditScreen from './Screens/Main/Profile/Setting/OTPNumber/otpEdit.js';
 //Property Edit Screens
 import PropTypesScreen from './Screens/Main/Profile/EditProperty/EditPropTypeModal/propertyTypeModal.js';
 import EditPropertyPriceScreen from './Screens/Main/Profile/EditProperty/EditPropertyPrice/editPropertyPrice.js';
+import EditPropertyAvailScreen from './Screens/Main/Profile/EditProperty/EditPropertyAvailability/editPropertyAvail.js';
+import EditPropertyDescriptionScreen from './Screens/Main/Profile/EditProperty/EditPropertyDescription/editPropertyDescription.js';
+import EditPropertyAmenitiesScreen from './Screens/Main/Profile/EditProperty/EditPropertyAmenities/editPropertyAmen.js';
 
 //Navigation between tabs
 import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
@@ -190,9 +193,25 @@ export default function App () {
         options={{ headerShown: false,
         cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
         />
+        <Stack.Screen name="EditPropertyAvail" 
+        component={EditPropertyAvailScreen} 
+        options={{ headerShown: false,
+        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
+        />
+        <Stack.Screen name="EditPropertyDescription" 
+        component={EditPropertyDescriptionScreen} 
+        options={{ headerShown: false,
+        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
+        />
+        <Stack.Screen name="EditPropertyAmenities" 
+        component={EditPropertyAmenitiesScreen} 
+        options={{ headerShown: false,
+        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
+        />
+
   
 
-
+  
 
       </Stack.Navigator>
       :

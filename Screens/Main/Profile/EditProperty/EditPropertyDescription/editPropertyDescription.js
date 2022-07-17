@@ -13,16 +13,26 @@ import {
 
 import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header,} from '../../../../../sharedUtils'
 
+import DatePicker from 'react-native-date-picker'
+
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY} from '../../../../../sharedUtils'
+
+import { DescriptionInput, RowContainer, CategoryName } from './editPropertyDescriptionStyle';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { Router } from 'express';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 FontAwesome.loadFont()
 
-export default function EditPropertyAmenitiesScreen({navigation, route}){
+export default function EditPropertyDescriptionScreen({navigation, route}){
+
+    const [description, setDescription] = useState(route.params.description);
+
     return(
-        <SafeAreaView>
+        <SafeAreaView style={{flex:1}}>
+            
             <HeaderContainer>
                 <BackButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
@@ -30,7 +40,7 @@ export default function EditPropertyAmenitiesScreen({navigation, route}){
                     </Pressable>
                 </BackButtonContainer>
                 <NameContainer>
-                    <Header>Edit Amenities</Header>
+                    <Header>Edit Property</Header>
                 </NameContainer>
                 {/* <ResetButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} >
@@ -38,7 +48,13 @@ export default function EditPropertyAmenitiesScreen({navigation, route}){
                     </Pressable>
                 </ResetButtonContainer> */}
             </HeaderContainer>
-
+            <RowContainer >
+                <CategoryName>Property Description</CategoryName>
+                <DescriptionInput multiline value={description} onChangeText={(value)=>setDescription(value)}>
+                        
+                </DescriptionInput>
+            </RowContainer>
+           
         </SafeAreaView>
     )
 }

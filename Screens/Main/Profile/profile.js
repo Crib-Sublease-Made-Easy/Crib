@@ -149,7 +149,7 @@ export default function ProfileScreen({navigation}){
                 </Pressable>
             </Header>
             <Container>
-                <Image source={{uri: userData.profilePic}} 
+                <Image source={{uri: profilePic}} 
                 style={{width:WIDTH*0.35, height: WIDTH*0.35, borderRadius: WIDTH*0.175, alignSelf:'center', backgroundColor:'pink'}} />
                 <InformationContainer>
                     <View style={{ width: WIDTH*0.5, justifyContent: 'flex-start'}}>

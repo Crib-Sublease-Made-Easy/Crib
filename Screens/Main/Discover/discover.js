@@ -95,7 +95,7 @@ export default function DiscoverScreen({navigation, route}){
     const [filterAmenities, setfilterAmenities] = useState([])
 
     useEffect(()=>{
-        const unsubscribe = navigation.addListener('focus', () => {
+       
         console.log("Refreshing again!")
 
         loadProperty()
@@ -111,9 +111,9 @@ export default function DiscoverScreen({navigation, route}){
         
        
             
-        });
-        return unsubscribe; 
-    },[currentLocation, navigation])
+       
+      
+    },[currentLocation])
 
     //Move the header to adjust the size according if searching is true or false
     function openHeader(){
