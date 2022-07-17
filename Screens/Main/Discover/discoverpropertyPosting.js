@@ -88,7 +88,8 @@ export default function PropertyPostingScreen({ navigation }) {
         [{ name: "Room", image: require('../../../assets/room.jpeg'), description: "Shared public space" },
         { name: "House", image: require('../../../assets/house.jpeg'), description: "Entire House" },
         { name: "Apartment", image: require('../../../assets/apartment.jpeg'), description: "2+ Bedroom Apartment" },
-        { name: "Studio", image: require('../../../assets/studio.jpeg'), description: "Open-styled apartment" }]
+        { name: "Studio", image: require('../../../assets/studio.jpeg'), description: "Open-styled apartment" }
+    ]
 
     //Posting data information 
     const [propertyType, setpropertyType] = useState('')
@@ -314,7 +315,7 @@ export default function PropertyPostingScreen({ navigation }) {
                 // else if(response.status == 200){
                 //     alert("Success")
                 // }
-
+                navigation.goBack()
                 console.log(data)
             })
             .catch(e => {

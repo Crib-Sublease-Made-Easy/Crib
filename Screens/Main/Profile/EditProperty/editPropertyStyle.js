@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, DARKGREY, EXTRALIGHT } from '../../../sharedUtils'
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, EXTRALIGHT, DARKGREY } from '../../../../sharedUtils'
+
 export const HeaderContainer = styled.View`
     width: ${WIDTH}px;
     height: ${HEIGHT*0.05}px;
@@ -24,9 +25,8 @@ export const BackButtonContainer = styled.View`
 export const NameContainer = styled.View`
     width: ${WIDTH*0.5}px;
     justify-content: center;
-    align-items:center
- 
-  `
+    align-items:center 
+`
 
 export const ResetButtonContainer = styled.View`
     width: ${WIDTH*0.25}px;
@@ -41,34 +41,28 @@ export const Header = styled.Text`
     font-weight: 500;
 `
 
-export const TopContainer = styled.View`
-    width: ${WIDTH*0.9}px;
-    align-self: center
-    flex-direction: row
-    padding-vertical: ${HEIGHT*0.03}px
+export const HeaderImageContainer = styled.View`
+    paddingVertical:${HEIGHT*0.02}px
+    marginTop:${HEIGHT*0.025}px
 `
 
-export const ImageContainer = styled.Pressable`
-    width: ${WIDTH*0.45}px;
-    justify-content: center;
-    align-items: center
-`
 
-export const NameJobContainer = styled.View`
-    width: ${WIDTH*0.45}px;
-    justify-content: center
-`
-export const JobText = styled.Text`
-    width: ${WIDTH*0.45}px; 
-    padding-vertical: ${HEIGHT*0.01}px
-    font-size: ${HEIGHT*0.0175}px;
-    font-weight: 400;
-`
-export const RowContainerCol = styled.View`
-    padding-vertical: ${HEIGHT*0.01}px
+export const PropertyPhotoContainer = styled.View`
     width: ${WIDTH*0.9}px;
+    height: ${HEIGHT*0.125}px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     align-self: center
-    justify-content: space-between
+   
+`
+export const PhotoContainer = styled.View`
+    width: ${WIDTH*0.15}px;
+    height: ${WIDTH*0.15}px
+    border-radius:15px;
+    background-color: ${MEDIUMGREY};
+    justify-content:center
+    align-items:center
 `
 export const RowContainer = styled.Pressable`
     padding-vertical: ${HEIGHT*0.01}px
@@ -80,32 +74,17 @@ export const RowContainer = styled.Pressable`
 
 export const CategoryName = styled.Text`
     font-size: ${HEIGHT*0.0175}px
-    padding-vertical: ${HEIGHT*0.01}px
+    padding-top: ${HEIGHT*0.01}px
+    padding-bottom: ${HEIGHT*0.005}px
     font-weight: 500
     width: ${WIDTH*0.9}px;
     align-self: center
 `
-
-export const AboutMeInput = styled.TextInput`
-    width: ${WIDTH*0.9}px;
-    height: ${HEIGHT*0.15}px;
-    border-radius: 10px
-    color: black
-    background-color: ${EXTRALIGHT}
-    padding-top: ${HEIGHT*0.01}px;
-    padding-horizontal: ${HEIGHT*0.02}px;
-`
-export const TextInputPressable = styled.Pressable`
-    width: ${WIDTH*0.9}px;
-    height: ${HEIGHT*0.15}px;
-    border-radius: 10px
-    color: black
-    background-color: ${EXTRALIGHT}
-    padding-top: ${HEIGHT*0.01}px;
-    padding-horizontal: ${HEIGHT*0.02}px;
-`
-
 export const RowName = styled.Text`
+    font-size: ${HEIGHT*0.015}px
+    color: ${DARKGREY}
+`
+export const DatePriceText = styled.Text`
     font-size: ${HEIGHT*0.015}px
     color: ${DARKGREY}
 `

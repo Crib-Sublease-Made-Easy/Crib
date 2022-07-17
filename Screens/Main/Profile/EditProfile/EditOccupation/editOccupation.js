@@ -14,6 +14,8 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../../sharedUtils
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
+import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+
 
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     RowContainer, CategoryName, PhoneNumberContainer, HelpText } from './editOccupationStyle';
@@ -21,8 +23,33 @@ import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButto
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
-export default function EditOccupationScreen({navigation}){
+export default function EditOccupationScreen({navigation, route}){
     const [occupation, setOccupation] = useState('')
+
+    async function update(){
+        const accessToken = await SecureStorage.getItem("refreshToken");
+        fetch('https://sublease-app.herokuapp.com/users/' + route.params.userData._id, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
+            },
+            body: JSON.stringify({
+                occupation: occupation,
+            })
+        })
+        .then((response) => response.json()).then(data => {
+            
+            console.log(data)
+
+            navigation.navigate('ProfileEdit',{userData:data})
+        })
+        .catch(e => {
+            console.log(e)
+        })
+    }
+
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
           <HeaderContainer>
@@ -35,7 +62,7 @@ export default function EditOccupationScreen({navigation}){
                     <Header>Change Occupation</Header>
                 </NameContainer>
                 <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=>navigation.navigate("OTPEdit")}>
+                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
                         <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
                     </Pressable>
                 </ResetButtonContainer>
@@ -45,7 +72,7 @@ export default function EditOccupationScreen({navigation}){
 
             <RowContainer>
                 <CategoryName>Old Occupation</CategoryName>
-                <PhoneNumberContainer editable={false} value="Software Engineer @ Google" />
+                <PhoneNumberContainer editable={false} value={route.params.userData.occupation} />
             </RowContainer>
             <RowContainer>
                 <CategoryName>Latest Occupation</CategoryName>

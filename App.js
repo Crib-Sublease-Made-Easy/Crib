@@ -49,7 +49,13 @@ import EditEducationScreen from './Screens/Main/Profile/EditProfile/EditEducatio
 import EditOccupationScreen from './Screens/Main/Profile/EditProfile/EditOccupation/editOccupation.js';
 import SettingScreen from './Screens/Main/Profile/Setting/setting.js'
 import ChangeNumberScreen from './Screens/Main/Profile/Setting/changeNumber.js';
+import EditAboutMeScreen from './Screens/Main/Profile/EditProfile/EditAboutMe/editAboutMe.js';
+import EditPropertyScreen from './Screens/Main/Profile/EditProperty/editProperty.js';
 import OTPEditScreen from './Screens/Main/Profile/Setting/OTPNumber/otpEdit.js';
+
+//Property Edit Screens
+import PropTypesScreen from './Screens/Main/Profile/EditProperty/EditPropTypeModal/propertyTypeModal.js';
+import EditPropertyPriceScreen from './Screens/Main/Profile/EditProperty/EditPropertyPrice/editPropertyPrice.js';
 
 //Navigation between tabs
 import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
@@ -164,8 +170,27 @@ export default function App () {
         options={{ headerShown: false,
         cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
         />
-
-
+        <Stack.Screen name="EditAboutMe" 
+        component={EditAboutMeScreen} 
+        options={{ headerShown: false,
+        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
+        />
+        <Stack.Screen name="EditProperty" 
+        component={EditPropertyScreen} 
+        options={{ headerShown: false,
+        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
+        />
+        <Stack.Screen name="EditPropertyType" 
+        component={PropTypesScreen} 
+        options={{ headerShown: false,
+        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
+        />
+         <Stack.Screen name="EditPropertyPrice" 
+        component={EditPropertyPriceScreen} 
+        options={{ headerShown: false,
+        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
+        />
+  
 
 
 

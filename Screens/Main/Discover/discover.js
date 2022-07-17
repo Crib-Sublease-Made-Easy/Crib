@@ -95,7 +95,7 @@ export default function DiscoverScreen({navigation, route}){
     const [filterAmenities, setfilterAmenities] = useState([])
 
     useEffect(()=>{
-     
+        const unsubscribe = navigation.addListener('focus', () => {
         console.log("Refreshing again!")
 
         loadProperty()
@@ -109,8 +109,11 @@ export default function DiscoverScreen({navigation, route}){
             setFlatlistRefreshing(false)
         }, 2000);
         
-        
-    },[currentLocation])
+       
+            
+        });
+        return unsubscribe; 
+    },[currentLocation, navigation])
 
     //Move the header to adjust the size according if searching is true or false
     function openHeader(){
@@ -393,7 +396,7 @@ export default function DiscoverScreen({navigation, route}){
                 onPress={()=>console.log("hi")}
                 />
             
-                {pinsData.length != 0 && pinsData.map((value,index)=>(
+                {/* {pinsData.length != 0 && pinsData.map((value,index)=>(
                     <Marker
                     key={value._id}
                     pinColor= { selectedPin != "" && selectedPin?.propertyInfo._id == value._id ? 'green' : 'blue'}
@@ -402,7 +405,7 @@ export default function DiscoverScreen({navigation, route}){
                     onPress={()=>onMarkerClick(value._id)}
                     
                     />
-                ))} 
+                ))}  */}
             </MapView>
             <Animated.View style={{position:'absolute', backgroundColor:'rgba(255,255,255,0.95)', width:WIDTH, height:HEIGHT,top:0,
             opacity: translation.interpolate({

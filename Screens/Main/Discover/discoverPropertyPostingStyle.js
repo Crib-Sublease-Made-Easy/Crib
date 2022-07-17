@@ -112,9 +112,6 @@ export const SearchInput = styled.TextInput`
   padding-left: ${WIDTH*0.05}px;
   color: white
   border-radius: 10px;
- 
-  
-
 `
 
 export const SearchContainer = styled.View`

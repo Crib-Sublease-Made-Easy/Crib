@@ -36,7 +36,8 @@ Ionicons.loadFont()
 
 import { Header,Container, NameText, OccupationText,EditProfilePressable,SlidingContainer,
     PostContainer, FavContainer, PostedText, FavText,  DefaultPostFavText, PostedPropertyInfoContainer,
-    PropertyName, DatePriceText, InformationContainer, IconContainer, IconsContainer
+    PropertyName, DatePriceText, InformationContainer, IconContainer, IconsContainer,PriceEditContainer,
+    EditPropertyPressable, EditText
  } from './profileStyle';
 import { useEvent } from 'react-native-reanimated';
 import { LIGHTGREY } from '../../../sharedUtils';
@@ -62,16 +63,18 @@ export default function ProfileScreen({navigation}){
 
  
     useEffect(()=>{
-       getTokens()
-      
-    }, [])
+        const unsubscribe = navigation.addListener('focus', () => {
+            getTokens()
+        });
+    return unsubscribe; 
+    }, [navigation])
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("refreshToken");
-        console.log("Access Token " + accessToken)
+       //console.log("Access Token " + accessToken)
 
         const UID = await SecureStorage.getItem("userId");
 
-        console.log("UID " + UID)
+      //  console.log("UID " + UID)
         setProfilePic(await SecureStorage.getItem("profilePic"))
         fetch('https://sublease-app.herokuapp.com/users/' + UID, {
         method: 'GET',
@@ -81,14 +84,16 @@ export default function ProfileScreen({navigation}){
         'Authorization': 'Bearer ' + accessToken,
         }
         }) 
-        .then(res => res.json()).then(async userData =>{
+        .then(res => res.json()).then( userData =>{
+            // console.log("userdata")
             setUserData(userData)
-            console.log(userData)
+            // console.log("userdata")
+            // console.log(userData)
             
            
-            console.log(userData.postedProperties.length)
+            //console.log(userData.postedProperties.length)
             if(userData.postedProperties.length != 0){
-                console.log(userData.postedProperties[0])
+                //console.log(userData.postedProperties[0])
                 fetchPostedProperties(userData.postedProperties[0], accessToken)
             }
         })
@@ -107,12 +112,9 @@ export default function ProfileScreen({navigation}){
             }
             }) 
             .then(res => res.json()).then(propertyData =>{
-                console.log("propertyData")
-                console.log(propertyData)
-                setPostedProperties(propertyData)
-               
-               
-                
+                // console.log("propertyData")
+                // console.log(propertyData)
+                setPostedProperties(propertyData) 
             })
             .catch(e=>{
                 alert(e)
@@ -186,7 +188,8 @@ export default function ProfileScreen({navigation}){
                 <View style={{ width:WIDTH, height:HEIGHT*0.4, justifyContent:'center', alignItems:'center'}}>
                     {postedProperties != "" ?
                         <View>
-                            <Image source={{uri: postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
+                            <Image key={"defaultPropPic"}
+                            source={{uri: postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
                             <PostedPropertyInfoContainer>
                                 <PropertyName>{postedProperties.propertyInfo.loc.secondaryTxt}</PropertyName>
                                 <DatePriceText>
@@ -195,8 +198,13 @@ export default function ProfileScreen({navigation}){
                                     {" "} to {" "}
                                     {new Date(postedProperties.propertyInfo.availableTo).getUTCMonth()}- 
                                     {new Date(postedProperties.propertyInfo.availableTo).getFullYear()}
-                                    </DatePriceText>
-                                <PropertyName style={{color:'black'}}>${postedProperties.propertyInfo.price}</PropertyName>
+                                </DatePriceText>
+                                <PriceEditContainer>
+                                    <PropertyName style={{color:'black'}}>${postedProperties.propertyInfo.price}</PropertyName>
+                                    <EditPropertyPressable onPress={()=>navigation.navigate("EditProperty", {propertyData: postedProperties.propertyInfo})}>
+                                        <EditText>Edit</EditText>
+                                    </EditPropertyPressable>
+                                </PriceEditContainer>
                             </PostedPropertyInfoContainer>
                         </View>
                     :
