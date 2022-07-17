@@ -243,6 +243,7 @@ export default function App () {
       </Stack.Navigator>
     }
     
+    
     </UserContext.Provider>
     </NavigationContainer>
    
