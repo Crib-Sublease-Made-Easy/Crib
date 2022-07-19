@@ -37,9 +37,7 @@ export default function EditPropertyScreen({navigation, route}){
     const [propDateTo, setPropDateTo] = useState(route.params.propertyData.availableTo)
     const [propDescription, setPropDescription] = useState(route.params.propertyData.postedBy)
     const [propAmen, setPropAmen] = useState(route.params.propertyData.amenities)
-    const [headerImage, setHeaderImage] = useState(route.params.propertyData.imgList[0])
-
-    const [typeModal, setTypeModal] = useState(false)
+    const [headerImage, setHeaderImage] = useState(null)
 
 
     // useEffect(()=>{
@@ -65,14 +63,17 @@ export default function EditPropertyScreen({navigation, route}){
                 </ResetButtonContainer> */}
             </HeaderContainer>
             <ScrollView>
-            <HeaderImageContainer>
+            {/* <HeaderImageContainer>
                 <Image key={"defaultPropPic"} source={{ uri: headerImage}}
                     style={{ width: WIDTH * 0.9, height: HEIGHT * 0.25, borderRadius: 10, alignSelf:'center' }} />
-            </HeaderImageContainer>
+            </HeaderImageContainer> */}
+            <View style={{width:WIDTH, height: HEIGHT*0.025}}>
 
+            </View>
+            <CategoryName>Image Gallery</CategoryName>
             <PropertyPhotoContainer >
             {propData.imgList.map((value, index)=>(
-                <TouchableOpacity key={"bedroomPic" + index} onPress={() => setHeaderImage(propertyBedroomImage.uri)}>
+                <TouchableOpacity key={"imgList" + value} onPress={() => setHeaderImage(value)}>
                     <PhotoContainer >
                         <Image source={{ uri: value }}
                             style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />

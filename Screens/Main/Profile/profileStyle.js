@@ -15,7 +15,7 @@ import {
   
 
 import styled from 'styled-components/native';
-import { MEDIUMGREY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
+import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
 
 const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
@@ -174,5 +174,39 @@ export const EditText = styled.Text`
   color: ${PRIMARYCOLOR}
   font-weight: 500
   padding:${WIDTH*0.015}px
+`
+
+export const FavPropertyCard = styled.Pressable`
+  width: ${WIDTH*0.9}px;
+  height: ${HEIGHT*0.3}px;
+  margin-top: ${HEIGHT*0.01}px
+  border-radius: 10px;
+  background-color:white;  
+`
+export const FavPropertyCardContent = styled.Pressable`
+  padding-horizontal: ${WIDTH*0.02}px
+  padding-vertical: ${HEIGHT*0.01}px;
+  width: 100%;
+  height: 40%;
+  
+  
+`
+
+export const FavPropertyCardName = styled.Text`
+  font-size: ${HEIGHT*0.015}px;
+  font-weight: 500
+`
+
+export const FavPropertyCardDateText = styled.Text`
+  font-size: ${HEIGHT*0.015}px;
+  color: ${DARKGREY}
+  font-weight: 400
+`
+export const FavPropertyCardDateContainer = styled.View`
+  padding-vertical: ${HEIGHT*0.01}px
+  width: 50%;
+  justify-content: space-between;
+  align-items: center
+  flex-direction: row
 `
 

@@ -90,8 +90,10 @@ export default function PasswordScreen({navigation,route}){
                 body: formData
             }).then(res => res.json()).then(async data =>{
                 console.log("User ID");
-               await SecureStorage.setItem("userId", data.createdUser._id)
+                await SecureStorage.setItem("userId", data.createdUser._id)
+                await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
                 navigate()
+                
               
             }).catch(e=>
                 console.log(e)

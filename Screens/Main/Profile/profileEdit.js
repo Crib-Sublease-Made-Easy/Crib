@@ -22,7 +22,7 @@ Ionicons.loadFont()
 import { DARKGREY, HEIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR, WIDTH, EXTRALIGHT } from '../../../sharedUtils';
 
 import {HeaderContainer, Header, BackButtonContainer, NameContainer, ResetButtonContainer, TopContainer, ImageContainer
-        ,NameJobContainer, JobText, RowContainer, CategoryName, AboutMeInput, RowName, RowContainerCol,
+        ,NameJobContainer, JobText, RowContainer, CategoryName, AboutMeInput, RowName, RowContainerCol, 
         TextInputPressable} from './profileEditStyle';
 
 export default function ProfileEditScreen({navigation, route}){
@@ -59,6 +59,9 @@ export default function ProfileEditScreen({navigation, route}){
             setUserAPIData(userData)
             if(route.params.userData.profilePic == null){
                 setProfilePic(userData.profilePic)
+                await SecureStorage.removeItem("profilePic")
+                await SecureStorage.setItem("ProfilePic", userData.profilePic)
+
             }
             
         })
@@ -104,7 +107,7 @@ export default function ProfileEditScreen({navigation, route}){
         <ScrollView>
             <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
+                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.navigate("Profile")}>
                         <Ionicons name='close-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>

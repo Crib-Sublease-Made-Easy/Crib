@@ -1,4 +1,4 @@
-import React , {useContext, useState, useRef, useEffect} from 'react';
+import React , {useContext, useState, useRef, useEffect, useCallback} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -34,13 +34,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
 
+
+
 import { Header,Container, NameText, OccupationText,EditProfilePressable,SlidingContainer,
     PostContainer, FavContainer, PostedText, FavText,  DefaultPostFavText, PostedPropertyInfoContainer,
     PropertyName, DatePriceText, InformationContainer, IconContainer, IconsContainer,PriceEditContainer,
-    EditPropertyPressable, EditText
+    EditPropertyPressable, EditText, FavPropertyCard, FavPropertyCardName, FavPropertyCardContent,
+    FavPropertyCardDateText, FavPropertyCardDateContainer
  } from './profileStyle';
 import { useEvent } from 'react-native-reanimated';
 import { LIGHTGREY } from '../../../sharedUtils';
+import { FlatList } from 'react-native-gesture-handler';
 export default function ProfileScreen({navigation}){
     const scrollviewRef = useRef(null)
     const {user, logout} = useContext(UserContext)
@@ -54,19 +58,16 @@ export default function ProfileScreen({navigation}){
 
     const [userData, setUserData] = useState('')
 
-    const [profilePic, setProfilePic] = useState('')
+    const [profilePic, setProfilePic] = useState(null)
 
     const [propertyAddr, setPropertyAddr] = useState('');
-
-
-
-
  
     useEffect(()=>{
-        const unsubscribe = navigation.addListener('focus', () => {
+        // const unsubscribe = navigation.addListener('focus', () => {
             getTokens()
-        });
-    return unsubscribe; 
+        
+        //     });
+        // return unsubscribe; 
     }, [navigation])
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("refreshToken");
@@ -75,7 +76,6 @@ export default function ProfileScreen({navigation}){
         const UID = await SecureStorage.getItem("userId");
 
       //  console.log("UID " + UID)
-        setProfilePic(await SecureStorage.getItem("profilePic"))
         fetch('https://sublease-app.herokuapp.com/users/' + UID, {
         method: 'GET',
         headers: {
@@ -84,23 +84,44 @@ export default function ProfileScreen({navigation}){
         'Authorization': 'Bearer ' + accessToken,
         }
         }) 
-        .then(res => res.json()).then( userData =>{
+        .then(res => res.json()).then(async userData =>{
             // console.log("userdata")
             setUserData(userData)
-            // console.log("userdata")
-            // console.log(userData)
-            
+            console.log("userdata")
+            console.log(userData)
+            let cachedProfilePic = await SecureStorage.getItem("profilePic");
+            if(cachedProfilePic == userData.profilePic){
+                console.log("Cached profile pic is")
+                // console.log(cachedProfilePic)
+                setProfilePic(cachedProfilePic)
+            }else{
+                console.log("API data is");
+                setProfilePic(userData.profilePic)
+            }
            
+        //    console.log("data")
+        //    console.log(userData)
             //console.log(userData.postedProperties.length)
             if(userData.postedProperties.length != 0){
                 //console.log(userData.postedProperties[0])
                 fetchPostedProperties(userData.postedProperties[0], accessToken)
             }
+            if(userData.favoriteProperties !== favoriteProperties){
+                console.log("Fav prop is not the same")
+                setFavoriteProperties([])
+                userData.favoriteProperties.forEach(propID => {
+                    fetchFavoriteProperties(propID, accessToken)
+                });
+                console.log("PropData")
+            }
+           
+            
         })
         .catch(e=>{
             alert(e)
         })
     }
+
 
     async function fetchPostedProperties(id, token){
         await fetch('https://sublease-app.herokuapp.com/properties/' + id, {
@@ -112,14 +133,35 @@ export default function ProfileScreen({navigation}){
             }
             }) 
             .then(res => res.json()).then(propertyData =>{
-                // console.log("propertyData")
-                // console.log(propertyData)
+                console.log("postedData")
+                console.log(propertyData)
                 setPostedProperties(propertyData) 
             })
+        
             .catch(e=>{
                 alert(e)
         })
     }
+    const fetchFavoriteProperties = useCallback(async (id, token) => {
+       
+        await fetch('https://sublease-app.herokuapp.com/properties/' + id, {
+            method: 'GET',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+            }
+            }) 
+            .then(res => res.json()).then(propertyData =>{
+                // console.log("propertyData")
+               
+                setFavoriteProperties(prev => [...prev, propertyData]) 
+            })
+            .catch(e=>{
+                alert(e)
+        })
+    }, [profilePic])
+
 
     function PressPosted(){
         Animated.spring(translation,{
@@ -150,11 +192,11 @@ export default function ProfileScreen({navigation}){
             </Header>
             <Container>
                 <Image source={{uri: profilePic}} 
-                style={{width:WIDTH*0.35, height: WIDTH*0.35, borderRadius: WIDTH*0.175, alignSelf:'center', backgroundColor:'pink'}} />
+                style={{width:WIDTH*0.35, height: WIDTH*0.35, borderRadius: WIDTH*0.175, alignSelf:'center', backgroundColor:LIGHTGREY}} />
                 <InformationContainer>
                     <View style={{ width: WIDTH*0.5, justifyContent: 'flex-start'}}>
                         <NameText>{userData.firstName} {""} {userData.lastName}</NameText>
-                        <OccupationText>{userData.occupation}</OccupationText>
+                      
                     </View>
                     <IconsContainer>
                         <IconContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
@@ -187,7 +229,7 @@ export default function ProfileScreen({navigation}){
                 style={{width:WIDTH, height:HEIGHT*0.4}}>
                 <View style={{ width:WIDTH, height:HEIGHT*0.4, justifyContent:'center', alignItems:'center'}}>
                     {postedProperties != "" ?
-                        <View>
+                        <Pressable onPress={()=>navigation.navigate("PropertyDetail", {data: postedProperties})}>
                             <Image key={"defaultPropPic"}
                             source={{uri: postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
                             <PostedPropertyInfoContainer>
@@ -206,7 +248,7 @@ export default function ProfileScreen({navigation}){
                                     </EditPropertyPressable>
                                 </PriceEditContainer>
                             </PostedPropertyInfoContainer>
-                        </View>
+                        </Pressable>
                     :
                         <Pressable style={{width:WIDTH, height:'100%', alignItems:'center', justifyContent:'center'}}
                             onPress={()=>navigation.navigate('PropertyPosting')}>
@@ -219,12 +261,36 @@ export default function ProfileScreen({navigation}){
                         </Pressable>
                     }
                 </View>
-                <View style={{width:WIDTH, height:HEIGHT*0.3}}>
-                    {favoriteProperties.length == 0 &&
+                <View style={{width:WIDTH, height:HEIGHT*0.45, }}>
+                    {favoriteProperties.length == 0 ?
                         <View style={{width:WIDTH, height:'100%',alignItems:'center',justifyContent:'center'}}>
                             <Image source={require('../../../assets/FavHome.jpg')} style={{width:WIDTH*0.7, height:HEIGHT*0.2}} />
                             <DefaultPostFavText>You haven't liked any properties yet...</ DefaultPostFavText>
                         </View>
+                        :
+                        <ScrollView style={{alignSelf:'center'}} showsVerticalScrollIndicator={false}>
+                            {favoriteProperties.map((item)=>(
+                            <FavPropertyCard key={item.propertyInfo._id} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
+                                <Image source={{uri: item.propertyInfo.imgList[0]}} 
+                                style={{width:'100%', height:'60%', borderRadius:10}}/>
+                                <FavPropertyCardContent>
+                                    <FavPropertyCardName>{item.propertyInfo.loc.streetAddr}</FavPropertyCardName>
+                                    <FavPropertyCardDateContainer>
+                                        <FavPropertyCardDateText>
+                                            {new Date(item.propertyInfo.availableFrom).toLocaleDateString()}
+                                        </FavPropertyCardDateText>
+                                        <Ionicons name="repeat-outline" size={15} />
+                                        <FavPropertyCardDateText>
+                                            {new Date(item.propertyInfo.availableTo).toLocaleDateString()}
+                                        </FavPropertyCardDateText>
+                                    </FavPropertyCardDateContainer>
+                                    <FavPropertyCardName>$ {item.propertyInfo.price}</FavPropertyCardName>
+                                </FavPropertyCardContent>
+                            </FavPropertyCard>
+
+                            ))}
+                        </ScrollView>
+                        
                     }
                 </View>
                

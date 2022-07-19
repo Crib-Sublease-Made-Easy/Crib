@@ -60,6 +60,9 @@ import EditPropertyAvailScreen from './Screens/Main/Profile/EditProperty/EditPro
 import EditPropertyDescriptionScreen from './Screens/Main/Profile/EditProperty/EditPropertyDescription/editPropertyDescription.js';
 import EditPropertyAmenitiesScreen from './Screens/Main/Profile/EditProperty/EditPropertyAmenities/editPropertyAmen.js';
 
+//Message
+import MessageTab from './Screens/Main/Message/MessageMain.js';
+
 //Navigation between tabs
 import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -109,6 +112,12 @@ export default function App () {
         <Stack.Screen
           name="ProfileTabs"
           component={ProfileTab}
+          options={{headerShown: false, cardStyleInterpolator: forFade}}
+        />
+        
+        <Stack.Screen
+          name="MessageTabs"
+          component={MessageTab}
           options={{headerShown: false, cardStyleInterpolator: forFade}}
         />
         
@@ -208,6 +217,13 @@ export default function App () {
         options={{ headerShown: false,
         cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
         />
+
+        {/* Messaging */}
+        {/* <Stack.Screen name="Lobby" component={Lobby} />
+        <Stack.Screen name="Chat" component={Chat} />
+        <Stack.Screen name="Member" component={Member} />
+        <Stack.Screen name="Invite" component={Invite} /> 
+        <Stack.Screen name="Profile" component={Invite} /> */}
 
   
 

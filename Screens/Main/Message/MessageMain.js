@@ -15,7 +15,7 @@ import { createBottomTabNavigator,  } from '@react-navigation/bottom-tabs';
 
 
 import DiscoverScreen from '../Discover/discover';
-import MessageScreen from '../Message/message.js';
+import MessageScreen from '../Message/message';
 import ProfileScreen from '../Profile/profile';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -30,7 +30,7 @@ const PRIMARYGREY = '#5e5d5d'
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-export default function ProfileTab(){
+export default function MessageTab(){
 
     return(
 
@@ -43,7 +43,7 @@ export default function ProfileTab(){
               iconName = focused
                 ? 'home'
                 : 'home-outline';
-            } else if (route.name === 'MessageMain') {
+            } else if (route.name === 'Message') {
               iconName = focused ? 'mail' : 'mail-outline';
             }
             else if (route.name === 'Profile') {

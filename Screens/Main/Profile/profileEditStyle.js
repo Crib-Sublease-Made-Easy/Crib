@@ -109,3 +109,10 @@ export const RowName = styled.Text`
     font-size: ${HEIGHT*0.015}px
     color: ${DARKGREY}
 `
+
+export const FavPropertyCard = styled.Pressable`
+    width: ${WIDTH*0.4}px;
+    height: ${HEIGHT*0.2}px;
+    border-radius: 10px;
+    background-color:red
+`

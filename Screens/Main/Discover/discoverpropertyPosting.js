@@ -30,14 +30,15 @@ import DatePicker from 'react-native-date-picker'
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
+
 FontAwesome.loadFont();
 
 const ImageName = [
-    { name: "Bedroom", des: "Please upload an image of where teanant will be sleeping." },
-    { name: "Bathroom", des: "Please upload an image of bathroom where teanant can use." },
-    { name: "Living Room", des: "Please upload an image of common space / shared space." },
-    { name: "Kitchen", des: "Please upload an image of kitchen / cooking area." },
-    { name: "Floor Plan", des: "Please upload an image of property floor plan." },
+    { name: "Bedroom", des: "Please upload an image of where teanant will be sleeping.", icon: "bed-outline" },
+    { name: "Bathroom", des: "Please upload an image of bathroom where teanant can use.", icon: "water-outline" },
+    { name: "Living Room", des: "Please upload an image of common space / shared space." , icon: "tv-outline"},
+    { name: "Kitchen", des: "Please upload an image of kitchen / cooking area." , icon: "fast-food-outline"},
+    { name: "Floor Plan", des: "Please upload an image of property floor plan.", icon: "logo-stackoverflow" },
 ]
 
 const amenitiesList =
@@ -272,8 +273,39 @@ export default function PropertyPostingScreen({ navigation }) {
         //String Array
 
         var array = propertyBedroomImage.uri.split(".");
+
         postingData.append("propertyImages", {
             uri: propertyBedroomImage.uri,
+            type: 'image/' + array[1],
+            name: 'someName',
+        });
+
+        var array = propertyBathroomImage.uri.split(".");
+        postingData.append("propertyImages", {
+            uri: propertyBathroomImage.uri,
+            type: 'image/' + array[1],
+            name: 'someName',
+        });
+        var array = propertyLivingroomImage.uri.split(".");
+
+        postingData.append("propertyImages", {
+            uri: propertyLivingroomImage.uri,
+            type: 'image/' + array[1],
+            name: 'someName',
+        });
+
+        var array = propertyKitchenImage.uri.split(".");
+
+        postingData.append("propertyImages", {
+            uri: propertyKitchenImage.uri,
+            type: 'image/' + array[1],
+            name: 'someName',
+        });
+
+
+        var array = propertyFloorplanImage.uri.split(".");
+        postingData.append("propertyImages", {
+            uri: propertyFloorplanImage.uri,
             type: 'image/' + array[1],
             name: 'someName',
         });
@@ -329,7 +361,7 @@ export default function PropertyPostingScreen({ navigation }) {
     async function selectGallery(name) {
 
 
-        const result = await launchImageLibrary();
+        const result = await launchImageLibrary({quality: 0.2});
         if (!result.didCancel) {
 
             if (name == "Bedroom") {
@@ -391,7 +423,10 @@ export default function PropertyPostingScreen({ navigation }) {
 
 
     return (
-        <View style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0 }} >
+        <SafeAreaView style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0 }} >
+            <TouchableOpacity style={{paddingLeft:WIDTH*0.05}} onPress={()=>navigation.navigate('Profile')}>
+                <Text style={{color: DARKGREY, fontWeight:'500'}}>Cancel Posting</Text>
+            </TouchableOpacity>
             <ModalView>
                 <ButtonContainer>
                     <Pressable onPress={() => moveScrollView(scrollviewIndex - 1)} style={{ width: WIDTH * 0.1 }}>
@@ -486,7 +521,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                         <Subheading>{value.name}</Subheading>
                                         <ImageText >{value.des}</ImageText>
                                         <ImageContainer onPress={() => selectGallery(value.name)}>
-                                            <Ionicons name='images-outline' size={40} color='white' />
+                                            <Ionicons name={value.icon} size={40} color='white' />
                                             <Image
                                                 style={{ position: 'absolute', height: '100%', width: '100%', borderRadius: 10 }}
                                                 resizeMode='cover'
@@ -577,7 +612,7 @@ export default function PropertyPostingScreen({ navigation }) {
                             </DateSelectContainer>   */}
 
                             <DatePicker
-                                textColor='white'
+                              
                                 modal
                                 mode='date'
                                 open={openFrom}
@@ -592,7 +627,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                 }}
                             />
                             <DatePicker
-                                textColor='white'
+                              
                                 modal
                                 mode='date'
                                 open={openTo}
@@ -805,7 +840,7 @@ export default function PropertyPostingScreen({ navigation }) {
                     </ContinueButton>
                 </NextContainer>
             </ModalView>
-        </View>
+        </SafeAreaView>
     )
 
 }

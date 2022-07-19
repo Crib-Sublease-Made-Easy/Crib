@@ -49,7 +49,7 @@ export const HeaderImageContainer = styled.View`
 
 export const PropertyPhotoContainer = styled.View`
     width: ${WIDTH*0.9}px;
-    height: ${HEIGHT*0.125}px;
+    height: ${HEIGHT*0.115}px;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;

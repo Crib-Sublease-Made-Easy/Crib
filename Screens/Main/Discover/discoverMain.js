@@ -15,7 +15,7 @@ import { createBottomTabNavigator,  } from '@react-navigation/bottom-tabs';
 
 
 import DiscoverScreen from './discover';
-import MessageScreen from '../message'
+import MessageScreen from '../Message/message.js'
 import ProfileScreen from '../Profile/profile';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
