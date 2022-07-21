@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 
 import styled from 'styled-components/native';
-import { TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
+import { LIGHTGREY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
 
 
 const PRIMARYCOLOR = '#4050B5'
@@ -38,9 +38,10 @@ export const Container = styled.Pressable`
 `
 
 export const Header = styled.View`
-  padding-bottom: ${HEIGHT*0.005}px;
-  align-self: center;
+  
+  width: ${WIDTH*1.1}px;
   margin-top: ${HEIGHT*0.06}px;
+  flex-direction: row
 `
 export const ModalContainer = styled.View`
   height: ${HEIGHT}px;
@@ -59,8 +60,8 @@ export const SearchInputContainerText = styled.Text`
 
 export const PlaceholderLogoTextContainer  = styled.TextInput`
   flex-direction: row;
-  height:${HEIGHT*0.075}px;
-  width: ${WIDTH*0.66}px;
+  height: 100%
+  width: 70%
   padding-left: ${WIDTH*0.02}px
   align-items: center  
 `
@@ -78,6 +79,7 @@ export const SearchInput = styled.TextInput`
   width: ${WIDTH*0.8}px;
   height: ${HEIGHT*0.075}px;
   border-radius: 20px;
+ 
 `
 
 export const FilterPressable  = styled.Pressable`
@@ -155,8 +157,7 @@ export const AutocompleteLocationContainer = styled.Pressable`
 
 export const SearchInputCancelIconContainer = styled.View`
   flex-direction: row;
-  height:${HEIGHT*0.075}px;
-  padding-left: ${WIDTH*0.075}px;
+  height: ${HEIGHT*0.065}px
   align-items:center
 `
 
@@ -176,11 +177,13 @@ export const ClosePreviewPressable = styled.Pressable`
 
 export const  PreviewBottomContainer = styled.Pressable`
   height: ${HEIGHT*0.075}px;
-  width: ${WIDTH*0.75}px;
+  width: ${WIDTH*0.9}px;
+  padding-horizontal: ${WIDTH*0.02}px;
   padding-top: ${HEIGHT*0.01}px
   align-self:center
   flex-direction: row
   justify-content: space-between
+ 
 `
 export const  PreviewTopContainer = styled.View`
   height:${HEIGHT*0.175}px;
@@ -197,7 +200,7 @@ export const PreviewCards = styled.Pressable`
 `
 
 export const PreviewTopRightContaier = styled.View`
-  width: ${WIDTH*0.2}px
+  width: ${WIDTH*0.36}px
   align-items: flex-end
 `
 export const PreviewNameText = styled.Text`
@@ -213,7 +216,7 @@ export const PreviewPriceText = styled.Text`
 
 `
 export const PreviewLocationText = styled.Text`
-  font-size: ${HEIGHT*0.019}px;
+  font-size: ${HEIGHT*0.015}px;
   font-weight: 500
   width: ${WIDTH*0.5}px
   
@@ -221,5 +224,46 @@ export const PreviewLocationText = styled.Text`
   
 `
 
+export const SeachIconContainer = styled.View`
+  width:15%
+  align-items: center;
+  justify-content: flex-end
+  flex-direction: row
+`
 
-    
+export const DeleteIconContainer = styled.Pressable`
+width:15%
+align-items: center;
+justify-content: center
+`
+
+export const CustomMarker = styled.View`
+  padding-horizontal: ${WIDTH*0.02}px;
+  padding-vertical: ${HEIGHT*0.01}px
+  border-radius:10px
+  background-color: ${PRIMARYCOLOR}
+  shadow-color: ${LIGHTGREY};
+  shadow-radius: 5px;
+  shadow-offset: 0 0;
+  shadow-opacity: 0.3;
+  elevation: 2
+  align-items: center;
+  justify-content: center
+
+`
+
+export const SearchHerePressable = styled.Pressable`
+  position: absolute;
+  bottom: ${HEIGHT*0.2}px;
+  left: ${WIDTH*0.05}px;
+  width: ${WIDTH*0.15}px
+  height: ${WIDTH*0.15}px
+  border-radius: ${WIDTH*0.075}px
+  background-color: white
+  justify-content: center
+  align-items: center
+  shadow-color: black
+  shadow-radius: 10px;
+  shadow-offset: 0 0;
+  shadow-opacity: 0.3;
+`

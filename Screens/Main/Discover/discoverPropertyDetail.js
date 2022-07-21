@@ -36,9 +36,10 @@ const WIDTH = Dimensions.get('screen').width;
 
 
 export default function PropertyDetailScreen({navigation, route}){
+    console.log("Detail")
+    console.log(route.params.data)
     useEffect(()=>{
-        console.log("Detail")
-        console.log(route.params.data)
+      
     }, [])
     const flatListRef = useRef(null)
     const propertyAmenities = (["Furnished", "Pets Allowed", "Able to renew", "On-site waher and dryer"]);
@@ -152,10 +153,10 @@ export default function PropertyDetailScreen({navigation, route}){
                         <InfoHeaderText>Teanant Information:</InfoHeaderText>
                         <TenantInfoContainer>
                             <ProfileImageContainer>
-                                <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.125, width:HEIGHT*0.125, borderRadius:HEIGHT*0.125/2, backgroundColor:LIGHTGREY}}/>
+                                {/* <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.125, width:HEIGHT*0.125, borderRadius:HEIGHT*0.125/2, backgroundColor:LIGHTGREY}}/> */}
                             </ProfileImageContainer>
                             <TenantInfo>
-                                <InfoHeaderText style={{width: WIDTH*0.6}}>{postedUserData.firstName} {postedUserData.lastName}</InfoHeaderText>
+                                {/* <InfoHeaderText style={{width: WIDTH*0.6}}>{postedUserData.firstName} {postedUserData.lastName}</InfoHeaderText> */}
                                 <InfoText>Software Engineer</InfoText>
                                 <InfoText>Harvard University</InfoText>
                             </TenantInfo>

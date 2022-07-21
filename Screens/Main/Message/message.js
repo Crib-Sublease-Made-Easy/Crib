@@ -18,7 +18,7 @@ export default function MessageScreen({navigation}){
 
             <TouchableOpacity onPress={()=> navigation.navigate("Setting")}>
                 <Text>
-                    Hello
+                 
                 </Text>
                 </TouchableOpacity>
         </SafeAreaView>
