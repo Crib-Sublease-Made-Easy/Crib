@@ -10,20 +10,14 @@ import {
   Dimensions,
   Button,
   Keyboard,
-  TextInput,
-  TouchableWithoutFeedback,
-  Pressable,
-  TouchableOpacity,
   Animated,
   Image,
   ActivityIndicator
   
 } from 'react-native';
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLOR, DARKGREY } from '../../../sharedUtils';
 
-
-const PRIMARYGREY = '#5e5d5d'
 const TEXTGREY = '#969696'
 
 
@@ -32,14 +26,14 @@ FontAwesome.loadFont()
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { SearchContainer,  SearchInput, Container, ModalSearchContainer, ModalContainer, Subheading, SearchResultContainer,
-    CancelGoBackText, LocationMainText, LocationSecondaryText, LogoText, PressableContainer, SearchInputContainerText,
+import {LocationMainText, LocationSecondaryText, LogoText, PressableContainer, SearchInputContainerText,
     PlaceholderLogoTextContainer, Header, AutocompleteLocationContainer, PreviewTopContainer, PreviewBottomContainer,
-    PreviewTopLeftContaier,PreviewTopRightContaier, PreviewNameText, PreviewPriceText, PreviewLocationText, FilterPressable } from './discoverStyle';
+    PreviewTopLeftContaier,PreviewTopRightContaier, PreviewNameText, PreviewPriceText, PreviewLocationText, 
+    SeachIconContainer, DeleteIconContainer, CustomMarker,  SearchHerePressable } from './discoverStyle';
 
 import { SearchInputCancelIconContainer } from './discoverStyle';
 
-import { FlatList, GestureHandlerRootView} from 'react-native-gesture-handler';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 import DiscoverFilterScreen from './Filter/discoverFilter';
 
@@ -48,7 +42,7 @@ import PropertyCard from './propertyCard';
 
 //React Native Map
 import MapView , { Marker }from 'react-native-maps';
-import Easing from 'react-native/Libraries/Animated/Easing';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
 var axios = require('axios');
 
@@ -56,7 +50,8 @@ export default function DiscoverScreen({navigation, route}){
     //Reference to the MapView
     const mapRef = useRef(null)
     //This is to control the height of the input view container
-    const translation = useRef(new Animated.Value(HEIGHT*0.075)).current;
+    const translation = useRef(new Animated.Value(HEIGHT*0.065)).current;
+    const widthtranslation = useRef(new Animated.Value(WIDTH*0.9)).current;
     const opacityTranslation = useRef(new Animated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
     const [currentLocation, setCurrentLocation] = useState([37.78825,-122.4324])
@@ -74,7 +69,7 @@ export default function DiscoverScreen({navigation, route}){
 
     const [propertiesData, setPropertiesData] = useState([]);
 
-    const [propertyPage, setPropertyPage] = useState(0);
+    const [propertyPage, setPropertyPage] = useState(1);
 
     const [filterModal, setFilterModal] = useState(false)
 
@@ -84,6 +79,8 @@ export default function DiscoverScreen({navigation, route}){
     const [markerClickIndex, setMarkerClickIndex] = useState()    
 
     const [flatlistRefreshing, setFlatlistRefreshing] = useState(false)
+
+    const [mapCenterLocation, setMapCenterLocation] = useState([])
 
     const [filterType, setfilterType] = useState('')
     const [filterSort, setfilterSort] = useState('')
@@ -95,63 +92,76 @@ export default function DiscoverScreen({navigation, route}){
     const [filterAmenities, setfilterAmenities] = useState([])
 
     useEffect(()=>{
-       
         console.log("Refreshing again!")
 
+        //This loads the property in the flatlist 
         loadProperty()
-        
-        moveMap()
-       
-        retrieveAllPins();
+           
+        retrieveAllPins(currentLocation[0], currentLocation[1]);
         setPropertyPreviewCard(false)
         setSelectedPin([])
         setTimeout(() => {
             setFlatlistRefreshing(false)
         }, 2000);
         
-       
-            
-       
-      
     },[currentLocation])
 
-    //Move the header to adjust the size according if searching is true or false
+    //Open The search bar container to displya all autocomplete results according to if searching is true 
     function openHeader(){
-        Animated.timing(translation,{
-        toValue: HEIGHT*0.5 ,
-        duration: 300,
-        easing: Easing.out(Easing.ease),
-        delay:100,
-        useNativeDriver:false,
-        }).start()
+        Animated.parallel([
+            Animated.spring(widthtranslation,{
+            toValue: WIDTH*0.9 ,
+            bounciness:0,
+                speed: 6,
+                useNativeDriver:false,
+            }),
+            Animated.spring(translation,{
+                toValue: HEIGHT*0.5 ,
+                bounciness:0,
+                speed: 6,
+                useNativeDriver:false,
+            }),
+        ]).start()
        
     }
+
+    //Close The search bar container to displya all autocomplete results according to if searching is true 
     function closeHeader(){
-        Animated.spring(translation,{
-        toValue: HEIGHT*0.075 ,
-        bounciness:0,
-        speed: 6,
-        useNativeDriver:false,
-        }).start()
+        Animated.parallel([
+            Animated.spring(translation,{
+                toValue: HEIGHT*0.065 ,
+                bounciness:0,
+                speed: 6,
+                useNativeDriver:false,
+            }),
+            Animated.spring(widthtranslation,{
+                toValue: WIDTH*0.9,
+                bounciness:0,
+                speed: 6,
+                useNativeDriver:false,
+            })
+        ]).start()
     }
 
+    //Open the preview card when the map button on the propertycard in flatlsit is pressed 
     function openPreviewCard(){
         Animated.spring(opacityTranslation,{
-        toValue: 1 ,
-        duration:300,
-        bounciness:0,
-        speed: 5,
-        useNativeDriver:false,
+            toValue: 1 ,
+            duration:300,
+            bounciness:0,
+            speed: 5,
+            useNativeDriver:false,
         }).start()
         setPropertyPreviewCard(true)
     }
+    //Close the preview card when the map button on the propertycard in flatlsit is pressed 
     function closePreviewCard(){
         Animated.spring(opacityTranslation,{
-        toValue: 0,
-        duration:300,
-        bounciness:0,
-        speed: 5,
-        useNativeDriver:false,
+            toValue: 0,
+            duration:300,
+            bounciness:0,
+            speed: 5,
+            useNativeDriver:false,
         }).start()
         setPropertyPreviewCard(false)
     }
@@ -183,21 +193,8 @@ export default function DiscoverScreen({navigation, route}){
     } 
 
     //Load initial properties
-    function loadProperty() {
-        // console.log("Loading Data...")
-        // fetch('https://sublease-app.herokuapp.com/properties/query?page=' + propertyPage, {
-        // method: 'GET',
-        // headers: {
-        // Accept: 'application/json',
-        // 'Content-Type': 'application/json'
-        // }
-        // }) 
-        // .then(res => res.json()).then( properties =>{
-        //     setPropertiesData([...propertiesData,...properties])
-        // })
-        // .catch(e=>{
-        //     alert(e)
-        // })
+    const loadProperty = useCallback(()=> {
+        
         let s = "";
         if(filterType != ""){
             s = s + "&type=" + filterType;
@@ -233,7 +230,8 @@ export default function DiscoverScreen({navigation, route}){
             }
             }) 
             .then(res => res.json()).then(properties =>{
-                // console.log("filtered properties is:")
+                console.log("Filtered properties is:")
+                console.log("==========================================================")
                 // console.log(properties)
                 setFilteredProperties(properties)
                 setFlatlistRefreshing(true)
@@ -242,11 +240,37 @@ export default function DiscoverScreen({navigation, route}){
             .catch(e=>{
                 alert(e)
         })
-    }
+    },[currentLocation])
 
     const loadMoreProperties = async() => {
+        console.log("Inside load more data")
         setPropertyPage(propertyPage+1);
-        await fetch('https://sublease-app.herokuapp.com/properties/query?page=' + propertyPage, {
+        let s = "";
+        if(filterType != ""){
+            s = s + "&type=" + filterType;
+        }
+        // if(filterSort != ""){
+        //     s = s + "&type=" + filterSort;
+        // }
+        if(filterDistance != ""){
+            s = s + "&maxDistance=" + parseInt(filterDistance);
+        }
+        if(filterDistance != ""){
+            s = s + "&bed=" + filterBedroom;
+        }
+        if(filterDistance != ""){
+            s = s + "&bath=" + filterBathroom;
+        }
+        for(let amen of filterAmenities){
+            s = s + "&" + amen + "=true";
+        }
+        s = s + `&latitude=${currentLocation[0]}`
+        s = s + `&longitude=${currentLocation[1]}`
+        s = s + "&maxDistance=1000"
+        s = s + `&priceHigh=${filterPriceHigher}`
+        s = s + '&priceLow=0'
+
+        await fetch('https://sublease-app.herokuapp.com/properties/query?page=' + propertyPage + s, {
         method: 'GET',
         headers: {
         Accept: 'application/json',
@@ -254,17 +278,19 @@ export default function DiscoverScreen({navigation, route}){
         }
         }) 
         .then(res => res.json()).then(properties =>{
-            setPropertiesData([...propertiesData,...properties])
+            // setPropertiesData([...propertiesData,...properties])
+          
+            setFilteredProperties([...filteredProperties,...properties])
         })
         .catch(e=>{
             alert(e)
         })      
     }
 
-    // Retrieve all the pins according to currentLocation 
-    const retrieveAllPins =useCallback(() =>{
+    // Retrieve all the pins according to currentLocation, this is need to display all the properties with a max distance of 1000km
+    const retrieveAllPins = useCallback((lat, long) =>{
         // console.log("Retrieving pins ")
-    fetch(`https://sublease-app.herokuapp.com/properties/pins?latitude=${currentLocation[0]}&longitude=${currentLocation[1]}&maxDistance=1000`, {
+    fetch(`https://sublease-app.herokuapp.com/properties/pins?latitude=${lat}&longitude=${long}&maxDistance=10000000000000`, {
         method: 'GET',
         headers: {
         Accept: 'application/json',
@@ -273,7 +299,8 @@ export default function DiscoverScreen({navigation, route}){
         }) 
         .then(res => res.json()).then( pins =>{
             console.log("Loading PinsData")
-
+            // console.log(pins)
+            console.log("==========================================================")
             setPinsData(pins)                  
         })
         .catch(e=>{
@@ -286,7 +313,7 @@ export default function DiscoverScreen({navigation, route}){
     //Input is an array [lat, long]
     //If only currentLocation is vlaid data, then center the mapview to current location
     //If both the currentLocation and the pinLocation is valid, then use delta to adjust mapview
-    function moveMap(){
+    function moveMap(lat,long){
        
         let latDelta = -1;
         let longDelta = -1
@@ -294,21 +321,12 @@ export default function DiscoverScreen({navigation, route}){
         if(currentLocation != ""){
             // console.log("Only Location")
             mapRef.current?.animateToRegion({
-                latitude: currentLocation[0],
-                longitude: currentLocation[1],
+                latitude: lat,
+                longitude: long,
                 latitudeDelta: 0.05,
                 longitudeDelta: 0.05,
             })
         }
-        // else if(selectedPin != ""){
-        //     // console.log("Only Pin")
-        //     mapRef.current?.animateToRegion({
-        //         latitude: selectedPin.loc.coordinates[1],
-        //         longitude:  selectedPin.loc.coordinates[0],
-        //         latitudeDelta: 0.05,
-        //         longitudeDelta: 0.05,
-        //     })
-        // }
     }
 
     //Move to the center of the selected location from search input
@@ -317,69 +335,73 @@ export default function DiscoverScreen({navigation, route}){
     //Empty the autocomplete locations 
     //setSearching to false so to shrink the header
     //Dismiss keyboard
-    async function selectCurrentLocation(data){
+    function selectCurrentLocation(locationQueryName){
+        console.log("The locationQueryName is :")
+        // console.log(locationQueryName)
         setautocompleteLocation("")
-        setlocationQuery(data)
+        setlocationQuery(locationQueryName)
         setSearching(false)
         Keyboard.dismiss()
-        // console.log("name is :")
-        // console.log(data)
-        locationStringToLatLong(data)
+        let spacelessLocation = locationQueryName.replaceAll(" ", "+");
+        var config = {
+            method: 'get',
+            url: `https://maps.googleapis.com/maps/api/geocode/json?address=${spacelessLocation}&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`,
+        };
+        axios(config)
+        .then(async (response)=> {           
+            // console.log(data)
+            lat = response.data.results[0].geometry.location.lat;
+            long = response.data.results[0].geometry.location.lng
+            setCurrentLocation([lat,long])
+            moveMap(lat, long)
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+       
+       
+
     }
 
     //Function to set the current location in variable currentLocation 
     //Input: name of the address 
     //Output: NONE
-    function locationStringToLatLong(name){
-        let lat;
-        let long;
+    async function locationStringToLatLong(name){
+        var lat;
         let spacelessLocation = name.replaceAll(" ", "+");
         var config = {
             method: 'get',
             url: `https://maps.googleapis.com/maps/api/geocode/json?address=${spacelessLocation}&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`,
         };
         axios(config)
-        .then(function (response) {           
-            lat = response.data.results[0].geometry.location.lat;
-            long = response.data.results[0].geometry.location.lng
-            setCurrentLocation([lat,long])
-            // moveMap([lat,long])
+        .then(async (data)=> {           
+            // console.log(data)
+            // lat = response.data.results[0].geometry.location.lat;
+            // long = response.data.results[0].geometry.location.lng
+            // setCurrentLocation([lat,long])
+           
+            // console.log(data.data.results[0].geometry.location.lng)
+            lat = data.data.results[0].geometry.location.lat
+            return lat
         })
         .catch(function (error) {
             console.log(error);
         });
+      
     }
 
     function onMarkerClick(id){
-        fetch(`https://sublease-app.herokuapp.com/properties/${id}`, {
-        method: 'GET',
-        headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-        }
-        }) 
-        .then(res => res.json()).then( pinInfo =>{
-            console.log("pinInfo")
-            setSelectedPin(pinInfo)
-            openPreviewCard()
-            mapRef.current?.animateToRegion({
-                latitude: pinInfo.propertyInfo.loc.coordinates[1] - 0.005,
-                longitude: pinInfo.propertyInfo.loc.coordinates[0],
-                latitudeDelta: 0.02,
-                longitudeDelta: 0.02,
-            })
-        })
-        .catch(e=>{
-            alert(e)
-        })
+       
     }
 
 
     return(
-        <GestureHandlerRootView>
+        <GestureHandlerRootView style={{display:'flex'}}>
         <View style={{width:WIDTH,height:HEIGHT,position:'absolute', top:0,}}>
 
             <MapView
+            
+                onRegionChange={(Region)=> setMapCenterLocation([Region.latitude,Region.longitude])}
                 ref={mapRef}
                 style={{flex:1, position:'relative'}}
                 initialRegion={{
@@ -390,22 +412,23 @@ export default function DiscoverScreen({navigation, route}){
                 }}
             >
             
-                <Marker
+                <Marker 
                 coordinate={{latitude:currentLocation[0], longitude: currentLocation[1] }}
-                title={"Current Location"}
-                onPress={()=>console.log("hi")}
-                />
+                >
+                    <Ionicons name="location" size={30} color='red'/>
+                </Marker>
             
-                {/* {pinsData.length != 0 && pinsData.map((value,index)=>(
+                {pinsData.length != 0 && pinsData.map((value,index)=>(
                     <Marker
                     key={value._id}
-                    pinColor= { selectedPin != "" && selectedPin?.propertyInfo._id == value._id ? 'green' : 'blue'}
                     coordinate={{latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
-                    title={"$" + value.price.toString()}    
-                    onPress={()=>onMarkerClick(value._id)}
-                    
-                    />
-                ))}  */}
+                   >
+                    <CustomMarker>
+                        <Text style={{color:'white'}}>${value.price}</Text>
+
+                    </CustomMarker>
+                   </Marker>
+                ))} 
             </MapView>
             <Animated.View style={{position:'absolute', backgroundColor:'rgba(255,255,255,0.95)', width:WIDTH, height:HEIGHT,top:0,
             opacity: translation.interpolate({
@@ -413,15 +436,18 @@ export default function DiscoverScreen({navigation, route}){
                 outputRange: [0, 1]
             }), display: searching ? 'flex' : 'none' }}/>
 
-            
+            < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), retrieveAllPins(mapCenterLocation[0], mapCenterLocation[1])}}>
+                <Ionicons name="search-outline" size={25} />
+            </ SearchHerePressable>
             <Animated.View 
-            style={{width:WIDTH*0.9, height: HEIGHT*0.25,backgroundColor:'white', borderRadius:25,
+            style={{width:WIDTH*0.9, height: HEIGHT*0.275,backgroundColor:'white', borderRadius:25,
             position:'absolute', bottom: HEIGHT*0.17, alignSelf:'center',shadowColor: 'black', shadowRadius: 5,
             shadowOpacity: 0.4, elevation: 5, display: propertyPreviewCard ? 'flex' : 'none',
             opacity: opacityTranslation.interpolate({
                 inputRange: [0, 1],
                 outputRange: [0, 1]
             })}}>
+                
                 {selectedPin != undefined && selectedPin != "" &&
                 <View>
                     <PreviewTopContainer>
@@ -431,11 +457,13 @@ export default function DiscoverScreen({navigation, route}){
 
                     <PreviewBottomContainer onPress={()=>navigation.naviFmagate("PropertyDetail", {data : {item: selectedPin.propertyInfo}})}>
                         
-                        <PreviewLocationText>{selectedPin.propertyInfo.location}</PreviewLocationText>
+                        <PreviewLocationText>{selectedPin.propertyInfo.loc.streetAddr}</PreviewLocationText>
                        
                         <PreviewTopRightContaier>
                             <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
-                            <PreviewPriceText>{selectedPin.propertyInfo.availableFrom} - {selectedPin.propertyInfo.availableTo}</PreviewPriceText>
+                            <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).toDateString()}</PreviewPriceText>
+                            <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableTo).toDateString()}</PreviewPriceText>
+
                         </PreviewTopRightContaier>
                     </ PreviewBottomContainer> 
                 </View>
@@ -450,26 +478,29 @@ export default function DiscoverScreen({navigation, route}){
         
 
         <Header>
-            <Animated.View style={ { height: translation, width: WIDTH*0.9, 
-            borderWidth: 1, borderColor: '#E0E0E0',  shadowColor: 'black', shadowRadius: 13, shadowOpacity: 0.2, backgroundColor:'#F8F8F8',
-            elevation: 5, borderRadius: 20, shadowOffset: {width: 0, height: 0}}} >
-                    <SearchInputCancelIconContainer >
-                        <Ionicons name='search-outline' size={25}  color={TEXTINPUTBORDERCOLOR} />
+            
+            {/* This sets the container of the search input */}
+            <Animated.View style={ { height: translation, width: widthtranslation, marginLeft: WIDTH*0.05,
+             shadowColor: 'black', shadowRadius: 13, shadowOpacity: 0.2, backgroundColor:'white',
+            elevation: 5, borderRadius: 25, shadowOffset: {width: 0, height: 0}}} >
+                    <SearchInputCancelIconContainer>
+                        <SeachIconContainer>
+                            <Ionicons name='search-outline' size={25}  color={TEXTINPUTBORDERCOLOR} />
+                        </SeachIconContainer>
                         <PlaceholderLogoTextContainer placeholderTextColor={TEXTINPUTBORDERCOLOR} placeholderTextWeight='500'
                         placeholder="Looking at ..." value={locationQuery}  onChangeText={(value)=>autocomplete(value)} 
                         onEndEditing={()=>{closeHeader(), setSearching(false), setautocompleteLocation([]), Keyboard.dismiss()}} onFocus={()=> {openHeader(),setSearching(true), setPropertyPreviewCard(false)}}/>
-                        <Pressable onPress={()=>setlocationQuery("")}>
-                            <FontAwesome name="times-circle" size={25}  color={TEXTGREY} style={{width: WIDTH*0.1, display: searching ? 'flex' : 'none',}}/>
-                        </Pressable>
-                        <Pressable onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', justifyContent:'center', alignItems: 'center'}} >
-                            {/* <FontAwesome name="sort" size={25}  color={TEXTGREY} style={{width: WIDTH*0.1, display: (!searching && locationQuery != "") ? 'flex' : 'none',}}/> */}
-                            <Ionicons name="filter" size={25} color={TEXTINPUTBORDERCOLOR}/>
-                        </Pressable>
+                        <DeleteIconContainer onPress={()=>setlocationQuery("")} style={{ display: searching ? 'flex' : 'none',}}>
+                            <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />
+                        </DeleteIconContainer>
+                        <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none'}} >
+                            <Ionicons name="list-outline" size={25}  color={TEXTGREY}/>
+                        </DeleteIconContainer> 
                     </SearchInputCancelIconContainer>
                     {autocompleteLocation.length != 0 &&
                             
                         autocompleteLocation.map((value, index)=>(
-                            <AutocompleteLocationContainer key={"autocomplete" + value.description + index} onPress={()=>{selectCurrentLocation(value.description),loadProperty}}>
+                            <AutocompleteLocationContainer key={"autocomplete" + value.description + index} onPress={()=>{selectCurrentLocation(value.description), setFilteredProperties([])}}>
                                 <FontAwesome name="map-pin" size={25} color= {PRIMARYCOLOR} style={{width: WIDTH*0.075}}/>
                                 <View>
                                 <LocationMainText key={value.structured_formatting.main_text}>{value.structured_formatting.main_text}</LocationMainText>
@@ -480,12 +511,19 @@ export default function DiscoverScreen({navigation, route}){
                     
                     }
             </Animated.View>
+            {/* <Pressable onPress={()=> setFilterModal(true)}
+            style={{width: HEIGHT*0.06, height: HEIGHT*0.06, borderRadius: HEIGHT*0.03, backgroundColor:'white', marginLeft: WIDTH*0.05, justifyContent:'center', alignItems:'center',shadowRadius: 13, shadowOpacity: 0.2, 
+            elevation: 5, borderRadius: 25, shadowOffset: {width: 0, height: 0}}}>
+                    <Ionicons name="filter" size={20} color={DARKGREY}/>
+            </Pressable> */}
         </Header>
       
-        {/* Property Cards and the search bar */}              
-        <PropertyCard index={0} navigation={navigation} 
+        {/* Property Cards and the search bar */}       
+        
+        <PropertyCard index={0} navigation={navigation} length={filteredProperties.length}
         propertiesData={propertiesData} loadMoreProperties={loadMoreProperties} filteredPropertiesData={filteredProperties} markerClickIndex={markerClickIndex}
-        flatlistRefreshing={flatlistRefreshing} mapRef={mapRef} onMarkerClick={onMarkerClick} currentLocation={currentLocation}/>
+        flatlistRefreshing={flatlistRefreshing} mapRef={mapRef} onMarkerClick={onMarkerClick} currentLocation={currentLocation} moveMap={moveMap}
+        setSelectedPin={setSelectedPin} openPreviewCard={openPreviewCard} />
 
         <DiscoverFilterScreen open={filterModal} close={()=>setFilterModal(false)} currentLocation={currentLocation} setFilteredProperties={setFilteredProperties} />
         
@@ -496,6 +534,3 @@ export default function DiscoverScreen({navigation, route}){
         
     )
 }
-
-
- 

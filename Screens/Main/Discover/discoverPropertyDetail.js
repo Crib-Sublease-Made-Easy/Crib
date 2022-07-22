@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -12,10 +12,11 @@ import {
     Keyboard,
     TextInput,
     Image,
-    Pressable
+    Pressable,
   } from 'react-native';
+import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
-
+import {UserContext} from '../../../UserContext'
 import { SharedElement } from 'react-navigation-shared-element';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
@@ -36,9 +37,12 @@ const WIDTH = Dimensions.get('screen').width;
 
 
 export default function PropertyDetailScreen({navigation, route}){
+    const {sb} = useContext(UserContext);
+
+    console.log("Detail")
+    console.log(route.params.data)
     useEffect(()=>{
-        console.log("Detail")
-        console.log(route.params.data)
+      
     }, [])
     const flatListRef = useRef(null)
     const propertyAmenities = (["Furnished", "Pets Allowed", "Able to renew", "On-site waher and dryer"]);
@@ -48,8 +52,28 @@ export default function PropertyDetailScreen({navigation, route}){
         { onViewableItemsChanged: testFuction },
     ]);
     const [flatingScrolling, setFlatlistScrolling] = useState(false)
-    
-   
+    const createConversation = async () =>{
+        const UID = await SecureStorage.getItem("userId");
+        console.log("MY Userid", UID)
+        var userIds = [UID]
+        console.log("I log catsssss")
+        
+        sb.GroupChannel.createChannelWithUserIds(userIds, false, propData.loc.streetAddr, propData.imgList[0], "null", "null", function(groupChannel, error) {
+            if (error) {
+                // Handle error.
+                console.log("Failed To Create Channel")
+                console.log(error)
+            }
+            console.log("Channel Created Successfully")
+            console.log(groupChannel)
+            // A group channel with additional information is successfully created.
+            var channelUrl = groupChannel.url;
+            navigation.navigate("Chat", {url:channelUrl, id: UID})
+            console.log(channelUrl)
+        });
+
+        
+    }
     const testFuction = ({
         viewableItems,
       }) => {
@@ -152,10 +176,10 @@ export default function PropertyDetailScreen({navigation, route}){
                         <InfoHeaderText>Teanant Information:</InfoHeaderText>
                         <TenantInfoContainer>
                             <ProfileImageContainer>
-                                <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.125, width:HEIGHT*0.125, borderRadius:HEIGHT*0.125/2, backgroundColor:LIGHTGREY}}/>
+                                {/* <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.125, width:HEIGHT*0.125, borderRadius:HEIGHT*0.125/2, backgroundColor:LIGHTGREY}}/> */}
                             </ProfileImageContainer>
                             <TenantInfo>
-                                <InfoHeaderText style={{width: WIDTH*0.6}}>{postedUserData.firstName} {postedUserData.lastName}</InfoHeaderText>
+                                {/* <InfoHeaderText style={{width: WIDTH*0.6}}>{postedUserData.firstName} {postedUserData.lastName}</InfoHeaderText> */}
                                 <InfoText>Software Engineer</InfoText>
                                 <InfoText>Harvard University</InfoText>
                             </TenantInfo>
@@ -177,7 +201,7 @@ export default function PropertyDetailScreen({navigation, route}){
             </PropertyDescription>
             <Footer>
                     <PricePerMonth>${propData.price} <Text style={{fontSize: HEIGHT*0.025, fontWeight:'500'}}>/ month</Text></PricePerMonth>
-                    <ContactTanentButton>
+                    <ContactTanentButton onPress={()=>createConversation()}>
                         <Text style={{color:'white', fontWeight:'700'}}>Contact Tenant</Text>
                     </ContactTanentButton>
             </Footer>

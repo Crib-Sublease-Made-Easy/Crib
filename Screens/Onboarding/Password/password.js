@@ -18,6 +18,7 @@ import { Header, ProgressBarContainer, TitleText, GeneralTextInput, ContinueButt
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
+import {UserContext} from '../../../UserContext'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
@@ -28,6 +29,7 @@ export default function PasswordScreen({navigation,route}){
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('')
     const [userId, setUserId] = useState('')
+    const {sb} = useContext(UserContext);
 
     function navigate(){
         console.log("==========When Load=========")
@@ -90,8 +92,39 @@ export default function PasswordScreen({navigation,route}){
                 body: formData
             }).then(res => res.json()).then(async data =>{
                 console.log("User ID");
+                console.log(data)
+                // The USER_ID below should be unique to your Sendbird application.
+                try {
+                    console.log("connecting to sendbird")
+                    console.log()
+                    sb.connect(data.createdUser._id, function(user, error) {
+                        if (error) {
+                            // Handle error.
+                            console.log("sendbird error")
+                            console.log(err)
+                        }
+                        else{
+                            console.log("sendbird connected")
+                            console.log(user)
+                            sb.updateCurrentUserInfo(data.createdUser.firstName, data.createdUser.profilePic, (user, err) => {
+                                if (!err) {
+                                    console.log("Successfully updated current user", err)
+                                  } else {
+                                    console.log("Error with updating current user", err)
+                                  }
+                            });
+                        }
+                        // The user is connected to Sendbird server.
+                    });
+                    // The user is connected to the Sendbird server.
+                } catch (err) {
+                    // Handle error.
+                }
                 await SecureStorage.setItem("userId", data.createdUser._id)
                 await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
+                //Create sendbird user here with userid
+                //store user info in
+
                 navigate()
                 
               

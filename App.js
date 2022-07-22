@@ -1,5 +1,5 @@
 import * as React  from 'react';
-import { useState, useContext, createContext } from 'react';
+import { useState, useContext, useEffect, createContext } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -8,9 +8,10 @@ import {
   Text,
   useColorScheme,
   View,
-  Dimensions
+  Dimensions,
+  AsyncStorage
 } from 'react-native';
-
+import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -48,6 +49,8 @@ import ProfileEditScreen from './Screens/Main/Profile/profileEdit.js';
 import EditEducationScreen from './Screens/Main/Profile/EditProfile/EditEducation/editEducation.js';
 import EditOccupationScreen from './Screens/Main/Profile/EditProfile/EditOccupation/editOccupation.js';
 import SettingScreen from './Screens/Main/Profile/Setting/setting.js'
+import ChatScreen from './Screens/Main/Message/chat.js'
+
 import ChangeNumberScreen from './Screens/Main/Profile/Setting/changeNumber.js';
 import EditAboutMeScreen from './Screens/Main/Profile/EditProfile/EditAboutMe/editAboutMe.js';
 import EditPropertyScreen from './Screens/Main/Profile/EditProperty/editProperty.js';
@@ -61,7 +64,7 @@ import EditPropertyDescriptionScreen from './Screens/Main/Profile/EditProperty/E
 import EditPropertyAmenitiesScreen from './Screens/Main/Profile/EditProperty/EditPropertyAmenities/editPropertyAmen.js';
 
 //Message
-import MessageTab from './Screens/Main/Message/MessageMain.js';
+import MessageTab from './Screens/Main/Message/message.js';
 
 //Navigation between tabs
 import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
@@ -69,14 +72,53 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { CardStyleInterpolators } from '@react-navigation/stack';
-
-
+import SendBird from 'sendbird'
 
 const Stack = createSharedElementStackNavigator();
+
+const appId = '14BD0602-4159-48D7-9292-66136C479B46';
+
+
 
 const PRIMARYCOLOR = '#4050B5'
 
 export default function App () {
+  const [sendBirdConnected, setSendbirdConnection] = useState(false)
+
+  const sb = new SendBird({appId: appId, localCacheEnabled: true });   // The `localCacheEnabled` is optional. The default is false.
+  useEffect(()=>{
+    
+    sb.useAsyncStorageAsDatabase(AsyncStorage); // This sets AsyncStorage as the database store.
+    connectSendbird()
+ }, [])
+  const connectSendbird = async () => {
+    const UID = await SecureStorage.getItem("userId");
+    try {
+      console.log("connecting to sendbird")
+      console.log()
+      sb.connect(UID, function(user, error) {
+          if (error) {
+              // Handle error.
+              console.log("sendbird error")
+              console.log(err)
+          }
+          else{
+            console.log("sendbird connected")
+            console.log(user)
+          }
+          // The user is connected to Sendbird server.
+      });
+      // The user is connected to the Sendbird server.
+  } catch (err) {
+      // Handle error.
+      console.log("SENDBIRD ERROR")
+  }
+  
+  }
+
+
+
+
 
   const [user, setUser] = useState(null)
 
@@ -97,7 +139,7 @@ export default function App () {
   return (
     
     <NavigationContainer>
-    <UserContext.Provider value={{user, login, logout}}>
+    <UserContext.Provider value={{user, login, logout, sb}}>
     
     { user == null ?
    
@@ -155,6 +197,11 @@ export default function App () {
         cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS }}
         />
 
+        <Stack.Screen name="Chat" 
+        component={ChatScreen} 
+        options={{ headerShown: false,
+        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS }}
+        />
         <Stack.Screen name="ChangeNumber" 
         component={ChangeNumberScreen} 
         options={{ headerShown: false,
