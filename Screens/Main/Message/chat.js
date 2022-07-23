@@ -11,11 +11,13 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
-  Image
+  Image,
+  Pressable
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
-import {GiftedChat, Actions, Bubble} from 'react-native-gifted-chat';
+import {GiftedChat, Actions, Bubble , InputToolbar, Send} from 'react-native-gifted-chat';
+import { ifIphoneX , getBottomSpace} from 'react-native-iphone-x-helper'
 
 const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
@@ -23,18 +25,21 @@ const PRIMARYGREY = '#5e5d5d'
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-const Item = ({ item }) => (
-    <View >
-      <Text >{item}</Text>
-    </View>
-  );
+import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header} from '../../../sharedUtils'
+
+import { MessageInput, MessageContainer, SendButton } from './chatStyle';
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+Ionicons.loadFont()
 
 export default function ChatScreen({navigation, route}){
     const {sb} = useContext(UserContext);
     const { url, id } = route.params;
 
+    const GiftedChatRef = useRef();
     const [messages, setMessages] = useState('')
-    const [customText, setCustomText] = useState('')
+    const [typingText, setTypingText] = useState('')
+
     const [channel, setChannel] = useState(null)
     useEffect(()=>{
       sb.addChannelHandler('channels', channelHandler);
@@ -78,7 +83,7 @@ export default function ChatScreen({navigation, route}){
         }
       })
 
-
+      setTypingText("")
 
 
     }, [])
@@ -137,13 +142,48 @@ export default function ChatScreen({navigation, route}){
 
 
     return(
-              <GiftedChat
+    <SafeAreaView style={{backgroundColor:'white', flex:1}}>
+    <HeaderContainer>
+          <BackButtonContainer>
+              <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
+                  <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+              </Pressable>
+          </BackButtonContainer>
+          <NameContainer>
+              <Header>{route.params.receiverName}</Header>
+          </NameContainer>
+         
+      </HeaderContainer>
+    <GiftedChat
+      ref={GiftedChatRef}
+      bottomOffset={getBottomSpace()}
+
+      renderInputToolbar = {(props)=>(
+       
+          <MessageContainer>
+            <MessageInput value={typingText} onChangeText={(value)=> setTypingText(value)} placeholder="Enter a message ..." />
+           
+            <TouchableOpacity onPress={()=> props.onSend({text: typingText} )}>
+              <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
+            </TouchableOpacity>
+            
+          </MessageContainer>
+       
+      )}
+        // renderSend = {(props)=>(
+        //   <TouchableOpacity onPress={()=> props.onSend({text: "Hello"})}>
+        //     <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
+        //   </TouchableOpacity>
+        // )}
+     
+      
+      
       messages={messages}
       onSend={messages => onSend(messages)}
-
       user={{
         _id: id
       }}
     />
+    </SafeAreaView>
     )
 }

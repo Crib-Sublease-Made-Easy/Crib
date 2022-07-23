@@ -35,7 +35,7 @@ export default function EditPropertyAvailScreen({navigation, route}){
     console.log(new Date(route.params.from))
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
-            <HeaderContainer>
+        <HeaderContainer>
             <BackButtonContainer>
                 <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
                     <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
