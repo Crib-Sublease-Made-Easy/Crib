@@ -148,7 +148,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     }
     s = s + `&latitude=${currentLocation[0]}`
     s = s + `&longitude=${currentLocation[1]}`
-    s = s + "&maxDistance=10"
+    s = s + "&maxDistance=1000000000000"
     s = s + `&priceHigh=${filterPriceHigher}`
     s = s + '&priceLow=0'
     console.log(s);

@@ -63,11 +63,11 @@ export default function ProfileScreen({navigation}){
     const [propertyAddr, setPropertyAddr] = useState('');
  
     useEffect(()=>{
-        // const unsubscribe = navigation.addListener('focus', () => {
+        const unsubscribe = navigation.addListener('focus', () => {
             getTokens()
         
-        //     });
-        // return unsubscribe; 
+            });
+        return unsubscribe; 
     }, [navigation])
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("refreshToken");

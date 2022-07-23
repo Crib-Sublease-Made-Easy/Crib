@@ -1,5 +1,5 @@
 //Lobby
-import React, {useRef, useEffect} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,166 +9,109 @@ import {
   useColorScheme,
   View,
   TouchableOpacity,
-  Animated
+  FlatList,
+  Dimensions,
+  Image
 } from 'react-native';
-import LottieView from 'lottie-react-native';
+import {UserContext} from '../../../UserContext';
+import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
-export default function MessageScreen({navigation}){
+const PRIMARYCOLOR = '#4050B5'
+const PRIMARYGREY = '#5e5d5d'
+
+const HEIGHT = Dimensions.get('screen').height;
+const WIDTH = Dimensions.get('screen').width;
+
+const Item = ({ item }) => (
+    <View >
+      <Text >{item}</Text>
+    </View>
+  );
+
+export default function MessageScreen({navigation, route}){
+    const {sb} = useContext(UserContext);
+
+    const [convoList, setConvoList] = useState('')
+    const [userId, setUserId] = useState('')
+
     useEffect(()=>{
-        LottieAnim.current.play();
-    },[])
+        const unsubscribe = navigation.addListener('focus', () => {
+            // The screen is focused
+            // Call any action
+            sb.addChannelHandler('channels', channelHandler);
+            fetchConvos()
+        });
+        
+        
+      
+    }, [])
 
-    const LottieAnim = useRef();
+    const renderItem = ({ item }) => (
+        <View >
+        <Text >{item}</Text>
+        </View>
+    );
+
+    const channelHandler = new sb.ChannelHandler();
+    channelHandler.onChannelChanged = channel => {
+        fetchConvos()
+      };
+    const fetchConvos = async() => {
+        const UID = await SecureStorage.getItem("userId");
+        setUserId(UID)
+        var listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+        listQuery.includeEmpty = true;
+        listQuery.order = 'latest_last_message'; 
+        listQuery.limit = 15;   // The value of pagination limit could be set up to 100.
+        
+        if (listQuery.hasNext) {
+            listQuery.next(function(groupChannels, error) {
+                if (error) {
+                    // Handle error.
+                }
+                setConvoList(groupChannels)
+                // A list of group channels is successfully retrieved.
+                console.log("new console list")
+                groupChannels.forEach(channel => {
+                    console.log(channel)
+                });
+        
+            });
+        }
+    }
+
+    //navigation.navigate("PAGENAME",{userData: userData})
+
+    //route.params.userData 
+
+
     return(
         <SafeAreaView style={{backgroundColor:'white'}}>
-            <Text>shinig</Text>
-
-            <TouchableOpacity onPress={()=> LottieAnim.current.play()}>
-                <Text>Hello</Text>
-            </TouchableOpacity>
-                <Text>
-                <View style={{height:300, width: 300,justifyContent:'center',alignItems:'center'}}>
-                    <LottieView ref={LottieAnim} source={{uri:'https://assets10.lottiefiles.com/datafiles/nT4vnUFY9yay7QI/data.json'}} style={{height:200, width:200}} loop={false} speed={0.5} />
-                </View>
-                </Text>
+            <View style={{width:WIDTH, height:HEIGHT*0.3,justifyContent:'center'}}>
+                <Text>Inbox</Text>
+            </View>
+            <FlatList
+                 data={convoList}
+                 contentContainerStyle={{ paddingBottom: 250 }}
+                keyExtractor={item => item.url}
+                renderItem={({item})=>(
                 
+                    <TouchableOpacity style={{width: WIDTH * 0.9,justifyContent:'center', paddingRight:10}} onPress={()=> navigation.navigate("Chat", {url:item.url, id: userId})}>
+                        <View style={{ flex:1,flexDirection:'row'}}>
+                        <Image source = {{uri: item.coverUrl}}
+   style = {{ width: 50, height: 50 }}
+   />
+                        <Text numberOfLines={1}>Vinesh - {item.name}{item.name} </Text>
+                        
+                        </View>
+                        <Text>{item.lastMessage.message}</Text>
+                        <Text>{new Date(item.lastMessage.createdAt).toLocaleTimeString()  }</Text>
+                    </TouchableOpacity>
+                )}
+            />
+            <TouchableOpacity >
+
+                </TouchableOpacity>
         </SafeAreaView>
     )
 }
-
-
-// import React, { useEffect, useState, useLayoutEffect } from 'react';
-// import { Image, Text, TouchableOpacity, View, Platform } from 'react-native';
-
-// import Icon from 'react-native-vector-icons/MaterialIcons';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import messaging from '@react-native-firebase/messaging';
-
-// import { withAppContext } from '../context';
-// import Login from './login';
-// import Channels from './channels';
-// import { handleNotificationAction } from '../utils';
-
-// const Lobby = props => {
-//   const { navigation, sendbird } = props;
-//   const [initialized, setInitialized] = useState(false);
-//   const [currentUser, setCurrentUser] = useState(null);
-//   const savedUserKey = 'savedUser';
-
-//   useLayoutEffect(() => {
-//     const title = currentUser ? (
-//       <View style={style.headerLeftContainer}>
-//         <Image source={require('../asset/logo-icon-white.png')} style={style.logo} />
-//         <Text style={style.headerTitle}>Channels</Text>
-//       </View>
-//     ) : null;
-
-//     const right = currentUser ? (
-//       <View style={style.headerRightContainer}>
-//         <TouchableOpacity activeOpacity={0.85} style={style.profileButton} onPress={startChat}>
-//           <Icon name="chat" color="#fff" size={28} />
-//         </TouchableOpacity>
-//       </View>
-//     ) : null;
-
-//     navigation.setOptions({
-//       headerShown: !!currentUser,
-//       headerTitle: () => title,
-//       headerRight: () => right,
-//     });
-//   }, [currentUser]);
-
-//   useEffect(() => {
-//     AsyncStorage.getItem(savedUserKey)
-//       .then(user => {
-//         if (user) {
-//           setCurrentUser(JSON.parse(user));
-//         }
-//         setInitialized(true);
-//         return handleNotificationAction(navigation, sendbird, currentUser, 'lobby');
-//       })
-//       .catch(err => console.error(err));
-//   }, []);
-
-//   const login = user => {
-//     AsyncStorage.setItem(savedUserKey, JSON.stringify(user))
-//       .then(async () => {
-//         try {
-//           setCurrentUser(user);
-//           const authorizationStatus = await messaging().requestPermission();
-//           if (
-//             authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-//             authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-//           ) {
-//             if (Platform.OS === 'ios') {
-//               const token = await messaging().getAPNSToken();
-//               sendbird.registerAPNSPushTokenForCurrentUser(token);
-//             } else {
-//               const token = await messaging().getToken();
-//               sendbird.registerGCMPushTokenForCurrentUser(token);
-//             }
-//           }
-//         } catch (err) {
-//           console.error(err);
-//         }
-//       })
-//       .catch(err => console.error(err));
-//   };
-
-//   const logout = async () => {
-//     await AsyncStorage.removeItem(savedUserKey);
-//     sendbird.disconnect();
-//     setCurrentUser(null);
-//   };
-
-//   const startChat = () => {
-//     if (currentUser) {
-//       navigation.navigate('Invite', { currentUser });
-//     }
-//   };
-//   const profile = () => {
-//     if (currentUser) {
-//       navigation.navigate('Profile', { currentUser });
-//     }
-//   };
-
-//   return (
-//     <>
-//       {initialized ? (
-//         currentUser ? (
-//           <Channels {...props} currentUser={currentUser} />
-//         ) : (
-//           <Login {...props} onLogin={login} />
-//         )
-//       ) : (
-//         <View />
-//       )}
-//     </>
-//   );
-// };
-
-// const style = {
-//   headerLeftContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   headerRightContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     marginRight: 16,
-//   },
-//   headerTitle: {
-//     fontSize: 20,
-//     color: '#fff',
-//   },
-//   logo: {
-//     width: 32,
-//     height: 32,
-//   },
-//   profileButton: {
-//     marginLeft: 10,
-//   },
-// };
-
-// export default withAppContext(Lobby);

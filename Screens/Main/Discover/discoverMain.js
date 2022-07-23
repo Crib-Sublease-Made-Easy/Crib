@@ -72,7 +72,7 @@ export default function DiscoverTab(){
               }
          
           })})}/>
-        <Tab.Screen name="Message" component={MessageScreen} />
+        <Tab.Screen name="Message" options={{ unmountOnBlur: true}}component={MessageScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     
