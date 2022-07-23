@@ -1,5 +1,5 @@
 //Lobby
-import * as React from 'react';
+import React, {useRef, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -8,19 +8,30 @@ import {
   Text,
   useColorScheme,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  Animated
 } from 'react-native';
+import LottieView from 'lottie-react-native';
 
 export default function MessageScreen({navigation}){
+    useEffect(()=>{
+        LottieAnim.current.play();
+    },[])
+
+    const LottieAnim = useRef();
     return(
         <SafeAreaView style={{backgroundColor:'white'}}>
             <Text>shinig</Text>
 
-            <TouchableOpacity onPress={()=> navigation.navigate("Setting")}>
+            <TouchableOpacity onPress={()=> LottieAnim.current.play()}>
+                <Text>Hello</Text>
+            </TouchableOpacity>
                 <Text>
-                 
+                <View style={{height:300, width: 300,justifyContent:'center',alignItems:'center'}}>
+                    <LottieView ref={LottieAnim} source={{uri:'https://assets10.lottiefiles.com/datafiles/nT4vnUFY9yay7QI/data.json'}} style={{height:200, width:200}} loop={false} speed={0.5} />
+                </View>
                 </Text>
-                </TouchableOpacity>
+                
         </SafeAreaView>
     )
 }
