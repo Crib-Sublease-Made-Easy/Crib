@@ -55,7 +55,7 @@ export default function PropertyDetailScreen({navigation, route}){
     const createConversation = async () =>{
         const UID = await SecureStorage.getItem("userId");
         console.log("MY Userid", UID)
-        var userIds = [UID]
+        var userIds = [UID, propData.postedBy]
         console.log("I log catsssss")
         
         sb.GroupChannel.createChannelWithUserIds(userIds, false, propData.loc.streetAddr, propData.imgList[0], "null", "null", function(groupChannel, error) {

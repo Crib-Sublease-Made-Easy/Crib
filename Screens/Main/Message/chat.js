@@ -142,7 +142,7 @@ export default function ChatScreen({navigation, route}){
       onSend={messages => onSend(messages)}
 
       user={{
-        id: id
+        _id: id
       }}
     />
     )

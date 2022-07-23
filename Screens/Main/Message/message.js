@@ -59,7 +59,7 @@ export default function MessageScreen({navigation, route}){
         const UID = await SecureStorage.getItem("userId");
         setUserId(UID)
         var listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
-        listQuery.includeEmpty = true;
+        listQuery.includeEmpty = false;
         listQuery.order = 'latest_last_message'; 
         listQuery.limit = 15;   // The value of pagination limit could be set up to 100.
         
@@ -67,13 +67,16 @@ export default function MessageScreen({navigation, route}){
             listQuery.next(function(groupChannels, error) {
                 if (error) {
                     // Handle error.
+                    console.log("error", error)
                 }
                 setConvoList(groupChannels)
                 // A list of group channels is successfully retrieved.
+                console.log(groupChannels)
                 console.log("new console list")
                 groupChannels.forEach(channel => {
                     console.log(channel)
                 });
+                console.log("After")
         
             });
         }

@@ -268,8 +268,8 @@ export default function PropertyPostingScreen({ navigation }) {
         postingData.append("type", propertyType);                       //String 
         postingData.append("streetAddr", propertyLocation);               //String 
         postingData.append("secondaryTxt", propertyLocation);               //String 
-        postingData.append("latitude", 37.175)
-        postingData.append("longitude", -122.278)
+        postingData.append("latitude", 37.792965)
+        postingData.append("longitude", -122.407248)
         //String Array
 
         var array = propertyBedroomImage.uri.split(".");
