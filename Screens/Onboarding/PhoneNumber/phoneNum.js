@@ -28,6 +28,10 @@ export default function PhoneNumberScreen({navigation, route}){
     const [phoneNumber, setPhoneNumber] = useState("")
 
     async function signupStep1(){
+        if(phoneNumber.length != 10){
+            alert("Please enter a valid phone number.")
+            return;
+        }
         console.log("Stepping 1")
         const res =  await fetch('https://sublease-app.herokuapp.com/users/OTP/step1', {
             method: 'POST',
