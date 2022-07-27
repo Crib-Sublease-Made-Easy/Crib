@@ -237,7 +237,7 @@ align-items: center;
 justify-content: center
 `
 
-export const CustomMarker = styled.View`
+export const CustomMarker = styled.Pressable`
   padding-horizontal: ${WIDTH*0.02}px;
   padding-vertical: ${HEIGHT*0.01}px
   border-radius:10px

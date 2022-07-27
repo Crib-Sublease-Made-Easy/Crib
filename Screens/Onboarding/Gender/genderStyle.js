@@ -48,21 +48,23 @@ export const SubtitleText = styled.Text`
 `
 
 export const GenderInputContainer = styled.View`
-    margin-top: ${HEIGHT*0.1}px
+    margin-top: ${HEIGHT*0.05}px
     align-items: center
 `
 
 
-export const GenderRowContainer = styled.View`
-    
+export const GenderRowContainer = styled.Pressable`
+   
     width: ${WIDTH*0.8}px;
     height: ${HEIGHT*0.07}px;
     align-self: center
     flex-direction: row;
     justify-content: space-between;
+    align-items: center
 `
 export const GenderName = styled.Text`
-    font-size: ${HEIGHT*0.025}px
+    font-size: ${HEIGHT*0.02}px
+    margin-left: ${WIDTH*0.025}px
     
 `
 

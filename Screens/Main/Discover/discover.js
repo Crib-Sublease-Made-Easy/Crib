@@ -425,6 +425,7 @@ export default function DiscoverScreen({navigation, route}){
                     <Marker
                     key={value._id}
                     coordinate={{latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
+                    onPress={()=> alert("HELLO")}
                    >
                     <CustomMarker>
                         <Text style={{color:'white'}}>${value.price}</Text>

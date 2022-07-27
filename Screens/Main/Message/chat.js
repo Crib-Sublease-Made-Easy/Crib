@@ -37,6 +37,8 @@ export default function ChatScreen({navigation, route}){
     const { url, id } = route.params;
 
     const GiftedChatRef = useRef();
+    const [query, setQuery] = useState('')
+
     const [messages, setMessages] = useState('')
     const [typingText, setTypingText] = useState('')
 
@@ -45,6 +47,7 @@ export default function ChatScreen({navigation, route}){
       sb.addChannelHandler('channels', channelHandler);
       console.log("CHAT",JSON.stringify(url))
       getGroupChannel()
+      console.log("CHANNEL", channel)
     }, [channel])
 
     const channelHandler = new sb.ChannelHandler();
@@ -53,7 +56,8 @@ export default function ChatScreen({navigation, route}){
         m._id = m.messageId
         m.text = m.message
         m.user = {}
-        m.user._id = m.userId
+        m.user._id = m._sender.userId
+        m.user.avatar = m._sender.plainProfileUrl
         setMessages(previousMessages => GiftedChat.append(previousMessages, [m]))
       }
     }
@@ -95,8 +99,10 @@ export default function ChatScreen({navigation, route}){
             // Handle error.
             console.log("ERROR CHANNEL")
         }else{
-          setChannel(groupChannel)
-          fetchConvos(groupChannel)
+          await setChannel(groupChannel)
+          var listQuery = groupChannel.createPreviousMessageListQuery();
+          await setQuery(listQuery)
+          fetchConvos(listQuery)
         }
       })
       
@@ -104,8 +110,8 @@ export default function ChatScreen({navigation, route}){
 
     }
 
-    const fetchConvos = (groupChannel) => {
-      var listQuery = groupChannel.createPreviousMessageListQuery();
+    const loadMore = (listQuery) => {
+      
       listQuery.limit = 20;
       listQuery.reverse = true;
 
@@ -120,7 +126,33 @@ export default function ChatScreen({navigation, route}){
           m._id = m.messageId
           m.text = m.message
           m.user = {}
-          m.user._id = m.userId
+          m.user._id = m._sender.userId
+          m.user.avatar = m._sender.plainProfileUrl
+        })
+        setMessages(previousMessages => GiftedChat.append(messages, previousMessages))
+        console.log(messages)
+        }
+        
+
+    });
+  }
+    const fetchConvos = (listQuery) => {
+      
+      listQuery.limit = 20;
+      listQuery.reverse = true;
+
+    // Retrieving previous messages.
+      listQuery.load(function(messages, error) {
+        if (error) {
+            // Handle error.
+            console.log("ERROR CHANNEL")
+        } else{
+        console.log("messages fetched")
+        messages.map(m => {
+          m._id = m.messageId
+          m.text = m.message
+          m.user = {}
+          m.user._id = m._sender.userId
           m.user.avatar = m._sender.plainProfileUrl
         })
         setMessages(messages)
@@ -133,7 +165,7 @@ export default function ChatScreen({navigation, route}){
     //   fetch('https://api-14BD0602-4159-48D7-9292-66136C479B46.sendbird.com/v3/group_channels/'+'205308348_48a354561b8903d19eaa9d4c91b23fdb3cd98264'+'/messages')
     //   .then(response => response.json())
     //   .then(data => console.log(data));
-    
+  
   }
 
     //navigation.navigate("PAGENAME",{userData: userData})
@@ -154,7 +186,9 @@ export default function ChatScreen({navigation, route}){
           </NameContainer>
          
       </HeaderContainer>
+    
     <GiftedChat
+      
       ref={GiftedChatRef}
       bottomOffset={getBottomSpace()}
 
@@ -163,7 +197,7 @@ export default function ChatScreen({navigation, route}){
           <MessageContainer>
             <MessageInput value={typingText} onChangeText={(value)=> setTypingText(value)} placeholder="Enter a message ..." />
            
-            <TouchableOpacity onPress={()=> props.onSend({text: typingText} )}>
+            <TouchableOpacity onPress={()=> typingText != "" && props.onSend({text: typingText} )}>
               <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
             </TouchableOpacity>
             
@@ -180,10 +214,15 @@ export default function ChatScreen({navigation, route}){
       
       messages={messages}
       onSend={messages => onSend(messages)}
+      loadEarlier = {true}
+      infiniteScroll={true}
+      onLoadEarlier = {() => loadMore(query)}
+      renderLoadEarlier = {() => <View></View>}
       user={{
         _id: id
       }}
     />
+    
     </SafeAreaView>
     )
 }

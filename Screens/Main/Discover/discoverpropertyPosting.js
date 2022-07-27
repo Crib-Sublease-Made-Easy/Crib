@@ -553,12 +553,7 @@ export default function PropertyPostingScreen({ navigation }) {
                             <SearchInput keyboardType='number-pad' value={propertyPrice} onChangeText={(value) => setpropertyPrice(value)}
                                 placeholder="$ Price" placeholderTextColor='white' />
                         </PriceInputSearchContainer>
-                        <FollowUpContainer>
-                            <Pressable onPress={() => setPropertyPriceNego(!propertyPriceNego)}>
-                                <Ionicons size={20} name={propertyPriceNego ? 'checkbox' : 'checkbox-outline'} color={LIGHTGREY} style={{ paddingVertical: HEIGHT * 0.01 }} />
-                            </Pressable>
-                            <FollowUpText>Negotiable</FollowUpText>
-                        </FollowUpContainer>
+                        
                     </PostingSection>
 
                     {/* Enter description  */}

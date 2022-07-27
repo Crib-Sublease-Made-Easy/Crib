@@ -10,34 +10,44 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { WIDTH, HEIGHT, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR , OnlyLetters,  ProgressBarCapacity, ProgressBar } from '../../../sharedUtils';
+import { WIDTH, HEIGHT, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR , OnlyLetters,  ProgressBarCapacity, ProgressBar, TrimSpace } from '../../../sharedUtils';
 
 import { Header, ProgressBarContainer, TitleText, GeneralTextInput, ContinueButton, ContinueText,
     TextInputContainer,} from './firstLastNameStyle';
 
+import Lottie from 'lottie-react-native';
+
 export default function FirstLastNameScreen({navigation, route}){
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
+    const [loading, setLoading] = useState(false)
 
     function checkInput(){
-        // if(firstName == ""){
-        //     alert("First name cannot be empty.")
-        // }
-        // else if(lastName == ""){
-        //     alert("Last name cannot be empty.")
-        // }
-        // else if(!OnlyLetters(firstName)){
-        //     alert("First name can only contain letters.")
-        // }
-        // else if(!OnlyLetters(lastName)){
-        //     alert("Last name can only contain letters.")
-        // }
-        // else{
-        //     navigation.navigate("Age")
-        // }
-        console.log("hello")
+        
+        if(firstName == ""){
+            alert("First name cannot be empty.")
+        }
+        else if(lastName == ""){
+            alert("Last name cannot be empty.")
+        }
+        else if(!OnlyLetters(firstName)){
+            alert("First name can only contain letters.")
+        }
+        else if(!OnlyLetters(lastName)){
+            alert("Last name can only contain letters.")
+        }
+        else if(firstName.length > 30){
+            alert("First name can only be less than 30 letters.")
+        }
+        else if(lastName.length > 30){
+            alert("Last name can only be less than 30 letters.")
+        }
+        else{      
+            navigation.navigate("Age", {firstName: firstName.trim(), lastName: lastName.trim()})
+        }
+      
        
-        navigation.navigate("Age", {firstName: firstName, lastName: lastName})
+        
     }
 
 
@@ -69,8 +79,12 @@ export default function FirstLastNameScreen({navigation, route}){
                 </TextInputContainer>
             </ScrollView>
 
-            <ContinueButton onPress={()=> checkInput()}>
-                <ContinueText>Continue</ContinueText>
+            <ContinueButton loading={loading} onPress={()=> checkInput()}>
+            {loading ?
+            <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
+            :
+            <ContinueText>Continue</ContinueText>
+            }
             </ContinueButton>
             
             </KeyboardAvoidingView>

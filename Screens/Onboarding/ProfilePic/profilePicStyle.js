@@ -20,6 +20,7 @@ const PRIMARYCOLOR = '#8559E3'
 const TEXTINPUTBORDERCOLOR = '#989898'
 
 import styled from 'styled-components/native';
+import { EXTRALIGHT, LIGHTGREY, MEDIUMGREY } from '../../../sharedUtils';
 
 export const Header = styled.View`
   width: ${WIDTH*0.9}px
@@ -52,7 +53,7 @@ export const ProfilePicContainer = styled.Pressable`
     height: ${WIDTH*0.5}px
     borderRadius: ${WIDTH*0.25}px
     align-self: center;
-    background-color: #BEC2DD
+    background-color: ${EXTRALIGHT}
     margin-top: ${HEIGHT*0.05}px
     justify-content: center;
     align-items: center

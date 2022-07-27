@@ -19,6 +19,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
+import {Picker} from '@react-native-picker/picker';
   
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
@@ -27,30 +28,25 @@ const PRIMARYCOLOR = '#8559E3'
 const PRIMARYGREY = '#D9D9D9'
 const TEXTINPUTBORDERCOLOR = '#989898'
 
+const cropData = {
+    offset: {x: WIDTH, y: HEIGHT},
+    size: {width: WIDTH, height: WIDTH},
+   
+};
+
 
 import { Header, TitleText, SubtitleText, ProgressBarContainer, ProfilePicContainer, 
     ContinueButton, ContinueText } from './profilePicStyle';
 
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
+import ImagePicker from 'react-native-image-crop-picker';
+
 export default function ProfilePicScreen({navigation, route}){
-    console.log("==========When Load=========")
-    console.log("First Name : " + route.params.firstName)
-    console.log("Last Name : " +route.params.lastName)
-    console.log("Age: " + route.params.age)
-    console.log("Gender: " + route.params.gender)
-    console.log("==========When Load=========")
+   
     const [profilePic, setProfilePic] = useState('')
 
     function checkInput(){
-        console.log("hello")
-        console.log(route.params.firstName)
-        console.log(route.params.lastName)
-        console.log(route.params.gender)
-        console.log(route.params.school)
-        console.log(route.params.occupation)
-        console.log(route.params.email)
-        console.log(route.params.profilePic)
        
         if(profilePic == ""){
             alert("User must upload profile picture.")
@@ -67,12 +63,16 @@ export default function ProfilePicScreen({navigation, route}){
         }
     }
 
-    async function SelectProfilePic(){
-        const result = await launchImageLibrary();
-        if(!result.didCancel){
-            console.log(result.assets[0].uri)
-            setProfilePic(result.assets[0].uri)
-        }
+    function SelectProfilePic(){
+        ImagePicker.openPicker({
+            width: 300,
+            height: 300,
+            cropping:true,
+            compressImageQuality: 0.3
+          }).then(image => {
+          
+            setProfilePic(image.path)
+          });
     }
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
@@ -87,7 +87,7 @@ export default function ProfilePicScreen({navigation, route}){
             </ProgressBarContainer>
             <ScrollView>
                 <TitleText>Show others who you are ...</TitleText>
-                <SubtitleText>Choose your profile picture</SubtitleText>
+                <SubtitleText>Press to select your profile picture</SubtitleText>
                 <ProfilePicContainer onPress={SelectProfilePic}>
                     <Ionicons name='image-outline' size={50} color={PRIMARYGREY}/>
                     {profilePic != "" &&

@@ -47,7 +47,7 @@ export default function LandingScreen({navigation}){
                     <JoinText>Join Now</JoinText>
                 </JoinButton>
             </BottomContainer>
-            <Pressable onPress={()=>navigation.navigate('Login')}>
+            <Pressable onPress={()=>navigation.reset({index: 0 , routes: [{ name: 'Login' }]})}>
                 <LoginText>Already have an account?  Login  </LoginText>
             </Pressable>
         </SafeAreaView>

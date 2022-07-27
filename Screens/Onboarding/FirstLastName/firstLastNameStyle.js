@@ -1,8 +1,9 @@
-import { WIDTH, HEIGHT, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
+import { WIDTH, HEIGHT, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR, MEDIUMGREY } from '../../../sharedUtils';
 import styled from 'styled-components/native';
 
 import {
-    View
+    View,
+    Pressable
 } from 'react-native';
 
 export const Header = styled.View`
@@ -40,10 +41,10 @@ export const GeneralTextInput = styled.TextInput`
     align-self: center   
 `
 
-export const ContinueButton = styled.Pressable`
+export const ContinueButton = styled(Pressable)`
     width: ${WIDTH*0.7}px;
     height: ${ HEIGHT*0.07}px;
-    background-color: ${PRIMARYCOLOR}
+    backgroundColor:  ${props=>(props.loading ? MEDIUMGREY : PRIMARYCOLOR)}}
     align-self: center
     border-radius: 25px
     justify-content: center

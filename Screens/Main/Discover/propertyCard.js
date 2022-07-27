@@ -14,11 +14,12 @@ import {
     TextInput,
     Image,
     ActivityIndicator,
-    Pressable
+    Pressable,
+    Aniamted as RNAnimated
   } from 'react-native';
 
 import styled from 'styled-components/native';
-
+import { Image as RneImage } from "@rneui/themed";
 import { SharedElement } from 'react-navigation-shared-element';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
@@ -27,7 +28,7 @@ FontAwesome.loadFont()
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import Animated, {useAnimatedStyle, useSharedValue, withSpring, runOnJS, FadeIn, Layout,  FadeInUp, SlideInLeft,} from 'react-native-reanimated';
+import Animated, {useAnimatedStyle, useSharedValue, withSpring, runOnJS, FadeIn, Layout,  FadeInUp, SlideInLeft, Easing,} from 'react-native-reanimated';
 
 import { FlatList, Gesture, GestureDetector, TouchableOpacity,  } from 'react-native-gesture-handler';
 
@@ -35,6 +36,7 @@ const PRIMARYCOLOR = '#4050B5'
 const TEXTGREY = '#969696'
 
 import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
+import { ease } from 'react-native/Libraries/Animated/Easing';
 
 
 // const CardContainer = styled.Pressable`
@@ -85,6 +87,7 @@ const PriceFont = styled.Text`
 
 const PropertyImageContainer = styled.View`
   position: relative;
+  border-radius:25px
 `
 
 const OpenMapIconContainer = styled.Pressable`
@@ -138,6 +141,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     const [previewing, setPreviewing] = useState(false)
     // const [propertiesData, setPropertiesData] = useState([]);
     const [propertyPage, setPropertyPage] = useState(0);
+    const ImageOpacity = useRef(new Animated.Value(1)).current;
     useEffect(()=>{
        console.log("UseEffect Refreshing...")
     //    loadProperty()
@@ -209,17 +213,22 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         })
         translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
     }
-
+    const onLoad = () => {
+        FadeIn
+    }
 
     const renderCards = useCallback((data, index) =>{
         console.log("HELLO")
         console.log(data.item)
         return(
-            <Pressable  entering={FadeIn.delay(index*200)}
+            <Pressable 
             style={CardContainer}  onPress={()=> navigation.navigate('PropertyDetail', {data: {propertyInfo: data.item}})} >
                 {/* <SharedElement id="0"> */}
                     <PropertyImageContainer>
-                        <Image style={{width:WIDTH*0.9, height:WIDTH*0.6, borderRadius:25, backgroundColor:LIGHTGREY}} source={{uri:data.item.imgList[0]}}/>
+                        <Animated.Image  
+                        style={{width:WIDTH*0.9, height:WIDTH*0.6, borderRadius:25, backgroundColor:LIGHTGREY,
+                        opacity: 1
+                        }} source={{uri:data.item.imgList[0]}}/>
                         {/* <OpenMapIconContainer onPress={()=>MoveMapToPin(data)}> */}
                         <OpenMapIconContainer onPress={()=>MoveMapToPin(data.item._id)}>
                             <FontAwesome name='location-arrow' size={HEIGHT*0.02} color='white'/>
