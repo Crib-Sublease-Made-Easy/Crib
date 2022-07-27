@@ -11,11 +11,13 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
-  Image
+  Image,
+  Pressable
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
-import {GiftedChat, Actions, Bubble} from 'react-native-gifted-chat';
+import {GiftedChat, Actions, Bubble , InputToolbar, Send} from 'react-native-gifted-chat';
+import { ifIphoneX , getBottomSpace} from 'react-native-iphone-x-helper'
 
 const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
@@ -23,23 +25,29 @@ const PRIMARYGREY = '#5e5d5d'
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-const Item = ({ item }) => (
-    <View >
-      <Text >{item}</Text>
-    </View>
-  );
+import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header} from '../../../sharedUtils'
+
+import { MessageInput, MessageContainer, SendButton } from './chatStyle';
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+Ionicons.loadFont()
 
 export default function ChatScreen({navigation, route}){
     const {sb} = useContext(UserContext);
     const { url, id } = route.params;
 
+    const GiftedChatRef = useRef();
+    const [query, setQuery] = useState('')
+
     const [messages, setMessages] = useState('')
-    const [customText, setCustomText] = useState('')
+    const [typingText, setTypingText] = useState('')
+
     const [channel, setChannel] = useState(null)
     useEffect(()=>{
       sb.addChannelHandler('channels', channelHandler);
       console.log("CHAT",JSON.stringify(url))
       getGroupChannel()
+      console.log("CHANNEL", channel)
     }, [channel])
 
     const channelHandler = new sb.ChannelHandler();
@@ -48,7 +56,8 @@ export default function ChatScreen({navigation, route}){
         m._id = m.messageId
         m.text = m.message
         m.user = {}
-        m.user._id = m.userId
+        m.user._id = m._sender.userId
+        m.user.avatar = m._sender.plainProfileUrl
         setMessages(previousMessages => GiftedChat.append(previousMessages, [m]))
       }
     }
@@ -78,7 +87,7 @@ export default function ChatScreen({navigation, route}){
         }
       })
 
-
+      setTypingText("")
 
 
     }, [])
@@ -90,8 +99,10 @@ export default function ChatScreen({navigation, route}){
             // Handle error.
             console.log("ERROR CHANNEL")
         }else{
-          setChannel(groupChannel)
-          fetchConvos(groupChannel)
+          await setChannel(groupChannel)
+          var listQuery = groupChannel.createPreviousMessageListQuery();
+          await setQuery(listQuery)
+          fetchConvos(listQuery)
         }
       })
       
@@ -99,8 +110,8 @@ export default function ChatScreen({navigation, route}){
 
     }
 
-    const fetchConvos = (groupChannel) => {
-      var listQuery = groupChannel.createPreviousMessageListQuery();
+    const loadMore = (listQuery) => {
+      
       listQuery.limit = 20;
       listQuery.reverse = true;
 
@@ -115,7 +126,33 @@ export default function ChatScreen({navigation, route}){
           m._id = m.messageId
           m.text = m.message
           m.user = {}
-          m.user._id = m.userId
+          m.user._id = m._sender.userId
+          m.user.avatar = m._sender.plainProfileUrl
+        })
+        setMessages(previousMessages => GiftedChat.append(messages, previousMessages))
+        console.log(messages)
+        }
+        
+
+    });
+  }
+    const fetchConvos = (listQuery) => {
+      
+      listQuery.limit = 20;
+      listQuery.reverse = true;
+
+    // Retrieving previous messages.
+      listQuery.load(function(messages, error) {
+        if (error) {
+            // Handle error.
+            console.log("ERROR CHANNEL")
+        } else{
+        console.log("messages fetched")
+        messages.map(m => {
+          m._id = m.messageId
+          m.text = m.message
+          m.user = {}
+          m.user._id = m._sender.userId
           m.user.avatar = m._sender.plainProfileUrl
         })
         setMessages(messages)
@@ -128,7 +165,7 @@ export default function ChatScreen({navigation, route}){
     //   fetch('https://api-14BD0602-4159-48D7-9292-66136C479B46.sendbird.com/v3/group_channels/'+'205308348_48a354561b8903d19eaa9d4c91b23fdb3cd98264'+'/messages')
     //   .then(response => response.json())
     //   .then(data => console.log(data));
-    
+  
   }
 
     //navigation.navigate("PAGENAME",{userData: userData})
@@ -137,13 +174,51 @@ export default function ChatScreen({navigation, route}){
 
 
     return(
-              <GiftedChat
+    <SafeAreaView style={{backgroundColor:'white', flex:1}}>
+    <HeaderContainer>
+          <BackButtonContainer>
+              <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
+                  <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+              </Pressable>
+          </BackButtonContainer>
+          <NameContainer>
+              <Header>{route.params.receiverName}</Header>
+          </NameContainer>
+         
+      </HeaderContainer>
+    <GiftedChat
+      ref={GiftedChatRef}
+      bottomOffset={getBottomSpace()}
+      renderInputToolbar = {(props)=>(
+       
+          <MessageContainer>
+            <MessageInput value={typingText} onChangeText={(value)=> setTypingText(value)} placeholder="Enter a message ..." />
+           
+            <TouchableOpacity onPress={()=> typingText != "" && props.onSend({text: typingText} )}>
+              <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
+            </TouchableOpacity>
+            
+          </MessageContainer>
+       
+      )}
+        // renderSend = {(props)=>(
+        //   <TouchableOpacity onPress={()=> props.onSend({text: "Hello"})}>
+        //     <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
+        //   </TouchableOpacity>
+        // )}
+     
+      
+      
       messages={messages}
       onSend={messages => onSend(messages)}
-
+      loadEarlier = {true}
+      infiniteScroll={true}
+      onLoadEarlier = {() => loadMore(query)}
+      renderLoadEarlier = {() => <View></View>}
       user={{
         _id: id
       }}
     />
+    </SafeAreaView>
     )
 }

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Dimensions, Pressable, Text} from 'react-native';
 
 import styled from 'styled-components/native';
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, EXTRALIGHT } from '../../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, EXTRALIGHT, MEDIUMGREY } from '../../../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -64,15 +64,15 @@ export const InputSection = styled.View`
     justify-content: space-between
 `
 export const InputSectionCol = styled.View`
-    padding-vertical: ${HEIGHT*0.02}px
+   
     width: ${WIDTH*0.9}px;
     border-bottom-width: 1px;
     border-color: #E0E0E0
     align-self: center
+    padding-bottom: ${HEIGHT*0.015}px
 `
 
 export const InputNameContainer = styled.View`
-   
    
     height: ${HEIGHT*0.075}px;
     justify-content: center;
@@ -81,20 +81,20 @@ export const InputNameContainer = styled.View`
 
 export const InputName = styled.Text`
     font-size: ${HEIGHT*0.02}px;
-    font-weight: 700;
+    font-weight: 600;
 `
 export const InputOptionContainer = styled.View`
     width: ${WIDTH*0.9}px;
-    height: ${HEIGHT*0.07}px;
+    padding-bottom: ${HEIGHT*0.015}px
     flex-direction: row;
-    justify-content: center
+    justify-content: space-between
     align-items: center
     align-self: center
 `
 
 export const BedroomOptions = styled(Pressable)`
-    padding-horizontal: ${WIDTH*0.03}px
-    padding-vertical: ${HEIGHT*0.01}px
+    padding-horizontal: ${WIDTH*0.045}px
+    padding-vertical: ${HEIGHT*0.007}px
     background-color: ${props=>(props.value == props.inputValue ? PRIMARYCOLOR : LIGHTGREY)}
     margin-left: ${WIDTH*0.02}px;
     margin-right: ${WIDTH*0.02}px;
@@ -102,7 +102,7 @@ export const BedroomOptions = styled(Pressable)`
 `
 
 export const BedroomOptionsText = styled(Text)`
-    font-size: ${HEIGHT*0.025}px;
+    font-size: ${HEIGHT*0.0175}px;
     font-weight: 400
     color: ${props=>(props.value == props.inputValue ? 'white' : 'black')}
 `
@@ -110,6 +110,7 @@ export const BedroomOptionsText = styled(Text)`
 export const PropertyTypeName = styled.Text`
     font-size: ${HEIGHT*0.0175}px;
     font-weight: 400;
+    margin-left: ${WIDTH*0.025}px
 `
 
 
@@ -120,7 +121,7 @@ export const TypeContainer = styled.View`
 
 export const TypeOption = styled.View`
     width: ${WIDTH*0.9}px;
-    height: ${HEIGHT*0.05}px
+    height: ${HEIGHT*0.045}px
     flex-direction: row;
     justify-content: space-between;
     align-self: center
@@ -149,7 +150,7 @@ export const PriceRangeText = styled.Text`
 `
 
 export const PriceInputSection = styled.View`
-    padding-vertical: ${HEIGHT*0.025}px
+   
     width: ${WIDTH*0.9}px;
     border-bottom-width: 1px;
     border-color: #E0E0E0 
@@ -164,7 +165,7 @@ export const AmenitiesInputSection = styled.View`
 `
 
 export const IndividualAmenitiesContainer = styled.View`
-
+    
 `
 export const DoneContainer = styled.View`
    
@@ -197,4 +198,35 @@ export const BedBathNumberText = styled.Text`
     width: ${WIDTH*0.1}px;
     font-size:${HEIGHT*0.02}px;
     text-align: center
+`
+
+export const ReviewLocationContainer = styled.View`
+    padding-vertical: ${HEIGHT*0.01}px
+    flex-direction: row;
+    align-items: center
+    width: ${WIDTH*0.9}px
+`
+export const ReviewInfoText = styled.Text`
+    font-size: ${HEIGHT*0.018}px;
+    font-weight: 400;
+    color: white
+    margin-top: ${HEIGHT*0.01}px;
+`
+export const AmenitiesContainer = styled.Text`
+    width: ${WIDTH*0.9}px;
+    
+   
+`
+export const NameIcon = styled.View`
+    flex-direction: row;
+`
+
+export const DateInputPressable = styled.Pressable`
+    width: ${WIDTH*0.9}px;
+    height: ${HEIGHT*0.05}px
+    border-radius: 10px;
+    background-color: ${EXTRALIGHT}
+    justify-content: center
+    padding-left: ${WIDTH*0.025}px
+
 `

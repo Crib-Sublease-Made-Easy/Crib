@@ -288,9 +288,10 @@ export default function DiscoverScreen({navigation, route}){
     }
 
     // Retrieve all the pins according to currentLocation, this is need to display all the properties with a max distance of 1000km
-    const retrieveAllPins = useCallback((lat, long) =>{
-        // console.log("Retrieving pins ")
-    fetch(`https://sublease-app.herokuapp.com/properties/pins?latitude=${lat}&longitude=${long}&maxDistance=10000000000000`, {
+    const retrieveAllPins = (lat, long) =>{
+        console.log("Retrieving pins ")
+        console.log(lat + " " + long)
+        fetch(`https://sublease-app.herokuapp.com/properties/pins?latitude=${lat}&longitude=${long}&maxDistance=1000`, {
         method: 'GET',
         headers: {
         Accept: 'application/json',
@@ -299,14 +300,16 @@ export default function DiscoverScreen({navigation, route}){
         }) 
         .then(res => res.json()).then( pins =>{
             console.log("Loading PinsData")
-            // console.log(pins)
+         
+            console.log(pins)
             console.log("==========================================================")
-            setPinsData(pins)                  
+            setPinsData(pins)             
+            
         })
         .catch(e=>{
             alert(e)
         })
-    },[currentLocation])
+    }
 
 
     //Move to the center the view property location 
@@ -418,7 +421,7 @@ export default function DiscoverScreen({navigation, route}){
                     <Ionicons name="location" size={30} color='red'/>
                 </Marker>
             
-                {pinsData.length != 0 && pinsData.map((value,index)=>(
+                {pinsData != undefined && pinsData.map((value,index)=>(
                     <Marker
                     key={value._id}
                     coordinate={{latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}

@@ -22,17 +22,14 @@ const PRIMARYGREY = '#5e5d5d'
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-const Item = ({ item }) => (
-    <View >
-      <Text >{item}</Text>
-    </View>
-  );
+import { InboxTitle, FlatlistItemContainer, FlatlistLeft, FlatlistRight, LocationText,TextAndTime, LastMessageTime } from './messageStyle';
 
 export default function MessageScreen({navigation, route}){
     const {sb} = useContext(UserContext);
 
     const [convoList, setConvoList] = useState('')
     const [userId, setUserId] = useState('')
+    const [receiverName, setReceiverName] = useState('')
 
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
@@ -40,16 +37,10 @@ export default function MessageScreen({navigation, route}){
             // Call any action
             sb.addChannelHandler('channels', channelHandler);
             fetchConvos()
-          });
-        
+        });
+        return unsubscribe
       
     }, [])
-
-    const renderItem = ({ item }) => (
-        <View >
-        <Text >{item}</Text>
-        </View>
-    );
 
     const channelHandler = new sb.ChannelHandler();
     channelHandler.onChannelChanged = channel => {
@@ -74,7 +65,11 @@ export default function MessageScreen({navigation, route}){
                 console.log(groupChannels)
                 console.log("new console list")
                 groupChannels.forEach(channel => {
-                    console.log(channel)
+                    // console.log(channel)
+                    // console.log("===============")
+                    // console.log(channel.memberMap.
+                   
+                  
                 });
                 console.log("After")
         
@@ -88,27 +83,31 @@ export default function MessageScreen({navigation, route}){
 
 
     return(
-        <SafeAreaView style={{backgroundColor:'white'}}>
-            <View style={{width:WIDTH, height:HEIGHT*0.3,justifyContent:'center'}}>
-                <Text>Inbox</Text>
-            </View>
+        <SafeAreaView style={{backgroundColor:'white', flex: 1}}>
+            <InboxTitle>Messages</InboxTitle>
             <FlatList
-                 data={convoList}
-                 contentContainerStyle={{ paddingBottom: 250 }}
+                style={{marginTop:HEIGHT*0.025}}
+                data={convoList}
+                contentContainerStyle={{ paddingBottom: 250 }}
                 keyExtractor={item => item.url}
                 renderItem={({item})=>(
                 
-                    <TouchableOpacity style={{width: WIDTH * 0.9,justifyContent:'center', paddingRight:10}} onPress={()=> navigation.navigate("Chat", {url:item.url, id: userId})}>
-                        <View style={{ flex:1,flexDirection:'row'}}>
-                        <Image source = {{uri: item.coverUrl}}
-   style = {{ width: 50, height: 50 }}
-   />
-                        <Text numberOfLines={1}>Vinesh - {item.name}{item.name} </Text>
-                        
-                        </View>
-                        <Text>{item.lastMessage.message}</Text>
-                        <Text>{new Date(item.lastMessage.createdAt).toLocaleTimeString()  }</Text>
-                    </TouchableOpacity>
+                <FlatlistItemContainer onPress={()=> navigation.navigate("Chat", {url:item.url, id: userId, receiverName:Object.values(item.memberMap)[0].nickname})}>
+                        <FlatlistLeft>
+                            <Image source = {{uri: item.coverUrl}} style = {{ width: WIDTH*0.14, height: WIDTH*0.14, borderRadius: WIDTH*0.07 }}/>
+                        </FlatlistLeft>
+                        <FlatlistRight>
+                            <LocationText>{item.name}</LocationText>
+                            
+                            {item.lastMessage != undefined &&
+                            <TextAndTime>
+                                <LastMessageTime>{item.lastMessage.message}</LastMessageTime>
+                                <LastMessageTime>{new Date(item.lastMessage.createdAt).toLocaleTimeString()  }</LastMessageTime> 
+                            </TextAndTime>
+                            }
+                          
+                        </FlatlistRight>
+                </FlatlistItemContainer>
                 )}
             />
             <TouchableOpacity >

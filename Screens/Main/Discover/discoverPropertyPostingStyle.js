@@ -221,7 +221,6 @@ export const AmenitiesContainer = styled.Text`
     width: ${WIDTH*0.9}px;
     height: ${HEIGHT*0.4}px;
     marginTop: ${HEIGHT*0.02}px;
-    
 `
 
 export const AmenitiesItem = styled.View`
@@ -306,7 +305,6 @@ export const Divider = styled.View`
 `
 
 export const ReviewInfoText = styled.Text`
-   
     font-size: ${HEIGHT*0.018}px;
     font-weight: 400;
     color: white

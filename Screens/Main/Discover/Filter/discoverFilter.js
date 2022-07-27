@@ -13,22 +13,27 @@ import {
 
 } from 'react-native';
 
-const amenitiesList = 
-[{name:'Pets Allowed', color: '#85CBFF', icon: 'paw'},
-{name: 'Mattress  ', color: '#C0C0C0', icon: 'bed'},
-{name: 'Able to renew', color:'#FFC58D', icon: 'refresh' },
-{name: 'Gym', color:'#FFC58D',icon: 'at'},
-{name: 'On-site Washer and Dryer', color:'#FF8B8B', icon: 'at'},
-{name: 'Wifi', color:'#AEFFF0', icon: 'wifi'},
-{name: 'Furnished', color: '#AEFFF0', icon: 'bed'},
-{name: 'Utilities Included', color:'#85CBFF', icon: 'bolt'},
-{name: 'Pool', color:'#FFC58D', icon: 'at'},
-{name: 'Parking   ', color:'#85CBFF', icon: 'at'},
-{name: 'TV', color:'#FF8B8B', icon: 'tv'},
-{name: 'Heating and Cooling', color:'#FFC58D', icon: 'at'},
-]
+const amenitiesList =
+    [{ name: 'Pets Allowed', color: '#57b2f7', icon: "paw-outline" },
+    { name: 'Mattress  ', color: '#fa4b4b', icon: 'bed-outline' },
+    { name: 'Able to renew', color: '#f79c40', icon: 'refresh-outline' },
+    { name: 'Gym', color: '#00d14d', icon: 'barbell-outline' },
+    { name: 'On-site Washer and Dryer', color: '#f79c40', icon: 'water-outline' },
+    { name: 'Wifi', color: '#00d14d', icon: 'wifi-outline' },
+    { name: 'Furnished', color: '#fa4b4b', icon: 'desktop-outline' },
+    { name: 'Utilities Included', color: '#57b2f7', icon: 'power-outline' },
+    { name: 'Pool', color: '#f79c40', icon: 'flask-outline' },
+    { name: 'Parking   ', color: '#57b2f7', icon: 'car-outline' },
+    { name: 'TV', color: '#fa4b4b', icon: 'tv-outline' },
+    { name: 'Heating and Cooling', color: '#fa4b4b', icon: 'thermometer-outline' },
+    ]
 
-const PROPERTIESTYPES = ["Room", "House", "Apartment", "Studio"];
+const PROPERTIESTYPES = 
+[{type: "Room", icon:'bed'},
+  {type: "House", icon:'home'}, 
+  {type: "Apartment", icon: 'building'}, 
+  {type:"Studio", icon :'lock'}
+];
 
 const BEDROOMTYPES = ["Studio", "2", "3", "4", "4+"];
 const BATHROOMTYPES = ["1", "2", "3", "4", "5+"];
@@ -37,24 +42,26 @@ const BATHROOMTYPES = ["1", "2", "3", "4", "5+"];
 const PRIMARYGREY = '#5e5d5d'
 const PRIMARYCOLOR = '#4050B5'
 
-import { MEDIUMGREY,HEIGHT, WIDTH } from '../../../../sharedUtils';
+import { MEDIUMGREY,HEIGHT, WIDTH, DARKGREY } from '../../../../sharedUtils';
 
 import Modal from "react-native-modal";
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import RNPickerSelect from 'react-native-picker-select';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
+import DatePicker from 'react-native-date-picker'
+
+
 import { Container, HeaderContainer, BackButtonContainer,NameContainer, ResetButtonContainer, Header, ModalStyle,
         InputForm,InputSection, InputName,InputNameContainer, InputOptionContainer, InputPressableContainer,
         InputPriceRangeContainer, PriceRangeText, PriceInputSection, AmenitiesInputSection, AmenitiesList,
         InputSectionCol, BedBathNumberText, TypeOption, TypeContainer, PropertyTypeName, BedroomOptions,
-        BedroomOptionsText} from './discoverFilterStyle';
+        BedroomOptionsText, AmenitiesContainer, NameIcon, DateInputPressable} from './discoverFilterStyle';
 
 export default function DiscoverFilterScreen({navigation, currentLocation, open, close, setFilteredProperties}){
     const [containerModal, setcontainerModal] = useState(false);
@@ -68,6 +75,14 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     const [filterPriceLower, setfilterPriceLower] = useState(0);
     const [filterPriceHigher, setfilterPriceHigher] = useState(5000);
     const [filterAmenities, setfilterAmenities] = useState([])
+    const [propertyAmenities, setpropertyAmenities] = useState([])
+
+    //Sets DatePicker Modal Visibility
+    const [propertydateFrom, setpropertydateFrom] = useState(new Date())
+    const [propertydateTo, setpropertydateTo] = useState(new Date())
+    const [openFrom, setOpenFrom] = useState(false)
+    const [openTo, setOpenTo] = useState(false)
+
 
     function updateBedroomCount(operation){
        
@@ -184,8 +199,11 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                     </InputNameContainer>
                     <TypeContainer>
                     {PROPERTIESTYPES.map((value)=>(
-                        <TypeOption>
-                            <PropertyTypeName>{value}</PropertyTypeName>
+                        <TypeOption key={value.name + value.icon}>
+                            <NameIcon>
+                                <FontAwesome name={value.icon} size={20} />
+                                <PropertyTypeName>{value.type}</PropertyTypeName>
+                            </NameIcon>
                             <Pressable onPress={()=>setfilterType(value)}>
                             <Ionicons name='checkbox' size={25} color={value == filterType ? PRIMARYCOLOR : MEDIUMGREY}/>
                         </Pressable>
@@ -233,44 +251,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                         </InputPressableContainer>
                     </InputOptionContainer>
                 </InputSection> */}
-                {/* <InputSection>
-                    <InputNameContainer>
-                        <InputName>Distance away</InputName>
-                    </InputNameContainer>
-                    <InputOptionContainer>
-                        <View>
-                        <RNPickerSelect
-                            placeholder={{
-                                label: "Select an item ..."
-                            }}
-                            
-                            style={{
-                                placeholder:{
-                                    color: PRIMARYGREY,
-                                    fontSize : HEIGHT*0.02
-                                }
-                                
-                            }}
-                            pickerProps={{
-                                itemStyle:{
-                                    fontSize: HEIGHT*0.02
-                                }
-                            }}
-                            
-                            onValueChange={(value) => setfilterDistance(value)}
-                            items={[
-                                { label: '< 1 mile', value: '1' },
-                                { label: '< 5 mile', value: '5' },
-                                { label: '< 10 mile', value: '10' },
-                                { label: '< 15 mile', value: '15' },
-                            ]}
-                        />
-                        </View>
-                        <InputPressableContainer >
-                            <FontAwesome name='chevron-down' size={15} color={PRIMARYCOLOR} style={{marginLeft:WIDTH*0.025}}/>
-                        </InputPressableContainer>
-                    </InputOptionContainer>
-                </InputSection> */}
+                
                 <PriceInputSection>
                 <InputSection style={{borderBottomWidth: 0}}>
                     <InputNameContainer>
@@ -308,13 +289,58 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                 </PriceInputSection>
                 <InputSectionCol>
                     <InputNameContainer>
+                        <InputName>Available From</InputName>
+                    </InputNameContainer>
+                    <DateInputPressable onPress={()=>setOpenFrom(true)}>
+                        <PropertyTypeName>{propertydateFrom.toDateString()}</PropertyTypeName>
+                    </DateInputPressable>
+                    <InputNameContainer>
+                        <InputName>Available To</InputName>
+                    </InputNameContainer>
+                    <DateInputPressable onPress={()=>setOpenTo(true)}>
+                        <PropertyTypeName>{propertydateTo.toDateString()}</PropertyTypeName>
+                    </DateInputPressable>
+                    <DatePicker
+                              
+                        modal
+                        mode='date'
+                        open={openFrom}
+                        date={propertydateFrom}
+                        onConfirm={(date) => {
+                            setpropertydateFrom(date)
+                            setOpenFrom(false)
+                            
+                        }}
+                        onCancel={() => {
+                            setOpenFrom(false)
+                        }}
+                    />
+                    <DatePicker
+                        
+                        modal
+                        mode='date'
+                        open={openTo}
+                        date={propertydateTo}
+                        onConfirm={(date) => {
+                            setpropertydateTo(date)
+                            setOpenTo(false)
+                                
+                        }}
+                        onCancel={() => {
+                            setOpenTo(false)
+                        }}
+                    />
+                    
+                </InputSectionCol>
+                <InputSectionCol>
+                    <InputNameContainer>
                         <InputName>Bedrooms</InputName>
                     </InputNameContainer>
                     <InputOptionContainer>
-                    {BEDROOMTYPES.map((value)=>(
+                    {BEDROOMTYPES.map((value, index)=>(
                         
                             
-                        <BedroomOptions  key={"bedroomOption" + value} onPress={()=> setfilterBedroom(value)} inputValue={filterBedroom} value={value}>   
+                        <BedroomOptions  key={"bedroomOption" + value  + index} onPress={()=> setfilterBedroom(value)} inputValue={filterBedroom} value={value}>   
                             <BedroomOptionsText value={value} inputValue={filterBedroom}>{value}</BedroomOptionsText>
                         </BedroomOptions>
                        
@@ -328,10 +354,10 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                         <InputName>Bethrooms</InputName>
                     </InputNameContainer>
                     <InputOptionContainer>
-                    {BATHROOMTYPES.map((value)=>(
+                    {BATHROOMTYPES.map((value, index)=>(
                         
                             
-                        <BedroomOptions key={"bathroomOption" + value} onPress={()=> setfilterBathroom(value)} inputValue={filterBathroom} value={value}>   
+                        <BedroomOptions key={"bathroomOption" + value + index} onPress={()=> setfilterBathroom(value)} inputValue={filterBathroom} value={value}>   
                             <BedroomOptionsText value={value} inputValue={filterBathroom}>{value}</BedroomOptionsText>
                         </BedroomOptions>
                        
@@ -339,26 +365,48 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                     </InputOptionContainer>
                 </InputSectionCol>
 
-                <InputSection style={{flexDirection:'column'}}>
-                    <AmenitiesInputSection>
+                <InputSectionCol style={{flexDirection:'column'}}>
+                    
+                    <InputNameContainer>
                         <InputName>Amenities</InputName>
-                    </AmenitiesInputSection>
-                    <Text style={{width:WIDTH*0.8}}>
-                    {amenitiesList.map((value,index)=>(
-                        <View key={value.name + 'view'} style={{minWidth: WIDTH*0.35, width: value.name.length*0.03*WIDTH, height:HEIGHT*0.055, justifyContent:'center', 
-                        paddingTop:HEIGHT*0.001, paddingBottom: HEIGHT*0.001, paddingRight: WIDTH*0.03}}>
-                            <Pressable key={value.name + 'pressable'} onPress={()=>updateAmenities(value.name)} style={{borderWidth:3, borderColor: filterAmenities.indexOf(value.name) == -1 ? value.color : '#0085FF', height: HEIGHT*0.045, 
-                            borderRadius: 20, justifyContent: 'center',backgroundColor:value.color, flexDirection:'row', alignItems:'center' }}>
-                                <FontAwesome key={value.name + 'icon'} name={value.icon} size={15} style={{paddingRight:WIDTH*0.025}} />
-                                <Text key={value.name + 'text'} style={{alignSelf:'center'}}>
-                                    {value.name}
-                                    </Text>
-                            </Pressable>
-                           
+                    </InputNameContainer>
+                    
+                   
+                        <AmenitiesContainer>
+                            {/* {amenitiesList.map((value, index) => (
+                                <View key={value.name + index + 'view'} style={{
+                                    minWidth: WIDTH * 0.35, width: value.name.length * 0.03 * WIDTH, height: HEIGHT * 0.0575, justifyContent: 'center',
+                                    paddingRight: WIDTH * 0.03
+                                }}>
+                                    <Pressable key={value.name + 'pressable'} onPress={() => updateAmenities(value.name)} style={{
+                                        borderWidth: 3, borderColor: propertyAmenities.indexOf(value.name) == -1 ? value.color : '#0085FF', height: HEIGHT * 0.045,
+                                        borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
+                                    }}>
+                                        <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
+                                            <Ionicons name={value.icon} size={15} />
+                                            {"   "}{value.name}
+                                        </Text>
+                                    </Pressable>
+
+                                </View>
+                            ))} */}
+                            {amenitiesList.map((value, index)=>(
+                                <TypeOption key={value.name + value.icon + "amenities"}>
+                                    <NameIcon>
+                                        <Ionicons key={value.icon} name={value.icon} size={20} />
+                                        <PropertyTypeName>{value.name}</PropertyTypeName>
+                                    </NameIcon>
+                                    <Pressable onPress={()=>updateAmenities(value.name)}>
+                                        <Ionicons name='checkbox' size={25} color={filterAmenities.indexOf(value.name) != -1 ? PRIMARYCOLOR : MEDIUMGREY}/>
+                                    </Pressable>
+                                </TypeOption>
+                            ))}
+                        </AmenitiesContainer>
+                        <View style={{width:WIDTH, height: HEIGHT*0.1}}>
+
                         </View>
-                    ))}
-                    </Text>
-                </InputSection>
+                    
+                </InputSectionCol>
             </InputForm>
            
         </ScrollView>
