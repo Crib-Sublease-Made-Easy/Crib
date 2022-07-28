@@ -18,24 +18,20 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-  
-import { HEIGHT, WIDTH } from '../../../sharedUtils';
+import {Picker} from '@react-native-picker/picker';
+
+import { HEIGHT, WIDTH, DARKGREY } from '../../../sharedUtils';
 
 import {Header, ProgressBarContainer, SubtitleText, TitleText, ContinueText, ContinueButton,
-    GeneralTextInput, TextInputContainer} from './occupationStyle';
+    GeneralTextInput, TextInputContainer, FollowUpContainer, FollowUpText} from './occupationStyle';
 
 export default function OccupationScreen({navigation, route}){
     const [occupation, setOccupation] = useState("")
+    const [showPicker, setShowPicker] = useState('')
+
 
     function checkInput(){
-        console.log("hello")
-        console.log(route.params.firstName)
-        console.log(route.params.lastName)
-        console.log(route.params.gender)
-        console.log(route.params.school)
-        console.log(route.params.occupation)
-        console.log(route.params.email)
-        console.log(route.params.profilePic)
+        
         navigation.navigate("Email",
         {
             firstName: route.params.firstName, 
@@ -61,13 +57,21 @@ export default function OccupationScreen({navigation, route}){
             <ProgressBarContainer>
 
             </ProgressBarContainer>
-            <ScrollView>
+            <ScrollView scrollEnabled={false}>
                 <TitleText>Occupation (Optional)</TitleText>
                 <SubtitleText>Choose your latest occupation</SubtitleText>
                 <TextInputContainer >
                     <GeneralTextInput value={occupation} onChangeText={(value)=> setOccupation(value)} placeholder="Ex: Plummer"  />
                 </TextInputContainer>
+
+                <FollowUpContainer>
+                    <Pressable onPress={() => setShowPicker(!showPicker)}>
+                        <Ionicons size={20} name={showPicker ? 'checkbox' : 'checkbox-outline'} color={DARKGREY} style={{ paddingVertical: HEIGHT * 0.01 }} />
+                    </Pressable>
+                    <FollowUpText>Show selection</FollowUpText>
+                </FollowUpContainer>
             </ScrollView>
+
 
             <ContinueButton onPress={()=> checkInput()}>
                 <ContinueText>Continue</ContinueText>

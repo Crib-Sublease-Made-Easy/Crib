@@ -73,3 +73,16 @@ export const ContinueButton = styled.Pressable`
     align-items: center
     margin-bottom: ${HEIGHT*0.025}px;
 `
+
+export const FollowUpContainer = styled.View`
+    padding-vertical: ${HEIGHT*0.02}px
+    width: ${WIDTH*0.8}px;
+    align-items: center
+    flex-direction: row
+    align-self: center
+`
+export const FollowUpText = styled.Text`
+    font-size: ${HEIGHT*0.0175}px;
+    margin-left: ${WIDTH*0.05}px
+    color: black
+`

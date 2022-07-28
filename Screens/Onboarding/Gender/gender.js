@@ -21,41 +21,33 @@ Ionicons.loadFont()
 import { HEIGHT, WIDTH, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR, MEDIUMGREY } from '../../../sharedUtils';
 
 
-const GENDERS = ["Men", "Women", "Others", "Perfer not to say"]
+const GENDERS = [
+    {name: "Male", icon: 'male-outline'},
+    {name:"Female", icon: 'female-outline'},
+    {name: "Others", icon: 'male-female-outline'},
+    {name: "Perfer not to say", icon: 'close-outline'}
+]
 
 import { AgeContainer, Header, ProgressBarContainer, SubtitleText, TitleText, GenderRowContainer, GenderName,
     GenderInputContainer, ContinueText, ContinueButton } from './genderStyle';
 
 export default function GenderScreen({navigation, route}){
-    console.log("==========When Load=========")
-    console.log("First Name : " + route.params.firstName)
-    console.log("Last Name : " +route.params.lastName)
-    console.log("Age: " + route.params.age)
-    console.log("==========When Load=========")
+   
     const [gender, setGender] = useState("")
 
     function checkInput(){
-        // if(gender == ""){
-        //     alert("Please slect an option.")
-        // }
-        // else{
-        //     navigation.navigate("ProfilePic")
-        // }
-        console.log("hello")
-        console.log(route.params.firstName)
-        console.log(route.params.lastName)
-        console.log(route.params.gender)
-        console.log(route.params.school)
-        console.log(route.params.occupation)
-        console.log(route.params.email)
-      
-        navigation.navigate("ProfilePic",
-        {
-            firstName: route.params.firstName, 
-            lastName: route.params.lastName,
-            age: route.params.age,
-            gender: gender
-        })
+        if(gender == ""){
+            alert("Please slect an option.")
+        }
+        else{
+            navigation.navigate("ProfilePic",
+            {
+                firstName: route.params.firstName, 
+                lastName: route.params.lastName,
+                age: route.params.age,
+                gender: gender
+            })
+        }  
     }
 
     return(
@@ -74,13 +66,16 @@ export default function GenderScreen({navigation, route}){
 
             <ScrollView>
                 <TitleText>What is your gender?</TitleText>
-                <SubtitleText>This will be showed to others</SubtitleText>
+                <SubtitleText>Select gender that identifies you the most.</SubtitleText>
                 <GenderInputContainer>
                     {GENDERS.map((value)=>(
-                    <GenderRowContainer key = {value + "RowContainer" }>
-                        <GenderName>{value}</GenderName>
-                        <Pressable onPress={()=>setGender(value)}>
-                            <Ionicons name='checkbox' size={25} color={ gender == value ? PRIMARYCOLOR : MEDIUMGREY}/>
+                    <GenderRowContainer key = {value.name + "RowContainer" } onPress={()=> setGender(value.name)}>
+                        <View style={{ flexDirection:'row', alignItems:'center'}}>
+                        <Ionicons name={value.icon} size={20} />
+                        <GenderName>{value.name}</GenderName>
+                        </View>
+                        <Pressable onPress={()=>setGender(value.name)}>
+                            <Ionicons name='checkbox' size={25} color={ gender == value.name ? PRIMARYCOLOR : MEDIUMGREY}/>
                         </Pressable>
                     </GenderRowContainer>
                     ))}

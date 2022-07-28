@@ -10,15 +10,18 @@ import {
     useColorScheme,
     View,
     Dimensions,
-    Pressable
+    Pressable,
+    Keyboard
 } from 'react-native';
 
 import { Header, ProgressBarContainer, TitleText, GeneralTextInput, ContinueButton, ContinueText,
-    TextInputContainer } from './passwordStyle';
+    TextInputContainer, SubtitleText } from './passwordStyle';
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
 import {UserContext} from '../../../UserContext'
+
+import Lottie from 'lottie-react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
@@ -29,31 +32,31 @@ export default function PasswordScreen({navigation,route}){
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('')
     const [userId, setUserId] = useState('')
+    const [loading, setLoading] = useState(false)
     const {sb} = useContext(UserContext);
 
-    function navigate(){
-        console.log("==========When Load=========")
-        console.log("First Name : " + route.params.firstName)
-        console.log("Last Name : " +route.params.lastName)
-        console.log("Age: " + route.params.age)
-        console.log("Gender: " + route.params.gender)
-        console.log("==========When Load=========")
-        console.log("navigating to otp")
-        navigation.navigate("PhoneNumber",
-        {
-            fistName: route.params.firstName, 
-            lastName: route.params.lastName,
-            age: route.params.age,
-            gender: route.params.gender,
-            profilePic: route.params.profilePic,
-            school: route.params.school,
-            email: route.params.email,
-            password: password,
-        })
+    function checkInput(){
+        Keyboard.dismiss()
+        if(password == "" || confirmPassword == ""){
+            alert("Passwords cannot be empty.")
+        }
+        else if(password != confirmPassword){
+            alert("Passwords do not match.")
+        }
+        else if(password.length < 8){
+            alert("Passmord length must be greater than 8.")
+        }
+        else if(password.length > 16){
+            alert("Passmord length must be less than 16.")
+        }
+        else{
+            setLoading(true)
+            signup()
+        }
     }
 
     async function signup(){
-        // console.log("hello")
+      
         // console.log(route.params.firstName)
         // console.log(route.params.lastName)
         // console.log(route.params.gender)
@@ -127,6 +130,7 @@ export default function PasswordScreen({navigation,route}){
 
                 navigate()
                 
+                
               
             }).catch(e=>
                 console.log(e)
@@ -135,7 +139,32 @@ export default function PasswordScreen({navigation,route}){
         else{
             console.log("Something is missing.")
         }
+        setTimeout(()=>{
+            setLoading(false)
+        },2000)
+    }
 
+    function navigate(){
+        console.log("==========When Load=========")
+        console.log("First Name : " + route.params.firstName)
+        console.log("Last Name : " +route.params.lastName)
+        console.log("Age: " + route.params.age)
+        console.log("Gender: " + route.params.gender)
+        console.log("==========When Load=========")
+        console.log("navigating to otp")
+        navigation.reset(
+        
+            {index: 0 , routes: [{ name: 'PhoneNumber', 
+            fistName: route.params.firstName, 
+            lastName: route.params.lastName,
+            age: route.params.age,
+            gender: route.params.gender,
+            profilePic: route.params.profilePic,
+            school: route.params.school,
+            email: route.params.email,
+            password: password, }]}
+            
+        )
     }
 
     return(
@@ -143,7 +172,7 @@ export default function PasswordScreen({navigation,route}){
             <KeyboardAvoidingView behavior={'padding'} style={{flex:1}} >
            
             <Header>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                <Pressable disabled={loading} style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
                     <Ionicons name='arrow-back-outline' size={25} />
                 </Pressable>
@@ -152,17 +181,23 @@ export default function PasswordScreen({navigation,route}){
             <ProgressBarContainer>
 
             </ProgressBarContainer>
-            <ScrollView>
+            <ScrollView scrollEnabled={false}>
           
             <TitleText>Set your password</TitleText>
+            <SubtitleText>Password length must be between 8 - 16</SubtitleText>
             <TextInputContainer>
-                <GeneralTextInput secureTextEntry={true} value={password} onChangeText={(value)=> setPassword(value)} placeholder="Password"  />
-                <GeneralTextInput secureTextEntry={true} value={confirmPassword} onChangeText={(value)=> setConfirmPassword(value)} placeholder="Confirm Password"  />
+                <GeneralTextInput editable={!loading} secureTextEntry={true} value={password} onChangeText={(value)=> setPassword(value)} placeholder="Password"  />
+                <GeneralTextInput editable={!loading} secureTextEntry={true} value={confirmPassword} onChangeText={(value)=> setConfirmPassword(value)} placeholder="Confirm Password"  />
             </TextInputContainer>
            
             </ScrollView>
-            <ContinueButton onPress={signup}>
+            {/* <ContinueButton onPress={checkInput}> */}
+            <ContinueButton loading={loading} onPress={()=> checkInput()}>
+            {loading ?
+                <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
+            :
                 <ContinueText>Continue</ContinueText>
+            }
             </ContinueButton>
             
             </KeyboardAvoidingView>

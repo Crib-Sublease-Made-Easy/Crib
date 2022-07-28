@@ -12,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
   
-import { HEIGHT, WIDTH } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, ContainsSpace, OnlyLetters } from '../../../sharedUtils';
 
 
 import {Header, ProgressBarContainer, SubtitleText, TitleText, ContinueText, ContinueButton,
@@ -22,26 +22,39 @@ export default function EmailScreen({navigation, route}){
     const [email, setEmail] = useState("")
 
     function checkInput(){
-        console.log("hello")
-        console.log(route.params.firstName)
-        console.log(route.params.lastName)
-        console.log(route.params.gender)
-        console.log(route.params.school)
-        console.log(route.params.occupation)
-        console.log(route.params.email)
-        console.log(route.params.profilePic)
-        
-        navigation.navigate("Password",
-        {
-            firstName: route.params.firstName, 
-            lastName: route.params.lastName,
-            age: route.params.age,
-            gender: route.params.gender,
-            profilePic: route.params.profilePic,
-            school: route.params.school,
-            occupation: route.params.occupation,
-            email: email,
-        })
+        let stringAfterAt = email.indexOf("@") == -1 ? undefined : email.substring(email.indexOf("@"));
+        if(email == ""){
+            alert("Email is required.")
+        }
+        else if(email.indexOf("@") == -1){
+            alert("Please enter a valid email.")
+        }
+        else if(ContainsSpace(email.trim())){
+            alert("Please enter a valid email.")
+        }
+        else if(stringAfterAt.indexOf(".") == -1){
+            alert("Please enter a valid email.")
+        }
+        else if(email.substring(email.lastIndexOf(".")) == "."){
+            alert("Please enter a valid email.")
+        }
+        else if(email.indexOf("@") != email.lastIndexOf("@")){
+            alert("Please enter a valid email.")
+        }
+        //Need to also check the front part of the string whatever is before @
+        else{
+            navigation.navigate("Password",
+            {
+                firstName: route.params.firstName, 
+                lastName: route.params.lastName,
+                age: route.params.age,
+                gender: route.params.gender,
+                profilePic: route.params.profilePic,
+                school: route.params.school,
+                occupation: route.params.occupation,
+                email: email,
+            })
+        }
     }
 
     return(

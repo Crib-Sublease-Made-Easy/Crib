@@ -13,17 +13,22 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Animated,
+  Easing
 } from 'react-native';
 import { UserContext } from '../../UserContext';
 
+import Lottie from 'lottie-react-native';
+
 import { Container, LoginForm, Heading, StandardInputStyle, StandardButtonStyle, ButtonText, Divider, 
-         DividerLineStyle, DividerTextStyle, SignupContainer, GoogleLoginButtonStyle } from './loginStyle';
+         DividerLineStyle, DividerTextStyle, SignupContainer, GoogleLoginButtonStyle, StandardButton } from './loginStyle';
 
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-const PRIMARYCOLOR = '#4050B5'
+import { DARKGREY, PRIMARYCOLOR } from '../../sharedUtils';
+
 
 
 export default function LoginScreen({navigation}){
@@ -31,11 +36,16 @@ export default function LoginScreen({navigation}){
     //Sets the user context 
     const {user, login} = useContext(UserContext);
 
+
+
     //Usestate varaible for storing email and password for login 
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState(''
-    )
+    const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
+
+  
     function userLogin(){
+        setLoading(true)
         fetch('https://sublease-app.herokuapp.com/users/login', {
             method: 'POST',
             headers: {
@@ -47,48 +57,53 @@ export default function LoginScreen({navigation}){
                 password: password,
             })
         }).then(e=>{
-            if(e.status == 401){
-                alert("Incorrect Email or Password.")
+            setTimeout(() =>  
+            {
+                setLoading(false)
+                if(e.status == 401){
+                    alert("Incorrect Email or Password.")
+                }
+                else if(e.status == 200 || e.status == 201){
+                    login(email);
+                }
             }
-            else if(e.status == 200 || e.status == 201){
-                login(email);
-            }
+            , 2000);
+           
         })
+        
+       
     }
 
     return(
        
-        <SafeAreaView style={{backgroundColor:'white'}}>
-            <KeyboardAvoidingView behavior="position">
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <Container>
-                    <Image source={require('../../assets/20945146.jpg')} style={{height: HEIGHT*0.35, width: HEIGHT*0.35, alignSelf: 'center'}}/>
-                    <LoginForm>
+        <SafeAreaView style={{backgroundColor:'white', flex:1}}>
+            <KeyboardAvoidingView behavior={'padding'} style={{flex:1}} >  
+                <ScrollView scrollEnabled={false}>
+                    <Image source={require('../../assets/20945146.jpg')} style={{height: HEIGHT*0.2, width: HEIGHT*0.25, alignSelf: 'center'}}/>
+                    <View >
                         <Heading>Login</Heading>
-                        <TextInput value={email} onChangeText={(value)=> setEmail(value)} style={StandardInputStyle} placeholder='Email'></TextInput>
-                        <TextInput value={password} onChangeText={(value)=> setPassword(value)} style={StandardInputStyle} placeholder='Password'></TextInput>
-                        
-                        <TouchableOpacity onPress={userLogin} style={StandardButtonStyle}> 
-                            <ButtonText>Login</ButtonText>
-                        </TouchableOpacity>
-                        <Divider>
-                            <View style={DividerLineStyle}></View>
-                            <Text style={DividerTextStyle}>or</Text>
-                            <View style={DividerLineStyle}></View>
-                        </Divider>
+                        <TextInput value={email} onChangeText={(value)=> setEmail(value)} style={StandardInputStyle} placeholder='Email' placeholderTextColor={DARKGREY}/>
+                        <TextInput value={password} onChangeText={(value)=> setPassword(value)} style={StandardInputStyle} placeholder='Password' placeholderTextColor={DARKGREY}/>
 
-                        <TouchableOpacity style={GoogleLoginButtonStyle}>
-                            <ButtonText >Login With Google</ButtonText>
+                    </View>
+                </ScrollView>
+                <View >
+                    <StandardButton onPress={userLogin} loading={loading} disabled={loading}> 
+                    {loading ?
+                        <Lottie source={require('../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
+                    :
+                        <ButtonText> Login </ButtonText>
+                    }
+                    </StandardButton>
+                    <SignupContainer>
+                        <Text style={{color: DARKGREY, fontWeight:'500'}}>New to Interzzz?</Text>
+                        <TouchableOpacity style={{paddingHorizontal:6}} onPress={()=>navigation.navigate('FirstLastName')}>
+                            
+                            <Text style={{color:PRIMARYCOLOR, fontWeight: '700'}}>Signup</Text>
+                            
                         </TouchableOpacity>
-                        <SignupContainer>
-                            <Text style={{color:'#7E7E7E', fontWeight:'500'}}>New to Interzzz?</Text>
-                            <TouchableOpacity style={{padding:6}} onPress={()=>navigation.navigate('FirstLastName')}>
-                                <Text style={{color:PRIMARYCOLOR, fontWeight: '700'}}>Signup</Text>
-                            </TouchableOpacity>
-                        </SignupContainer>
-                    </LoginForm>
-                </Container>
-            </TouchableWithoutFeedback>   
+                    </SignupContainer>
+                </View>
             </KeyboardAvoidingView>
         </SafeAreaView>
        

@@ -25,8 +25,7 @@ import {Header, ProgressBarContainer, SubtitleText, TitleText, ContinueText, Con
     GeneralTextInput, TextInputContainer} from './phoneNumStyle';
 
 export default function PhoneNumberScreen({navigation, route}){
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [authyID, setauthyID] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState("")
 
     async function signupStep1(){
         console.log("Stepping 1")
@@ -38,7 +37,7 @@ export default function PhoneNumberScreen({navigation, route}){
             },
             body: JSON.stringify({
                 phoneNumber: phoneNumber,
-                email: route.params.email
+                email: route.email
             })
         }) 
         .then(res => res.json()).then(data =>{
@@ -54,7 +53,7 @@ export default function PhoneNumberScreen({navigation, route}){
         })   
     }
     function signupStep2(id){
-        setauthyID(id);
+       
         fetch('https://sublease-app.herokuapp.com/users/OTP/step2', {
             method: 'POST',
             headers: {
@@ -72,19 +71,21 @@ export default function PhoneNumberScreen({navigation, route}){
                 alert("invalid in step 2.")
             }
         })
-        navigation.navigate("otp",
-        {
-            fistName: route.params.firstName, 
-            lastName: route.params.lastName,
-            age: route.params.age,
-            gender: route.params.gender,
-            profilePic: route.params.profilePic,
-            school: route.params.school,
-            email: route.params.email,
-            password: route.params.password,
+        navigation.reset(
+        
+            {index: 0 , routes: [{ name: 'otp', 
+            fistName: route.firstName, 
+            lastName: route.lastName,
+            age: route.age,
+            gender: route.gender,
+            profilePic: route.profilePic,
+            school: route.school,
+            email: route.email,
+            password: password,
             phoneNumber: phoneNumber,
-            authyID: id
-        })
+            authy_id: id}]}
+            
+        )
     }
 
     
@@ -100,26 +101,58 @@ export default function PhoneNumberScreen({navigation, route}){
 
     }
 
+    const handleInput = (e) => {
+        // this is where we'll call our future formatPhoneNumber function that we haven't written yet.
+        const formattedPhoneNumber = formatPhoneNumber(e);
+        // we'll set the input value using our setInputValue
+        setPhoneNumber(formattedPhoneNumber)
+    };
+
+
+    function formatPhoneNumber(value){
+        if (!value) return value;
+
+        // clean the input for any non-digit values.
+        let number = value.replace(/[^\d]/g, '');
+      
+        // phoneNumberLength is used to know when to apply our formatting for the phone number
+        const phoneNumberLength = number.length;
+      
+
+
+        if (phoneNumberLength < 4) return number;
+
+        if (phoneNumberLength < 7) {
+            return `(${number.slice(0, 3)})-${number.slice(3)}`;
+        }
+        return `(${number.slice(0, 3)})-${number.slice(
+            3,
+            6
+        )}-${number.slice(6, 10)}`;
+    }
+
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
             <Header>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
-                    {/* <FontAwesome name='arrow-left' size={25} /> */}
+                {/* <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                   
                     <Ionicons name='arrow-back-outline' size={25} />
-                </Pressable>
+                </Pressable> */}
             </Header>
                 
             <ProgressBarContainer>
 
             </ProgressBarContainer>
            
-            <ScrollView>
+            <ScrollView scrollEnabled={false}>
                 <TitleText>Enter your phone number</TitleText>
-                <SubtitleText>We will send you a OTP to verify your number</SubtitleText>
+                <SubtitleText>We will send you a one time password to verify your number</SubtitleText>
                 <TextInputContainer>
-                    <GeneralTextInput value={phoneNumber} onChangeText={(value)=> setPhoneNumber(value)}
-                    keyboardType = "number-pad" placeholder="xxx-xxx-xxxx"  />
+                    <GeneralTextInput value={phoneNumber} onChangeText={(value)=> handleInput(value)}
+                    keyboardType = "number-pad" placeholder="xxx-xxx-xxxx"/>
+                        
+                    
                 </TextInputContainer>
             </ScrollView>
           

@@ -176,14 +176,12 @@ export default function DiscoverScreen({navigation, route}){
         
         var config = {
             method: 'get',
-            url: `https://maps.googleapis.com/maps/api/place/queryautocomplete/json?input=${query}&country:us&types=address&location=37.76999%2C-122.44696&radius=4000&strictbounds=true&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`,
+            url: `https://sublease-app.herokuapp.com/autocomplete/places/${query}`,
         };
         axios(config)
         .then(function (response) {
-            setautocompleteLocation([]);
-            let JSONdata = response.data
-            
-            for( let name of JSONdata.predictions){
+            setautocompleteLocation([]);            
+            for( let name of response){
                 setautocompleteLocation(prevArray => [...prevArray,name])   
             }        
         })
@@ -425,6 +423,7 @@ export default function DiscoverScreen({navigation, route}){
                     <Marker
                     key={value._id}
                     coordinate={{latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
+                    onPress={()=> alert("HELLO")}
                    >
                     <CustomMarker>
                         <Text style={{color:'white'}}>${value.price}</Text>

@@ -44,10 +44,14 @@ export const ProgressBar = styled.View`
 //Function to check only characters and space
 //Return true if string has only letters and space
 export function OnlyLetters(str) {
-    return /^[a-zA-Z]+$/.test(str);
-  }
+    return /^[a-zA-Z-]+$/.test(str.trim());
+}
 
-  export const HeaderContainer = styled.View`
+export function ContainsSpace(str){
+    return /\s/.test(str);
+}
+
+export const HeaderContainer = styled.View`
     width: ${WIDTH}px;
     height: ${HEIGHT*0.05}px;
     border-top-right-radius: 20px;

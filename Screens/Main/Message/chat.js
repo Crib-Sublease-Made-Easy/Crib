@@ -186,7 +186,9 @@ export default function ChatScreen({navigation, route}){
           </NameContainer>
          
       </HeaderContainer>
+    
     <GiftedChat
+      
       ref={GiftedChatRef}
       bottomOffset={getBottomSpace()}
       renderInputToolbar = {(props)=>(
@@ -219,6 +221,7 @@ export default function ChatScreen({navigation, route}){
         _id: id
       }}
     />
+    
     </SafeAreaView>
     )
 }

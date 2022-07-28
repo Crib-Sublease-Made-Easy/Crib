@@ -216,21 +216,18 @@ export default function PropertyPostingScreen({ navigation }) {
         if (query != "") {
             var config = {
                 method: 'get',
-                url: `https://maps.googleapis.com/maps/api/place/queryautocomplete/json?input=${query}&country:us&types=address&location=37.76999%2C-122.44696&radius=4000&strictbounds=true&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`,
+                url: `https://sublease-app.herokuapp.com/autocomplete/places/${query}`,
             };
             axios(config)
-                .then(function (response) {
-                    setautocompleteLocation([]);
-                    let JSONdata = response.data
-                    for (let name of JSONdata.predictions) {
-
-                        setautocompleteLocation(prevArray => [...prevArray, name])
-
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            .then(function (response) {
+                setautocompleteLocation([]);            
+                for( let name of response){
+                    setautocompleteLocation(prevArray => [...prevArray,name])   
+                }        
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     }
 
@@ -553,12 +550,7 @@ export default function PropertyPostingScreen({ navigation }) {
                             <SearchInput keyboardType='number-pad' value={propertyPrice} onChangeText={(value) => setpropertyPrice(value)}
                                 placeholder="$ Price" placeholderTextColor='white' />
                         </PriceInputSearchContainer>
-                        <FollowUpContainer>
-                            <Pressable onPress={() => setPropertyPriceNego(!propertyPriceNego)}>
-                                <Ionicons size={20} name={propertyPriceNego ? 'checkbox' : 'checkbox-outline'} color={LIGHTGREY} style={{ paddingVertical: HEIGHT * 0.01 }} />
-                            </Pressable>
-                            <FollowUpText>Negotiable</FollowUpText>
-                        </FollowUpContainer>
+                        
                     </PostingSection>
 
                     {/* Enter description  */}

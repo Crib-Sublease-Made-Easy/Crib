@@ -22,7 +22,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo Library Access Profile Pic</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
 	<key>LSRequiresIPhoneOS</key>

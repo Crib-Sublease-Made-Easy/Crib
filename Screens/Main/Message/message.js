@@ -86,7 +86,7 @@ export default function MessageScreen({navigation, route}){
         <SafeAreaView style={{backgroundColor:'white', flex: 1}}>
             <InboxTitle>Messages</InboxTitle>
             <FlatList
-                style={{marginTop:HEIGHT*0.025}}
+                style={{marginTop:HEIGHT*0.015}}
                 data={convoList}
                 contentContainerStyle={{ paddingBottom: 250 }}
                 keyExtractor={item => item.url}
