@@ -221,7 +221,7 @@ export default function PropertyPostingScreen({ navigation }) {
             axios(config)
             .then(function (response) {
                 setautocompleteLocation([]);            
-                for( let name of response){
+                for( let name of response.data){
                     setautocompleteLocation(prevArray => [...prevArray,name])   
                 }        
             })

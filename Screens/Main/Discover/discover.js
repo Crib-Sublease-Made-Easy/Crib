@@ -179,9 +179,9 @@ export default function DiscoverScreen({navigation, route}){
             url: `https://sublease-app.herokuapp.com/autocomplete/places/${query}`,
         };
         axios(config)
-        .then(function (response) {
-            setautocompleteLocation([]);            
-            for( let name of response){
+        .then(response => {
+            setautocompleteLocation([]);           
+            for( let name of response.data){
                 setautocompleteLocation(prevArray => [...prevArray,name])   
             }        
         })

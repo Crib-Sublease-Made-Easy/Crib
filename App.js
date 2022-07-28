@@ -141,7 +141,7 @@ export default function App () {
     <NavigationContainer>
     <UserContext.Provider value={{user, login, logout, sb}}>
     
-    { user != null ?
+    { user == null ?
    
       <Stack.Navigator>
         
