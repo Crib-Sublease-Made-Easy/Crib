@@ -18,7 +18,7 @@ import {
   Easing
 } from 'react-native';
 import { UserContext } from '../../UserContext';
-
+import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 import Lottie from 'lottie-react-native';
 
 import { Container, LoginForm, Heading, StandardInputStyle, StandardButtonStyle, ButtonText, Divider, 
@@ -45,6 +45,7 @@ export default function LoginScreen({navigation}){
 
   
     function userLogin(){
+        let loginSuccessful = false
         setLoading(true)
         fetch('https://sublease-app.herokuapp.com/users/login', {
             method: 'POST',
@@ -56,19 +57,34 @@ export default function LoginScreen({navigation}){
                 email: email,
                 password: password,
             })
-        }).then(e=>{
-            setTimeout(() =>  
+        }).then(async e=>{
+            await setTimeout( () =>  
             {
                 setLoading(false)
                 if(e.status == 401){
                     alert("Incorrect Email or Password.")
                 }
                 else if(e.status == 200 || e.status == 201){
-                    login(email);
                 }
             }
             , 2000);
-           
+            return e.json()
+
+
+        }).then(async(response) => {
+            console.log("RESOPONSE", response)
+            try{
+                await SecureStorage.setItem("firstName", response.loggedInUser.firstName)
+                await SecureStorage.setItem("lastName", response.loggedInUser.lastName)
+                await SecureStorage.setItem("profilePic", response.loggedInUser.profilePic)
+                await SecureStorage.setItem("userId", response.loggedInUser._id)
+                await SecureStorage.setItem("accessToken", response.token.access)
+                await SecureStorage.setItem("refreshToken", response.token.refresh)
+                console.log("got")
+                login(email);
+            } catch(err){
+                console.log(err)
+            }
         })
         
        
