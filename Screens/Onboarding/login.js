@@ -58,7 +58,7 @@ export default function LoginScreen({navigation}){
                 password: password,
             })
         }).then(async e=>{
-            await setTimeout( () =>  
+            setTimeout( () =>  
             {
                 setLoading(false)
                 if(e.status == 401){

@@ -116,7 +116,7 @@ export default function DiscoverScreen({navigation, route}){
                 useNativeDriver:false,
             }),
             Animated.spring(translation,{
-                toValue: HEIGHT*0.5 ,
+                toValue: HEIGHT*0.075*5 + HEIGHT*0.07 ,
                 bounciness:0,
                 speed: 6,
                 useNativeDriver:false,
@@ -299,8 +299,8 @@ export default function DiscoverScreen({navigation, route}){
         .then(res => res.json()).then( pins =>{
             console.log("Loading PinsData")
          
-            console.log(pins)
-            console.log("==========================================================")
+            //console.log(pins)
+            //console.log("==========================================================")
             setPinsData(pins)             
             
         })
@@ -423,7 +423,6 @@ export default function DiscoverScreen({navigation, route}){
                     <Marker
                     key={value._id}
                     coordinate={{latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
-                    onPress={()=> alert("HELLO")}
                    >
                     <CustomMarker>
                         <Text style={{color:'white'}}>${value.price}</Text>
@@ -490,7 +489,7 @@ export default function DiscoverScreen({navigation, route}){
                             <Ionicons name='search-outline' size={25}  color={TEXTINPUTBORDERCOLOR} />
                         </SeachIconContainer>
                         <PlaceholderLogoTextContainer placeholderTextColor={TEXTINPUTBORDERCOLOR} placeholderTextWeight='500'
-                        placeholder="Looking at ..." value={locationQuery}  onChangeText={(value)=>autocomplete(value)} 
+                        placeholder="Search location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={()=>{setautocompleteLocation([]), setlocationQuery("")}}
                         onEndEditing={()=>{closeHeader(), setSearching(false), setautocompleteLocation([]), Keyboard.dismiss()}} onFocus={()=> {openHeader(),setSearching(true), setPropertyPreviewCard(false)}}/>
                         <DeleteIconContainer onPress={()=>setlocationQuery("")} style={{ display: searching ? 'flex' : 'none',}}>
                             <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />
@@ -503,7 +502,7 @@ export default function DiscoverScreen({navigation, route}){
                             
                         autocompleteLocation.map((value, index)=>(
                             <AutocompleteLocationContainer key={"autocomplete" + value.description + index} onPress={()=>{selectCurrentLocation(value.description), setFilteredProperties([])}}>
-                                <FontAwesome name="map-pin" size={25} color= {PRIMARYCOLOR} style={{width: WIDTH*0.075}}/>
+                                <Ionicons name="navigate-circle-outline" size={23} color= {PRIMARYCOLOR} style={{width: WIDTH*0.07}}/>
                                 <View>
                                 <LocationMainText key={value.structured_formatting.main_text}>{value.structured_formatting.main_text}</LocationMainText>
                                 <LocationSecondaryText key={value.structured_formatting.secondary_text} >{value.structured_formatting.secondary_text}</LocationSecondaryText>

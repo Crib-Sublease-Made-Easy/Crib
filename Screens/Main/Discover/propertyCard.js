@@ -169,7 +169,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     translateY.value = Math.max(translateY.value, HEIGHT/40);
    
     }).onEnd(()=>{
-    console.log(translateY.value)
+    //console.log(translateY.value)
     if(translateY.value  < HEIGHT/1.59 ){
         translateY.value = withSpring(HEIGHT/40, {stiffness: 50, mass: 0.3, damping:15})
         runOnJS(enableFlatlistScroll)(false)
@@ -200,7 +200,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
             .then(res => res.json()).then( pinInfo =>{
                 console.log("onMarkerClick")
                 console.log("The clicker pin info")
-                console.log(pinInfo)
+                //console.log(pinInfo)
                 console.log("==========================================================")
                
                 setSelectedPin(pinInfo)
@@ -218,8 +218,8 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     }
 
     const renderCards = useCallback((data, index) =>{
-        console.log("HELLO")
-        console.log(data.item)
+       // console.log("HELLO")
+        //console.log(data.item)
         return(
             <Pressable 
             style={CardContainer}  onPress={()=> navigation.navigate('PropertyDetail', {data: {propertyInfo: data.item}})} >

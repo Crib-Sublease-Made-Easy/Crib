@@ -125,6 +125,7 @@ export const OTPInputContainer = styled.Pressable`
     width: ${WIDTH*0.9}px;
     flex-direction: row;
     justify-content: space-around;
+    margin-top: ${HEIGHT*0.03}px
 `
 
 export const HiddenTextInput = styled.TextInput`
@@ -140,7 +141,7 @@ export const HiddenTextInput = styled.TextInput`
 export const OTPInputSection = styled.View`
     align-items: center;
     width: ${WIDTH}px;
-    margin-top : ${HEIGHT*0.05}px
+  
 `
 
 export const OTPInput = styled.View`

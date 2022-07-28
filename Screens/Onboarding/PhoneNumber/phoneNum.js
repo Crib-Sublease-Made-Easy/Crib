@@ -21,17 +21,18 @@ Ionicons.loadFont()
 
 import { HEIGHT, WIDTH } from '../../../sharedUtils';
 
+import Lottie from 'lottie-react-native';
+
+
 import {Header, ProgressBarContainer, SubtitleText, TitleText, ContinueText, ContinueButton,
     GeneralTextInput, TextInputContainer} from './phoneNumStyle';
 
 export default function PhoneNumberScreen({navigation, route}){
     const [phoneNumber, setPhoneNumber] = useState("")
-
+    const [passedPhoneNumber, setPassedPhoneNumber]= useState("")
+    const [loading, setLoading] = useState(false)
+    console.log(passedPhoneNumber)
     async function signupStep1(){
-        if(phoneNumber.length != 10){
-            alert("Please enter a valid phone number.")
-            return;
-        }
         console.log("Stepping 1")
         const res =  await fetch('https://sublease-app.herokuapp.com/users/OTP/step1', {
             method: 'POST',
@@ -40,7 +41,7 @@ export default function PhoneNumberScreen({navigation, route}){
             'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                phoneNumber: phoneNumber,
+                phoneNumber: passedPhoneNumber,
                 email: route.email
             })
         }) 
@@ -76,7 +77,6 @@ export default function PhoneNumberScreen({navigation, route}){
             }
         })
         navigation.reset(
-        
             {index: 0 , routes: [{ name: 'otp', 
             fistName: route.firstName, 
             lastName: route.lastName,
@@ -85,23 +85,26 @@ export default function PhoneNumberScreen({navigation, route}){
             profilePic: route.profilePic,
             school: route.school,
             email: route.email,
-            password: password,
-            phoneNumber: phoneNumber,
+            password: route.password,
+            phoneNumber: passedPhoneNumber,
             authy_id: id}]}
-            
         )
+        setLoading(false)
     }
 
     
 
     function checkInput(){
-    //     if(phoneNumber.length != 10){
-    //         alert("Phone number is invalid")
-    //     }
-    //    else{
-    //         navigation.navigate("otp")
-    //    }
-        signupStep1()
+        if(passedPhoneNumber.length != 10){
+            alert("Phone number is invalid")
+        }
+       else{
+            setLoading(true)
+            console.log("Will sign up")
+            signupStep1()
+       }
+
+       
 
     }
 
@@ -115,10 +118,10 @@ export default function PhoneNumberScreen({navigation, route}){
 
     function formatPhoneNumber(value){
         if (!value) return value;
-
+        setPassedPhoneNumber(value)
         // clean the input for any non-digit values.
         let number = value.replace(/[^\d]/g, '');
-      
+        setPassedPhoneNumber(number)
         // phoneNumberLength is used to know when to apply our formatting for the phone number
         const phoneNumberLength = number.length;
       
@@ -153,7 +156,7 @@ export default function PhoneNumberScreen({navigation, route}){
                 <TitleText>Enter your phone number</TitleText>
                 <SubtitleText>We will send you a one time password to verify your number</SubtitleText>
                 <TextInputContainer>
-                    <GeneralTextInput value={phoneNumber} onChangeText={(value)=> handleInput(value)}
+                    <GeneralTextInput editable={!loading} value={phoneNumber} onChangeText={(value)=> handleInput(value)}
                     keyboardType = "number-pad" placeholder="xxx-xxx-xxxx"/>
                         
                     
@@ -161,8 +164,12 @@ export default function PhoneNumberScreen({navigation, route}){
             </ScrollView>
           
 
-            <ContinueButton onPress={checkInput}>
+            <ContinueButton disabled={loading} loading={loading} onPress={checkInput}>
+            {loading ?
+                <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
+            :
                 <ContinueText>Continue</ContinueText>
+            }
             </ContinueButton>
             </KeyboardAvoidingView>
         </SafeAreaView>

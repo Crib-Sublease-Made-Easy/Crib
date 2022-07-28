@@ -55,7 +55,7 @@ export const SubtitleText = styled.Text`
 `
 
 export const TextInputContainer = styled.View`
-    padding-top: ${HEIGHT*0.025}px
+   padding-top:${HEIGHT*0.025}px
 `
 
 export const GeneralTextInput = styled.TextInput`

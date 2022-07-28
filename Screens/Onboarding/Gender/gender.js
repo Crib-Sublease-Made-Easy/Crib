@@ -64,14 +64,14 @@ export default function GenderScreen({navigation, route}){
 
             </ProgressBarContainer>
 
-            <ScrollView>
+            <ScrollView scrollEnabled={false}>
                 <TitleText>What is your gender?</TitleText>
                 <SubtitleText>Select gender that identifies you the most.</SubtitleText>
                 <GenderInputContainer>
                     {GENDERS.map((value)=>(
                     <GenderRowContainer key = {value.name + "RowContainer" } onPress={()=> setGender(value.name)}>
                         <View style={{ flexDirection:'row', alignItems:'center'}}>
-                        <Ionicons name={value.icon} size={20} />
+                      
                         <GenderName>{value.name}</GenderName>
                         </View>
                         <Pressable onPress={()=>setGender(value.name)}>

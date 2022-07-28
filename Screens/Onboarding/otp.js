@@ -43,53 +43,20 @@ export default function OTPScreen({navigation, route}){
     const [pinReady, setpinReady] = useState(false)
     const [authyID, setauthyID] = useState('')
     const [smsErrorModal, setSMSErrorModal] = useState(false)
+    const [laoding, setLoading] = useState(false)
 
     const MAX_CODE_LENGTH = 6;
 
     useEffect(()=> {
-        setauthyID(route.params.authyID)
+        setauthyID(route.authyID)
         if(code.length == 6){
             signupStep3();
         }
 
     },[code])
 
-
-    // async function signup(){
-    //     const data = route.params;
-    //     fetch('https://sublease-app.herokuapp.com/users/signup', {
-    //         method: 'POST',
-    //         headers: {
-    //           Accept: 'application/json',
-    //           'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({
-    //             firstName: data.firstName,
-    //             lastName:data.lastName,
-    //             age: data.age,
-    //             phoneNumber: phoneNumber,
-    //             email: data.email,
-    //             password: data.password,
-    //             gender: data.gender,
-    //             profilePic: data.profilePic,
-                
-    //         })
-    //     }).then( e =>{
-    //         if(e.status == 409){
-    //             alert("Account Exists. Please log in.")
-    //             navigation.navigate('Login')
-    //         }
-    //         if(e.status == 400 || e.status == 404){
-    //             alert("Fuck")
-    //         }
-    //         else{
-    //             login(data.email);
-    //             console.log(e)
-    //         }
-    //     })
-    // }
-
     async function signupStep3(){ 
+        setLoading(true)
         console.log("TOKEN")
         console.log(code);
         console.log("AuthyID")
@@ -103,7 +70,7 @@ export default function OTPScreen({navigation, route}){
             body: JSON.stringify({
                 authy_id: authyID,
                 token: code,
-                email: route.params.email
+                email: route.email
             })
         })
         .then(res => res.json()).then(async data =>{
@@ -111,19 +78,57 @@ export default function OTPScreen({navigation, route}){
             console.log(data);
 
             if(data.messge != "Success"){
-                alert("invalid in step 3.")
+                alert("Incorrect code.")
+                setCode("")
+                setLoading(false)
             }
             else{
-                console.log("The user id on otp is: ");
-                console.log(route.params.userId)
 
                 await SecureStorage.setItem("accessToken", data.token.accessToken)
                 await SecureStorage.setItem("refreshToken", data.token.refreshToken)
-                await SecureStorage.setItem("profilePic", route.params.profilePic)
+                await SecureStorage.setItem("profilePic", route.profilePic)
                 console.log("got")
-                login(route.params.email);
+                setTimeout(()=>{setLoading(false)},2000)
+                login(route.email);
             }
         })
+    }
+
+    function backToPhoneNumber(){
+        navigation.reset(
+            {index: 0 , routes: [{ name: 'PhoneNumber', 
+            fistName: route.firstName, 
+            lastName: route.lastName,
+            age: route.age,
+            gender: route.gender,
+            profilePic: route.profilePic,
+            school: route.school,
+            email: route.email,
+            password: route.password, }]}
+            
+        )
+    }
+
+    function resendSMS(){
+       
+        fetch('https://sublease-app.herokuapp.com/users/OTP/step2', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                authy_id: authyID
+            })
+        })
+        .then(res => res.json()).then(data =>{
+            console.log("STEP2");
+            console.log(data);
+            if(data.response.success != true){
+                alert("invalid in step 2.")
+            }
+        })
+        setLoading(false)
     }
 
     return(
@@ -134,7 +139,8 @@ export default function OTPScreen({navigation, route}){
                 <ScrollView>
                     <HeadingImageContainer>
                         <Heading>Enter OTP</Heading>
-                        <Image source={require('../../assets/otp.jpg')} style={{ height: HEIGHT*0.2, width: HEIGHT*0.3, alignSelf: 'center', }}/>
+                        <SubtitleText>Please enter the one time password sent to you through sms</SubtitleText>
+                        <Image source={require('../../assets/otp.jpg')} style={{ height: HEIGHT*0.15, width: HEIGHT*0.2, alignSelf: 'center', }}/>
                     </HeadingImageContainer>
                     
                     <OTPInputField
@@ -160,10 +166,10 @@ export default function OTPScreen({navigation, route}){
                         Is this number correct?
                     </ModalHeaderText>
                     <UserNumberText>
-                        +1 608 999 1395
+                        +1 ({route.phoneNumber.slice(0, 3)})-{route.phoneNumber.slice(3,6)}-{route.phoneNumber.slice(6, 10)}
                     </UserNumberText>
                     <ModalOptionContainer>
-                        <ModalOption onPress={()=> {setSMSErrorModal(false, navigation.goBack())}}>
+                        <ModalOption onPress={()=> {setSMSErrorModal(false), backToPhoneNumber()}}>
                             <Text>No</Text>
                         </ModalOption>
                         <ModalOption>

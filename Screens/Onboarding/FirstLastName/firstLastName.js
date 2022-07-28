@@ -71,7 +71,7 @@ export default function FirstLastNameScreen({navigation, route}){
 
             </ProgressBarContainer>
 
-            <ScrollView>
+            <ScrollView scrollEnabled={false}>
                 <TitleText>Tell us a bit about you ...</TitleText>
                 <TextInputContainer>
                     <GeneralTextInput value={firstName} onChangeText={(value)=>setFirstName(value)} placeholder="First Name"  />

@@ -21,6 +21,9 @@ const TEXTINPUTBORDERCOLOR = '#989898'
 
 import styled from 'styled-components/native';
 
+import { MEDIUMGREY } from '../../../sharedUtils';
+
+
 export const Header = styled.View`
   width: ${WIDTH*0.9}px
   height: ${HEIGHT*0.05}px
@@ -67,7 +70,7 @@ export const ContinueText = styled.Text`
 export const ContinueButton = styled.Pressable`
     width: ${WIDTH*0.7}px;
     height: ${ HEIGHT*0.07}px;
-    background-color: ${PRIMARYCOLOR}
+    backgroundColor:  ${props=>(props.loading ? MEDIUMGREY : PRIMARYCOLOR)}}
     align-self: center
     border-radius: 25px
     justify-content: center

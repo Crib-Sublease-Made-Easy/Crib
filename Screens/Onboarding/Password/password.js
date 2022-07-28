@@ -153,7 +153,6 @@ export default function PasswordScreen({navigation,route}){
         console.log("==========When Load=========")
         console.log("navigating to otp")
         navigation.reset(
-        
             {index: 0 , routes: [{ name: 'PhoneNumber', 
             fistName: route.params.firstName, 
             lastName: route.params.lastName,
@@ -184,7 +183,7 @@ export default function PasswordScreen({navigation,route}){
             <ScrollView scrollEnabled={false}>
           
             <TitleText>Set your password</TitleText>
-            <SubtitleText>Password length must be between 8 - 16</SubtitleText>
+            <SubtitleText>Password must contain between 8 to 16 characters</SubtitleText>
             <TextInputContainer>
                 <GeneralTextInput editable={!loading} secureTextEntry={true} value={password} onChangeText={(value)=> setPassword(value)} placeholder="Password"  />
                 <GeneralTextInput editable={!loading} secureTextEntry={true} value={confirmPassword} onChangeText={(value)=> setConfirmPassword(value)} placeholder="Confirm Password"  />
@@ -192,7 +191,7 @@ export default function PasswordScreen({navigation,route}){
            
             </ScrollView>
             {/* <ContinueButton onPress={checkInput}> */}
-            <ContinueButton loading={loading} onPress={()=> checkInput()}>
+            <ContinueButton disabled={loading} loading={loading} onPress={()=> checkInput()}>
             {loading ?
                 <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
             :

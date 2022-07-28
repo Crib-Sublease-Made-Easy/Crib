@@ -119,13 +119,14 @@ export const TypeContainer = styled.View`
     justify-content: space-between;
 `
 
-export const TypeOption = styled.View`
+export const TypeOption = styled.Pressable`
     width: ${WIDTH*0.9}px;
-    height: ${HEIGHT*0.045}px
+    height: ${HEIGHT*0.055}px
     flex-direction: row;
     justify-content: space-between;
     align-self: center
     align-items: center
+   
 `
 
 export const InputPressableContainer = styled.Pressable`
@@ -217,7 +218,7 @@ export const AmenitiesContainer = styled.Text`
     
    
 `
-export const NameIcon = styled.View`
+export const NameIcon = styled.Pressable`
     flex-direction: row;
 `
 

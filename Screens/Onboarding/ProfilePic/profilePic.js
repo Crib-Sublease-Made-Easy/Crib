@@ -85,7 +85,7 @@ export default function ProfilePicScreen({navigation, route}){
             <ProgressBarContainer>
 
             </ProgressBarContainer>
-            <ScrollView>
+            <ScrollView scrollEnabled={false}>
                 <TitleText>Show others who you are ...</TitleText>
                 <SubtitleText>Press to select your profile picture</SubtitleText>
                 <ProfilePicContainer onPress={SelectProfilePic}>

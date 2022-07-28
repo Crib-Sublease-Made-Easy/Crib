@@ -141,7 +141,7 @@ export default function App () {
     <NavigationContainer>
     <UserContext.Provider value={{user, login, logout, sb}}>
     
-    { user != null ?
+    { user == null ?
    
       <Stack.Navigator>
         
@@ -280,6 +280,8 @@ export default function App () {
       :
       
       <Stack.Navigator initialRouteName='Landing'>
+             
+
         <Stack.Screen name="Landing"   component={LandingScreen} options={{headerShown: false}}/>
         <Stack.Screen
           name="Login"

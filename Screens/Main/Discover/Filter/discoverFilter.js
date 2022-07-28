@@ -32,7 +32,7 @@ const PROPERTIESTYPES =
 [{type: "Room", icon:'bed'},
   {type: "House", icon:'home'}, 
   {type: "Apartment", icon: 'building'}, 
-  {type:"Studio", icon :'lock'}
+  {type:"Studio", icon :'user'}
 ];
 
 const BEDROOMTYPES = ["Studio", "2", "3", "4", "4+"];
@@ -199,13 +199,13 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                     </InputNameContainer>
                     <TypeContainer>
                     {PROPERTIESTYPES.map((value)=>(
-                        <TypeOption key={value.name + value.icon}>
-                            <NameIcon>
+                        <TypeOption key={value.type + value.icon} >
+                            <NameIcon onPress={()=>{value.type == filterType ? setfilterType("") : setfilterType(value.type)}}>
                                 <FontAwesome name={value.icon} size={20} />
                                 <PropertyTypeName>{value.type}</PropertyTypeName>
                             </NameIcon>
-                            <Pressable onPress={()=>setfilterType(value)}>
-                            <Ionicons name='checkbox' size={25} color={value == filterType ? PRIMARYCOLOR : MEDIUMGREY}/>
+                            <Pressable onPress={()=>{value.type == filterType ? setfilterType("") : setfilterType(value.type)}}>
+                            <Ionicons name='checkbox' size={25} color={value.type == filterType ? PRIMARYCOLOR : MEDIUMGREY}/>
                         </Pressable>
                         </TypeOption>
                     ))}
@@ -264,12 +264,12 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                 <View style={{alignItems:'center'}}>
                 <MultiSlider
                 
-                vales={[filterPriceLower,filterPriceHigher]}
+                vales={filterPriceHigher}
                 onValuesChangeStart={()=> setscrollEnabled(false)}
                 onValuesChangeFinish={()=> setscrollEnabled(true)}
                 onValuesChange={(value)=> setfilterPriceHigher(value)}
                 min={0}
-                max={4000}
+                max={10000}
                 allowOverlap={false}
                 snapped
                 step={10}
