@@ -41,14 +41,15 @@ export default function OTPScreen({navigation, route}){
     const [phoneNumber, setphoneNumber] = useState('')
     const [code, setCode] = useState('')
     const [pinReady, setpinReady] = useState(false)
-    const [authyID, setauthyID] = useState('')
+    const [authyID, setauthyID] = useState(route.authy_id)
     const [smsErrorModal, setSMSErrorModal] = useState(false)
     const [laoding, setLoading] = useState(false)
 
+    console.log(route.authy_id)
     const MAX_CODE_LENGTH = 6;
 
     useEffect(()=> {
-        setauthyID(route.authyID)
+        setauthyID(route.authy_id)
         if(code.length == 6){
             signupStep3();
         }
@@ -60,7 +61,7 @@ export default function OTPScreen({navigation, route}){
         console.log("TOKEN")
         console.log(code);
         console.log("AuthyID")
-        console.log(authyID);
+        console.log(route.authy_id);
         fetch('https://sublease-app.herokuapp.com/users/OTP/step3', {
             method: 'POST',
             headers: {
@@ -68,7 +69,7 @@ export default function OTPScreen({navigation, route}){
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                authy_id: authyID,
+                authy_id: route.authy_id,
                 token: code,
                 email: route.email
             })
@@ -119,7 +120,7 @@ export default function OTPScreen({navigation, route}){
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                authy_id: authyID
+                authy_id: route.authy_id
             })
         })
         .then(res => res.json()).then(data =>{
@@ -161,7 +162,9 @@ export default function OTPScreen({navigation, route}){
                 </KeyboardAvoidingView>
             </Container>
             <Modal isVisible={smsErrorModal} animationIn= 'zoomIn' animationOut='zoomOut'
-            style={{padding:0, margin: 0, justifyContent:'center', alignItems:'center'}}>
+            style={{padding:0, margin: 0, justifyContent:'center', alignItems:'center', flex:1}}>
+            <TouchableWithoutFeedback onPress={()=>setSMSErrorModal(false)}>
+            <View style={{width:WIDTH, height: HEIGHT,justifyContent:'center', alignItems:'center'}}>
                 <ModalView>
                     <ModalHeaderText>
                         Is this number correct?
@@ -173,11 +176,14 @@ export default function OTPScreen({navigation, route}){
                         <ModalOption onPress={()=> {setSMSErrorModal(false), backToPhoneNumber()}}>
                             <Text>No</Text>
                         </ModalOption>
-                        <ModalOption>
+                        <ModalOption onPress={resendSMS}>
                             <Text style={{color: PRIMARYCOLOR}}>Resend code</Text>
                         </ModalOption>
                     </ModalOptionContainer>
                 </ModalView>
+            </View>
+            </TouchableWithoutFeedback>
+           
             </Modal>
         </SafeAreaView>
     )
