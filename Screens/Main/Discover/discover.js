@@ -20,6 +20,7 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLO
 
 const TEXTGREY = '#969696'
 
+const PriceRanges = ["500", "1000", "1500", "2000", "2500", "3000","3500", "4000", "4000+" ]
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
@@ -71,7 +72,7 @@ export default function DiscoverScreen({navigation, route}){
 
     const [propertyPage, setPropertyPage] = useState(1);
 
-    const [filterModal, setFilterModal] = useState(false)
+    const [filterModal, setFilterModal] = useState(true)
 
     const [filteredProperties, setFilteredProperties] = useState([])
 

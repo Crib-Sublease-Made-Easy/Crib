@@ -15,7 +15,7 @@ import {
 
 const amenitiesList =
     [{ name: 'Pets Allowed', color: '#57b2f7', icon: "paw-outline" },
-    { name: 'Mattress  ', color: '#fa4b4b', icon: 'bed-outline' },
+    { name: 'Mattress', color: '#fa4b4b', icon: 'bed-outline' },
     { name: 'Able to renew', color: '#f79c40', icon: 'refresh-outline' },
     { name: 'Gym', color: '#00d14d', icon: 'barbell-outline' },
     { name: 'On-site Washer and Dryer', color: '#f79c40', icon: 'water-outline' },
@@ -23,7 +23,7 @@ const amenitiesList =
     { name: 'Furnished', color: '#fa4b4b', icon: 'desktop-outline' },
     { name: 'Utilities Included', color: '#57b2f7', icon: 'power-outline' },
     { name: 'Pool', color: '#f79c40', icon: 'flask-outline' },
-    { name: 'Parking   ', color: '#57b2f7', icon: 'car-outline' },
+    { name: 'Parking', color: '#57b2f7', icon: 'car-outline' },
     { name: 'TV', color: '#fa4b4b', icon: 'tv-outline' },
     { name: 'Heating and Cooling', color: '#fa4b4b', icon: 'thermometer-outline' },
     ]
@@ -73,13 +73,13 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     const [filterBedroom, setfilterBedroom] = useState(1);
     const [filterBathroom, setfilterBathroom] = useState(1);
     const [filterPriceLower, setfilterPriceLower] = useState(0);
-    const [filterPriceHigher, setfilterPriceHigher] = useState(5000);
+    const [filterPriceHigher, setfilterPriceHigher] = useState(10000);
     const [filterAmenities, setfilterAmenities] = useState([])
     const [propertyAmenities, setpropertyAmenities] = useState([])
 
     //Sets DatePicker Modal Visibility
     const [propertydateFrom, setpropertydateFrom] = useState(new Date())
-    const [propertydateTo, setpropertydateTo] = useState(new Date())
+    const [propertydateTo, setpropertydateTo] = useState(new Date(1759176355615))
     const [openFrom, setOpenFrom] = useState(false)
     const [openTo, setOpenTo] = useState(false)
 
@@ -105,14 +105,17 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     }
 
     function updateAmenities(name){
-
+        
         if(filterAmenities.indexOf(name) != -1){
+            console.log("delete" + name)
             let tempindex = filterAmenities.indexOf(name);
             setfilterAmenities([...filterAmenities.slice(0,tempindex), ...filterAmenities.slice(tempindex+1,filterAmenities.length)])
         }
         else{
+            console.log("add" + name)
             setfilterAmenities(prev=>[...prev, name]);
         }
+        console.log(filterAmenities)
     }
     
     const translation = useRef(new Animated.Value(0)).current;
@@ -187,7 +190,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                 </NameContainer>
                 <ResetButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={filter}>
-                        <Ionicons name='checkmark-done' size={25} />
+                        <Ionicons name='checkmark-outline' size={25} />
                     </Pressable>
                 </ResetButtonContainer>
             </HeaderContainer>
@@ -213,44 +216,6 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                     </TypeContainer>
                 </InputSectionCol>
         
-                {/* <InputSection>
-                    <InputNameContainer>
-                        <InputName>Sort By</InputName>
-                    </InputNameContainer>
-                    <InputOptionContainer>
-                        <View>
-                        <RNPickerSelect
-                            placeholder={{
-                                label: "Select an item ..."
-                            }}
-                            
-                            style={{
-                                placeholder:{
-                                    color: PRIMARYGREY,
-                                    fontSize : HEIGHT*0.02
-                                }
-                                
-                            }}
-                            pickerProps={{
-                                itemStyle:{
-                                    fontSize: HEIGHT*0.02
-                                }
-                            }}
-                            
-                            onValueChange={(value) => setfilterSort(value)}
-                            items={[
-                                { label: 'Distance', value: 'Ditance' },
-                                { label: 'Price', value: 'Price' },
-                                { label: 'Most Viewed', value: 'Most Viewed' },
-                                { label: 'Most Recent', value: 'Most Recent' },
-                            ]}
-                        />
-                        </View>
-                        <InputPressableContainer >
-                            <FontAwesome name='chevron-down' size={15} color={PRIMARYCOLOR} style={{marginLeft:WIDTH*0.025}}/>
-                        </InputPressableContainer>
-                    </InputOptionContainer>
-                </InputSection> */}
                 
                 <PriceInputSection>
                 <InputSection style={{borderBottomWidth: 0}}>
@@ -263,18 +228,18 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                 </InputSection>
                 <View style={{alignItems:'center'}}>
                 <MultiSlider
-                
-                vales={filterPriceHigher}
+                isMarkersSeparated={true}
+                enabledTwo={false}
+                values={[filterPriceHigher]}
                 onValuesChangeStart={()=> setscrollEnabled(false)}
                 onValuesChangeFinish={()=> setscrollEnabled(true)}
                 onValuesChange={(value)=> setfilterPriceHigher(value)}
                 min={0}
                 max={10000}
-                allowOverlap={false}
-                snapped
+                
                 step={10}
                 enabledOne={true}
-                enabledTwo={true}
+                
                 selectedStyle={{
                     backgroundColor: PRIMARYCOLOR
                 }}
@@ -298,16 +263,28 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                         <InputName>Available To</InputName>
                     </InputNameContainer>
                     <DateInputPressable onPress={()=>setOpenTo(true)}>
+                    {propertydateTo.getTime() < 1759176355615 ?
                         <PropertyTypeName>{propertydateTo.toDateString()}</PropertyTypeName>
+                    :
+                    null
+                    }
                     </DateInputPressable>
                     <DatePicker
-                              
+                        
                         modal
                         mode='date'
                         open={openFrom}
                         date={propertydateFrom}
                         onConfirm={(date) => {
-                            setpropertydateFrom(date)
+                            if(date.getTime() < new Date().getTime()){
+                                alert("Invalid Available From Date")
+                            }
+                            else if(date.getTime() >= propertydateTo.getTime()){
+                                alert("Cannot set date to after Available From date.")
+                            }
+                            else{
+                                setpropertydateFrom(date)
+                            }
                             setOpenFrom(false)
                             
                         }}
@@ -322,9 +299,19 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                         open={openTo}
                         date={propertydateTo}
                         onConfirm={(date) => {
-                            setpropertydateTo(date)
-                            setOpenTo(false)
-                                
+                            if(date.getTime() < new Date().getTime()){
+                                alert("Cannot set Available To before today")
+                            }
+                            else if(date.getTime() <= propertydateFrom.getTime()){
+                                alert("Cannot set Available To on or before Available From date")
+                            }
+                            else if(date.getTime() >= 1759176355615){
+                                alert("Date Selected is too far ahead, please select a closer date.") 
+                            }
+                            else{
+                                setpropertydateTo(date)
+                            }    
+                            setOpenTo(false)            
                         }}
                         onCancel={() => {
                             setOpenTo(false)
@@ -340,7 +327,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                     {BEDROOMTYPES.map((value, index)=>(
                         
                             
-                        <BedroomOptions  key={"bedroomOption" + value  + index} onPress={()=> setfilterBedroom(value)} inputValue={filterBedroom} value={value}>   
+                        <BedroomOptions  key={"bedroomOption" + value  + index} onPress={()=> value == filterBedroom ? setfilterBedroom("") : setfilterBedroom(value)} inputValue={filterBedroom} value={value}>   
                             <BedroomOptionsText value={value} inputValue={filterBedroom}>{value}</BedroomOptionsText>
                         </BedroomOptions>
                        
@@ -351,13 +338,13 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                 {/* Bathroom Section */}
                 <InputSectionCol>
                     <InputNameContainer>
-                        <InputName>Bethrooms</InputName>
+                        <InputName>Bathrooms</InputName>
                     </InputNameContainer>
                     <InputOptionContainer>
                     {BATHROOMTYPES.map((value, index)=>(
                         
                             
-                        <BedroomOptions key={"bathroomOption" + value + index} onPress={()=> setfilterBathroom(value)} inputValue={filterBathroom} value={value}>   
+                        <BedroomOptions key={"bathroomOption" + value + index} onPress={()=> value == filterBathroom ? setfilterBathroom("") : setfilterBathroom(value)} inputValue={filterBathroom} value={value}>   
                             <BedroomOptionsText value={value} inputValue={filterBathroom}>{value}</BedroomOptionsText>
                         </BedroomOptions>
                        
@@ -391,7 +378,8 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                 </View>
                             ))} */}
                             {amenitiesList.map((value, index)=>(
-                                <TypeOption key={value.name + value.icon + "amenities"}>
+                              
+                                <TypeOption key={value.name + value.icon + "amenities"} >
                                     <NameIcon>
                                         <Ionicons key={value.icon} name={value.icon} size={20} />
                                         <PropertyTypeName>{value.name}</PropertyTypeName>
@@ -400,6 +388,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                         <Ionicons name='checkbox' size={25} color={filterAmenities.indexOf(value.name) != -1 ? PRIMARYCOLOR : MEDIUMGREY}/>
                                     </Pressable>
                                 </TypeOption>
+                               
                             ))}
                         </AmenitiesContainer>
                         <View style={{width:WIDTH, height: HEIGHT*0.1}}>
