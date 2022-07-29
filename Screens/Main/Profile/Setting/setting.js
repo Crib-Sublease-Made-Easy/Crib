@@ -3,11 +3,13 @@ import {
   SafeAreaView,
   Switch,
   Pressable,
-  Animated
+  Animated,
+  TouchableOpacity
 } from 'react-native';
 import { User } from 'realm';
-import { UserContext } from '../../../UserContext';
+import { UserContext } from '../../../../UserContext';
 
+import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../sharedUtils';
 
@@ -20,9 +22,24 @@ import { HeaderContainer, BackButtonContainer, NameContainer, Header,ResetButton
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
+
 export default function SettingScreen({navigation}){
     const [messageNotification, setMessageNotification] = useState(true)
     const [newPropNotification, setNewPropNotification] = useState(true)
+    const {user, login} = useContext(UserContext);
+
+    const logout =  async() => {
+      await SecureStorage.removeItem("refreshToken");
+      await SecureStorage.removeItem("accessToken");
+      await SecureStorage.removeItem("firstName");
+      await SecureStorage.removeItem("lastName");
+      await SecureStorage.removeItem("email");
+      await SecureStorage.removeItem("userId");
+      await SecureStorage.removeItem("profilePic");
+
+      login(null)
+    }
+
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
           <HeaderContainer>
@@ -108,7 +125,9 @@ export default function SettingScreen({navigation}){
               <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryContainer>
+              <TouchableOpacity onPress={() => logout()}>
               <CategoryName style={{color:DARKGREY}}>Logout</CategoryName>
+              </TouchableOpacity>
             </CategoryContainer>
             <CategoryContainer>
               <CategoryName style={{color:'red'}}>Delete Account</CategoryName>

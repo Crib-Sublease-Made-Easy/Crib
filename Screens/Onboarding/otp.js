@@ -87,6 +87,7 @@ export default function OTPScreen({navigation, route}){
                 await SecureStorage.setItem("accessToken", data.token.accessToken)
                 await SecureStorage.setItem("refreshToken", data.token.refreshToken)
                 await SecureStorage.setItem("profilePic", route.profilePic)
+                await SecureStorage.setItem("email", route.email)
                 console.log("got")
                 setTimeout(()=>{setLoading(false)},2000)
                 login(route.email);

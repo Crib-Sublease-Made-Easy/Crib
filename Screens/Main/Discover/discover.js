@@ -72,7 +72,7 @@ export default function DiscoverScreen({navigation, route}){
 
     const [propertyPage, setPropertyPage] = useState(1);
 
-    const [filterModal, setFilterModal] = useState(true)
+    const [filterModal, setFilterModal] = useState(false)
 
     const [filteredProperties, setFilteredProperties] = useState([])
 

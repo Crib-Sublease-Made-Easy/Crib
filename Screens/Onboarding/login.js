@@ -76,6 +76,7 @@ export default function LoginScreen({navigation}){
             try{
                 await SecureStorage.setItem("firstName", response.loggedInUser.firstName)
                 await SecureStorage.setItem("lastName", response.loggedInUser.lastName)
+                await SecureStorage.setItem("email", email)
                 await SecureStorage.setItem("profilePic", response.loggedInUser.profilePic)
                 await SecureStorage.setItem("userId", response.loggedInUser._id)
                 await SecureStorage.setItem("accessToken", response.token.access)

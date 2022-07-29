@@ -1,4 +1,4 @@
-import * as React  from 'react';
+import * as React from 'react';
 import { useState, useContext, useEffect, createContext } from 'react';
 import {
   SafeAreaView,
@@ -82,41 +82,84 @@ const appId = '14BD0602-4159-48D7-9292-66136C479B46';
 
 const PRIMARYCOLOR = '#4050B5'
 
-export default function App () {
+export default function App() {
   const [sendBirdConnected, setSendbirdConnection] = useState(false)
 
-  const sb = new SendBird({appId: appId, localCacheEnabled: true });   // The `localCacheEnabled` is optional. The default is false.
-  useEffect(()=>{
-    
-    sb.useAsyncStorageAsDatabase(AsyncStorage); // This sets AsyncStorage as the database store.
+  const sb = new SendBird({ appId: appId, localCacheEnabled: true });   // The `localCacheEnabled` is optional. The default is false.
+  useEffect(() => {
+    console.log("NEW APP REFRESH")
+    refreshAccessToken()
     connectSendbird()
- }, [])
+  }, [])
   const connectSendbird = async () => {
     const UID = await SecureStorage.getItem("userId");
-    try {
-      console.log("connecting to sendbird")
-      console.log()
-      sb.connect(UID, function(user, error) {
+    if (UID != undefined) {
+      try {
+        console.log("connecting to sendbird")
+        console.log()
+        sb.connect(UID, function (user, error) {
           if (error) {
-              // Handle error.
-              console.log("sendbird error")
-              console.log(err)
+            // Handle error.
+            console.log("sendbird error")
+            console.log(error)
           }
-          else{
+          else {
             console.log("sendbird connected")
             console.log(user)
           }
           // The user is connected to Sendbird server.
-      });
-      // The user is connected to the Sendbird server.
-  } catch (err) {
-      // Handle error.
-      console.log("SENDBIRD ERROR")
-  }
-  
+        });
+        // The user is connected to the Sendbird server.
+      } catch (err) {
+        // Handle error.
+        console.log("SENDBIRD ERROR")
+      }
+    }
   }
 
+  const refreshAccessToken = async () => {
+    const rt = await SecureStorage.getItem("refreshToken");
+    const id = await SecureStorage.getItem("userId");
+    if (rt != undefined) {
+      fetch('https://sublease-app.herokuapp.com/tokens/accessRefresh', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + rt
+        }
+      }).then(async e => e.json()).then(async (response) => {
+        console.log("RESOPONSE", response)
+        try {
+          await SecureStorage.setItem("accessToken", response.accessToken)
+        } catch (err) {
+          console.log(err)
+        }
+      })
 
+      const at = await SecureStorage.getItem("accessToken");
+
+
+      fetch('https://sublease-app.herokuapp.com/users/' + id, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + at
+        }
+      }).then(async e => e.json()).then(async (response) => {
+        console.log("FETCH USER", response)
+        try {
+          await SecureStorage.setItem("firstName", response.firstName)
+          await SecureStorage.setItem("lastName", response.lastName)
+          await SecureStorage.setItem("profilePic", response.profilePic)
+          login("email");
+        } catch (err) {
+          console.log(err)
+        }
+      })
+    }
+  }
 
 
 
@@ -137,180 +180,212 @@ export default function App () {
   });
 
   return (
-    
+
     <NavigationContainer>
-    <UserContext.Provider value={{user, login, logout, sb}}>
-    
-    { user == null ?
-   
-      <Stack.Navigator>
-        
-        <Stack.Screen
-          name="DiscoverTabs"
-          component={DiscoverTab}
-          options={{headerShown: false, cardStyleInterpolator: forFade}}
-        />
+      <UserContext.Provider value={{ user, login, logout, sb }}>
 
-        <Stack.Screen
-          name="ProfileTabs"
-          component={ProfileTab}
-          options={{headerShown: false, cardStyleInterpolator: forFade}}
-        />
-        
-        <Stack.Screen
-          name="MessageTabs"
-          component={MessageTab}
-          options={{headerShown: false, cardStyleInterpolator: forFade}}
-        />
-        
+        {user != null ?
 
-        <Stack.Screen
-          name="DiscoverSearch"
-          component={DiscoverSearchScreen}
-          options={{headerShown: false, cardStyleInterpolator: forFade}}
-          sharedElements={(route, otherRoute, showing) => {
-            return ["searchBox"];
-          }}
-        />
-        <Stack.Screen name="PropertyDetail" 
-        component={PropertyDetailScreen} 
-        options={{ headerShown: false, cardStyleInterpolator: forFade, }}
-        sharedElements={(route, otherRoute, showing) => {
-          return ["0", "view"];
-        }}
-        />
-        <Stack.Screen name="PropertyPosting" 
-        component={PropertyPostingScreen} 
-        options={{ headerShown: false,  
-        cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS }}
-        />
+          <Stack.Navigator>
 
-        <Stack.Screen name="PropertyFilter" 
-        component={DiscoverFilterScreen} 
-        options={{ headerShown: false, presentation:'transparentModal', 
-        cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS }}
-        />
+            <Stack.Screen
+              name="DiscoverTabs"
+              component={DiscoverTab}
+              options={{ headerShown: false, cardStyleInterpolator: forFade }}
+            />
 
-        <Stack.Screen name="Setting" 
-        component={SettingScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS }}
-        />
+            <Stack.Screen
+              name="ProfileTabs"
+              component={ProfileTab}
+              options={{ headerShown: false, cardStyleInterpolator: forFade }}
+            />
 
-        <Stack.Screen name="Chat" 
-        component={ChatScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS }}
-        />
-        <Stack.Screen name="ChangeNumber" 
-        component={ChangeNumberScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS }}
-        />
+            <Stack.Screen
+              name="MessageTabs"
+              component={MessageTab}
+              options={{ headerShown: false, cardStyleInterpolator: forFade }}
+            />
 
-        <Stack.Screen name="OTPEdit" 
-        component={OTPEditScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS }}
-        />
-        <Stack.Screen name="ProfileEdit" 
-        component={ProfileEditScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forVerticalIOS, gestureDirection:'vertical'}}
-        />
 
-        <Stack.Screen name="EditEducation" 
-        component={EditEducationScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
-        />
-        <Stack.Screen name="EditOccupation" 
-        component={EditOccupationScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
-        />
-        <Stack.Screen name="EditAboutMe" 
-        component={EditAboutMeScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
-        />
-        <Stack.Screen name="EditProperty" 
-        component={EditPropertyScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
-        />
-        <Stack.Screen name="EditPropertyType" 
-        component={PropTypesScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
-        />
-         <Stack.Screen name="EditPropertyPrice" 
-        component={EditPropertyPriceScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
-        />
-        <Stack.Screen name="EditPropertyAvail" 
-        component={EditPropertyAvailScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
-        />
-        <Stack.Screen name="EditPropertyDescription" 
-        component={EditPropertyDescriptionScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
-        />
-        <Stack.Screen name="EditPropertyAmenities" 
-        component={EditPropertyAmenitiesScreen} 
-        options={{ headerShown: false,
-        cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS, }}
-        />
+            <Stack.Screen
+              name="DiscoverSearch"
+              component={DiscoverSearchScreen}
+              options={{ headerShown: false, cardStyleInterpolator: forFade }}
+              sharedElements={(route, otherRoute, showing) => {
+                return ["searchBox"];
+              }}
+            />
+            <Stack.Screen name="PropertyDetail"
+              component={PropertyDetailScreen}
+              options={{ headerShown: false, cardStyleInterpolator: forFade, }}
+              sharedElements={(route, otherRoute, showing) => {
+                return ["0", "view"];
+              }}
+            />
+            <Stack.Screen name="PropertyPosting"
+              component={PropertyPostingScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS
+              }}
+            />
 
-        {/* Messaging */}
-        {/* <Stack.Screen name="Lobby" component={Lobby} />
+            <Stack.Screen name="PropertyFilter"
+              component={DiscoverFilterScreen}
+              options={{
+                headerShown: false, presentation: 'transparentModal',
+                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS
+              }}
+            />
+
+            <Stack.Screen name="Setting"
+              component={SettingScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
+
+            <Stack.Screen name="Chat"
+              component={ChatScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
+            <Stack.Screen name="ChangeNumber"
+              component={ChangeNumberScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
+
+            <Stack.Screen name="OTPEdit"
+              component={OTPEditScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
+            <Stack.Screen name="ProfileEdit"
+              component={ProfileEditScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS, gestureDirection: 'vertical'
+              }}
+            />
+
+            <Stack.Screen name="EditEducation"
+              component={EditEducationScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="EditOccupation"
+              component={EditOccupationScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="EditAboutMe"
+              component={EditAboutMeScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="EditProperty"
+              component={EditPropertyScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="EditPropertyType"
+              component={PropTypesScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="EditPropertyPrice"
+              component={EditPropertyPriceScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="EditPropertyAvail"
+              component={EditPropertyAvailScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="EditPropertyDescription"
+              component={EditPropertyDescriptionScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="EditPropertyAmenities"
+              component={EditPropertyAmenitiesScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+
+            {/* Messaging */}
+            {/* <Stack.Screen name="Lobby" component={Lobby} />
         <Stack.Screen name="Chat" component={Chat} />
         <Stack.Screen name="Member" component={Member} />
         <Stack.Screen name="Invite" component={Invite} /> 
         <Stack.Screen name="Profile" component={Invite} /> */}
 
-  
-
-  
-
-      </Stack.Navigator>
-      :
-      
-      <Stack.Navigator initialRouteName='Landing'>
-             
-
-        <Stack.Screen name="Landing"   component={LandingScreen} options={{headerShown: false}}/>
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          
-          options={{headerShown: false, animation:'slide_from_right'}}
-        />
-        <Stack.Screen name="Signup"  component={SignupScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="FirstLastName"  component={FirstLastNameScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="Age"  component={AgeScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="Gender"  component={GenderScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="ProfilePic"  component={ProfilePicScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="Occupation"  component={OccupationScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="School"  component={SchoolScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="Email"  component={EmailScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="Password"  component={PasswordScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="PhoneNumber"  component={PhoneNumberScreen} options={{headerShown: false}}/>
 
 
 
-        <Stack.Screen name="EmailPassword" component={EmailPasswordScreen} options={{headerShown: false}}/>
-        <Stack.Screen name="otp" component={OTPScreen} options={{headerShown: false}}/>
-        
-      </Stack.Navigator>
-    }
-    
-    
-    </UserContext.Provider>
+
+          </Stack.Navigator>
+          :
+
+          <Stack.Navigator initialRouteName='Landing'>
+
+
+            <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }} />
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+
+              options={{ headerShown: false, animation: 'slide_from_right' }}
+            />
+            <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="FirstLastName" component={FirstLastNameScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Age" component={AgeScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Gender" component={GenderScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="ProfilePic" component={ProfilePicScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Occupation" component={OccupationScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="School" component={SchoolScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Email" component={EmailScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Password" component={PasswordScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="PhoneNumber" component={PhoneNumberScreen} options={{ headerShown: false }} />
+
+
+
+            <Stack.Screen name="EmailPassword" component={EmailPasswordScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="otp" component={OTPScreen} options={{ headerShown: false }} />
+
+          </Stack.Navigator>
+        }
+
+
+      </UserContext.Provider>
     </NavigationContainer>
-   
+
   )
 }
