@@ -40,7 +40,7 @@ export default function PropertyDetailScreen({navigation, route}){
     console.log("Detail")
     console.log(route.params.data)
     useEffect(()=>{
-      
+      fetchProperties()
     }, [])
     const flatListRef = useRef(null)
     const propertyAmenities = (["Furnished", "Pets Allowed", "Able to renew", "On-site waher and dryer"]);
@@ -77,7 +77,7 @@ export default function PropertyDetailScreen({navigation, route}){
 
     async function fetchProperties(){
         const accessToken = await SecureStorage.getItem("refreshToken");
-        await fetch('https://sublease-app.herokuapp.com/properties/' + route.params.propertyInfo._id, {
+        await fetch('https://sublease-app.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -87,7 +87,7 @@ export default function PropertyDetailScreen({navigation, route}){
             }) 
             .then(res => res.json()).then(propertyData =>{
                 console.log("The following is fetch API data")
-                console.log("propertyData")
+                console.log(propertyData)
                
                
             })
