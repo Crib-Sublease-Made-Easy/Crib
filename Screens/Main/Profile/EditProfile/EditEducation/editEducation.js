@@ -36,7 +36,7 @@ export default function EditEducationScreen({navigation, route}){
                 'Authorization': 'Bearer ' + accessToken,
             },
             body: JSON.stringify({
-                school: education,
+                school: education.trim(),
             })
         })
             .then((response) => response.json()).then(data => {

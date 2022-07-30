@@ -162,9 +162,8 @@ export const DateSelectContainer = styled.View`
 
 export const DateSelectPressable = styled.Pressable`
    
-   
-    align-items: center
-   
+    width:${WIDTH*0.3}px
+    align-items: center   
     border-radius: 10px;
 `
 export const CategoryName = styled.Text`
@@ -177,7 +176,7 @@ export const CategoryName = styled.Text`
 export const DateCategoryName = styled.Text`
     font-size: ${HEIGHT*0.0175}px
     padding-vertical: ${HEIGHT*0.01}px
-    width: ${WIDTH*0.3}px
+    width: ${WIDTH*0.275}px
     font-weight: 500
     color: white
 `   
@@ -278,7 +277,7 @@ export const RowValueContainer = styled.Pressable`
     flex-direction: row;
     align-items: center
     padding-vertical: ${HEIGHT*0.015}px
-    width: ${WIDTH*0.25}px
+    
 `
 export const RowName = styled.Text`
     font-size: ${HEIGHT*0.0175}px
@@ -287,14 +286,14 @@ export const RowName = styled.Text`
 
 export const PropertyDescriptionInput = styled.TextInput`
     width: ${WIDTH*0.9}px;
-    height: ${HEIGHT*0.2}px;
+    height: ${HEIGHT*0.275}px;
     border-width: 1px;
     border-color: white
     border-radius: 15px;
     color: white
     margin-top: ${HEIGHT*0.02}px;
-    padding-left: ${HEIGHT*0.02}px;
-    padding-top: ${HEIGHT*0.02}px;
+    padding-horizontal: ${HEIGHT*0.02}px;
+    padding-vertical: ${HEIGHT*0.02}px;
 `
 
 export const Divider = styled.View`
@@ -405,4 +404,11 @@ export const ImageContainer = styled.Pressable`
     align-self: center
     justify-content: center;
     align-items: center
+`
+
+export const MaxText = styled.Text`
+    width: ${WIDTH*0.9}px;
+    align-self: center
+    margin-top: ${HEIGHT*0.01}px
+    color: white
 `

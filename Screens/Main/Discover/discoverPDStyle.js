@@ -2,9 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {Dimensions,} from 'react-native';
 
 import styled from 'styled-components/native';
-import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY } from '../../../sharedUtils';
+import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR } from '../../../sharedUtils';
 
-const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
 
 const HEIGHT = Dimensions.get('screen').height;
@@ -32,7 +31,8 @@ export const CardTitle = styled.Text`
 export const CardSectionOne = styled.View`
     margin-top: ${HEIGHT*0.025}px
     padding-vertical: ${HEIGHT*0.01}px
-    align-items: center
+    width:${WIDTH*0.9}px
+    align-self:center
 `
 export const LocationDistanceContainer = styled.View`
     height: ${HEIGHT*0.05}px;
@@ -45,6 +45,13 @@ export const LocationText = styled.Text`
     font-size: ${HEIGHT*0.0175}px;
     font-weight: 400;
     color: ${PRIMARYGREY}
+`
+
+export const AmenitiesText = styled.Text`
+    font-size: ${HEIGHT*0.0175}px;
+    font-weight: 400;
+    color: ${PRIMARYGREY}
+    margin-left: ${WIDTH*0.025}px
 `
 export const BedAndBathContainer = styled.View`
    
@@ -110,11 +117,11 @@ export const DescriptionText = styled.Text`
 `
 
 export const AmenitiesItem = styled.View`
-    width: ${WIDTH*0.9}px;
+   
     height: ${HEIGHT*0.05}px;
     align-items:center;
     flex-direction: row;
-    justify-content: space-between;
+   
 `
 
 export const Footer = styled.View`

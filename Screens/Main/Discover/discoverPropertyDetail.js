@@ -25,15 +25,15 @@ import { Container, PropertyDescription, ImageStyle, CardSectionOne, CardTitle, 
         LocationText, BedAndBathContainer, BedBathLogo, Divider, CardSectionTwo, InfoHeaderText,
             InfoContainer, BothInfoContainer, InfoText, DescriptionText, AmenitiesItem, Footer,
             PricePerMonth, ContactTanentButton, TenantInfoContainer, TenantInfo, ProfileImageContainer,
-            CardSectionFour, CardSectionFive, DateContainer, DateText, DescriptionContainer} from './discoverPDStyle'
+            CardSectionFour, CardSectionFive, DateContainer, DateText, DescriptionContainer, AmenitiesText} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import { LIGHTGREY } from '../../../sharedUtils';
+import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR} from '../../../sharedUtils';
 
-const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
 
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
+
 
 
 export default function PropertyDetailScreen({navigation, route}){
@@ -137,7 +137,7 @@ export default function PropertyDetailScreen({navigation, route}){
                                 <LocationText>{propData.bed} bedroom</LocationText>
                             </BedBathLogo>
                             <BedBathLogo>
-                                <Ionicons name="eye-off-outline" size={25} color={PRIMARYGREY}></Ionicons>
+                                <Ionicons name="water-outline" size={25} color={PRIMARYGREY}></Ionicons>
                                 <LocationText>{propData.bath} bathroom</LocationText>
                             </BedBathLogo>
                         </BedAndBathContainer>
@@ -153,7 +153,7 @@ export default function PropertyDetailScreen({navigation, route}){
                                 <InfoHeaderText>Availability:</InfoHeaderText>
                                 <DateContainer>
                                     <DateText>{new Date(propData.availableFrom).toDateString()}</DateText>
-                                    <Ionicons name="repeat" size={25} />
+                                    <Ionicons name="arrow-forward-outline" size={25} />
                                     <DateText>{new Date(propData.availableTo).toDateString()}</DateText>
                                 </DateContainer>
                             </InfoContainer>
@@ -171,7 +171,7 @@ export default function PropertyDetailScreen({navigation, route}){
                     <Divider></Divider>
                     
                     <CardSectionTwo>
-                        <InfoHeaderText>Teanant Information:</InfoHeaderText>
+                        <InfoHeaderText>Tenant Information:</InfoHeaderText>
                         <TenantInfoContainer>
                             <ProfileImageContainer>
                                 {/* <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.125, width:HEIGHT*0.125, borderRadius:HEIGHT*0.125/2, backgroundColor:LIGHTGREY}}/> */}
@@ -188,8 +188,9 @@ export default function PropertyDetailScreen({navigation, route}){
                         <InfoHeaderText>Amenities:</InfoHeaderText>
                         {propData.amenities.map((value)=>(
                             <AmenitiesItem key={value}>
-                                <LocationText>{value}</LocationText>
-                                <Ionicons name="checkbox" size={WIDTH*0.075} color={PRIMARYCOLOR}></Ionicons>
+                                <Ionicons name={GetAmenitiesIcon(value)} size={WIDTH*0.075} color={PRIMARYCOLOR}></Ionicons>
+                                <AmenitiesText >{value}</AmenitiesText>
+                               
                             </AmenitiesItem>
 
                         ))}

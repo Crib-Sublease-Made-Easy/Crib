@@ -18,6 +18,8 @@ export const LIGHTGREY = '#E0E0E0'
 
 export const EXTRALIGHT = '#EFEFEF'
 
+export const GOOGLEBLUE = '#4c8bf5'
+
 //Dimensions
 export const HEIGHT = Dimensions.get('screen').height;
 export const WIDTH = Dimensions.get('screen').width;
@@ -49,6 +51,61 @@ export function OnlyLetters(str) {
 
 export function ContainsSpace(str){
     return /\s/.test(str);
+}
+const amenitiesList =
+    [{ name: 'Pets Allowed', color: '#57b2f7', icon: "paw-outline" },
+    { name: 'Mattress', color: '#fa4b4b', icon: 'bed-outline' },
+    { name: 'Able to renew', color: '#f79c40', icon: 'refresh-outline' },
+    { name: 'Gym', color: '#00d14d', icon: 'barbell-outline' },
+    { name: 'On-site Washer and Dryer', color: '#f79c40', icon: 'water-outline' },
+    { name: 'Wifi', color: '#00d14d', icon: 'wifi-outline' },
+    { name: 'Furnished', color: '#fa4b4b', icon: 'desktop-outline' },
+    { name: 'Utilities Included', color: '#57b2f7', icon: 'power-outline' },
+    { name: 'Pool', color: '#f79c40', icon: 'flask-outline' },
+    { name: 'Parking', color: '#57b2f7', icon: 'car-outline' },
+    { name: 'TV', color: '#fa4b4b', icon: 'tv-outline' },
+    { name: 'Heating and Cooling', color: '#fa4b4b', icon: 'thermometer-outline' },
+]
+export const GetAmenitiesIcon = (name) =>{
+    if(name=="Pets Allowed"){
+        return "paw-outline";
+    }
+    else if (name=="Mattress"){
+        return "bed-outline";
+    }
+    else if (name=="Able to renew"){
+        return "refresh-outline";
+    }
+    else if (name=="Gym"){
+        return "barbell-outline";
+    }
+    else if (name=="On-site Washer and Dryer"){
+        return "water-outline";
+    }
+    else if (name=="Wifi"){
+        return "wifi-outline";
+    }
+    else if (name=="Furnished"){
+        return "desktop-outline";
+    }
+    else if (name=="Utilities Included"){
+        return "power-outline";
+    }
+    else if (name=="Pool"){
+        return "flask-outline";
+    }
+    else if (name=="Parking"){
+        return "car-outline";
+    }
+    else if (name=="TV"){
+        return "tv-outline";
+    }
+    else if (name=="Heating and Cooling"){
+        return "thermometer-outline";
+    }
+    else{
+        return "checkbox"
+    }
 }
 
 export const HeaderContainer = styled.View`

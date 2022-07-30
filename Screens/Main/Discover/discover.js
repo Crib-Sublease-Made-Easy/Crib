@@ -396,6 +396,7 @@ export default function DiscoverScreen({navigation, route}){
        console.log(item)
        setSelectedPin(item)
        setPropertyPreviewCard(true)
+       openPreviewCard()
        moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
     }
 
@@ -419,7 +420,7 @@ export default function DiscoverScreen({navigation, route}){
                 <Marker
                     key={"currentlocationmarker"}
                     coordinate={{ latitude:currentLocation[0], longitude:currentLocation[1] }}
-                      
+                    style={{zIndex:3}}
                 ></Marker>
                 
             
@@ -428,7 +429,7 @@ export default function DiscoverScreen({navigation, route}){
                     key={value._id}
                     coordinate={{ latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
                     onPress={()=>onMarkerClick(value)}
-                    
+                    style={{zIndex: value._id == selectedPin._id ? 2 : 1}}
                    >
                     <CustomMarker style={{backgroundColor: value._id == selectedPin._id ? PRIMARYCOLOR : 'green'}}>
                         <Text style={{color:'white'}}>${value.price}</Text>
@@ -462,7 +463,7 @@ export default function DiscoverScreen({navigation, route}){
                         borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
                     </PreviewTopContainer>
 
-                    <PreviewBottomContainer onPress={()=>navigation.naviFmagate("PropertyDetail", {data : {item: selectedPin.propertyInfo}})}>
+                    <PreviewBottomContainer onPress={()=>navigation.naviFmagate("PropertyDetail", {data : {item: selectedPin}})}>
                         
                         <PreviewLocationText>{selectedPin.loc.streetAddr}</PreviewLocationText>
                         <PreviewPriceText>{new Date(selectedPin.availableFrom).toDateString()} - {new Date(selectedPin.availableTo).toDateString()}</PreviewPriceText>
