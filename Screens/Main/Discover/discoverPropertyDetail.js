@@ -37,8 +37,6 @@ const WIDTH = Dimensions.get('screen').width;
 
 
 export default function PropertyDetailScreen({navigation, route}){
-    const {sb} = useContext(UserContext);
-
     console.log("Detail")
     console.log(route.params.data)
     useEffect(()=>{
