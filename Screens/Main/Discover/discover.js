@@ -311,7 +311,7 @@ export default function DiscoverScreen({navigation, route}){
     }
 
 
-    //Move to the center the view property location 
+    //Move to the center the view property  
     //Input is an array [lat, long]
     //If only currentLocation is vlaid data, then center the mapview to current location
     //If both the currentLocation and the pinLocation is valid, then use delta to adjust mapview
@@ -395,6 +395,7 @@ export default function DiscoverScreen({navigation, route}){
     function onMarkerClick(item){
        console.log(item)
        setSelectedPin(item)
+       setPropertyPreviewCard(true)
        moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
     }
 
@@ -415,7 +416,11 @@ export default function DiscoverScreen({navigation, route}){
                 longitudeDelta: 0,
                 }}
             >
-            
+                <Marker
+                    key={"currentlocationmarker"}
+                    coordinate={{ latitude:currentLocation[0], longitude:currentLocation[1] }}
+                      
+                ></Marker>
                 
             
                 {pinsData != undefined && pinsData.map((value,index)=>(
@@ -453,16 +458,16 @@ export default function DiscoverScreen({navigation, route}){
                 {selectedPin != undefined && selectedPin != "" &&
                 <View>
                     <PreviewTopContainer>
-                        <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
+                        <Image source={{uri:selectedPin.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
                         borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
                     </PreviewTopContainer>
 
                     <PreviewBottomContainer onPress={()=>navigation.naviFmagate("PropertyDetail", {data : {item: selectedPin.propertyInfo}})}>
                         
-                        <PreviewLocationText>{selectedPin.propertyInfo.loc.streetAddr}</PreviewLocationText>
-                        <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).toDateString()} - {new Date(selectedPin.propertyInfo.availableTo).toDateString()}</PreviewPriceText>
+                        <PreviewLocationText>{selectedPin.loc.streetAddr}</PreviewLocationText>
+                        <PreviewPriceText>{new Date(selectedPin.availableFrom).toDateString()} - {new Date(selectedPin.availableTo).toDateString()}</PreviewPriceText>
                         
-                        <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
+                        <PreviewPriceText>${selectedPin.price}</PreviewPriceText>
 
                         
                     </ PreviewBottomContainer> 
