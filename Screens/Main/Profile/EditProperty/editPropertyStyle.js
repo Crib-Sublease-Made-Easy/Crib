@@ -83,6 +83,8 @@ export const CategoryName = styled.Text`
 export const RowName = styled.Text`
     font-size: ${HEIGHT*0.015}px
     color: ${DARKGREY}
+    width: ${WIDTH*0.8}px
+    height: ${HEIGHT*0.04}px
 `
 export const DatePriceText = styled.Text`
     font-size: ${HEIGHT*0.015}px

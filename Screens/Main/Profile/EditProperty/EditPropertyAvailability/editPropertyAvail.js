@@ -25,7 +25,7 @@ import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContai
 
 import { RowContainer, CategoryName, DateContainer } from './editPropertyAvailStyle';
 
-
+import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
 export default function EditPropertyAvailScreen({navigation, route}){
     const [availFrom, setAvailFrom] = useState( new Date(route.params.from))
@@ -33,6 +33,33 @@ export default function EditPropertyAvailScreen({navigation, route}){
     const [openFrom, setOpenFrom] = useState(false);
     const [openTo, setOpenTo] = useState(false)
     console.log(new Date(route.params.from))
+
+    async function update(){
+       
+        console.log(route.params.propID)
+        const accessToken = await SecureStorage.getItem("refreshToken");
+        fetch('https://sublease-app.herokuapp.com/properties/' + route.params.uid, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
+            },
+            body: JSON.stringify({
+                availableFrom: availFrom,
+                availableTo: availTo
+            })
+        })
+            .then((response) => response.json()).then(data => {
+                console.log("Update type reponse")
+                console.log(data)
+                navigation.navigate('EditProperty')
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }
+    
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
         <HeaderContainer>
@@ -45,7 +72,7 @@ export default function EditPropertyAvailScreen({navigation, route}){
                 <Header>Edit Availability</Header>
             </NameContainer>
             <ResetButtonContainer>
-                <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} >
+                <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
                     <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
                 </Pressable>
             </ResetButtonContainer>
@@ -73,9 +100,17 @@ export default function EditPropertyAvailScreen({navigation, route}){
             open={openFrom}
             date={availFrom}
             onConfirm={(date) => {
-                const correctDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
-                setOpenFrom(false),
-                    setAvailFrom(correctDate)
+                if(date.getTime() +1000000< new Date().getTime()){
+                   alert("Invalid available from date.")
+                }
+                else if(date.getTime() > availTo.getTime()){
+                    alert("Avilable from cannot be after available to")
+                }
+                else{
+                    setAvailFrom(date)
+                }
+                setOpenFrom(false)
+                  
             }}
             onCancel={() => {
                 setOpenFrom(false)
@@ -88,9 +123,17 @@ export default function EditPropertyAvailScreen({navigation, route}){
             open={openTo}
             date={availTo}
             onConfirm={(date) => {
-                const correctDate = new Date(date.getFullYear(), date.getMonth() % 12, date.getDate())
-                setOpenTo(false),
-                    setAvailTo(correctDate)
+                if(date.getTime() < new Date().getTime()){
+                    alert("Invalid available to date.")
+                }
+                else if(date.getTime() < availFrom.getTime() + 2000000){
+                    alert("Available to cannot be before available from.")
+                }
+                else{
+                    setAvailTo(date)
+                }
+                setOpenTo(false)
+                    
             }}
             onCancel={() => {
                 setOpenTo(false)

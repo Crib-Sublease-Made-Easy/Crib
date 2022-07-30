@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, {useState, useEffect, useRef, useContext, useCallback} from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -51,7 +51,9 @@ export default function PropertyDetailScreen({navigation, route}){
     const viewabilityConfigCallbackPairs = useRef([
         { onViewableItemsChanged: testFuction },
     ]);
+    const {sb} = useContext(UserContext);
     const [flatingScrolling, setFlatlistScrolling] = useState(false)
+    const [flatlistIndex, setFlatlistIndex] = useState(0)
     const createConversation = async () =>{
         const UID = await SecureStorage.getItem("userId");
         console.log("MY Userid", UID)
@@ -74,11 +76,44 @@ export default function PropertyDetailScreen({navigation, route}){
 
         
     }
+
+    async function fetchProperties(){
+        const accessToken = await SecureStorage.getItem("refreshToken");
+        await fetch('https://sublease-app.herokuapp.com/properties/' + route.params.propertyInfo._id, {
+            method: 'GET',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken,
+            }
+            }) 
+            .then(res => res.json()).then(propertyData =>{
+                console.log("The following is fetch API data")
+                console.log("propertyData")
+               
+               
+            })
+            .catch(e=>{
+                alert(e)
+        })
+    }
+
     const testFuction = ({
         viewableItems,
-      }) => {
+    }) => {
         console.log(viewableItems)
-      };
+    };
+
+    const onScroll = useCallback((event) => {
+    const slideSize = event.nativeEvent.layoutMeasurement.width;
+    const index = event.nativeEvent.contentOffset.x / slideSize;
+    const roundIndex = Math.round(index);
+    setFlatlistIndex(roundIndex)
+    }, []);
+
+    function likeProperty(){
+
+    }
 
     return(
        
@@ -88,6 +123,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 <ScrollView showsVerticalScrollIndicator={false} >
                     <View style={{height:HEIGHT*0.35, width:WIDTH}}>
                         <FlatList 
+                        onScroll={onScroll}
                         horizontal 
                         style={{position:'absolute', width:WIDTH, height:HEIGHT*0.35, overflow:'hidden'}}
                         data={propData.imgList}
@@ -96,7 +132,6 @@ export default function PropertyDetailScreen({navigation, route}){
                            
                             <View style={{width:WIDTH, height:HEIGHT*0.35,justifyContent:'center'}}>
                                 <Image source={{uri: item}} style={{width:WIDTH, height:HEIGHT*0.35,}} />
-                                
                             </View>
                         )}
                         snapToAlignment="center"
@@ -104,16 +139,14 @@ export default function PropertyDetailScreen({navigation, route}){
                         showsHorizontalScrollIndicator={false}
                         bounces={false}
                         snapToInterval={WIDTH}
-                        viewabilityConfigCallbackPairs={
-                            viewabilityConfigCallbackPairs.current
-                        }
+                        
                         />
                             
                             {/* <Image style={ImageStyle} source={{uri: data.imgList[0]}}/> */}
-                        <View style={{width: WIDTH, height: HEIGHT*0.02, position:'absolute', bottom:HEIGHT*0.05, flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+                        <View style={{width: WIDTH, height: HEIGHT*0.02, position:'absolute', bottom:HEIGHT*0.03, flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
                             {propData.imgList.map((data, index)=>(
-                                <View key={"img"+ index} style={{marginLeft:WIDTH*0.02, marginRight:WIDTH*0.02, height:HEIGHT*0.015, width:HEIGHT*0.015, 
-                                borderRadius:HEIGHT*0.0075,backgroundColor:'white' }}>
+                                <View key={"img"+ index} style={{marginLeft:WIDTH*0.02, marginRight:WIDTH*0.02, height:HEIGHT*0.012, width:HEIGHT*0.012, 
+                                borderRadius:HEIGHT*0.006,backgroundColor: flatlistIndex == index ? PRIMARYCOLOR : 'white' }}>
                                 </View>
                             ))
 
@@ -124,13 +157,17 @@ export default function PropertyDetailScreen({navigation, route}){
                          position:'absolute',top:HEIGHT*0.05, left:WIDTH*0.05, width:WIDTH*0.1, height:WIDTH*0.1, borderRadius: WIDTH*0.05 }} onPress={()=>navigation.goBack()}>
                             <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
                         </Pressable>
+                        <Pressable  style={{backgroundColor:'rgba(43,43,43,0.8)',justifyContent:'center', alignItems:'center',
+                         position:'absolute',top:HEIGHT*0.05, right:WIDTH*0.05, width:WIDTH*0.1, height:WIDTH*0.1, borderRadius: WIDTH*0.05 }} onPress={likeProperty}>
+                            <Ionicons  name="heart" size={25} color='white'></Ionicons>
+                        </Pressable>
                     </View>
                     
                     <CardSectionOne>
                         <CardTitle>{propData.loc.streetAddr}</CardTitle>
                         <LocationDistanceContainer>
                             <Ionicons name="location-outline" size={20} />
-                            <LocationText>Mountain View , CA</LocationText>
+                            <LocationText>{propData.loc.secondaryTxt}</LocationText>
                             {/* <LocationText>3 miles away</LocationText> */}
                         </LocationDistanceContainer>
                         <BedAndBathContainer>

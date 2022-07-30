@@ -25,13 +25,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker'
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
-
 import ImagePicker from 'react-native-image-crop-picker';
+
+import Lottie from 'lottie-react-native';
+
 
 
 FontAwesome.loadFont();
@@ -44,31 +45,13 @@ const ImageName = [
     { name: "Floor Plan", des: "Please upload an image of property floor plan.", icon: "logo-stackoverflow" },
 ]
 
-const amenitiesList =
-    [{ name: 'Pets Allowed', color: '#57b2f7', icon: "paw-outline" },
-    { name: 'Mattress  ', color: '#fa4b4b', icon: 'bed-outline' },
-    { name: 'Able to renew', color: '#f79c40', icon: 'refresh-outline' },
-    { name: 'Gym', color: '#00d14d', icon: 'barbell-outline' },
-    { name: 'On-site Washer and Dryer', color: '#f79c40', icon: 'water-outline' },
-    { name: 'Wifi', color: '#00d14d', icon: 'wifi-outline' },
-    { name: 'Furnished', color: '#fa4b4b', icon: 'desktop-outline' },
-    { name: 'Utilities Included', color: '#57b2f7', icon: 'power-outline' },
-    { name: 'Pool', color: '#f79c40', icon: 'flask-outline' },
-    { name: 'Parking   ', color: '#57b2f7', icon: 'car-outline' },
-    { name: 'TV', color: '#fa4b4b', icon: 'tv-outline' },
-    { name: 'Heating and Cooling', color: '#fa4b4b', icon: 'thermometer-outline' },
-    ]
 
 const bedroomList = ["Studio", "2", "3", "4+"]
 const bathroomList = ["1", "2", "3", "4+"]
 
 
 
-const PRIMARYCOLOR = '#4050B5'
-const PRIMARYGREY = '#5e5d5d'
 
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
 
 import {
     ModalView, Heading, ButtonContainer, ImageContainer, NextContainer, InfoText, ContinueButton,
@@ -81,8 +64,7 @@ import {
     ReviewHeading, ReviewLocationContainer, ReviewDateContainer, ImageSelectionContainer, ImageText, MaxText
 } from './discoverPropertyPostingStyle';
 import Easing from 'react-native/Libraries/Animated/Easing';
-import { DARKGREY, LIGHTGREY, MEDIUMGREY } from '../../../sharedUtils';
-import { TopContainer } from '../Profile/profileEditStyle';
+import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR  } from '../../../sharedUtils';
 import { SubHeadingText } from '../../Onboarding/Landing/landingStyle';
 
 
@@ -116,6 +98,8 @@ export default function PropertyPostingScreen({ navigation }) {
     const [propertyKitchenImage, setPropertyKitchenImage] = useState(null)
     const [propertyFloorplanImage, setPropertyFloorPlanImage] = useState(null)
 
+    const [loading, setLoading] = useState(false)
+
     //Sets DatePicker Modal Visibility
     const [openFrom, setOpenFrom] = useState(false)
     const [openTo, setOpenTo] = useState(false)
@@ -129,7 +113,6 @@ export default function PropertyPostingScreen({ navigation }) {
     //Control Opacity when scrolling 
     const OpacityTranslation = useRef(new Animated.Value(1)).current;
     const TopContainerTranslation = useRef(new Animated.Value(HEIGHT * 0.1)).current;
-    const SearchHeightTranslation = useRef(new Animated.Value(0)).current;
 
 
     function moveScrollView(val) {
@@ -165,7 +148,6 @@ export default function PropertyPostingScreen({ navigation }) {
        
         else {
             setscrollviewIndex(val)
-            // sequence()
             console.log("Type: " + propertyType)
             console.log("Address: " + propertyLocation)
             console.log("Images: " + propertyphotoGallery.length)
@@ -189,22 +171,6 @@ export default function PropertyPostingScreen({ navigation }) {
         }
 
     }
-
-    // function sequence(){
-    //     Animated.sequence([
-    //         Animated.spring(OpacityTranslation,{
-    //             toValue: 0,
-    //             duration:200, 
-    //             useNativeDriver:false,
-    //         }),
-    //         Animated.spring(OpacityTranslation,{
-    //             toValue: 1,
-    //             duration:300, 
-    //             delay:500,
-    //             useNativeDriver:false,
-    //         })
-    //     ]).start()
-    // }
 
     function SelectLocationSequence() {
 
@@ -288,6 +254,7 @@ export default function PropertyPostingScreen({ navigation }) {
     }
 
     async function postproperty() {
+        setLoading(true)
         console.log("Posting")
         const accessToken = await SecureStorage.getItem("refreshToken");
         console.log(propertyphotoGallery);
@@ -330,13 +297,14 @@ export default function PropertyPostingScreen({ navigation }) {
             name: 'someName',
         });
 
-
-        var array = propertyFloorplanImage.split(".");
-        postingData.append("propertyImages", {
-            uri: propertyFloorplanImage,
-            type: 'image/' + array[1],
-            name: 'someName',
-        });
+        if(propertyFloorplanImage!= null){
+            var array = propertyFloorplanImage.split(".");
+            postingData.append("propertyImages", {
+                uri: propertyFloorplanImage,
+                type: 'image/' + array[1],
+                name: 'someName',
+            });
+        }
 
 
         postingData.append("price", propertyPrice.split("$")[1]);                     //String 
@@ -348,14 +316,9 @@ export default function PropertyPostingScreen({ navigation }) {
         postingData.append("title", "Name");                    //String
         // postingData.append("propertyAmenities", propertyAmenities);     //Array of String 
         postingData.append("timePosted", new Date().toString())
-        postingData.append("amenities", "furnished");
-        postingData.append("amenities", "moveinFlexibility");                  //Array of String 
-        postingData.append("amenities", "renew");                              //Array of String 
-        postingData.append("amenities", "pets");                               //Array of String 
-        postingData.append("amenities", "parking");                            //Array of String 
-        postingData.append("amenities", "onSiteWasherDryer");                  //Array of String 
-        postingData.append("amenities", "sharedRoom");                         //Array of String 
-        postingData.append("amenities", "utilitiesIncluded");                  //Array of String 
+        propertyAmenities.forEach(element => {
+            postingData.append("amenities", element);
+        });
 
         console.log("AccessToken")
         console.log(accessToken)
@@ -369,14 +332,11 @@ export default function PropertyPostingScreen({ navigation }) {
             body: postingData,
         })
             .then((response) => response.json()).then(data => {
-                // if(response.status == 401){
-                //     alert("Fuck you scumbag.")
-                // }
-                // else if(response.status == 200){
-                //     alert("Success")
-                // }
-                navigation.goBack()
-                console.log(data)
+                setTimeout(()=>{
+                    navigation.goBack()
+                    setLoading(false)
+                    console.log(data)
+                },1500)
             })
             .catch(e => {
                 alert(e)
@@ -430,11 +390,6 @@ export default function PropertyPostingScreen({ navigation }) {
         //   getTokens
     }, [expanded])
 
-    // async function getTokens(){
-    //     const accessToken = await SecureStorage.getItem("accessToken");
-
-
-    // }
 
     function testing() {
         Animated.timing(heighttranslation, {
@@ -446,6 +401,7 @@ export default function PropertyPostingScreen({ navigation }) {
     }
 
     function moveOn(value) {
+        console.log(value)
         Keyboard.dismiss()
         setpropertyLocation(value.description)
         setpropertyMainAddr(value.structured_formatting.main_text)
@@ -461,20 +417,15 @@ export default function PropertyPostingScreen({ navigation }) {
         return "$" + val
     }
 
-    function setMainAndSecondary(value){
-        console.log("hi")
-        
-    }
-
-
+   
     return (
         <SafeAreaView style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0 }} >
-            <TouchableOpacity style={{paddingLeft:WIDTH*0.05}} onPress={()=>navigation.navigate('Profile')}>
+            <TouchableOpacity disabled={loading} style={{paddingLeft:WIDTH*0.05}} onPress={()=>navigation.navigate("Profile")}>
                 <Text style={{color: DARKGREY, fontWeight:'500'}}>Cancel Posting</Text>
             </TouchableOpacity>
             <ModalView>
                 <ButtonContainer>
-                    <Pressable onPress={() => moveScrollView(scrollviewIndex - 1)} style={{ width: WIDTH * 0.1 }}>
+                    <Pressable disabled={loading} onPress={() => moveScrollView(scrollviewIndex - 1)} style={{ width: WIDTH * 0.1 }}>
                         <Ionicons name="arrow-back-outline" size={30} color='white'></Ionicons>
                     </Pressable>
                     <Pressable style={{ display: scrollviewIndex == 10 || scrollviewIndex == 9 || scrollviewIndex == 0 ? 'none' : 'flex', }}
@@ -623,13 +574,13 @@ export default function PropertyPostingScreen({ navigation }) {
                         <InputContainer >
                             <DateSelectContainer>
 
-                                <RowContainer>
+                                <RowContainer onPress={() => setOpenFrom(true)}>
                                     <DateCategoryName>Available From</DateCategoryName>
                                     <Ionicons name="shuffle" size={20} color='white' />
                                     <RowValueContainer onPress={() => setOpenFrom(true)} >
                                         <DateSelectPressable onPress={() => setOpenFrom(true)}>
                                         {
-                                            propertydateFrom.getTime() == new Date().getTime() ?
+                                            propertydateFrom.getTime() < new Date().getTime() + 10000000 ?
                                                 <Text style={{color:'white'}}> Select Date</Text>
                                             :
                                             <Text style={{ alignSelf: 'center', color: 'white' }}>{propertydateFrom.getMonth()%12 + 1}-{propertydateFrom.getDate()}-{propertydateFrom.getFullYear()}</Text>
@@ -638,7 +589,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                         <Ionicons name='chevron-forward-outline' size={25} color='white' style={{ paddingLeft: WIDTH * 0.05 }} />
                                     </RowValueContainer>
                                 </RowContainer>
-                                <RowContainer>
+                                <RowContainer onPress={() => setOpenTo(true)}>
                                     <DateCategoryName>Available To</DateCategoryName>
                                     <Ionicons name="shuffle" size={20} color='white' />
                                     <RowValueContainer onPress={() => setOpenTo(true)}>
@@ -699,8 +650,22 @@ export default function PropertyPostingScreen({ navigation }) {
                                 open={openTo}
                                 date={propertydateTo}
                                 onConfirm={(date) => {
-                                    setOpenTo(false),
-                                    setpropertydateTo(date)
+                                    if(date.getTime() < propertydateFrom.getTime()){
+                                        alert("Available to date cannot be before available from date")
+                                    }
+                                    else if(date.getTime() > 1759176355615){
+                                        console.log(propertydateTo)
+                                        alert("Cannot schdeul too far in advance.")
+                                    }
+                                    else if(date.getTime() < propertydateFrom.getTime()+50000000){
+
+                                        alert("Available from and available to cannot be on the same date.")
+                                    }
+
+                                    else{
+                                        setpropertydateTo(date)
+                                    }
+                                    setOpenTo(false)
                                 }}
                                 onCancel={() => {
                                     setOpenTo(false)
@@ -760,7 +725,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                             borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
                                         }}>
                                             <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                                <Ionicons name={value.icon} size={20} />
+                                                <Ionicons name={value.icon} size={15} />
                                                 {"   "}{value.name}
                                             </Text>
                                         </Pressable>
@@ -831,6 +796,14 @@ export default function PropertyPostingScreen({ navigation }) {
                                 </TouchableOpacity>
 
                             </PropertyPhotoContainer>
+                            <ReviewSectionContainer>
+                                <ReviewHeading>Location</ReviewHeading>
+                                <ReviewLocationContainer>
+                                    <Ionicons name='location-outline' size={20} color='white' />
+                                    <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{propertyLocation}</ReviewInfoText>
+                                </ReviewLocationContainer>
+
+                            </ReviewSectionContainer>
 
                             <ReviewSectionContainer>
                                 <ReviewHeading>Property Type</ReviewHeading>
@@ -858,14 +831,6 @@ export default function PropertyPostingScreen({ navigation }) {
                             </ReviewSectionContainer>
 
                             <ReviewSectionContainer>
-                                <ReviewHeading>Location</ReviewHeading>
-                                <ReviewLocationContainer>
-                                    <Ionicons name='location-outline' size={20} color='white' />
-                                    <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{propertyLocation}</ReviewInfoText>
-                                </ReviewLocationContainer>
-
-                            </ReviewSectionContainer>
-                            <ReviewSectionContainer>
                                 <ReviewHeading>Availability</ReviewHeading>
                                 <ReviewDateContainer>
                                     <ReviewInfoText>From {propertydateFrom.getMonth()}-{propertydateFrom.getDate()}-{propertydateFrom.getFullYear()}</ReviewInfoText>
@@ -877,7 +842,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                 <ReviewHeading>Amenities</ReviewHeading>
                                 {propertyAmenities.map((value) => (
                                     <ReviewLocationContainer key={"amenities" + value}>
-                                        <Ionicons name='location-outline' size={20} color='white' />
+                                        <Ionicons name={GetAmenitiesIcon(value)} size={20} color='white' />
                                         <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{value}</ReviewInfoText>
                                     </ReviewLocationContainer>
                                 ))}
@@ -885,9 +850,13 @@ export default function PropertyPostingScreen({ navigation }) {
 
                         </ScrollView>
                         <Footer>
-                            <PricePerMonth>$700 <Text style={{ fontSize: HEIGHT * 0.025, fontWeight: '500', color: 'white' }}>/ month</Text></PricePerMonth>
-                            <ContactTanentButton onPress={postproperty}>
+                            <PricePerMonth>{propertyPrice} <Text style={{ fontSize: HEIGHT * 0.025, fontWeight: '500', color: 'white' }}>/ month</Text></PricePerMonth>
+                            <ContactTanentButton loading={loading}onPress={postproperty}>
+                            {loading ? 
+                                 <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
+                            :
                                 <Text style={{ color: 'white', fontWeight: '700' }}>Post</Text>
+                            }
                             </ContactTanentButton>
                         </Footer>
 

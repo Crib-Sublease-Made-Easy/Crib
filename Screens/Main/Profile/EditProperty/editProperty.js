@@ -26,23 +26,65 @@ import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButto
     HeaderImageContainer, PropertyPhotoContainer, PhotoContainer, RowContainer, RowName, CategoryName,
     DatePriceText } from './editPropertyStyle';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
 
 export default function EditPropertyScreen({navigation, route}){
-    const propData = route.params.propertyData
-    console.log(propData)
-    const [propType, setPropType] = useState(route.params.propertyData.type)
-    const [propLocation, setPropLocation] = useState(route.params.propertyData.loc.streetAddr)
-    const [propPrice, setPropPrice] = useState(route.params.propertyData.price)
-    const [propDateFrom, setPropDateFrom] = useState(route.params.propertyData.availableFrom)
-    const [propDateTo, setPropDateTo] = useState(route.params.propertyData.availableTo)
-    const [propDescription, setPropDescription] = useState(route.params.propertyData.postedBy)
-    const [propAmen, setPropAmen] = useState(route.params.propertyData.amenities)
+
+    useEffect(()=>{
+        const unsubscribe = navigation.addListener('focus', () => {
+            getTokens()
+        });
+        return unsubscribe; 
+    },[navigation])
+   
+    // console.log(propData)
+
+    const [propAPIData, setPropAPIData] = useState('')
+    const [propID, setPropID] = useState('')
+    const [propType, setPropType] = useState('')
+    const [propLocation, setPropLocation] = useState('')
+    const [propPrice, setPropPrice] = useState('')
+    const [propDateFrom, setPropDateFrom] = useState('')
+    const [propDateTo, setPropDateTo] = useState('')
+    const [propDescription, setPropDescription] = useState('')
+    const [propImg, setPropImg] = useState([])
+    const [propAmen, setPropAmen] = useState('')
     const [headerImage, setHeaderImage] = useState(null)
 
 
-    // useEffect(()=>{
 
-    // },[])
+    async function getTokens(){
+        const accessToken = await SecureStorage.getItem("refreshToken");
+        const UID = await SecureStorage.getItem("userId");
+
+        fetch('https://sublease-app.herokuapp.com/properties/' + route.params.propertyData._id, {
+        method: 'GET',
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken,
+        }
+        }) 
+        .then(res => res.json()).then(async propData =>{
+            // console.log(propData)
+            setPropAPIData(propData) 
+
+            //Set the default varaibles 
+            setPropLocation(propData.propertyInfo.loc.streetAddr + " , " + propData.propertyInfo.loc.secondaryTxt)
+            setPropType(propData.propertyInfo.type)
+            setPropPrice(propData.propertyInfo.price)
+            setPropDateFrom(propData.propertyInfo.availableFrom)
+            setPropDateTo(propData.propertyInfo.availableTo)
+            setPropDescription(propData.propertyInfo.description)
+            setPropAmen(propData.propertyInfo.amenities)
+            setPropID(propData.propertyInfo._id)
+            setPropImg(propData.propertyInfo.imgList)
+
+        })
+        .catch(e=>{
+            alert(e)
+        })
+    }
     
     return(
       
@@ -72,7 +114,7 @@ export default function EditPropertyScreen({navigation, route}){
             </View>
             <CategoryName>Image Gallery</CategoryName>
             <PropertyPhotoContainer >
-            {propData.imgList.map((value, index)=>(
+            {propImg.map((value, index)=>(
                 <TouchableOpacity key={"imgList" + value} onPress={() => setHeaderImage(value)}>
                     <PhotoContainer >
                         <Image source={{ uri: value }}
@@ -88,35 +130,35 @@ export default function EditPropertyScreen({navigation, route}){
                 {/* <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/> */}
             </RowContainer>
             <CategoryName>Type</CategoryName>
-            <RowContainer onPress={()=>navigation.navigate("EditPropertyType", {type: propData.price})}>
+            <RowContainer onPress={()=>navigation.navigate("EditPropertyType", {type: propPrice, uid: propID })}>
                 <RowName>{propType}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Price</CategoryName>
-            <RowContainer onPress={()=>navigation.navigate("EditPropertyPrice", {price: propData.price})}>
+            <RowContainer onPress={()=>navigation.navigate("EditPropertyPrice", {price: propPrice, uid: propID})}>
                 <RowName>$ {propPrice}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Availability</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditPropertyAvail",{from: propData.availableFrom, to: propData.availableTo})}>
+            <RowContainer onPress={()=> navigation.navigate("EditPropertyAvail",{from: propDateFrom, to: propDateTo, uid: propID})}>
                 <DatePriceText>
-                    {new Date(propDateFrom).getUTCMonth()}- 
+                    {new Date(propDateFrom).getUTCMonth()% 12 + 1}- 
                     {new Date(propDateFrom).getFullYear()}
                     {" "} to {" "}
-                    {new Date(propDateTo).getUTCMonth()}- 
+                    {new Date(propDateTo).getUTCMonth() % 12 + 1}- 
                     {new Date(propDateTo).getFullYear()}
                 </DatePriceText>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Description</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditPropertyDescription",{description: "Hello"})}>
+            <RowContainer onPress={()=> navigation.navigate("EditPropertyDescription",{description: propDescription, uid:propID})}>
                 <RowName>{propDescription}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Amenities</CategoryName>
-            <RowContainer  onPress={()=> navigation.navigate("EditPropertyAmenities",{amenities: propData.amenities})}>
+            <RowContainer  onPress={()=> navigation.navigate("EditPropertyAmenities",{amenities: propAmen, uid: propID})}>
                 <RowName>
-                    Swimming Pool, Furnished, Wifi
+                    Select Amenities
                 </RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>

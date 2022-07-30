@@ -12,7 +12,7 @@ const WIDTH = Dimensions.get('screen').width;
 
 export const DescriptionInput = styled.TextInput`
     width: ${WIDTH*0.9}px;
-    height: ${HEIGHT*0.15}px;
+    height: ${HEIGHT*0.3}px;
     border-radius: 10px
     color: black
     background-color: ${LIGHTGREY}

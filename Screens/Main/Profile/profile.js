@@ -201,7 +201,9 @@ export default function ProfileScreen({navigation}){
                         <IconContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
                             <Ionicons name="create"  size={25}/>
                         </IconContainer>
-                        <IconContainer onPress={()=> navigation.navigate("PropertyPosting")}>
+                        {/* <IconContainer onPress={()=> navigation.reset({index: 0 , routes: [{ name: 'PropertyPosting'}]} )}> */}
+                        <IconContainer onPress={()=> navigation.navigate('PropertyPosting')}>
+
                             <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
                         </IconContainer>
                         <IconContainer onPress={()=> navigation.navigate("PropertyPosting")}>
@@ -235,7 +237,7 @@ export default function ProfileScreen({navigation}){
                             <Image key={"defaultPropPic"}
                             source={{uri: postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
                             <PostedPropertyInfoContainer>
-                                <PropertyName>{postedProperties.propertyInfo.loc.secondaryTxt}</PropertyName>
+                                <PropertyName>{postedProperties.propertyInfo.loc.streetAddr} { "," } {postedProperties.propertyInfo.loc.secondaryTxt}</PropertyName>
                                 <DatePriceText>
                                     {new Date(postedProperties.propertyInfo.availableFrom).getUTCMonth()}- 
                                     {new Date(postedProperties.propertyInfo.availableFrom).getFullYear()}
@@ -253,7 +255,7 @@ export default function ProfileScreen({navigation}){
                         </Pressable>
                     :
                         <Pressable style={{width:WIDTH, height:'100%', alignItems:'center', justifyContent:'center'}}
-                            onPress={()=>navigation.navigate('PropertyPosting')}>
+                            onPress={()=>navigation.reset(index=0, route=[{name: 'PropertyPosting'}] )}>
                             <Image source={require('../../../assets/PostedHome.jpg')} style={{width:WIDTH*0.7, height:HEIGHT*0.2}} />
                             {/* <Pressable style={{width:WIDTH*0.5, height:HEIGHT*0.06, borderRadius:30,
                             backgroundColor: PRIMARYCOLOR, justifyContent:'center', alignItems:'center'}}>
