@@ -499,9 +499,12 @@ export default function DiscoverScreen({navigation, route}){
                         <DeleteIconContainer onPress={()=>setlocationQuery("")} style={{ display: searching ? 'flex' : 'none',}}>
                             <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />
                         </DeleteIconContainer>
-                        <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none'}} >
-                            <Ionicons name="list-outline" size={25}  color={TEXTGREY}/>
+                        <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
+                            <View style={{borderWidth:1, padding: 7, borderRadius: 50, borderColor: '#D3D3D3', }}>
+                            <Ionicons name="options-sharp" size={20} />
+                            </View>
                         </DeleteIconContainer> 
+
                     </SearchInputCancelIconContainer>
                     {autocompleteLocation.length != 0 &&
                             
