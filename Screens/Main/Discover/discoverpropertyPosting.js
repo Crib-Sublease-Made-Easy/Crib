@@ -300,46 +300,46 @@ export default function PropertyPostingScreen({ navigation }) {
         postingData.append("longitude", -122.407248)
         //String Array
 
-        var array = propertyBedroomImage.uri.split(".");
+        var array = propertyBedroomImage.split(".");
 
         postingData.append("propertyImages", {
-            uri: propertyBedroomImage.uri,
+            uri: propertyBedroomImage,
             type: 'image/' + array[1],
             name: 'someName',
         });
 
-        var array = propertyBathroomImage.uri.split(".");
+        var array = propertyBathroomImage.split(".");
         postingData.append("propertyImages", {
-            uri: propertyBathroomImage.uri,
+            uri: propertyBathroomImage,
             type: 'image/' + array[1],
             name: 'someName',
         });
-        var array = propertyLivingroomImage.uri.split(".");
+        var array = propertyLivingroomImage.split(".");
 
         postingData.append("propertyImages", {
-            uri: propertyLivingroomImage.uri,
-            type: 'image/' + array[1],
-            name: 'someName',
-        });
-
-        var array = propertyKitchenImage.uri.split(".");
-
-        postingData.append("propertyImages", {
-            uri: propertyKitchenImage.uri,
+            uri: propertyLivingroomImage,
             type: 'image/' + array[1],
             name: 'someName',
         });
 
+        var array = propertyKitchenImage.split(".");
 
-        var array = propertyFloorplanImage.uri.split(".");
         postingData.append("propertyImages", {
-            uri: propertyFloorplanImage.uri,
+            uri: propertyKitchenImage,
             type: 'image/' + array[1],
             name: 'someName',
         });
 
 
-        postingData.append("price", propertyPrice);                     //String 
+        var array = propertyFloorplanImage.split(".");
+        postingData.append("propertyImages", {
+            uri: propertyFloorplanImage,
+            type: 'image/' + array[1],
+            name: 'someName',
+        });
+
+
+        postingData.append("price", propertyPrice.split("$")[1]);                     //String 
         postingData.append("description", propertyDescription);         //String 
         postingData.append("availableFrom", propertydateFrom.toString());          //String
         postingData.append("availableTo", propertydateTo.toString());              //String
@@ -419,7 +419,7 @@ export default function PropertyPostingScreen({ navigation }) {
     }
 
     function updateImages(index) {
-        setHeaderImage(propertyphotoGallery[index].uri);
+        setHeaderImage(propertyphotoGallery[index]);
     }
     const startingvalue = HEIGHT * 0.1;
     const [expanded, setexpended] = useState(true)
@@ -445,10 +445,12 @@ export default function PropertyPostingScreen({ navigation }) {
         }).start()
     }
 
-    function moveOn(name) {
+    function moveOn(value) {
         Keyboard.dismiss()
-        setpropertyLocation(name)
-
+        setpropertyLocation(value.description)
+        setpropertyMainAddr(value.structured_formatting.main_text)
+        setpropertySecondaryAddr(value.structured_formatting.secondary_text)
+       
     }
 
     function formatPrice(price){
@@ -459,6 +461,10 @@ export default function PropertyPostingScreen({ navigation }) {
         return "$" + val
     }
 
+    function setMainAndSecondary(value){
+        console.log("hi")
+        
+    }
 
 
     return (
@@ -531,16 +537,13 @@ export default function PropertyPostingScreen({ navigation }) {
                         <Animated.View style={{ width: WIDTH * 0.9, height: HEIGHT * 0.4, borderRadius: 10 }}>
 
                             {propertyLocation.length != 0 && autocompleteLocation.map((value, index) => (
-                                <Pressable key={value.description + index} 
-                                onPress={() => { setpropertyLocation(value.description), Keyboard.dismiss(), 
-                                setautocompleteLocation([]), moveScrollView(scrollviewIndex + 1), setpropertyMainAddr(value.structured_formatting.main_text),
-                                setpropertySecondaryAddr(value.structured_formatting.secondary_text) }} >
+                                <Pressable key={value.description + index}>
                                     <View style={{
                                         width: WIDTH * 0.9, height: HEIGHT * 0.08, paddingLeft: WIDTH * 0.025,
-                                        alignItems: 'center', flexDirection: 'row'
+                                        alignItems: 'center', flexDirection: 'row',
                                     }}>
                                         <Ionicons name="location-outline" size={25} color={LIGHTGREY} />
-                                        <Pressable style={{ width: WIDTH * 0.8, marginLeft: WIDTH * 0.025 }} onPress={() => moveOn(value.description)}>
+                                        <Pressable style={{ width: WIDTH * 0.8, marginLeft: WIDTH * 0.025 }} onPress={() => moveOn(value)}>
                                             <Text style={{ color: 'white', fontSize: HEIGHT * 0.015 }}>{value.structured_formatting.main_text}</Text>
                                             <Text style={{ color: LIGHTGREY, fontSize: HEIGHT * 0.015 }}>{value.structured_formatting.secondary_text}</Text>
                                         </Pressable>
@@ -676,7 +679,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                     else if(date.getTime() > 1759176355615){
                                         alert("Date selected is too far ahead.")
                                     }
-                                    else if(date.getTime() > propertydateTo()){
+                                    else if(date.getTime() > propertydateTo.getTime()){
                                         alert("Available from cannot be after available to.")
                                     }
                                     else{
@@ -785,43 +788,43 @@ export default function PropertyPostingScreen({ navigation }) {
 
 
                             <View style={{ width: WIDTH, height: HEIGHT * 0.25, paddingBottom: HEIGHT * 0.05, marginTop: HEIGHT * 0.03, borderRadius: 10, }}>
-                                <Image source={{ uri: headerImage == null ? propertyBedroomImage == null ? null : propertyBedroomImage.uri : headerImage }}
+                                <Image source={{ uri: headerImage == null ? propertyBedroomImage == null ? null : propertyBedroomImage: headerImage }}
                                     style={{ width: WIDTH * 0.9, height: HEIGHT * 0.25, borderRadius: 10, borderWidth: 1, borderColor: MEDIUMGREY }} />
                             </View>
                             <ReviewHeading style={{ marginTop: HEIGHT * 0.02 }}>Gallery</ReviewHeading>
                             <PropertyPhotoContainer >
 
-                                <TouchableOpacity key={"bedroomPic"} onPress={() => setHeaderImage(propertyBedroomImage.uri)}>
+                                <TouchableOpacity key={"bedroomPic"} onPress={() => setHeaderImage(propertyBedroomImage)}>
                                     <PhotoContainer >
-                                        <Image source={{ uri: propertyBedroomImage == null ? null : propertyBedroomImage.uri }}
+                                        <Image source={{ uri: propertyBedroomImage == null ? null : propertyBedroomImage }}
                                             style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
                                         {/* <Text>{propertyphotoGallery[index]}</Text> */}
                                     </PhotoContainer>
                                 </TouchableOpacity>
-                                <TouchableOpacity key={"bathRoomPic"} onPress={() => setHeaderImage(propertyBathroomImage.uri)}>
+                                <TouchableOpacity key={"bathRoomPic"} onPress={() => setHeaderImage(propertyBathroomImage)}>
                                     <PhotoContainer >
-                                        <Image source={{ uri: propertyBathroomImage == null ? null : propertyBathroomImage.uri }}
+                                        <Image source={{ uri: propertyBathroomImage == null ? null : propertyBathroomImage}}
                                             style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
                                         {/* <Text>{propertyphotoGallery[index]}</Text> */}
                                     </PhotoContainer>
                                 </TouchableOpacity>
-                                <TouchableOpacity key={"livingRoomPic"} onPress={() => setHeaderImage(propertyLivingroomImage.uri)}>
+                                <TouchableOpacity key={"livingRoomPic"} onPress={() => setHeaderImage(propertyLivingroomImage)}>
                                     <PhotoContainer >
-                                        <Image source={{ uri: propertyLivingroomImage == null ? null : propertyLivingroomImage.uri }}
+                                        <Image source={{ uri: propertyLivingroomImage == null ? null : propertyLivingroomImage}}
                                             style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
                                         {/* <Text>{propertyphotoGallery[index]}</Text> */}
                                     </PhotoContainer>
                                 </TouchableOpacity>
-                                <TouchableOpacity key={"kitchenPic"} onPress={() => setHeaderImage(propertyKitchenImage.uri)}>
+                                <TouchableOpacity key={"kitchenPic"} onPress={() => setHeaderImage(propertyKitchenImage)}>
                                     <PhotoContainer >
-                                        <Image source={{ uri: propertyKitchenImage == null ? null : propertyKitchenImage.uri }}
+                                        <Image source={{ uri: propertyKitchenImage == null ? null : propertyKitchenImage }}
                                             style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
                                         {/* <Text>{propertyphotoGallery[index]}</Text> */}
                                     </PhotoContainer>
                                 </TouchableOpacity>
-                                <TouchableOpacity key={"floorplanPic"} onPress={() => setHeaderImage(propertyFloorplanImage.uri)}>
+                                <TouchableOpacity key={"floorplanPic"} onPress={() => setHeaderImage(propertyFloorplanImage)}>
                                     <PhotoContainer >
-                                        <Image source={{ uri: propertyFloorplanImage == null ? null : propertyFloorplanImage.uri }}
+                                        <Image source={{ uri: propertyFloorplanImage == null ? null : propertyFloorplanImage}}
                                             style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
                                         {/* <Text>{propertyphotoGallery[index]}</Text> */}
                                     </PhotoContainer>
