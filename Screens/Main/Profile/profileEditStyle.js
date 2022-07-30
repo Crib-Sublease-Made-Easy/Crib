@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, DARKGREY, EXTRALIGHT } from '../../../sharedUtils'
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, DARKGREY, EXTRALIGHT, GOOGLEBLUE } from '../../../sharedUtils'
 export const HeaderContainer = styled.View`
     width: ${WIDTH}px;
     height: ${HEIGHT*0.05}px;
@@ -37,6 +37,7 @@ export const ResetButtonContainer = styled.View`
 `
 
 export const Header = styled.Text`
+    margin-top: ${HEIGHT*0.025}px
     font-size: ${HEIGHT*0.02}px;
     font-weight: 500;
 `
@@ -44,7 +45,8 @@ export const Header = styled.Text`
 export const TopContainer = styled.View`
     width: ${WIDTH*0.9}px;
     align-self: center
-    flex-direction: row
+    justify-content: center
+    align-items:center
     padding-vertical: ${HEIGHT*0.03}px
 `
 
@@ -55,14 +57,24 @@ export const ImageContainer = styled.Pressable`
 `
 
 export const NameJobContainer = styled.View`
-    width: ${WIDTH*0.45}px;
+    width: ${WIDTH*0.9}px;
     justify-content: center
+    align-items:center
 `
 export const JobText = styled.Text`
     width: ${WIDTH*0.45}px; 
     padding-vertical: ${HEIGHT*0.01}px
     font-size: ${HEIGHT*0.0175}px;
     font-weight: 400;
+`
+
+export const AgeText = styled.Text`
+    width: ${WIDTH*0.9}px; 
+    padding-vertical: ${HEIGHT*0.01}px
+    font-size: ${HEIGHT*0.0175}px;
+    font-weight: 400;
+    text-align:center
+   
 `
 export const RowContainerCol = styled.View`
     padding-vertical: ${HEIGHT*0.01}px
@@ -115,4 +127,9 @@ export const FavPropertyCard = styled.Pressable`
     height: ${HEIGHT*0.2}px;
     border-radius: 10px;
     background-color:red
+`
+
+export const ChangeProfilePicText = styled.Text`
+    color: ${GOOGLEBLUE}
+    margin-top: ${HEIGHT*0.005}px
 `

@@ -36,7 +36,7 @@ export default function EditOccupationScreen({navigation, route}){
                 'Authorization': 'Bearer ' + accessToken,
             },
             body: JSON.stringify({
-                occupation: occupation,
+                occupation: occupation.trim(),
             })
         })
         .then((response) => response.json()).then(data => {

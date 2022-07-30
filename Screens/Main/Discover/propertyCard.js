@@ -47,19 +47,23 @@ import { ease } from 'react-native/Libraries/Animated/Easing';
 //     padding-top: ${HEIGHT*0.01}px;
 //     padding-bottom: ${HEIGHT*0.01}px;
 // `
-const CardContainer = {width: WIDTH*0.9, height:HEIGHT*0.375, alignSelf: 'center', borderRadius: 15, paddingVertical: HEIGHT*0.01  };
+const CardContainer = {width: WIDTH*0.9,  alignSelf: 'center', borderRadius: 15, paddingVertical: HEIGHT*0.01 ,  };
 
 const PropertyInfoContainer = styled.View`
-  width: ${WIDTH*0.9}px;
-  
+  width: ${WIDTH*0.875}px;
+  height: ${HEIGHT*0.1}px
+  justify-content:space-around
+  align-self: center
   padding-top: ${HEIGHT*0.01}px;
-  flex-direction: row;
+  padding-left: ${WIDTH*0.025}px
+  
+  
 `
 
 const LocationFont = styled.Text`
-  font-size: ${HEIGHT*0.0175}px;
+  font-size: ${HEIGHT*0.015}px;
   font-weight: 500;
-  width: ${WIDTH*0.57}px;
+  width: 100%
   
 `
 const PropertyInfoContainerLeft = styled.View`
@@ -73,21 +77,22 @@ const PropertyInfoContainerRight = styled.View`
 `
 const DateFont = styled.Text`
     margin-top: ${HEIGHT*0.0025}px;
-    font-size: 12px;
+    font-size: ${HEIGHT*0.015}px;
     font-weight: 400;
-    color: ${DARKGREY}
+    color: black
    
 `
 const PriceFont = styled.Text`
   justify-content: center;
-  font-size: ${HEIGHT*0.02}px;
-  color: ${DARKGREY}
+  font-size: ${HEIGHT*0.0175}px;
+  color: black
   font-weight: 400;
 `
 
 const PropertyImageContainer = styled.View`
   position: relative;
   border-radius:25px
+
 `
 
 const OpenMapIconContainer = styled.Pressable`
@@ -213,9 +218,6 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         })
         translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
     }
-    const onLoad = () => {
-        FadeIn
-    }
 
     const renderCards = useCallback((data, index) =>{
        // console.log("HELLO")
@@ -226,7 +228,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                 {/* <SharedElement id="0"> */}
                     <PropertyImageContainer>
                         <Animated.Image  
-                        style={{width:WIDTH*0.9, height:WIDTH*0.6, borderRadius:25, backgroundColor:LIGHTGREY,
+                        style={{width:WIDTH*0.9, height:WIDTH*0.6, borderRadius:15, backgroundColor:LIGHTGREY,
                         opacity: 1
                         }} source={{uri:data.item.imgList[0]}}/>
                         {/* <OpenMapIconContainer onPress={()=>MoveMapToPin(data)}> */}
@@ -239,14 +241,14 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                     </PropertyImageContainer>
                 {/* </SharedElement> */}
                 <PropertyInfoContainer>
-                    <PropertyInfoContainerLeft>
+                   
                         <LocationFont>{data.item.loc.streetAddr}</LocationFont>
                         <DateFont>{new Date(data.item.availableFrom).toDateString()} - { new Date(data.item.availableTo).toDateString()}</DateFont>
                        
-                    </PropertyInfoContainerLeft>
-                    <PropertyInfoContainerRight >
+                   
+                   
                         <PriceFont><Text style={{fontWeight:'700'}}>${data.item.price}</Text>/month</PriceFont>
-                    </PropertyInfoContainerRight> 
+                    
                 </PropertyInfoContainer>   
                 <SharedElement id="view">
                     <View style={{backgroundColor:'white'}}></View>

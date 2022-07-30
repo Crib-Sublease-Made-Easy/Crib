@@ -196,14 +196,16 @@ export default function ProfileScreen({navigation}){
                 <InformationContainer>
                     <View style={{ width: WIDTH*0.5, justifyContent: 'flex-start'}}>
                         <NameText>{userData.firstName} {""} {userData.lastName}</NameText>
-                      
                     </View>
                     <IconsContainer>
                         <IconContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
-                            <Ionicons name="create-outline"  size={25}/>
+                            <Ionicons name="create"  size={25}/>
                         </IconContainer>
                         <IconContainer onPress={()=> navigation.navigate("PropertyPosting")}>
-                            <Ionicons name="add"  size={25} color={PRIMARYCOLOR}/>
+                            <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
+                        </IconContainer>
+                        <IconContainer onPress={()=> navigation.navigate("PropertyPosting")}>
+                            <Ionicons name="heart"  size={25} color={PRIMARYCOLOR}/>
                         </IconContainer>
                     </IconsContainer>
                 </InformationContainer>
@@ -226,7 +228,7 @@ export default function ProfileScreen({navigation}){
                 </SlidingContainer>
 
             <ScrollView ref={scrollviewRef} horizontal snapToAlignment='start' snapToInterval={WIDTH} decelerationRate='fast'
-                style={{width:WIDTH, height:HEIGHT*0.4}}>
+                style={{width:WIDTH, height:HEIGHT*0.4}} scrollEnabled={false}>
                 <View style={{ width:WIDTH, height:HEIGHT*0.4, justifyContent:'center', alignItems:'center'}}>
                     {postedProperties != "" ?
                         <Pressable onPress={()=>navigation.navigate("PropertyDetail", {data: postedProperties})}>
@@ -268,7 +270,8 @@ export default function ProfileScreen({navigation}){
                             <DefaultPostFavText>You haven't liked any properties yet...</ DefaultPostFavText>
                         </View>
                         :
-                        <ScrollView style={{alignSelf:'center'}} showsVerticalScrollIndicator={false}>
+                        <ScrollView onTouchMove={()=>console.log("hi")} 
+                        style={{alignSelf:'center'}} showsVerticalScrollIndicator={false}>
                             {favoriteProperties.map((item)=>(
                             <FavPropertyCard key={item.propertyInfo._id} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
                                 <Image source={{uri: item.propertyInfo.imgList[0]}} 

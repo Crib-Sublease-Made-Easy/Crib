@@ -69,6 +69,7 @@ export const EditProfilePressable = styled.Pressable`
 export const SlidingContainer = styled.View`  
     width: ${WIDTH*0.9}px;
     height: ${HEIGHT*0.1}px;
+    margin-top:${HEIGHT*0.02}px
     flex-direction: row;
     justify-content: space-around
     align-items: center
@@ -132,14 +133,15 @@ export const InformationContainer = styled.View`
   width: ${WIDTH*0.8}px;
   justify-content: space-between
   align-items: center
-  flex-direction: row
-  margin-top:${HEIGHT*0.03}px
+ 
+  margin-top:${HEIGHT*0.015}px
 
 `
 
 export const IconContainer = styled.Pressable`
   height: ${WIDTH*0.1}px
   width: ${WIDTH*0.1}px
+  margin-top: ${HEIGHT*0.025}px
   border-radius: ${WIDTH*0.05}px
   background-color: rgba(217,217,217,0.5)
   justify-content: center;
@@ -147,7 +149,7 @@ export const IconContainer = styled.Pressable`
 `
 
 export const IconsContainer = styled.View`
-  width: ${WIDTH*0.3}px
+  width: ${WIDTH*0.6}px
   justify-content: space-around;
   align-items: center
   flex-direction: row

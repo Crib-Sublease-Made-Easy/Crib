@@ -31,6 +31,9 @@ import DatePicker from 'react-native-date-picker'
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
 
+import ImagePicker from 'react-native-image-crop-picker';
+
+
 FontAwesome.loadFont();
 
 const ImageName = [
@@ -75,7 +78,7 @@ import {
     BedAndBathContainer, BedBathLogo, LocationText, ReviewPropertyDescriptionInput, Footer, ContactTanentButton,
     PricePerMonth, PropertyTypeCard, PriceInputSearchContainer, CategoryName, RowContainer, RowValueContainer, RowName,
     FollowUpContainer, FollowUpText, DateCategoryName, BedroomContaienr, BedroomItemContainer, RowContainerCol,
-    ReviewHeading, ReviewLocationContainer, ReviewDateContainer, ImageSelectionContainer, ImageText
+    ReviewHeading, ReviewLocationContainer, ReviewDateContainer, ImageSelectionContainer, ImageText, MaxText
 } from './discoverPropertyPostingStyle';
 import Easing from 'react-native/Libraries/Animated/Easing';
 import { DARKGREY, LIGHTGREY, MEDIUMGREY } from '../../../sharedUtils';
@@ -96,8 +99,10 @@ export default function PropertyPostingScreen({ navigation }) {
     const [propertyType, setpropertyType] = useState('')
     const [propertyLocation, setpropertyLocation] = useState('')
     const [propertyphotoGallery, setpropertyphotoGallery] = useState([])
+    const [propertyMainAddr, setpropertyMainAddr] = useState('')
+    const [propertySecondaryAddr, setpropertySecondaryAddr] = useState('')
     const [propertydateFrom, setpropertydateFrom] = useState(new Date())
-    const [propertydateTo, setpropertydateTo] = useState(new Date())
+    const [propertydateTo, setpropertydateTo] = useState(new Date(1759176355615))
     const [propertyNumBed, setpropertyNumBed] = useState('');
     const [propertyNumBath, setpropertyNumBath] = useState('');
     const [propertyPrice, setpropertyPrice] = useState('');
@@ -128,10 +133,36 @@ export default function PropertyPostingScreen({ navigation }) {
 
 
     function moveScrollView(val) {
+        console.log(val)
         Keyboard.dismiss()
         if (val < 0) {
             navigation.goBack();
         }
+        else if(val == 2 && propertyType== ""){
+            alert("Must select a property type.")
+        }
+        else if(val == 3 && propertyLocation== ""){
+            alert("Must enter property location.")
+        }
+        else if(val == 4 && (propertyBathroomImage == null || propertyBathroomImage == null ||
+            propertyLivingroomImage == null || propertyKitchenImage == null)){
+                if(propertyBedroomImage == null){
+                    alert("Must select Bedroom Image.")
+                }
+                else if(propertyBathroomImage == null){
+                    alert("Must select Bathrrom Image.")
+                }
+                else if(propertyKitchenImage == null){
+                    alert("Must select Kitchen Image.")
+                }
+                else if(propertyLivingroomImage == null){
+                    alert("Must select Livingroom Image.")
+                }
+        }
+        else if(val == 5 && propertyPrice == ""){
+            alert("Must enter property price.")
+        }
+       
         else {
             setscrollviewIndex(val)
             // sequence()
@@ -263,8 +294,8 @@ export default function PropertyPostingScreen({ navigation }) {
         const postingData = new FormData();
 
         postingData.append("type", propertyType);                       //String 
-        postingData.append("streetAddr", propertyLocation);               //String 
-        postingData.append("secondaryTxt", propertyLocation);               //String 
+        postingData.append("streetAddr", propertyMainAddr);               //String 
+        postingData.append("secondaryTxt", propertySecondaryAddr);               //String 
         postingData.append("latitude", 37.792965)
         postingData.append("longitude", -122.407248)
         //String Array
@@ -356,28 +387,33 @@ export default function PropertyPostingScreen({ navigation }) {
 
 
     async function selectGallery(name) {
-
-
-        const result = await launchImageLibrary({quality: 0.2});
-        if (!result.didCancel) {
-
+        console.log(name)
+        ImagePicker.openPicker({
+            width: 300,
+            height: 300,
+            cropping:true,
+            
+          }).then(image => {
+            console.log(image.path)
             if (name == "Bedroom") {
-                setPropertyBedroomImage(result.assets[0]);
+                setPropertyBedroomImage(image.path);
             }
             else if (name == "Bathroom") {
-                setPropertyBathroomImage(result.assets[0]);
+                setPropertyBathroomImage(image.path);
             }
             else if (name == "Living Room") {
-                setPropertyLivingroomImage(result.assets[0]);
+                setPropertyLivingroomImage(image.path);
             }
             else if (name == "Kitchen") {
-                setPropertyKitchenImage(result.assets[0]);
+                setPropertyKitchenImage(image.path);
             }
             else if (name == "Floor Plan") {
-                setPropertyFloorPlanImage(result.assets[0]);
+                setPropertyFloorPlanImage(image.path);
             }
 
-        }
+        }).catch((e)=>{
+            console.log(e)
+        })
 
 
     }
@@ -415,7 +451,13 @@ export default function PropertyPostingScreen({ navigation }) {
 
     }
 
-
+    function formatPrice(price){
+        if (price == ""){
+            return;
+        }
+        let val = price.replace("$","")
+        return "$" + val
+    }
 
 
 
@@ -431,7 +473,7 @@ export default function PropertyPostingScreen({ navigation }) {
                     </Pressable>
                     <Pressable style={{ display: scrollviewIndex == 10 || scrollviewIndex == 9 || scrollviewIndex == 0 ? 'none' : 'flex', }}
                         onPress={() => moveScrollView(scrollviewIndex + 1)}>
-                        <Ionicons name="checkmark-done-outline" size={30} color={PRIMARYCOLOR}></Ionicons>
+                        <Ionicons name="checkmark-outline" size={30} color={PRIMARYCOLOR}></Ionicons>
                     </Pressable>
                 </ButtonContainer>
                 <Animated.ScrollView keyboardShouldPersistTaps={'handled'}
@@ -489,7 +531,10 @@ export default function PropertyPostingScreen({ navigation }) {
                         <Animated.View style={{ width: WIDTH * 0.9, height: HEIGHT * 0.4, borderRadius: 10 }}>
 
                             {propertyLocation.length != 0 && autocompleteLocation.map((value, index) => (
-                                <Pressable key={value.description + index} onPress={() => { setpropertyLocation(value.description), Keyboard.dismiss(), setautocompleteLocation([]), moveScrollView(scrollviewIndex + 1) }} >
+                                <Pressable key={value.description + index} 
+                                onPress={() => { setpropertyLocation(value.description), Keyboard.dismiss(), 
+                                setautocompleteLocation([]), moveScrollView(scrollviewIndex + 1), setpropertyMainAddr(value.structured_formatting.main_text),
+                                setpropertySecondaryAddr(value.structured_formatting.secondary_text) }} >
                                     <View style={{
                                         width: WIDTH * 0.9, height: HEIGHT * 0.08, paddingLeft: WIDTH * 0.025,
                                         alignItems: 'center', flexDirection: 'row'
@@ -525,11 +570,11 @@ export default function PropertyPostingScreen({ navigation }) {
 
                                                 source={{
                                                     uri:
-                                                        value.name == "Bedroom" ? propertyBedroomImage == null ? null : propertyBedroomImage.uri :
-                                                            value.name == "Bathroom" ? propertyBathroomImage == null ? null : propertyBathroomImage.uri :
-                                                                value.name == "Living Room" ? propertyLivingroomImage == null ? null : propertyLivingroomImage.uri :
-                                                                    value.name == "Kitchen" ? propertyKitchenImage == null ? null : propertyKitchenImage.uri :
-                                                                        propertyFloorplanImage == null ? null : propertyFloorplanImage.uri
+                                                        value.name == "Bedroom" ? propertyBedroomImage == null ? null : propertyBedroomImage :
+                                                            value.name == "Bathroom" ? propertyBathroomImage == null ? null : propertyBathroomImage :
+                                                                value.name == "Living Room" ? propertyLivingroomImage == null ? null : propertyLivingroomImage :
+                                                                    value.name == "Kitchen" ? propertyKitchenImage == null ? null : propertyKitchenImage :
+                                                                        propertyFloorplanImage == null ? null : propertyFloorplanImage
                                                 }} />
                                         </ImageContainer>
 
@@ -537,7 +582,11 @@ export default function PropertyPostingScreen({ navigation }) {
 
 
                                 ))}
+                                <View style={{height:HEIGHT*0.1}}/>
+
+
                         </ScrollView>
+                        
 
                     </PostingSection>
 
@@ -547,7 +596,7 @@ export default function PropertyPostingScreen({ navigation }) {
                             Please set property price per month.
                         </InfoText>
                         <PriceInputSearchContainer>
-                            <SearchInput keyboardType='number-pad' value={propertyPrice} onChangeText={(value) => setpropertyPrice(value)}
+                            <SearchInput keyboardType='number-pad' value={formatPrice(propertyPrice)} onChangeText={(value) => setpropertyPrice(value)}
                                 placeholder="$ Price" placeholderTextColor='white' />
                         </PriceInputSearchContainer>
                         
@@ -560,6 +609,7 @@ export default function PropertyPostingScreen({ navigation }) {
                         <PropertyDescriptionInput placeholder="Enter some basic details of your property. (Optional)"
                             value={propertyDescription} onChangeText={(value) => setpropertyDescription(value)} multiline={true}
                             placeholderTextColor={MEDIUMGREY} />
+                        {/* <MaxText>Maximum 100 words</MaxText> */}
                     </PostingSection>
 
                     <PostingSection>
@@ -575,7 +625,12 @@ export default function PropertyPostingScreen({ navigation }) {
                                     <Ionicons name="shuffle" size={20} color='white' />
                                     <RowValueContainer onPress={() => setOpenFrom(true)} >
                                         <DateSelectPressable onPress={() => setOpenFrom(true)}>
-                                            <Text style={{ alignSelf: 'center', color: 'white' }}>{propertydateFrom.getMonth()}-{propertydateFrom.getDate()}-{propertydateFrom.getFullYear()}</Text>
+                                        {
+                                            propertydateFrom.getTime() == new Date().getTime() ?
+                                                <Text style={{color:'white'}}> Select Date</Text>
+                                            :
+                                            <Text style={{ alignSelf: 'center', color: 'white' }}>{propertydateFrom.getMonth()%12 + 1}-{propertydateFrom.getDate()}-{propertydateFrom.getFullYear()}</Text>
+                                        }
                                         </DateSelectPressable>
                                         <Ionicons name='chevron-forward-outline' size={25} color='white' style={{ paddingLeft: WIDTH * 0.05 }} />
                                     </RowValueContainer>
@@ -585,7 +640,12 @@ export default function PropertyPostingScreen({ navigation }) {
                                     <Ionicons name="shuffle" size={20} color='white' />
                                     <RowValueContainer onPress={() => setOpenTo(true)}>
                                         <DateSelectPressable onPress={() => setOpenTo(true)}>
-                                            <Text style={{ alignSelf: 'center', color: 'white' }}>{propertydateTo.getMonth()}-{propertydateTo.getDate()}-{propertydateTo.getFullYear()}</Text>
+                                            {
+                                            propertydateTo.getTime() == 1759176355615 ?
+                                                <Text style={{color: 'white'}}>Select Date</Text>
+                                            :
+                                                <Text style={{ alignSelf: 'center', color: 'white' }}>{propertydateTo.getMonth()%12 +1}-{propertydateTo.getDate()}-{propertydateTo.getFullYear()}</Text>
+                                            }
                                         </DateSelectPressable>
                                         <Ionicons name='chevron-forward-outline' size={25} color='white' style={{ paddingLeft: WIDTH * 0.05 }} />
                                     </RowValueContainer>
@@ -610,9 +670,20 @@ export default function PropertyPostingScreen({ navigation }) {
                                 open={openFrom}
                                 date={propertydateFrom}
                                 onConfirm={(date) => {
-                                    const correctDate = new Date(date.getFullYear(), (date.getMonth() % 12) + 1, date.getDate())
-                                    setOpenFrom(false),
-                                        setpropertydateFrom(correctDate)
+                                    if(date.getTime() < new Date().getTime()){
+                                        alert("Please enter a date later than current date.")
+                                    }
+                                    else if(date.getTime() > 1759176355615){
+                                        alert("Date selected is too far ahead.")
+                                    }
+                                    else if(date.getTime() > propertydateTo()){
+                                        alert("Available from cannot be after available to.")
+                                    }
+                                    else{
+                                        setpropertydateFrom(date)
+                                    }
+                                    setOpenFrom(false)
+                                       
                                 }}
                                 onCancel={() => {
                                     setOpenFrom(false)
@@ -625,9 +696,8 @@ export default function PropertyPostingScreen({ navigation }) {
                                 open={openTo}
                                 date={propertydateTo}
                                 onConfirm={(date) => {
-                                    const correctDate = new Date(date.getFullYear(), (date.getMonth() % 12) + 1, date.getDate())
                                     setOpenTo(false),
-                                        setpropertydateTo(correctDate)
+                                    setpropertydateTo(date)
                                 }}
                                 onCancel={() => {
                                     setOpenTo(false)
