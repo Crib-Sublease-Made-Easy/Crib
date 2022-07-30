@@ -202,8 +202,8 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                 console.log("The clicker pin info")
                 //console.log(pinInfo)
                 console.log("==========================================================")
-               
-                setSelectedPin(pinInfo)
+                console.log(pinInfo.propertyInfo)
+                setSelectedPin(pinInfo.propertyInfo)
                 openPreviewCard()
                 moveMap(pinInfo.propertyInfo.loc.coordinates[1] - 0.015,pinInfo.propertyInfo.loc.coordinates[0])
 
