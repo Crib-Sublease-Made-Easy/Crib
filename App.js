@@ -9,7 +9,6 @@ import {
   useColorScheme,
   View,
   Dimensions,
-  AsyncStorage
 } from 'react-native';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 

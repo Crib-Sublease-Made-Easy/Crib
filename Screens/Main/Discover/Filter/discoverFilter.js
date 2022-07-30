@@ -61,7 +61,8 @@ import { Container, HeaderContainer, BackButtonContainer,NameContainer, ResetBut
         InputForm,InputSection, InputName,InputNameContainer, InputOptionContainer, InputPressableContainer,
         InputPriceRangeContainer, PriceRangeText, PriceInputSection, AmenitiesInputSection, AmenitiesList,
         InputSectionCol, BedBathNumberText, TypeOption, TypeContainer, PropertyTypeName, BedroomOptions,
-        BedroomOptionsText, AmenitiesContainer, NameIcon, DateInputPressable} from './discoverFilterStyle';
+        BedroomOptionsText, AmenitiesContainer, NameIcon, DateInputPressable, Footer, ResetText, ApplyButton, 
+    ApplyText} from './discoverFilterStyle';
 
 export default function DiscoverFilterScreen({navigation, currentLocation, open, close, setFilteredProperties}){
     const [containerModal, setcontainerModal] = useState(false);
@@ -70,8 +71,8 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     const [filterType, setfilterType] = useState('')
     const [filterSort, setfilterSort] = useState('')
     const [filterDistance, setfilterDistance] = useState('')
-    const [filterBedroom, setfilterBedroom] = useState(1);
-    const [filterBathroom, setfilterBathroom] = useState(1);
+    const [filterBedroom, setfilterBedroom] = useState(0);
+    const [filterBathroom, setfilterBathroom] = useState(0);
     const [filterPriceLower, setfilterPriceLower] = useState(0);
     const [filterPriceHigher, setfilterPriceHigher] = useState(10000);
     const [filterAmenities, setfilterAmenities] = useState([])
@@ -83,26 +84,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     const [openFrom, setOpenFrom] = useState(false)
     const [openTo, setOpenTo] = useState(false)
 
-
-    function updateBedroomCount(operation){
-       
-        if(operation == 'add'){
-            setfilterBedroom(filterBedroom+1);
-        }
-        else if(operation == "minus" && filterBedroom > 0){
-            setfilterBedroom(filterBedroom-1);
-        }
-    }
-
-    function updateBathroomCount(operation){
-       
-        if(operation == 'add'){
-            setfilterBathroom(filterBathroom+1);
-        }
-        else if(operation == "minus" && filterBathroom > 0){
-            setfilterBathroom(filterBathroom-1);
-        }
-    }
+    
 
     function updateAmenities(name){
         
@@ -117,16 +99,19 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
         }
         console.log(filterAmenities)
     }
-    
-    const translation = useRef(new Animated.Value(0)).current;
 
+    function resetFilter(){
+        setfilterType("")
+        setfilterPriceHigher(10000)
+        setpropertydateFrom(new Date())
+        setpropertydateTo(new Date(1759176355615))
+        setfilterAmenities([])
+        setfilterBathroom("")
+        setfilterBedroom("")
+    }
    
     useEffect(()=>{
        setcontainerModal(true)
-    },[])
-
-    useEffect(()=>{
-       
     },[])
 
     function filter(){
@@ -188,13 +173,13 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                 <NameContainer>
                     <Header>Filter</Header>
                 </NameContainer>
-                <ResetButtonContainer>
+                {/* <ResetButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={filter}>
                         <Ionicons name='checkmark-outline' size={25} />
                     </Pressable>
-                </ResetButtonContainer>
+                </ResetButtonContainer> */}
             </HeaderContainer>
-            <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={scrollEnabled}>
+            <ScrollView style={{height:HEIGHT*0.75}}showsVerticalScrollIndicator={false} scrollEnabled={scrollEnabled}>
             <InputForm>
                 <InputSectionCol>
                     <InputNameContainer>
@@ -352,7 +337,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                     </InputOptionContainer>
                 </InputSectionCol>
 
-                <InputSectionCol style={{flexDirection:'column'}}>
+                <InputSectionCol style={{flexDirection:'column', borderBottomWidth: 0}}>
                     
                     <InputNameContainer>
                         <InputName>Amenities</InputName>
@@ -391,14 +376,21 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                
                             ))}
                         </AmenitiesContainer>
-                        <View style={{width:WIDTH, height: HEIGHT*0.1}}>
+                        <View style={{width:WIDTH, height: HEIGHT*0.025}}>
 
                         </View>
                     
                 </InputSectionCol>
             </InputForm>
-           
         </ScrollView>
+        <Footer >
+            <Pressable onPress={resetFilter}>
+                <ResetText>Reset</ResetText>
+            </Pressable>
+            <ApplyButton onPress={filter}>
+            <ApplyText>Apply Filter</ApplyText>
+            </ApplyButton>
+        </Footer>
         </Animated.View>
         </SafeAreaView>
         </Modal>

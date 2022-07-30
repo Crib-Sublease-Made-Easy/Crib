@@ -176,13 +176,15 @@ export const ClosePreviewPressable = styled.Pressable`
 `
 
 export const  PreviewBottomContainer = styled.Pressable`
-  height: ${HEIGHT*0.075}px;
+  padding-vertical: ${HEIGHT*0.02}px
+  height: ${HEIGHT*0.1}px;
   width: ${WIDTH*0.9}px;
   padding-horizontal: ${WIDTH*0.02}px;
   padding-top: ${HEIGHT*0.01}px
   align-self:center
-  flex-direction: row
-  justify-content: space-between
+  justify-content: space-around
+  
+
  
 `
 export const  PreviewTopContainer = styled.View`
@@ -210,17 +212,19 @@ export const PreviewNameText = styled.Text`
   width: ${WIDTH*0.6}px
 ` 
 export const PreviewPriceText = styled.Text`
-  text-align: right
-  font-size: ${HEIGHT*0.0175}px;
+  width: ${WIDTH*0.9}px
+  padding-horizontal: ${WIDTH*0.025}px
+  font-size: ${HEIGHT*0.014}px;
   color: ${PRIMARYGREY}
 
 `
 export const PreviewLocationText = styled.Text`
   font-size: ${HEIGHT*0.015}px;
   font-weight: 500
-  width: ${WIDTH*0.5}px
-  
-  height: ${HEIGHT*0.06}px;
+  width: ${WIDTH*0.9}px
+  max-height: ${HEIGHT*0.06}px;
+  padding-horizontal: ${WIDTH*0.025}px
+  overflow: hidden
   
 `
 

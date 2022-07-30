@@ -41,7 +41,7 @@ export default function OTPScreen({navigation, route}){
     const [phoneNumber, setphoneNumber] = useState('')
     const [code, setCode] = useState('')
     const [pinReady, setpinReady] = useState(false)
-    const [authyID, setauthyID] = useState('')
+    const [authyID, setauthyID] = useState(route.authy_id)
     const [smsErrorModal, setSMSErrorModal] = useState(false)
     const [laoding, setLoading] = useState(false)
 
@@ -49,7 +49,7 @@ export default function OTPScreen({navigation, route}){
     const MAX_CODE_LENGTH = 6;
 
     useEffect(()=> {
-        setauthyID(route.authyID)
+        setauthyID(route.authy_id)
         if(code.length == 6){
             signupStep3();
         }
@@ -61,7 +61,7 @@ export default function OTPScreen({navigation, route}){
         console.log("TOKEN")
         console.log(code);
         console.log("AuthyID")
-        console.log(route.authyID);
+        console.log(route.authy_id);
         fetch('https://sublease-app.herokuapp.com/users/OTP/step3', {
             method: 'POST',
             headers: {
@@ -69,7 +69,7 @@ export default function OTPScreen({navigation, route}){
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                authy_id: route.authyID,
+                authy_id: route.authy_id,
                 token: code,
                 email: route.email
             })
@@ -120,7 +120,7 @@ export default function OTPScreen({navigation, route}){
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                authy_id: route.authyID
+                authy_id: route.authy_id
             })
         })
         .then(res => res.json()).then(data =>{

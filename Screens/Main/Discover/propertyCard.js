@@ -205,7 +205,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                
                 setSelectedPin(pinInfo)
                 openPreviewCard()
-                moveMap(pinInfo.propertyInfo.loc.coordinates[1],pinInfo.propertyInfo.loc.coordinates[0])
+                moveMap(pinInfo.propertyInfo.loc.coordinates[1] - 0.015,pinInfo.propertyInfo.loc.coordinates[0])
 
             })
             .catch(e=>{

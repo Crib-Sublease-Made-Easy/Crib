@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Dimensions, Pressable, Text} from 'react-native';
 
 import styled from 'styled-components/native';
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, EXTRALIGHT, MEDIUMGREY } from '../../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, EXTRALIGHT, MEDIUMGREY, DARKGREY } from '../../../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -229,5 +229,45 @@ export const DateInputPressable = styled.Pressable`
     background-color: ${EXTRALIGHT}
     justify-content: center
     padding-left: ${WIDTH*0.025}px
+`
 
+export const Footer = styled.View`
+    height: ${HEIGHT*0.1}px
+    width: ${WIDTH}px
+    backgroundColor: white
+    padding-horizontal: ${WIDTH*0.1}px
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center
+    border-top-width: 1px
+    border-color: ${MEDIUMGREY}
+    
+`
+
+export const ResetText = styled.Text`
+    font-size: ${HEIGHT*0.02}px;
+    color: ${DARKGREY}
+    font-weight: 300
+    textDecorationLine: underline
+`
+
+export const ApplyButton = styled.Pressable`
+    width: ${WIDTH*0.35}px;
+    height: ${HEIGHT*0.06}px;
+    border-radius: 25px;
+    background-color: ${PRIMARYCOLOR};
+    justify-content: center;
+    align-items: center
+    shadow-offset: 0 0
+    shadow-color: black;
+    shadow-radius: 5px;
+    shadow-opacity: 0.2;
+    elevation: 5
+`
+
+export const ApplyText = styled.Text`
+    font-size: ${HEIGHT*0.0175}px;
+    color: white
+    font-weight: 500
+   
 `

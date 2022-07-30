@@ -265,7 +265,7 @@ export default function DiscoverScreen({navigation, route}){
         }
         s = s + `&latitude=${currentLocation[0]}`
         s = s + `&longitude=${currentLocation[1]}`
-        s = s + "&maxDistance=1000"
+        s = s + "&maxDistance=10"
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
 
@@ -290,7 +290,7 @@ export default function DiscoverScreen({navigation, route}){
     const retrieveAllPins = (lat, long) =>{
         console.log("Retrieving pins ")
         console.log(lat + " " + long)
-        fetch(`https://sublease-app.herokuapp.com/properties/pins?latitude=${lat}&longitude=${long}&maxDistance=1000`, {
+        fetch(`https://sublease-app.herokuapp.com/properties/pins?latitude=${lat}&longitude=${long}&maxDistance=100`, {
         method: 'GET',
         headers: {
         Accept: 'application/json',
@@ -355,7 +355,7 @@ export default function DiscoverScreen({navigation, route}){
             lat = response.data.results[0].geometry.location.lat;
             long = response.data.results[0].geometry.location.lng
             setCurrentLocation([lat,long])
-            moveMap(lat, long)
+            moveMap(lat - 0.015, long)
         })
         .catch(function (error) {
             console.log(error);
@@ -392,8 +392,10 @@ export default function DiscoverScreen({navigation, route}){
       
     }
 
-    function onMarkerClick(id){
-       
+    function onMarkerClick(item){
+       console.log(item)
+       setSelectedPin(item)
+       moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
     }
 
 
@@ -414,18 +416,16 @@ export default function DiscoverScreen({navigation, route}){
                 }}
             >
             
-                <Marker 
-                coordinate={{latitude:currentLocation[0], longitude: currentLocation[1] }}
-                >
-                    <Ionicons name="location" size={30} color='red'/>
-                </Marker>
+                
             
                 {pinsData != undefined && pinsData.map((value,index)=>(
                     <Marker
                     key={value._id}
-                    coordinate={{latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
+                    coordinate={{ latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
+                    onPress={()=>onMarkerClick(value)}
+                    
                    >
-                    <CustomMarker>
+                    <CustomMarker style={{backgroundColor: value._id == selectedPin._id ? PRIMARYCOLOR : 'green'}}>
                         <Text style={{color:'white'}}>${value.price}</Text>
 
                     </CustomMarker>
@@ -460,13 +460,11 @@ export default function DiscoverScreen({navigation, route}){
                     <PreviewBottomContainer onPress={()=>navigation.naviFmagate("PropertyDetail", {data : {item: selectedPin.propertyInfo}})}>
                         
                         <PreviewLocationText>{selectedPin.propertyInfo.loc.streetAddr}</PreviewLocationText>
-                       
-                        <PreviewTopRightContaier>
-                            <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
-                            <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).toDateString()}</PreviewPriceText>
-                            <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableTo).toDateString()}</PreviewPriceText>
+                        <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).toDateString()} - {new Date(selectedPin.propertyInfo.availableTo).toDateString()}</PreviewPriceText>
+                        
+                        <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
 
-                        </PreviewTopRightContaier>
+                        
                     </ PreviewBottomContainer> 
                 </View>
                 }
