@@ -26,9 +26,38 @@ import { Router } from 'express';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 FontAwesome.loadFont()
 
+import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import { PropertyDescription } from '../../../Discover/discoverPDStyle';
+
+
 export default function EditPropertyDescriptionScreen({navigation, route}){
 
     const [description, setDescription] = useState(route.params.description);
+
+    async function update(){
+       
+        console.log(route.params.propID)
+        const accessToken = await SecureStorage.getItem("refreshToken");
+        fetch('https://sublease-app.herokuapp.com/properties/' + route.params.uid, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
+            },
+            body: JSON.stringify({
+                description: description
+            })
+        })
+            .then((response) => response.json()).then(data => {
+                console.log("Update type reponse")
+                console.log(data)
+                navigation.navigate('EditProperty')
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }
 
     return(
         <SafeAreaView style={{flex:1}}>
@@ -42,11 +71,11 @@ export default function EditPropertyDescriptionScreen({navigation, route}){
                 <NameContainer>
                     <Header>Edit Property</Header>
                 </NameContainer>
-                {/* <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} >
+                <ResetButtonContainer>
+                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
                         <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
                     </Pressable>
-                </ResetButtonContainer> */}
+                </ResetButtonContainer>
             </HeaderContainer>
             <RowContainer >
                 <CategoryName>Property Description</CategoryName>

@@ -52,9 +52,9 @@ export function OnlyLetters(str) {
 export function ContainsSpace(str){
     return /\s/.test(str);
 }
-const amenitiesList =
+export const amenitiesList =
     [{ name: 'Pets Allowed', color: '#57b2f7', icon: "paw-outline" },
-    { name: 'Mattress', color: '#fa4b4b', icon: 'bed-outline' },
+    { name: "Mattress", color: '#fa4b4b', icon: 'bed-outline' },
     { name: 'Able to renew', color: '#f79c40', icon: 'refresh-outline' },
     { name: 'Gym', color: '#00d14d', icon: 'barbell-outline' },
     { name: 'On-site Washer and Dryer', color: '#f79c40', icon: 'water-outline' },

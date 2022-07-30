@@ -69,7 +69,6 @@ export const EditProfilePressable = styled.Pressable`
 export const SlidingContainer = styled.View`  
     width: ${WIDTH*0.9}px;
     height: ${HEIGHT*0.1}px;
-    margin-top:${HEIGHT*0.02}px
     flex-direction: row;
     justify-content: space-around
     align-items: center

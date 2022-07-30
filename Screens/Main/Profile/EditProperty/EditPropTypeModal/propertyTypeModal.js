@@ -14,6 +14,7 @@ import Modal from "react-native-modal";
 
 import styled from 'styled-components/native';
 
+import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY} from '../../../../../sharedUtils'
@@ -31,9 +32,35 @@ const flatListTypes =
 ]
 
 import { HeaderContainer, BackButtonContainer, NameContainer, ResetButtonContainer , Header} from './propTypeModalStyle';
+import { Updates } from 'expo';
 
 export default function PropTypesScreen({navigation, route}){
     const [propertyTypes, setPropertyTypes] = useState(route.params.type)
+
+    async function update(){
+        console.log(propertyTypes)
+        console.log(route.params.propID)
+        const accessToken = await SecureStorage.getItem("refreshToken");
+        fetch('https://sublease-app.herokuapp.com/properties/' + route.params.uid, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
+            },
+            body: JSON.stringify({
+                type: propertyTypes
+            })
+        })
+            .then((response) => response.json()).then(data => {
+                console.log("Update type reponse")
+                console.log(data)
+                navigation.navigate('EditProperty',{refresh: true})
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }
 
     const renderItem = ({ item, index }) => (
        
@@ -64,8 +91,8 @@ export default function PropTypesScreen({navigation, route}){
                     <Header>Property Type</Header>
                 </NameContainer>
                 <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}}>
-                        <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
+                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
+                        <Ionicons name='checkmark-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
                     </Pressable>
                 </ResetButtonContainer>
             </HeaderContainer>

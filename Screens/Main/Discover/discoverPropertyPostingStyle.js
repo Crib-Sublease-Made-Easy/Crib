@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Dimensions,} from 'react-native';
+import {Dimensions, Pressable} from 'react-native';
 
 import styled from 'styled-components/native';
 import { DARKGREY, LIGHTGREY, MEDIUMGREY } from '../../../sharedUtils';
@@ -247,7 +247,7 @@ export const PhotoContainer = styled.View`
     justify-content:center
     align-items:center
 `
-export const RowContainer = styled.View`
+export const RowContainer = styled.Pressable`
     padding-vertical: ${HEIGHT*0.02}px
     width: ${WIDTH*0.9}px;
     align-items: center
@@ -361,10 +361,10 @@ export const Footer = styled.View`
     borderTopColor: #E0E0E0;
 
 `
-export const ContactTanentButton = styled.Pressable`
+export const ContactTanentButton = styled(Pressable)`
     width: ${WIDTH*0.4}px;
     height: ${HEIGHT*0.06}px;
-    background-color: ${PRIMARYCOLOR};
+    backgroundColor:  ${props=>(props.loading ? MEDIUMGREY : PRIMARYCOLOR)}}
     border-radius: 30px;
     justify-content: center;
     align-items: center;

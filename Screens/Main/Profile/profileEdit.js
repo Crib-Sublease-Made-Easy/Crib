@@ -43,14 +43,11 @@ export default function ProfileEditScreen({navigation, route}){
         });
         return unsubscribe;       
     },[navigation])
+    
     async function getTokens(){
-
         const accessToken = await SecureStorage.getItem("refreshToken");
-
         const UID = await SecureStorage.getItem("userId");
 
-
-       
         fetch('https://sublease-app.herokuapp.com/users/' + route.params.userData._id, {
         method: 'GET',
         headers: {
@@ -66,9 +63,7 @@ export default function ProfileEditScreen({navigation, route}){
                 setProfilePic(userData.profilePic)
                 await SecureStorage.removeItem("profilePic")
                 await SecureStorage.setItem("ProfilePic", userData.profilePic)
-
             }
-            
         })
         .catch(e=>{
             alert(e)

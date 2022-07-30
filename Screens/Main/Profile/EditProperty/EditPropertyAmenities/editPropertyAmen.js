@@ -22,7 +22,7 @@ FontAwesome.loadFont()
 
 export default function EditPropertyAmenitiesScreen({navigation, route}){
     return(
-        <SafeAreaView>
+        <SafeAreaView style={{flex: 1, backgroundColor:'white'}}>
             <HeaderContainer>
                 <BackButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
