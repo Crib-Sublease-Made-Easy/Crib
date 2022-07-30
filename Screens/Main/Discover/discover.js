@@ -401,6 +401,21 @@ export default function DiscoverScreen({navigation, route}){
     }
 
 
+
+    const updateQueryString = () => {
+        var config = {
+            method: 'get',
+            url: `https://sublease-app.herokuapp.com/autocomplete/reversegeocoding?lat=${currentLocation[0]}&long=${currentLocation[1]}`,
+        };
+        axios(config)
+        .then(async (response)=> {           
+            setlocationQuery(response.data.formatted_address)
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
     return(
         <GestureHandlerRootView style={{display:'flex'}}>
         <View style={{width:WIDTH,height:HEIGHT,position:'absolute', top:0,}}>
@@ -444,7 +459,7 @@ export default function DiscoverScreen({navigation, route}){
                 outputRange: [0, 1]
             }), display: searching ? 'flex' : 'none' }}/>
 
-            < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), retrieveAllPins(mapCenterLocation[0], mapCenterLocation[1])}}>
+            < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), retrieveAllPins(mapCenterLocation[0], mapCenterLocation[1]), updateQueryString()}}>
                 <Ionicons name="search-outline" size={25} />
             </ SearchHerePressable>
             <Animated.View 
