@@ -12,7 +12,8 @@ import {
   Keyboard,
   Animated,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
+  TouchableOpacity
   
 } from 'react-native';
 
@@ -70,6 +71,8 @@ export default function DiscoverScreen({navigation, route}){
     //Access the fields by selectedPin.item.name
     const [selectedPin, setSelectedPin] = useState([])
 
+    const [pinSelectedPropData, setPinSelectedPropData] = useState([])
+    
     const [propertiesData, setPropertiesData] = useState([]);
 
     const [propertyPage, setPropertyPage] = useState(1);
@@ -402,13 +405,27 @@ export default function DiscoverScreen({navigation, route}){
       
     }
 
-    function onMarkerClick(item){
+    async function onMarkerClick(item){
        console.log(item)
-    
-       setSelectedPin(item)
-       setPropertyPreviewCard(true)
-       openPreviewCard()
-       moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
+       await fetch('https://sublease-app.herokuapp.com/properties/' + item._id, {
+        method: 'GET',
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+        }
+        }) 
+        .then(res => res.json()).then(property =>{
+            console.log(property)
+            setPinSelectedPropData(property)
+            moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
+        })
+        .catch(e=>{
+            alert(e)
+        })
+        setSelectedPin(item)
+        setPropertyPreviewCard(true)
+        openPreviewCard()
+       
     }
 
 
@@ -483,14 +500,13 @@ export default function DiscoverScreen({navigation, route}){
             })}}>
                 
                 {selectedPin != undefined && selectedPin != "" &&
-                <View>
+                <TouchableOpacity onPress={()=>{navigation.navigate("PropertyDetail", {data: pinSelectedPropData})}}>
                     <PreviewTopContainer>
                         <Image source={{uri:selectedPin.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
                         borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
                     </PreviewTopContainer>
 
-                    <PreviewBottomContainer onPress={()=>navigation.navigate("PropertyDetail", {simplifiedData : selectedPin})}>
-                        
+                    <PreviewBottomContainer >
                         <PreviewLocationText>{selectedPin.loc.streetAddr}</PreviewLocationText>
                         <PreviewPriceText>{new Date(selectedPin.availableFrom).toDateString()} - {new Date(selectedPin.availableTo).toDateString()}</PreviewPriceText>
                         
@@ -498,7 +514,7 @@ export default function DiscoverScreen({navigation, route}){
 
                         
                     </ PreviewBottomContainer> 
-                </View>
+                </TouchableOpacity>
                 }
             
                 <FontAwesome onPress={()=>closePreviewCard()} name="times-circle" size={30}  color='white' style={{position: 'absolute', right:WIDTH*0.025,

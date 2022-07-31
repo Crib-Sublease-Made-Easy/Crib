@@ -92,7 +92,7 @@ export default function MessageScreen({navigation, route}){
                 keyExtractor={item => item.url}
                 renderItem={({item})=>(
                 
-                <FlatlistItemContainer onPress={()=> navigation.navigate("Chat", {url:item.url, id: userId, receiverName:Object.values(item.memberMap)[0].nickname})}>
+                <FlatlistItemContainer onPress={()=> navigation.navigate("Chat", {url:item.url, id: userId})}>
                         <FlatlistLeft>
                             <Image source = {{uri: item.coverUrl}} style = {{ width: WIDTH*0.14, height: WIDTH*0.14, borderRadius: WIDTH*0.07 }}/>
                         </FlatlistLeft>

@@ -125,8 +125,11 @@ export const BackButtonContainer = styled.View`
     height: 100%
     justify-content: center;
     align-items:flex-start;
-
 `
+
+
+
+
 
 export const NameContainer = styled.View`
     width: ${WIDTH*0.5}px;

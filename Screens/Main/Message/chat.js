@@ -38,12 +38,13 @@ export default function ChatScreen({navigation, route}){
 
     const GiftedChatRef = useRef();
     const [query, setQuery] = useState('')
-
+    const [propertyInfo, setPropertyInfo] = useState(null)
     const [messages, setMessages] = useState('')
     const [typingText, setTypingText] = useState('')
 
     const [channel, setChannel] = useState(null)
     useEffect(()=>{
+      console.log("PARAMS",route.params)
       sb.addChannelHandler('channels', channelHandler);
       console.log("CHAT",JSON.stringify(url))
       getGroupChannel()
@@ -100,14 +101,26 @@ export default function ChatScreen({navigation, route}){
             console.log("ERROR CHANNEL")
         }else{
           await setChannel(groupChannel)
+          console.log("GROUP CHANNEL", groupChannel.data)
+          await getPropertyInfo(groupChannel.data)
           var listQuery = groupChannel.createPreviousMessageListQuery();
           await setQuery(listQuery)
           fetchConvos(listQuery)
         }
       })
-      
-      
+    }
 
+    const getPropertyInfo = async (propId) =>{
+
+      await fetch('https://sublease-app.herokuapp.com/properties/' + propId, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }
+      }).then(async e => e.json()).then(async (response) => {
+        setPropertyInfo(response)
+      })
     }
 
     const loadMore = (listQuery) => {
@@ -181,10 +194,26 @@ export default function ChatScreen({navigation, route}){
                   <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
               </Pressable>
           </BackButtonContainer>
-          <NameContainer>
-              <Header>{route.params.receiverName}</Header>
-          </NameContainer>
-         
+          {channel != null ? 
+            channel.members[0].userId == id ?
+              <NameContainer>
+                  <Header>{channel.members[1].nickname}</Header>
+              </NameContainer>
+              :
+              <NameContainer>
+              <Header>{channel.members[0].nickname}</Header>
+               </NameContainer>
+          :
+          null
+          }
+          {channel != null ?
+          <BackButtonContainer>
+              <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}>
+              <Image source={{uri:channel.coverUrl}} style={{height:HEIGHT*0.035, width:HEIGHT*0.035, borderRadius:HEIGHT*0.025/2, backgroundColor:'grey'}}/>
+              </Pressable>
+          </BackButtonContainer>
+          : null}
+          
       </HeaderContainer>
     
     <GiftedChat
