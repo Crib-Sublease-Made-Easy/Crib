@@ -60,6 +60,8 @@ export default function DiscoverScreen({navigation, route}){
     const [locationQuery, setlocationQuery] = useState('')
     //The data of the pins to acess a field its pinsData.item.field
     const [pinsData, setPinsData] = useState([])
+    //Toggle to retrieve more properties
+    const [retrieveMore, setRetrieveMore] = useState(true)
     //The array to store all predictions of the user input
     const [autocompleteLocation, setautocompleteLocation] = useState([])
     //To indicate if user is searching or not
@@ -243,7 +245,9 @@ export default function DiscoverScreen({navigation, route}){
 
     const loadMoreProperties = async() => {
         console.log("Inside load more data")
-        setPropertyPage(propertyPage+1);
+        if(retrieveMore){
+            setPropertyPage(propertyPage+1);
+        }
         let s = "";
         if(filterType != ""){
             s = s + "&type=" + filterType;
@@ -268,7 +272,7 @@ export default function DiscoverScreen({navigation, route}){
         s = s + "&maxDistance=10"
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
-
+        console.log("PAGE", propertyPage)
         await fetch('https://sublease-app.herokuapp.com/properties/query?page=' + propertyPage + s, {
         method: 'GET',
         headers: {
@@ -278,8 +282,11 @@ export default function DiscoverScreen({navigation, route}){
         }) 
         .then(res => res.json()).then(properties =>{
             // setPropertiesData([...propertiesData,...properties])
-          
-            setFilteredProperties([...filteredProperties,...properties.propertyInfo])
+          console.log("PROPERTIES", properties)
+          if(properties.length < 4){
+            setRetrieveMore(false)
+          }
+            setFilteredProperties([...filteredProperties,...properties])
         })
         .catch(e=>{
             alert(e)
