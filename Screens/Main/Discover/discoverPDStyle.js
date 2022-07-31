@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Dimensions,} from 'react-native';
+import {Dimensions, Pressable} from 'react-native';
 
 import styled from 'styled-components/native';
 import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR } from '../../../sharedUtils';
@@ -139,10 +139,10 @@ export const PricePerMonth = styled.Text`
     font-size: ${HEIGHT*0.025}px;
     font-weight: 700;
 `
-export const ContactTanentButton = styled.Pressable`
+export const ContactTanentButton = styled(Pressable)`
     width: ${WIDTH*0.4}px;
     height: ${HEIGHT*0.06}px;
-    background-color: ${PRIMARYCOLOR};
+    background-color: ${props=>(props.ownProperty? MEDIUMGREY : PRIMARYCOLOR)};
     border-radius: 30px;
     justify-content: center;
     align-items: center;

@@ -40,9 +40,12 @@ export default function PropertyDetailScreen({navigation, route}){
     console.log("Detail")
     console.log("DATAAAA", route.params.data)
     useEffect(()=>{
+        console.log(route.params.uid)
+        console.log(route.params.data.propertyInfo.postedBy)
       fetchProperties()
       getTokens()
     }, [])
+   
     const flatListRef = useRef(null)
     const propertyAmenities = (["Furnished", "Pets Allowed", "Able to renew", "On-site waher and dryer"]);
     const [propData, setPropData] = useState(route.params.data.propertyInfo);
@@ -56,8 +59,9 @@ export default function PropertyDetailScreen({navigation, route}){
     const [propAPIData, setPropAPIData] = useState()
     const [liked, setLiked]  = useState()
     const [userDate, setUserData]= useState()
+    const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == route.params.uid)
     const createConversation = async () =>{
-        const UID = await SecureStorage.getItem("userId");
+
         console.log("MY Userid", UID)
         var userIds = [UID, propData.postedBy]
         console.log("I log catsssss")
@@ -166,6 +170,9 @@ export default function PropertyDetailScreen({navigation, route}){
             if (userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) != -1){
                 setLiked(true)
             }
+          
+           
+            
             
         })
         .catch(e=>{
@@ -215,10 +222,12 @@ export default function PropertyDetailScreen({navigation, route}){
                          position:'absolute',top:HEIGHT*0.05, left:WIDTH*0.05, width:WIDTH*0.1, height:WIDTH*0.1, borderRadius: WIDTH*0.05 }} onPress={()=>navigation.goBack()}>
                             <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
                         </Pressable>
+                        { !ownProperty &&
                         <Pressable  style={{backgroundColor:'rgba(43,43,43,0.8)',justifyContent:'center', alignItems:'center',
                          position:'absolute',top:HEIGHT*0.05, right:WIDTH*0.05, width:WIDTH*0.1, height:WIDTH*0.1, borderRadius: WIDTH*0.05 }} onPress={likeProperty}>
                             <Ionicons  name="heart" size={25} color={ liked ? '#ee88a6' : 'white'}></Ionicons>
                         </Pressable>
+                        }
                     </View>
                     
                     <CardSectionOne>
@@ -297,7 +306,8 @@ export default function PropertyDetailScreen({navigation, route}){
             </PropertyDescription>
             <Footer>
                     <PricePerMonth>${propData.price} <Text style={{fontSize: HEIGHT*0.025, fontWeight:'500'}}>/ month</Text></PricePerMonth>
-                    <ContactTanentButton onPress={()=>createConversation()}>
+                
+                    <ContactTanentButton disabled={ownProperty} ownProperty={ownProperty} onPress={()=>createConversation()}>
                         <Text style={{color:'white', fontWeight:'700'}}>Contact Tenant</Text>
                     </ContactTanentButton>
             </Footer>

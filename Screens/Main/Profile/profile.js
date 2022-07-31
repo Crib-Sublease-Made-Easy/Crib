@@ -1,4 +1,4 @@
-import React , {useContext, useState, useRef, useEffect, useCallback} from 'react';
+import React , {useContext, useState, useRef, useEffect, useCallback, useId} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -63,6 +63,7 @@ export default function ProfileScreen({navigation}){
     const [propertyAddr, setPropertyAddr] = useState('');
  
     useEffect(()=>{
+
         const unsubscribe = navigation.addListener('focus', () => {
             getTokens()
         
@@ -235,7 +236,7 @@ export default function ProfileScreen({navigation}){
                 style={{width:WIDTH, height:HEIGHT*0.4}} scrollEnabled={false}>
                 <View style={{ width:WIDTH, height:HEIGHT*0.4, justifyContent:'center', alignItems:'center'}}>
                     {postedProperties != "" ?
-                        <Pressable onPress={()=>navigation.navigate("PropertyDetail", {data: postedProperties})}>
+                        <Pressable onPress={()=>navigation.navigate("PropertyDetail", {data: postedProperties, uid: userData._id})}>
                             <Image key={"defaultPropPic"}
                             source={{uri: postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
                             <PostedPropertyInfoContainer>
@@ -278,9 +279,11 @@ export default function ProfileScreen({navigation}){
                         style={{alignSelf:'center',}} showsVerticalScrollIndicator={false}>
                             {favoriteProperties.map((item)=>(
                             <FavPropertyCard key={item.propertyInfo._id}>
+                                <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
                                 <Image source={{uri: item.propertyInfo.imgList[0]}} 
-                                style={{width:'30%', height:'100%', borderRadius:10}}/>
-                                <FavPropertyCardContent onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
+                                style={{width:'100%', height:'100%', borderRadius:10}}/>
+                                </Pressable>
+                                <FavPropertyCardContent onPress={()=> navigation.navigate("PropertyDetail", {data: item, uid: userData._id})}>
                                     <FavPropertyCardName>{item.propertyInfo.loc.streetAddr}</FavPropertyCardName>
                                     <FavPropertyCardDateContainer>
                                         <FavPropertyCardDateText>
