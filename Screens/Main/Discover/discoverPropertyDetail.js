@@ -214,7 +214,7 @@ export default function PropertyDetailScreen({navigation, route}){
                         </Pressable>
                         <Pressable  style={{backgroundColor:'rgba(43,43,43,0.8)',justifyContent:'center', alignItems:'center',
                          position:'absolute',top:HEIGHT*0.05, right:WIDTH*0.05, width:WIDTH*0.1, height:WIDTH*0.1, borderRadius: WIDTH*0.05 }} onPress={likeProperty}>
-                            <Ionicons  name="heart" size={25} color={ liked ? 'red' : 'white'}></Ionicons>
+                            <Ionicons  name="heart" size={25} color={ liked ? '#ee88a6' : 'white'}></Ionicons>
                         </Pressable>
                     </View>
                     

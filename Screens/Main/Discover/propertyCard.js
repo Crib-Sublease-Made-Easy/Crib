@@ -234,7 +234,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                         opacity: 1
                         }} source={{uri:data.item.propertyInfo.imgList[0]}}/>
                         {/* <OpenMapIconContainer onPress={()=>MoveMapToPin(data)}> */}
-                        <OpenMapIconContainer onPress={()=>MoveMapToPin(data.item._id)}>
+                        <OpenMapIconContainer onPress={()=>MoveMapToPin(data.item.propertyInfo._id)}>
                             <FontAwesome name='location-arrow' size={HEIGHT*0.02} color='white'/>
                         </OpenMapIconContainer>
                         {/* <FavIconContainer >
