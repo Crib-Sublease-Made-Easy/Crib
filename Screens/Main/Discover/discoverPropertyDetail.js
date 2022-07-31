@@ -38,14 +38,14 @@ const WIDTH = Dimensions.get('screen').width;
 
 export default function PropertyDetailScreen({navigation, route}){
     console.log("Detail")
-    console.log(route.params.data)
+    console.log("DATAAAA", route.params.data)
     useEffect(()=>{
       fetchProperties()
     }, [])
     const flatListRef = useRef(null)
     const propertyAmenities = (["Furnished", "Pets Allowed", "Able to renew", "On-site waher and dryer"]);
     const propData = route.params.data.propertyInfo;
-    const postedUserData = route.params.data.postedUserInfo;
+    const postedUserData = route.params.data.userInfo;
     const viewabilityConfigCallbackPairs = useRef([
         { onViewableItemsChanged: testFuction },
     ]);
@@ -211,12 +211,12 @@ export default function PropertyDetailScreen({navigation, route}){
                         <InfoHeaderText>Tenant Information:</InfoHeaderText>
                         <TenantInfoContainer>
                             <ProfileImageContainer>
-                                {/* <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.125, width:HEIGHT*0.125, borderRadius:HEIGHT*0.125/2, backgroundColor:LIGHTGREY}}/> */}
+                                <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.125, width:HEIGHT*0.125, borderRadius:HEIGHT*0.125/2, backgroundColor:LIGHTGREY}}/>
                             </ProfileImageContainer>
                             <TenantInfo>
-                                {/* <InfoHeaderText style={{width: WIDTH*0.6}}>{postedUserData.firstName} {postedUserData.lastName}</InfoHeaderText> */}
-                                <InfoText>Software Engineer</InfoText>
-                                <InfoText>Harvard University</InfoText>
+                                <InfoHeaderText style={{width: WIDTH*0.6}}>{postedUserData.firstName} {postedUserData.lastName}</InfoHeaderText>
+                                <InfoText>{postedUserData.school}</InfoText>
+                                <InfoText>{postedUserData.occupation}</InfoText>
                             </TenantInfo>
                         </TenantInfoContainer>
                     </CardSectionTwo>
