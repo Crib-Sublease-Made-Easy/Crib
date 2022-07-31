@@ -97,6 +97,8 @@ export default function DiscoverScreen({navigation, route}){
     const [filterPriceHigher, setfilterPriceHigher] = useState(5000);
     const [filterAmenities, setfilterAmenities] = useState([])
 
+    const [loading, setLoading] = useState(false)
+
     useEffect(()=>{
         console.log("Refreshing again!")
         //This loads the property in the flatlist 
@@ -406,8 +408,9 @@ export default function DiscoverScreen({navigation, route}){
     }
 
     async function onMarkerClick(item){
-       console.log(item)
-       await fetch('https://sublease-app.herokuapp.com/properties/' + item._id, {
+        setLoading(true)
+        console.log(item)
+        await fetch('https://sublease-app.herokuapp.com/properties/' + item._id, {
         method: 'GET',
         headers: {
         Accept: 'application/json',
@@ -425,7 +428,7 @@ export default function DiscoverScreen({navigation, route}){
         setSelectedPin(item)
         setPropertyPreviewCard(true)
         openPreviewCard()
-       
+        setLoading(false)
     }
 
 
@@ -500,7 +503,7 @@ export default function DiscoverScreen({navigation, route}){
             })}}>
                 
                 {selectedPin != undefined && selectedPin != "" &&
-                <TouchableOpacity onPress={()=>{navigation.navigate("PropertyDetail", {data: pinSelectedPropData})}}>
+                <TouchableOpacity disabled={loading} onPress={()=>{navigation.navigate("PropertyDetail", {data: pinSelectedPropData})}}>
                     <PreviewTopContainer>
                         <Image source={{uri:selectedPin.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
                         borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>

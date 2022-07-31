@@ -41,6 +41,7 @@ export default function ChatScreen({navigation, route}){
     const [propertyInfo, setPropertyInfo] = useState(null)
     const [messages, setMessages] = useState('')
     const [typingText, setTypingText] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const [channel, setChannel] = useState(null)
     useEffect(()=>{
@@ -87,10 +88,7 @@ export default function ChatScreen({navigation, route}){
           });
         }
       })
-
       setTypingText("")
-
-
     }, [])
 
 
@@ -111,7 +109,7 @@ export default function ChatScreen({navigation, route}){
     }
 
     const getPropertyInfo = async (propId) =>{
-
+      setLoading(true)
       await fetch('https://sublease-app.herokuapp.com/properties/' + propId, {
         method: 'GET',
         headers: {
@@ -121,6 +119,7 @@ export default function ChatScreen({navigation, route}){
       }).then(async e => e.json()).then(async (response) => {
         setPropertyInfo(response)
       })
+      setLoading(false)
     }
 
     const loadMore = (listQuery) => {
@@ -207,11 +206,11 @@ export default function ChatScreen({navigation, route}){
           null
           }
           {channel != null ?
-          <BackButtonContainer>
-              <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}>
+          <ResetButtonContainer style={{paddingRight: WIDTH*0.075}}>
+              <Pressable disabled={loading} style={{alignItems:'center'}} onPress={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}>
               <Image source={{uri:channel.coverUrl}} style={{height:HEIGHT*0.035, width:HEIGHT*0.035, borderRadius:HEIGHT*0.025/2, backgroundColor:'grey'}}/>
               </Pressable>
-          </BackButtonContainer>
+          </ResetButtonContainer>
           : null}
           
       </HeaderContainer>

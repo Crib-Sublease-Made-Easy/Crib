@@ -70,7 +70,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
 
     const [filterType, setfilterType] = useState('')
     const [filterSort, setfilterSort] = useState('')
-    const [filterDistance, setfilterDistance] = useState('')
+    const [filterDistance, setfilterDistance] = useState(150)
     const [filterBedroom, setfilterBedroom] = useState(0);
     const [filterBathroom, setfilterBathroom] = useState(0);
     const [filterPriceLower, setfilterPriceLower] = useState(0);
@@ -138,7 +138,6 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     }
     s = s + `&latitude=${currentLocation[0]}`
     s = s + `&longitude=${currentLocation[1]}`
-    s = s + "&maxDistance=1000000000000"
     s = s + `&priceHigh=${filterPriceHigher}`
     s = s + '&priceLow=0'
     console.log(s);
@@ -205,39 +204,39 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
         
                 
                 <PriceInputSection>
-                <InputSection style={{borderBottomWidth: 0}}>
-                    <InputNameContainer>
-                            <InputName>Max Budget</InputName>
-                    </InputNameContainer>
-                    <InputPriceRangeContainer>
-                            <PriceRangeText>${filterPriceHigher} / month</PriceRangeText>
-                    </InputPriceRangeContainer>
-                </InputSection>
-                <View style={{alignItems:'center'}}>
-                <MultiSlider
-                isMarkersSeparated={true}
-                enabledTwo={false}
-                values={[filterPriceHigher]}
-                onValuesChangeStart={()=> setscrollEnabled(false)}
-                onValuesChangeFinish={()=> setscrollEnabled(true)}
-                onValuesChange={(value)=> setfilterPriceHigher(value)}
-                min={0}
-                max={10000}
+                    <InputSection style={{borderBottomWidth: 0}}>
+                        <InputNameContainer>
+                                <InputName>Max Budget</InputName>
+                        </InputNameContainer>
+                        <InputPriceRangeContainer>
+                                <PriceRangeText>${filterPriceHigher} / month</PriceRangeText>
+                        </InputPriceRangeContainer>
+                    </InputSection>
+                    <View style={{alignItems:'center'}}>
+                    <MultiSlider
+                    isMarkersSeparated={true}
+                    enabledTwo={false}
+                    values={[filterPriceHigher]}
+                    onValuesChangeStart={()=> setscrollEnabled(false)}
+                    onValuesChangeFinish={()=> setscrollEnabled(true)}
+                    onValuesChange={(value)=> setfilterPriceHigher(value)}
+                    min={0}
+                    max={10000}
+                    
+                    step={10}
+                    enabledOne={true}
+                    
+                    selectedStyle={{
+                        backgroundColor: PRIMARYCOLOR
+                    }}
+                    containerStyle={{
+                        width:WIDTH,
+                        alignItems:'center'
+                    }}
+                    sliderLength={WIDTH*0.8}
                 
-                step={10}
-                enabledOne={true}
-                
-                selectedStyle={{
-                    backgroundColor: PRIMARYCOLOR
-                }}
-                containerStyle={{
-                    width:WIDTH,
-                    alignItems:'center'
-                }}
-                sliderLength={WIDTH*0.8}
-              
-                />
-                </View>
+                    />
+                    </View>
                 </PriceInputSection>
                 <InputSectionCol>
                     <InputNameContainer>
@@ -304,8 +303,42 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                             setOpenTo(false)
                         }}
                     />
-                    
                 </InputSectionCol>
+                <PriceInputSection>
+                    <InputSection style={{borderBottomWidth: 0}}>
+                        <InputNameContainer>
+                                <InputName>Max Distance</InputName>
+                        </InputNameContainer>
+                        <InputPriceRangeContainer>
+                                <PriceRangeText>{filterDistance} miles</PriceRangeText>
+                        </InputPriceRangeContainer>
+                    </InputSection>
+                    <View style={{alignItems:'center'}}>
+                    <MultiSlider
+                    isMarkersSeparated={true}
+                    enabledTwo={false}
+                    values={[filterDistance]}
+                    onValuesChangeStart={()=> setscrollEnabled(false)}
+                    onValuesChangeFinish={()=> setscrollEnabled(true)}
+                    onValuesChange={(value)=> setfilterDistance(value)}
+                    min={1}
+                    max={150}
+                    
+                    step={1}
+                    enabledOne={true}
+                    
+                    selectedStyle={{
+                        backgroundColor: PRIMARYCOLOR
+                    }}
+                    containerStyle={{
+                        width:WIDTH,
+                        alignItems:'center'
+                    }}
+                    sliderLength={WIDTH*0.8}
+                
+                    />
+                    </View>
+                </PriceInputSection>
                 <InputSectionCol>
                     <InputNameContainer>
                         <InputName>Bedrooms</InputName>

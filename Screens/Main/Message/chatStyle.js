@@ -16,7 +16,8 @@ export const MessageContainer = styled.View`
     align-items: center
     background-color: ${EXTRALIGHT};
     border-radius: 25px;
-    padding-horizontal: ${WIDTH*0.03}px
+    padding-left: ${WIDTH*0.03}px
+    padding-right: ${WIDTH*0.01}px
     border-width: 1px;
     border-color: ${LIGHTGREY}
     
