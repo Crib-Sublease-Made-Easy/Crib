@@ -41,6 +41,7 @@ export default function PropertyDetailScreen({navigation, route}){
     console.log("DATAAAA", route.params.data)
     useEffect(()=>{
       fetchProperties()
+      getTokens()
     }, [])
     const flatListRef = useRef(null)
     const propertyAmenities = (["Furnished", "Pets Allowed", "Able to renew", "On-site waher and dryer"]);
@@ -53,6 +54,8 @@ export default function PropertyDetailScreen({navigation, route}){
     const [flatingScrolling, setFlatlistScrolling] = useState(false)
     const [flatlistIndex, setFlatlistIndex] = useState(0)
     const [propAPIData, setPropAPIData] = useState()
+    const [liked, setLiked]  = useState()
+    const [userDate, setUserData]= useState()
     const createConversation = async () =>{
         const UID = await SecureStorage.getItem("userId");
         console.log("MY Userid", UID)
@@ -66,7 +69,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 console.log(error)
             }
             console.log("Channel Created Successfully")
-            console.log(groupChannel)
+            //console.log(groupChannel)
             // A group channel with additional information is successfully created.
             var channelUrl = groupChannel.url;
             navigation.navigate("Chat", {url:channelUrl, id: UID})
@@ -88,7 +91,7 @@ export default function PropertyDetailScreen({navigation, route}){
             }) 
             .then(res => res.json()).then(propertyData =>{
                 setPropAPIData(postedUserData)
-                console.log(propertyData)
+                //console.log(propertyData)
                
                
             })
@@ -100,7 +103,7 @@ export default function PropertyDetailScreen({navigation, route}){
     const testFuction = ({
         viewableItems,
     }) => {
-        console.log(viewableItems)
+        //console.log(viewableItems)
     };
 
     const onScroll = useCallback((event) => {
@@ -110,8 +113,61 @@ export default function PropertyDetailScreen({navigation, route}){
     setFlatlistIndex(roundIndex)
     }, []);
 
-    function likeProperty(){
+    async function likeProperty(){
+        console.log("ID" , route.params.data.propertyInfo._id)
+        const accessToken = await SecureStorage.getItem("refreshToken");
+        console.log(accessToken)
+        await fetch('https://sublease-app.herokuapp.com/properties/favorite', {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'bearer ' + accessToken,
+            },
+            body: JSON.stringify({
+                propertyId: route.params.data.propertyInfo._id,
+            })
+            }) 
+            .then(res => res.json()).then(message =>{
+                setLiked(!liked)
+                console.log(message)
+               
+            })
+            .catch(e=>{
+                alert(e)
+        })
+    }
 
+    async function getTokens(){
+       
+        const accessToken = await SecureStorage.getItem("refreshToken");
+       //console.log("Access Token " + accessToken)
+
+        const UID = await SecureStorage.getItem("userId");
+
+      //  console.log("UID " + UID)
+        fetch('https://sublease-app.herokuapp.com/users/' + UID, {
+        method: 'GET',
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken,
+        }
+        }) 
+        .then(res => res.json()).then(async userData =>{
+            // console.log("userdata")
+            setUserData(userData)
+            console.log("userdata")
+            console.log(userData)
+           
+            if (userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) != -1){
+                setLiked(true)
+            }
+            
+        })
+        .catch(e=>{
+            alert(e)
+        })
     }
 
     return(
@@ -158,7 +214,7 @@ export default function PropertyDetailScreen({navigation, route}){
                         </Pressable>
                         <Pressable  style={{backgroundColor:'rgba(43,43,43,0.8)',justifyContent:'center', alignItems:'center',
                          position:'absolute',top:HEIGHT*0.05, right:WIDTH*0.05, width:WIDTH*0.1, height:WIDTH*0.1, borderRadius: WIDTH*0.05 }} onPress={likeProperty}>
-                            <Ionicons  name="heart" size={25} color='white'></Ionicons>
+                            <Ionicons  name="heart" size={25} color={ liked ? 'red' : 'white'}></Ionicons>
                         </Pressable>
                     </View>
                     
