@@ -64,7 +64,7 @@ import { Container, HeaderContainer, BackButtonContainer,NameContainer, ResetBut
         BedroomOptionsText, AmenitiesContainer, NameIcon, DateInputPressable, Footer, ResetText, ApplyButton, 
     ApplyText} from './discoverFilterStyle';
 
-export default function DiscoverFilterScreen({navigation, currentLocation, open, close, setFilteredProperties}){
+export default function DiscoverFilterScreen({navigation, currentLocation, open, close, setFilteredProperties, properttyPage, setRetrieveMore}){
     const [containerModal, setcontainerModal] = useState(false);
     const [scrollEnabled, setscrollEnabled] = useState(true)
 
@@ -115,6 +115,8 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     },[])
 
     function filter(){
+        setPropertyPage(1)
+        setRetrieveMore(true)
     let s = "";
     if(filterType != ""){
         s = s + "&type=" + filterType;

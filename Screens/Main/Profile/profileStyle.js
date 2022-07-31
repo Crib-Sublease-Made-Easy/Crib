@@ -179,17 +179,19 @@ export const EditText = styled.Text`
 
 export const FavPropertyCard = styled.Pressable`
   width: ${WIDTH*0.9}px;
-  height: ${HEIGHT*0.3}px;
+  height: ${HEIGHT*0.125}px;
   margin-top: ${HEIGHT*0.01}px
   border-radius: 10px;
   background-color:white;  
+  flex-direction: row
 `
 export const FavPropertyCardContent = styled.Pressable`
   padding-horizontal: ${WIDTH*0.02}px
   padding-vertical: ${HEIGHT*0.01}px;
-  width: 100%;
-  height: 40%;
-  
+  width: 70%
+  height: 100%;
+  justify-content: space-around
+  overflow: hidden  
   
 `
 

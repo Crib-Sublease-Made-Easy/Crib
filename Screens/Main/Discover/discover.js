@@ -96,7 +96,6 @@ export default function DiscoverScreen({navigation, route}){
 
     useEffect(()=>{
         console.log("Refreshing again!")
-
         //This loads the property in the flatlist 
         loadProperty()
            
@@ -195,7 +194,9 @@ export default function DiscoverScreen({navigation, route}){
 
     //Load initial properties
     const loadProperty = useCallback(()=> {
-        
+        console.log("Load properties")
+        setPropertyPage(1)
+        setRetrieveMore(true)
         let s = "";
         if(filterType != ""){
             s = s + "&type=" + filterType;
@@ -231,8 +232,8 @@ export default function DiscoverScreen({navigation, route}){
             }
             }) 
             .then(res => res.json()).then(properties =>{
-                console.log("Filtered properties is:")
-                console.log("==========================================================")
+                // console.log("Filtered properties is:")
+                // console.log("==========================================================")
                 // console.log(properties)
                 setFilteredProperties(properties)
                 setFlatlistRefreshing(true)
@@ -273,30 +274,32 @@ export default function DiscoverScreen({navigation, route}){
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
         console.log("PAGE", propertyPage)
-        await fetch('https://sublease-app.herokuapp.com/properties/query?page=' + propertyPage + s, {
-        method: 'GET',
-        headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-        }
-        }) 
-        .then(res => res.json()).then(properties =>{
-            // setPropertiesData([...propertiesData,...properties])
-          console.log("PROPERTIES", properties)
-          if(properties.length < 4){
-            setRetrieveMore(false)
-          }
-            setFilteredProperties([...filteredProperties,...properties])
-        })
-        .catch(e=>{
-            alert(e)
-        })      
+        if(propertyPage != 0){
+            await fetch('https://sublease-app.herokuapp.com/properties/query?page=' + propertyPage + s, {
+            method: 'GET',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+            }
+            }) 
+            .then(res => res.json()).then(properties =>{
+                // setPropertiesData([...propertiesData,...properties])
+            //   console.log("PROPERTIES", properties)
+            if(properties.length == 0){
+                setRetrieveMore(false)
+            }
+                setFilteredProperties([...filteredProperties,...properties])
+            })
+            .catch(e=>{
+                alert(e)
+            })   
+        }   
     }
 
     // Retrieve all the pins according to currentLocation, this is need to display all the properties with a max distance of 1000km
     const retrieveAllPins = (lat, long) =>{
-        console.log("Retrieving pins ")
-        console.log(lat + " " + long)
+        // console.log("Retrieving pins ")
+        // console.log(lat + " " + long)
         fetch(`https://sublease-app.herokuapp.com/properties/pins?latitude=${lat}&longitude=${long}&maxDistance=10`, {
         method: 'GET',
         headers: {
@@ -345,7 +348,7 @@ export default function DiscoverScreen({navigation, route}){
     //setSearching to false so to shrink the header
     //Dismiss keyboard
     function selectCurrentLocation(locationQueryName){
-        console.log("The locationQueryName is :")
+        // console.log("The locationQueryName is :")
         // console.log(locationQueryName)
         setautocompleteLocation("")
         setlocationQuery(locationQueryName)
@@ -400,7 +403,7 @@ export default function DiscoverScreen({navigation, route}){
     }
 
     function onMarkerClick(item){
-       console.log(item)
+    //    console.log(item)
        setSelectedPin(item)
        setPropertyPreviewCard(true)
        openPreviewCard()
@@ -556,7 +559,7 @@ export default function DiscoverScreen({navigation, route}){
         flatlistRefreshing={flatlistRefreshing} mapRef={mapRef} onMarkerClick={onMarkerClick} currentLocation={currentLocation} moveMap={moveMap}
         setSelectedPin={setSelectedPin} openPreviewCard={openPreviewCard} />
 
-        <DiscoverFilterScreen open={filterModal} close={()=>setFilterModal(false)} currentLocation={currentLocation} setFilteredProperties={setFilteredProperties} />
+        <DiscoverFilterScreen open={filterModal} close={()=>setFilterModal(false)} currentLocation={currentLocation} setFilteredProperties={setFilteredProperties} propertyPage={propertyPage} setRetrieveMore={setRetrieveMore}/>
         
         {/* <View style={{backgroundColor:'red', height:HEIGHT*0.3, width: WIDTH*0.9,  alignSelf:'center', position:'absolute', bottom:0}}>
 

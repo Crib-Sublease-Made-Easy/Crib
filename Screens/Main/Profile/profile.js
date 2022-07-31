@@ -92,10 +92,12 @@ export default function ProfileScreen({navigation}){
             let cachedProfilePic = await SecureStorage.getItem("profilePic");
             if(cachedProfilePic == userData.profilePic){
                 console.log("Cached profile pic is")
-                // console.log(cachedProfilePic)
+                console.log(cachedProfilePic)
+                await SecureStorage.setItem("profilePic", userData.profilePic);
                 setProfilePic(cachedProfilePic)
             }else{
                 console.log("API data is");
+                await SecureStorage.setItem("profilePic", userData.profilePic);
                 setProfilePic(userData.profilePic)
             }
            
@@ -272,19 +274,19 @@ export default function ProfileScreen({navigation}){
                             <DefaultPostFavText>You haven't liked any properties yet...</ DefaultPostFavText>
                         </View>
                         :
-                        <ScrollView onTouchMove={()=>console.log("hi")} 
-                        style={{alignSelf:'center'}} showsVerticalScrollIndicator={false}>
+                        <ScrollView contentContainerStyle={{alignSelf:'center'}}
+                        style={{alignSelf:'center',}} showsVerticalScrollIndicator={false}>
                             {favoriteProperties.map((item)=>(
-                            <FavPropertyCard key={item.propertyInfo._id} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
+                            <FavPropertyCard key={item.propertyInfo._id}>
                                 <Image source={{uri: item.propertyInfo.imgList[0]}} 
-                                style={{width:'100%', height:'60%', borderRadius:10}}/>
-                                <FavPropertyCardContent>
+                                style={{width:'30%', height:'100%', borderRadius:10}}/>
+                                <FavPropertyCardContent onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
                                     <FavPropertyCardName>{item.propertyInfo.loc.streetAddr}</FavPropertyCardName>
                                     <FavPropertyCardDateContainer>
                                         <FavPropertyCardDateText>
                                             {new Date(item.propertyInfo.availableFrom).toLocaleDateString()}
                                         </FavPropertyCardDateText>
-                                        <Ionicons name="repeat-outline" size={15} />
+                                        <Ionicons name="arrow-forward-outline" size={15} />
                                         <FavPropertyCardDateText>
                                             {new Date(item.propertyInfo.availableTo).toLocaleDateString()}
                                         </FavPropertyCardDateText>
@@ -294,6 +296,9 @@ export default function ProfileScreen({navigation}){
                             </FavPropertyCard>
 
                             ))}
+                            <View style={{width:WIDTH*0.9, height: HEIGHT*0.05}}>
+
+                            </View>
                         </ScrollView>
                         
                     }

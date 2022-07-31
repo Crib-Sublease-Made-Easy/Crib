@@ -97,6 +97,7 @@ export default function PropertyPostingScreen({ navigation }) {
     const [propertyLivingroomImage, setPropertyLivingroomImage] = useState(null)
     const [propertyKitchenImage, setPropertyKitchenImage] = useState(null)
     const [propertyFloorplanImage, setPropertyFloorPlanImage] = useState(null)
+    const [latLong, setLatLong] = useState([])
 
     const [loading, setLoading] = useState(false)
 
@@ -263,8 +264,8 @@ export default function PropertyPostingScreen({ navigation }) {
         postingData.append("type", propertyType);                       //String 
         postingData.append("streetAddr", propertyMainAddr);               //String 
         postingData.append("secondaryTxt", propertySecondaryAddr);               //String 
-        postingData.append("latitude", 37.792965)
-        postingData.append("longitude", -122.407248)
+        postingData.append("latitude", latLong[0])
+        postingData.append("longitude", latLong[1])
         //String Array
 
         var array = propertyBedroomImage.split(".");
@@ -406,6 +407,7 @@ export default function PropertyPostingScreen({ navigation }) {
         setpropertyLocation(value.description)
         setpropertyMainAddr(value.structured_formatting.main_text)
         setpropertySecondaryAddr(value.structured_formatting.secondary_text)
+        LocationToLatLong(value.description)
        
     }
 
@@ -415,6 +417,27 @@ export default function PropertyPostingScreen({ navigation }) {
         }
         let val = price.replace("$","")
         return "$" + val
+    }
+
+    async function LocationToLatLong(name){
+        const accessToken = await SecureStorage.getItem("refreshToken");
+        await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${name}&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`, {
+            method: 'GET',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken,
+            }
+            }) 
+            .then(res => res.json()).then(locInfo=>{
+                console.log("lat and long")
+                console.log(locInfo.results[0].geometry.location)
+                setLatLong([locInfo.results[0].geometry.location.lat, locInfo.results[0].geometry.location.lng])
+            })
+        
+            .catch(e=>{
+                alert(e)
+        })
     }
 
    

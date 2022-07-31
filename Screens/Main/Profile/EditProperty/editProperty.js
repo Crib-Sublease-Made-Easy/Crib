@@ -21,6 +21,8 @@ Ionicons.loadFont()
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
+import ImagePicker from 'react-native-image-crop-picker';
+
 import PropTypesScreen from './EditPropTypeModal/propertyTypeModal';
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     HeaderImageContainer, PropertyPhotoContainer, PhotoContainer, RowContainer, RowName, CategoryName,
@@ -50,6 +52,8 @@ export default function EditPropertyScreen({navigation, route}){
     const [propImg, setPropImg] = useState([])
     const [propAmen, setPropAmen] = useState('')
     const [headerImage, setHeaderImage] = useState(null)
+
+    const [propFloorplanImage, setPropFloorplanImage] = useState(null)
 
 
 
@@ -85,6 +89,38 @@ export default function EditPropertyScreen({navigation, route}){
             alert(e)
         })
     }
+
+    async function SelectProfilePic(index){
+        const accessToken = await SecureStorage.getItem("refreshToken");
+        ImagePicker.openPicker({
+            width: 300,
+            height: 300,
+            cropping:true,
+            compressImageQuality: 0.3
+          }).then(image => {
+           
+
+            setProfilePic(image.path)
+            fetch('https://sublease-app.herokuapp.com/users/' + route.params.userData._id, {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken,
+                },
+                body: JSON.stringify({
+                    profilePic: image.path,
+                })
+            })
+            .catch((error) => {
+                if (error.code === 'E_PICKER_CANCELLED') { // here the solution
+                  return false;
+                }
+            });
+          });
+        
+        
+    }   
     
     return(
       
@@ -115,7 +151,7 @@ export default function EditPropertyScreen({navigation, route}){
             <CategoryName>Image Gallery</CategoryName>
             <PropertyPhotoContainer >
             {propImg.map((value, index)=>(
-                <TouchableOpacity key={"imgList" + value} onPress={() => setHeaderImage(value)}>
+                <TouchableOpacity key={"imgList" + value} onPress={() => SelectProfilePic(index)}>
                     <PhotoContainer >
                         <Image source={{ uri: value }}
                             style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
@@ -123,6 +159,21 @@ export default function EditPropertyScreen({navigation, route}){
                     </PhotoContainer>
                 </TouchableOpacity>
             ))}
+            {
+                propImg.length == 4 &&
+
+                <TouchableOpacity key={"imgList" + "floorplan"} onPress={() => SelectProfilePic(4)}>
+                    <PhotoContainer >
+                       {propFloorplanImage != null ?
+                        <Image source={{ uri: propFloorplanImage == null ? null : setPropFloorplanImage  }}
+                            style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
+                        :
+                        <Ionicons name="add" size={20} color='white'/>
+                        }
+                    </PhotoContainer>
+                </TouchableOpacity>
+
+            }
             </PropertyPhotoContainer>
             <CategoryName>Location</CategoryName>
             <RowContainer>

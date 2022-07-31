@@ -222,7 +222,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
 
     const renderCards = useCallback((data, index) =>{
        // console.log("HELLO")
-        console.log("DATA ITEM", data.item)
+        // console.log("DATA ITEM", data.item)
 
         return(
             <Pressable 
@@ -278,7 +278,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />
         :
         <FlatList
-        onEndReachedThreshold = {0.5}
+        onEndReachedThreshold = {0.4}
        
         onEndReached={()=>{
             console.log("loading more data")
