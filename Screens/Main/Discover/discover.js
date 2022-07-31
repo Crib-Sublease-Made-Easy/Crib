@@ -279,7 +279,7 @@ export default function DiscoverScreen({navigation, route}){
         .then(res => res.json()).then(properties =>{
             // setPropertiesData([...propertiesData,...properties])
           
-            setFilteredProperties([...filteredProperties,...properties])
+            setFilteredProperties([...filteredProperties,...properties.propertyInfo])
         })
         .catch(e=>{
             alert(e)
@@ -544,7 +544,7 @@ export default function DiscoverScreen({navigation, route}){
       
         {/* Property Cards and the search bar */}       
         
-        <PropertyCard index={0} navigation={navigation} length={filteredProperties.length}
+        <PropertyCard index={0} navigation={navigation} length={pinsData.length}
         propertiesData={propertiesData} loadMoreProperties={loadMoreProperties} filteredPropertiesData={filteredProperties} markerClickIndex={markerClickIndex}
         flatlistRefreshing={flatlistRefreshing} mapRef={mapRef} onMarkerClick={onMarkerClick} currentLocation={currentLocation} moveMap={moveMap}
         setSelectedPin={setSelectedPin} openPreviewCard={openPreviewCard} />
