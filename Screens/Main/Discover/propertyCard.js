@@ -226,7 +226,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
 
         return(
             <Pressable 
-            style={CardContainer}  onPress={()=> navigation.navigate('PropertyDetail', {data: {propertyInfo: data.item.propertyInfo}})} >
+            style={CardContainer}  onPress={()=> navigation.navigate('PropertyDetail', {data: data.item})} >
                 {/* <SharedElement id="0"> */}
                     <PropertyImageContainer>
                         <Animated.Image  
