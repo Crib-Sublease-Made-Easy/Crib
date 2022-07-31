@@ -45,7 +45,7 @@ export default function PropertyDetailScreen({navigation, route}){
     }, [])
     const flatListRef = useRef(null)
     const propertyAmenities = (["Furnished", "Pets Allowed", "Able to renew", "On-site waher and dryer"]);
-    const propData = route.params.data.propertyInfo;
+    const [propData, setPropData] = useState(route.params.data.propertyInfo);
     const postedUserData = route.params.data.userInfo;
     const viewabilityConfigCallbackPairs = useRef([
         { onViewableItemsChanged: testFuction },
@@ -90,7 +90,10 @@ export default function PropertyDetailScreen({navigation, route}){
             }
             }) 
             .then(res => res.json()).then(propertyData =>{
-                setPropAPIData(postedUserData)
+                if(route.params.data == undefined){
+                    setPropData(propertyData.propertyInfo)
+                }
+                setPropAPIData(propertyData)
                 //console.log(propertyData)
                
                

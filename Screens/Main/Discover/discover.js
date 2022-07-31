@@ -403,7 +403,8 @@ export default function DiscoverScreen({navigation, route}){
     }
 
     function onMarkerClick(item){
-    //    console.log(item)
+       console.log(item)
+    
        setSelectedPin(item)
        setPropertyPreviewCard(true)
        openPreviewCard()
@@ -488,7 +489,7 @@ export default function DiscoverScreen({navigation, route}){
                         borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
                     </PreviewTopContainer>
 
-                    <PreviewBottomContainer onPress={()=>navigation.naviFmagate("PropertyDetail", {data : {item: selectedPin}})}>
+                    <PreviewBottomContainer onPress={()=>navigation.navigate("PropertyDetail", {simplifiedData : selectedPin})}>
                         
                         <PreviewLocationText>{selectedPin.loc.streetAddr}</PreviewLocationText>
                         <PreviewPriceText>{new Date(selectedPin.availableFrom).toDateString()} - {new Date(selectedPin.availableTo).toDateString()}</PreviewPriceText>
