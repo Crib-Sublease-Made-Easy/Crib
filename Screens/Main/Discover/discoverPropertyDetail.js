@@ -52,6 +52,7 @@ export default function PropertyDetailScreen({navigation, route}){
     const {sb} = useContext(UserContext);
     const [flatingScrolling, setFlatlistScrolling] = useState(false)
     const [flatlistIndex, setFlatlistIndex] = useState(0)
+    const [propAPIData, setPropAPIData] = useState()
     const createConversation = async () =>{
         const UID = await SecureStorage.getItem("userId");
         console.log("MY Userid", UID)
@@ -86,7 +87,7 @@ export default function PropertyDetailScreen({navigation, route}){
             }
             }) 
             .then(res => res.json()).then(propertyData =>{
-                console.log("The following is fetch API data")
+                setPropAPIData(postedUserData)
                 console.log(propertyData)
                
                

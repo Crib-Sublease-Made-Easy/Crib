@@ -141,7 +141,8 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     filteredPropertiesData, markerClickIndex, flatlistRefreshing, currentLocation,
     onMarkerClick, length, moveMap, openPreviewCard
 }){
-    
+    // console.log("hi")
+    // console.log(filteredPropertiesData)
     const flatlistRef = useRef(0);
     const [previewing, setPreviewing] = useState(false)
     // const [propertiesData, setPropertiesData] = useState([]);
@@ -219,9 +220,9 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
     }
 
-    const renderCards = useCallback((data, index) =>{
-       // console.log("HELLO")
-        //console.log(data.item)
+    const renderCards = ((data, index) =>{
+       console.log("HELLO")
+        console.log(data.item)
         return(
             <Pressable 
             style={CardContainer}  onPress={()=> navigation.navigate('PropertyDetail', {data: {propertyInfo: data.item}})} >
@@ -230,7 +231,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                         <Animated.Image  
                         style={{width:WIDTH*0.9, height:WIDTH*0.6, borderRadius:15, backgroundColor:LIGHTGREY,
                         opacity: 1
-                        }} source={{uri:data.item.imgList[0]}}/>
+                        }} source={{uri:data.imgList[0]}}/>
                         {/* <OpenMapIconContainer onPress={()=>MoveMapToPin(data)}> */}
                         <OpenMapIconContainer onPress={()=>MoveMapToPin(data.item._id)}>
                             <FontAwesome name='location-arrow' size={HEIGHT*0.02} color='white'/>
@@ -255,7 +256,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                 </SharedElement>
             </Pressable>
         )
-    },[filteredPropertiesData])
+    })
 
     
     return(
@@ -292,7 +293,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
        
         // key={propertiesData}
         keyExtractor={(item, index) => String(index)}
-        renderItem={(data, index)=>renderCards(data, index)}
+        renderItem={(item, index)=>renderCards(item, index)}
         />
         }   
         </Animated.View>
