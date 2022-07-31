@@ -220,18 +220,19 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
     }
 
-    const renderCards = ((data, index) =>{
-       console.log("HELLO")
-        console.log(data.item)
+    const renderCards = useCallback((data, index) =>{
+       // console.log("HELLO")
+        console.log("DATA ITEM", data.item)
+
         return(
             <Pressable 
-            style={CardContainer}  onPress={()=> navigation.navigate('PropertyDetail', {data: {propertyInfo: data.item}})} >
+            style={CardContainer}  onPress={()=> navigation.navigate('PropertyDetail', {data: {propertyInfo: data.item.propertyInfo}})} >
                 {/* <SharedElement id="0"> */}
                     <PropertyImageContainer>
                         <Animated.Image  
                         style={{width:WIDTH*0.9, height:WIDTH*0.6, borderRadius:15, backgroundColor:LIGHTGREY,
                         opacity: 1
-                        }} source={{uri:data.imgList[0]}}/>
+                        }} source={{uri:data.item.propertyInfo.imgList[0]}}/>
                         {/* <OpenMapIconContainer onPress={()=>MoveMapToPin(data)}> */}
                         <OpenMapIconContainer onPress={()=>MoveMapToPin(data.item._id)}>
                             <FontAwesome name='location-arrow' size={HEIGHT*0.02} color='white'/>
@@ -243,12 +244,12 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                 {/* </SharedElement> */}
                 <PropertyInfoContainer>
                    
-                        <LocationFont>{data.item.loc.streetAddr}</LocationFont>
-                        <DateFont>{new Date(data.item.availableFrom).toDateString()} - { new Date(data.item.availableTo).toDateString()}</DateFont>
+                        <LocationFont>{data.item.propertyInfo.loc.streetAddr}</LocationFont>
+                        <DateFont>{new Date(data.item.propertyInfo.availableFrom).toDateString()} - { new Date(data.item.propertyInfo.availableTo).toDateString()}</DateFont>
                        
                    
                    
-                        <PriceFont><Text style={{fontWeight:'700'}}>${data.item.price}</Text>/month</PriceFont>
+                        <PriceFont><Text style={{fontWeight:'700'}}>${data.item.propertyInfo.price}</Text>/month</PriceFont>
                     
                 </PropertyInfoContainer>   
                 <SharedElement id="view">

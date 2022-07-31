@@ -215,7 +215,7 @@ export default function DiscoverScreen({navigation, route}){
         }
         s = s + `&latitude=${currentLocation[0]}`
         s = s + `&longitude=${currentLocation[1]}`
-        s = s + "&maxDistance=1000"
+        s = s + "&maxDistance=10"
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
 
@@ -231,9 +231,8 @@ export default function DiscoverScreen({navigation, route}){
             .then(res => res.json()).then(properties =>{
                 console.log("Filtered properties is:")
                 console.log("==========================================================")
-                console.log(properties)
-                
-                setFilteredProperties(properties[0].propertyInfo)
+                // console.log(properties)
+                setFilteredProperties(properties)
                 setFlatlistRefreshing(true)
                 
             })
@@ -291,7 +290,7 @@ export default function DiscoverScreen({navigation, route}){
     const retrieveAllPins = (lat, long) =>{
         console.log("Retrieving pins ")
         console.log(lat + " " + long)
-        fetch(`https://sublease-app.herokuapp.com/properties/pins?latitude=${lat}&longitude=${long}&maxDistance=100`, {
+        fetch(`https://sublease-app.herokuapp.com/properties/pins?latitude=${lat}&longitude=${long}&maxDistance=10`, {
         method: 'GET',
         headers: {
         Accept: 'application/json',

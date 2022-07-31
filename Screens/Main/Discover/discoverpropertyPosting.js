@@ -378,6 +378,9 @@ export default function PropertyPostingScreen({ navigation }) {
 
     }
 
+    function updateImages(index) {
+        setHeaderImage(propertyphotoGallery[index]);
+    }
     const startingvalue = HEIGHT * 0.1;
     const [expanded, setexpended] = useState(true)
     const heighttranslation = useRef(new Animated.Value(startingvalue)).current;
