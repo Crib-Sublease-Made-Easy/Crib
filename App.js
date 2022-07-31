@@ -51,6 +51,7 @@ import SettingScreen from './Screens/Main/Profile/Setting/setting.js'
 import ChatScreen from './Screens/Main/Message/chat.js'
 
 import ChangeNumberScreen from './Screens/Main/Profile/Setting/changeNumber.js';
+import ChangeEmailScreen from './Screens/Main/Profile/Setting/ChangeEmail/changeEmail.js';
 import EditAboutMeScreen from './Screens/Main/Profile/EditProfile/EditAboutMe/editAboutMe.js';
 import EditPropertyScreen from './Screens/Main/Profile/EditProperty/editProperty.js';
 import OTPEditScreen from './Screens/Main/Profile/Setting/OTPNumber/otpEdit.js';
@@ -254,6 +255,13 @@ export default function App() {
             />
             <Stack.Screen name="ChangeNumber"
               component={ChangeNumberScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
+            <Stack.Screen name="ChangeEmail"
+              component={ChangeEmailScreen}
               options={{
                 headerShown: false,
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS

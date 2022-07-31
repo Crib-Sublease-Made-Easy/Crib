@@ -139,7 +139,7 @@ const PropertiesLength = styled.Text`
 
 export default function PropertyCard({navigation, setSelectedPin, loadMoreProperties,
     filteredPropertiesData, markerClickIndex, flatlistRefreshing, currentLocation,
-    onMarkerClick, length, moveMap, openPreviewCard
+    onMarkerClick, length, moveMap, openPreviewCard, userId
 }){
     // console.log("hi")
     // console.log(filteredPropertiesData)
@@ -226,7 +226,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
 
         return(
             <Pressable 
-            style={CardContainer}  onPress={()=> navigation.navigate('PropertyDetail', {data: data.item})} >
+            style={CardContainer}  onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId})} >
                 {/* <SharedElement id="0"> */}
                     <PropertyImageContainer>
                         <Animated.Image  

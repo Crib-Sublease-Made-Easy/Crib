@@ -1,4 +1,4 @@
-import React , {useContext, useState, useRef, useEffect, useCallback} from 'react';
+import React , {useContext, useState, useRef, useEffect, useCallback, useId} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -278,9 +278,11 @@ export default function ProfileScreen({navigation}){
                         style={{alignSelf:'center',}} showsVerticalScrollIndicator={false}>
                             {favoriteProperties.map((item)=>(
                             <FavPropertyCard key={item.propertyInfo._id}>
+                                <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
                                 <Image source={{uri: item.propertyInfo.imgList[0]}} 
-                                style={{width:'30%', height:'100%', borderRadius:10}}/>
-                                <FavPropertyCardContent onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
+                                style={{width:'100%', height:'100%', borderRadius:10}}/>
+                                </Pressable>
+                                <FavPropertyCardContent onPress={()=> navigation.navigate("PropertyDetail", {data: item, uid: userData._id})}>
                                     <FavPropertyCardName>{item.propertyInfo.loc.streetAddr}</FavPropertyCardName>
                                     <FavPropertyCardDateContainer>
                                         <FavPropertyCardDateText>

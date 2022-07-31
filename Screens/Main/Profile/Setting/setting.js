@@ -1,4 +1,4 @@
-import React , {useContext, useState, useRef} from 'react';
+import React , {useContext, useState, useRef, useEffect} from 'react';
 import {
   SafeAreaView,
   Switch,
@@ -26,7 +26,16 @@ FontAwesome.loadFont()
 export default function SettingScreen({navigation}){
     const [messageNotification, setMessageNotification] = useState(true)
     const [newPropNotification, setNewPropNotification] = useState(true)
+    const [userData, setUserData] = useState("")
     const {user, login} = useContext(UserContext);
+
+    useEffect(()=>{
+      const unsubscribe = navigation.addListener('focus', () => {
+        getTokens()
+    
+        });
+    return unsubscribe; 
+    },[navigation])
 
     const logout =  async() => {
       await SecureStorage.removeItem("refreshToken");
@@ -36,9 +45,37 @@ export default function SettingScreen({navigation}){
       await SecureStorage.removeItem("email");
       await SecureStorage.removeItem("userId");
       await SecureStorage.removeItem("profilePic");
-
       login(null)
     }
+
+    async function getTokens(){
+      const accessToken = await SecureStorage.getItem("refreshToken");
+     //console.log("Access Token " + accessToken)
+
+      const UID = await SecureStorage.getItem("userId");
+
+    //  console.log("UID " + UID)
+      fetch('https://sublease-app.herokuapp.com/users/' + UID, {
+      method: 'GET',
+      headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + accessToken,
+      }
+      }) 
+      .then(res => res.json()).then(async userData =>{
+          // console.log("userdata")
+          setUserData(userData)
+          console.log("userdata")
+          console.log(userData)   
+      //    console.log("data")
+      //    console.log(userData)
+          //console.log(userData.postedProperties.length)      
+      })
+      .catch(e=>{
+          alert(e)
+      })
+  }
 
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
@@ -68,14 +105,14 @@ export default function SettingScreen({navigation}){
             <RowContainer>
               <RowName>Phone Number</RowName>
               <RowValueContainer onPress={()=> navigation.navigate("ChangeNumber")}>
-                <RowValueText>+1 6089991395</RowValueText>
+                <RowValueText>+1 {userData.phoneNumber}</RowValueText>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
               </RowValueContainer>
             </RowContainer>
             <RowContainer>
               <RowName>Email</RowName>
-              <RowValueContainer>
-                <RowValueText>hlee777@wisc.edu</RowValueText>
+              <RowValueContainer onPress={()=> navigation.navigate("ChangeEmail", {email: userData.email, uid: userData._id})}>
+                <RowValueText>{userData.email}</RowValueText>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
               </RowValueContainer>
             </RowContainer>

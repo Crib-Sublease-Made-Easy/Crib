@@ -64,19 +64,14 @@ import { Container, HeaderContainer, BackButtonContainer,NameContainer, ResetBut
         BedroomOptionsText, AmenitiesContainer, NameIcon, DateInputPressable, Footer, ResetText, ApplyButton, 
     ApplyText} from './discoverFilterStyle';
 
-export default function DiscoverFilterScreen({navigation, currentLocation, open, close, setFilteredProperties, properttyPage, setRetrieveMore}){
+export default function DiscoverFilterScreen({navigation, currentLocation, open, close, setFilteredProperties, setPropertyPage, setRetrieveMore,retrieveAllPins
+    ,filterType, setfilterType, filterDistance, setfilterDistance, filterBedroom, setfilterBedroom,filterBathroom, setfilterBathroom
+    ,filterPriceHigher, setfilterPriceHigher, filterAmenities, setfilterAmenities, propertyAmenities, setpropertyAmenities
+}){
     const [containerModal, setcontainerModal] = useState(false);
     const [scrollEnabled, setscrollEnabled] = useState(true)
 
-    const [filterType, setfilterType] = useState('')
-    const [filterSort, setfilterSort] = useState('')
-    const [filterDistance, setfilterDistance] = useState(150)
-    const [filterBedroom, setfilterBedroom] = useState(0);
-    const [filterBathroom, setfilterBathroom] = useState(0);
-    const [filterPriceLower, setfilterPriceLower] = useState(0);
-    const [filterPriceHigher, setfilterPriceHigher] = useState(10000);
-    const [filterAmenities, setfilterAmenities] = useState([])
-    const [propertyAmenities, setpropertyAmenities] = useState([])
+    
 
     //Sets DatePicker Modal Visibility
     const [propertydateFrom, setpropertydateFrom] = useState(new Date())
@@ -108,6 +103,8 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
         setfilterAmenities([])
         setfilterBathroom("")
         setfilterBedroom("")
+        setfilterDistance(150)
+
     }
    
     useEffect(()=>{
@@ -127,10 +124,10 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     if(filterDistance != ""){
         s = s + "&maxDistance=" + parseInt(filterDistance);
     }
-    if(filterDistance != ""){
+    if(filterBedroom != ""){
         s = s + "&bed=" + filterBedroom;
     }
-    if(filterDistance != ""){
+    if(filterBathroom != ""){
         s = s + "&bath=" + filterBathroom;
     }
     for(let amen of filterAmenities){
@@ -158,6 +155,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
         .catch(e=>{
             alert(e)
     })
+    retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities )
     }
 
     return(

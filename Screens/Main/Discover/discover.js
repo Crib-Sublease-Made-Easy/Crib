@@ -16,7 +16,7 @@ import {
   TouchableOpacity
   
 } from 'react-native';
-
+import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLOR, DARKGREY } from '../../../sharedUtils';
 
 const TEXTGREY = '#969696'
@@ -90,21 +90,21 @@ export default function DiscoverScreen({navigation, route}){
 
     const [filterType, setfilterType] = useState('')
     const [filterSort, setfilterSort] = useState('')
-    const [filterDistance, setfilterDistance] = useState('')
-    const [filterBedroom, setfilterBedroom] = useState(1);
-    const [filterBathroom, setfilterBathroom] = useState(1);
+    const [filterDistance, setfilterDistance] = useState(150)
+    const [filterBedroom, setfilterBedroom] = useState("");
+    const [filterBathroom, setfilterBathroom] = useState("");
     const [filterPriceLower, setfilterPriceLower] = useState(0);
-    const [filterPriceHigher, setfilterPriceHigher] = useState(5000);
+    const [filterPriceHigher, setfilterPriceHigher] = useState(10000);
     const [filterAmenities, setfilterAmenities] = useState([])
 
     const [loading, setLoading] = useState(false)
-
+    const [userId, setUserId] = useState(null)
     useEffect(()=>{
         console.log("Refreshing again!")
         //This loads the property in the flatlist 
         loadProperty()
-           
-        retrieveAllPins(currentLocation[0], currentLocation[1]);
+        getUserId()
+        retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities )
         setPropertyPreviewCard(false)
         setSelectedPin([])
         setTimeout(() => {
@@ -113,6 +113,11 @@ export default function DiscoverScreen({navigation, route}){
         
     },[currentLocation])
 
+
+    const getUserId = async () =>{
+        const id = await SecureStorage.getItem('userId')
+        setUserId(id); //try Im retardedhaaha
+    }
     //Open The search bar container to displya all autocomplete results according to if searching is true 
     function openHeader(){
         Animated.parallel([
@@ -212,10 +217,10 @@ export default function DiscoverScreen({navigation, route}){
         if(filterDistance != ""){
             s = s + "&maxDistance=" + parseInt(filterDistance);
         }
-        if(filterDistance != ""){
+        if(filterBedroom != ""){
             s = s + "&bed=" + filterBedroom;
         }
-        if(filterDistance != ""){
+        if(filterBathroom != ""){
             s = s + "&bath=" + filterBathroom;
         }
         for(let amen of filterAmenities){
@@ -223,11 +228,11 @@ export default function DiscoverScreen({navigation, route}){
         }
         s = s + `&latitude=${currentLocation[0]}`
         s = s + `&longitude=${currentLocation[1]}`
-        s = s + "&maxDistance=10"
+
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
 
-        // console.log(s);
+        console.log(s);
     
         fetch('https://sublease-app.herokuapp.com/properties/query?page=0' + s, {
             method: 'GET',
@@ -239,7 +244,7 @@ export default function DiscoverScreen({navigation, route}){
             .then(res => res.json()).then(properties =>{
                 // console.log("Filtered properties is:")
                 // console.log("==========================================================")
-                // console.log(properties)
+                console.log(properties)
                 setFilteredProperties(properties)
                 setFlatlistRefreshing(true)
                 
@@ -264,10 +269,10 @@ export default function DiscoverScreen({navigation, route}){
         if(filterDistance != ""){
             s = s + "&maxDistance=" + parseInt(filterDistance);
         }
-        if(filterDistance != ""){
+        if(filterBedroom != ""){
             s = s + "&bed=" + filterBedroom;
         }
-        if(filterDistance != ""){
+        if(filterBathroom != ""){
             s = s + "&bath=" + filterBathroom;
         }
         for(let amen of filterAmenities){
@@ -275,7 +280,6 @@ export default function DiscoverScreen({navigation, route}){
         }
         s = s + `&latitude=${currentLocation[0]}`
         s = s + `&longitude=${currentLocation[1]}`
-        s = s + "&maxDistance=10"
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
         console.log("PAGE", propertyPage)
@@ -301,11 +305,35 @@ export default function DiscoverScreen({navigation, route}){
         }   
     }
 
-    // Retrieve all the pins according to currentLocation, this is need to display all the properties with a max distance of 1000km
-    const retrieveAllPins = (lat, long) =>{
+    function retrieveAllPins(lat, long, distance, price, bed, bath, type, amens ){
+        
+        let s = "";
+        if(type != ""){
+            s = s + "&type=" + type;
+        }
+        if(distance != ""){
+            s = s + "&maxDistance=" + parseInt(distance);
+        }
+        if(bed != ""){
+            s = s + "&bed=" + bed;
+        }
+        if(bath != ""){
+            s = s + "&bath=" + bath;
+        }
+        if(amens != undefined){
+            for(let amen of amens){
+                s = s + "&" + amen + "=true";
+            }
+        
+         }
+        s = s + `&latitude=${lat}`
+        s = s + `&longitude=${long}`
+        s = s + `&priceHigh=${price}`
+        s = s + `&priceLow=0`
+        console.log("S",s)
         // console.log("Retrieving pins ")
-        // console.log(lat + " " + long)
-        fetch(`https://sublease-app.herokuapp.com/properties/pins?latitude=${lat}&longitude=${long}&maxDistance=10`, {
+        console.log(`https://sublease-app.herokuapp.com/properties/pins?${s}`)
+        fetch(`https://sublease-app.herokuapp.com/properties/pins?${s}` , {
         method: 'GET',
         headers: {
         Accept: 'application/json',
@@ -315,8 +343,8 @@ export default function DiscoverScreen({navigation, route}){
         .then(res => res.json()).then( pins =>{
             console.log("Loading PinsData")
          
-            //console.log(pins)
-            //console.log("==========================================================")
+            console.log("PINS", pins)
+            console.log("==========================================================")
             setPinsData(pins)             
             
         })
@@ -490,7 +518,9 @@ export default function DiscoverScreen({navigation, route}){
                 outputRange: [0, 1]
             }), display: searching ? 'flex' : 'none' }}/>
 
-            < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), retrieveAllPins(mapCenterLocation[0], mapCenterLocation[1]), updateQueryString()}}>
+            < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), updateQueryString(),
+            retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities )
+            }}>
                 <Ionicons name="search-outline" size={25} />
             </ SearchHerePressable>
             <Animated.View 
@@ -503,7 +533,7 @@ export default function DiscoverScreen({navigation, route}){
             })}}>
                 
                 {selectedPin != undefined && selectedPin != "" &&
-                <TouchableOpacity disabled={loading} onPress={()=>{navigation.navigate("PropertyDetail", {data: pinSelectedPropData})}}>
+                <TouchableOpacity disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: pinSelectedPropData, uid: userId})}}>
                     <PreviewTopContainer>
                         <Image source={{uri:selectedPin.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
                         borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
@@ -574,16 +604,20 @@ export default function DiscoverScreen({navigation, route}){
       
         {/* Property Cards and the search bar */}       
         
-        <PropertyCard index={0} navigation={navigation} length={pinsData.length}
+        <PropertyCard index={0} navigation={navigation} length={pinsData.length} userId={userId}
         propertiesData={propertiesData} loadMoreProperties={loadMoreProperties} filteredPropertiesData={filteredProperties} markerClickIndex={markerClickIndex}
         flatlistRefreshing={flatlistRefreshing} mapRef={mapRef} onMarkerClick={onMarkerClick} currentLocation={currentLocation} moveMap={moveMap}
         setSelectedPin={setSelectedPin} openPreviewCard={openPreviewCard} />
 
-        <DiscoverFilterScreen open={filterModal} close={()=>setFilterModal(false)} currentLocation={currentLocation} setFilteredProperties={setFilteredProperties} propertyPage={propertyPage} setRetrieveMore={setRetrieveMore}/>
+        <DiscoverFilterScreen open={filterModal} close={()=>setFilterModal(false)} retrieveAllPins={retrieveAllPins}
+        currentLocation={currentLocation} setFilteredProperties={setFilteredProperties} setPropertyPage={setPropertyPage} setRetrieveMore={setRetrieveMore}
+        filterType={filterType} setfilterType={setfilterType} filterSort={filterSort} setfilterSort={setfilterSort} filterDistance={filterDistance}
+        setfilterDistance={setfilterDistance} filterBedroom={filterBedroom} setfilterBedroom={setfilterBedroom} filterBathroom={filterBathroom}
+        setfilterBathroom={setfilterBathroom} filterPriceLower={filterPriceLower} setfilterPriceLower={setfilterPriceLower}
+        filterPriceHigher={filterPriceHigher} setfilterPriceHigher={setfilterPriceHigher} filterAmenities={filterAmenities}
+        setfilterAmenities={setfilterAmenities}
+        />
         
-        {/* <View style={{backgroundColor:'red', height:HEIGHT*0.3, width: WIDTH*0.9,  alignSelf:'center', position:'absolute', bottom:0}}>
-
-        </View> */}
         </GestureHandlerRootView>
         
     )

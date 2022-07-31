@@ -32,6 +32,8 @@ import { MessageInput, MessageContainer, SendButton } from './chatStyle';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
+import { ChatImageSettingContainer } from './chatStyle';
+
 export default function ChatScreen({navigation, route}){
     const {sb} = useContext(UserContext);
     const { url, id } = route.params;
@@ -206,11 +208,12 @@ export default function ChatScreen({navigation, route}){
           null
           }
           {channel != null ?
-          <ResetButtonContainer style={{paddingRight: WIDTH*0.075}}>
+          <ChatImageSettingContainer>
               <Pressable disabled={loading} style={{alignItems:'center'}} onPress={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}>
-              <Image source={{uri:channel.coverUrl}} style={{height:HEIGHT*0.035, width:HEIGHT*0.035, borderRadius:HEIGHT*0.025/2, backgroundColor:'grey'}}/>
+                <Image source={{uri:channel.coverUrl}} style={{height:HEIGHT*0.035, width:HEIGHT*0.035, borderRadius:HEIGHT*0.025/2, backgroundColor:'grey'}}/>
               </Pressable>
-          </ResetButtonContainer>
+              <Ionicons name="ellipsis-vertical" size={25} />
+          </ChatImageSettingContainer>
           : null}
           
       </HeaderContainer>

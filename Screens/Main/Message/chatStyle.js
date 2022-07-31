@@ -35,3 +35,12 @@ export const SendButton = styled.Pressable`
     justify-content: center;
     align-items: center
 `
+
+export const ChatImageSettingContainer = styled.View`
+    width: ${WIDTH*0.25}px;
+    padding-right: ${WIDTH*0.03}px
+    height: 100%
+    justify-content: space-between
+    align-items: center
+    flex-direction: row
+`
