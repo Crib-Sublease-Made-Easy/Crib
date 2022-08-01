@@ -93,6 +93,16 @@ export default function MessageScreen({navigation, route}){
                 renderItem={({item})=>(
                 
                 <FlatlistItemContainer onPress={()=> navigation.navigate("Chat", {url:item.url, id: userId})}>
+                        <View style={{width:WIDTH*0.025, height: '100%', justifyContent:'center'}}>
+                            {
+                            item.unreadMessageCount == 0 ?
+                                null
+                                :
+                                <FlatlistUnread>
+                                    
+                                </FlatlistUnread>
+                            }
+                        </View>
                         <FlatlistLeft>
 
                             <Image source = {{uri: item.coverUrl}} style = {{ width: WIDTH*0.14, height: WIDTH*0.14, borderRadius: WIDTH*0.07 }}/>
@@ -102,21 +112,16 @@ export default function MessageScreen({navigation, route}){
 
                             {item.lastMessage != undefined &&
                             <TextAndTime>
-                                <LastMessageTime>{item.lastMessage.message}</LastMessageTime>
-                                <LastMessageTime>{new Date(item.lastMessage.createdAt).toLocaleTimeString()  }</LastMessageTime> 
+                                
+                                <LastMessageTime unreadCount={item.unreadMessageCount}>{item.lastMessage.message}</LastMessageTime>
+                            
+                                <LastMessageTime  unreadCount={item.unreadMessageCount}>{new Date(item.lastMessage.createdAt).toLocaleTimeString()  }</LastMessageTime> 
                                 
                             </TextAndTime>
                             }
                           
                         </FlatlistRight>
-                        {
-                        item.unreadMessageCount == 0 ?
-                            null
-                            :
-                            <FlatlistUnread>
-                                <Text>{item.unreadMessageCount}</Text>
-                            </FlatlistUnread>
-                        }
+                        
                 </FlatlistItemContainer>
                 )}
             />

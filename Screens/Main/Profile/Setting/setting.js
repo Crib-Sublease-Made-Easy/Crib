@@ -88,11 +88,11 @@ export default function SettingScreen({navigation}){
                 <NameContainer>
                     <Header>Settings</Header>
                 </NameContainer>
-                <ResetButtonContainer>
+                {/* <ResetButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}}>
                         <Ionicons name='checkmark-done' size={25} />
                     </Pressable>
-                </ResetButtonContainer>
+                </ResetButtonContainer> */}
             </HeaderContainer>
 
             {/* <View style={{width:WIDTH, height: HEIGHT*0.025}}/> */}

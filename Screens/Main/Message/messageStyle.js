@@ -25,10 +25,10 @@ export const FlatlistItemContainer = styled.TouchableOpacity`
     border-color: ${EXTRALIGHT}
 `
 export const FlatlistUnread = styled.TouchableOpacity`
-    width: ${WIDTH*0.175}px;
-    height: ${WIDTH*0.075}px;;
+    width: ${WIDTH*0.02}px;
+    height: ${WIDTH*0.02}px;;
     backgroundColor: ${PRIMARYCOLOR};
-    borderRadius: 30
+    borderRadius: ${WIDTH*0.01}px;
     justify-content: center;
     align-items: center
 
@@ -37,6 +37,7 @@ export const FlatlistUnread = styled.TouchableOpacity`
 
 export const FlatlistLeft = styled.View`
     width:${WIDTH*0.12}px
+    margin-left: ${WIDTH*0.025}px
     height: 100%;
     justify-content: center;
     align-items: center
@@ -63,8 +64,8 @@ export const TextAndTime = styled.View`
     align-items: center
 `
 
-export const LastMessageTime = styled.Text`
+export const LastMessageTime = styled(Text)`
     font-size: ${HEIGHT*0.015}px;
     color: ${DARKGREY};
-    font-weight: 500
+    font-weight: ${props=>(props.unreadCount == 0 ? '500' : '700')};
 `
