@@ -34,7 +34,9 @@ export default function PhoneNumberScreen({navigation, route}){
     console.log(passedPhoneNumber)
     async function signupStep1(){
         console.log("Stepping 1")
-        const res =  await fetch('https://sublease-app.herokuapp.com/users/OTP/step1', {
+        console.log("PHONENUMBER  ", passedPhoneNumber);
+        console.log("EMAIL  ", route.params.email);
+        fetch('https://sublease-app.herokuapp.com/users/OTP/step1', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -42,7 +44,7 @@ export default function PhoneNumberScreen({navigation, route}){
             },
             body: JSON.stringify({
                 phoneNumber: passedPhoneNumber,
-                email: route.email
+                email: route.params.email
             })
         }) 
         .then(res => res.json()).then(data =>{
@@ -52,13 +54,15 @@ export default function PhoneNumberScreen({navigation, route}){
                 alert("invalid in step 1.")
             }
             else{
-                signupStep2(data.id);
+                console.log("GOING TO STEP2")
+                signupStep2(data.response.user.id);
             }
 
         })   
     }
     function signupStep2(id){
-       
+        console.log("STEP2");
+        console.log("ID", id)
         fetch('https://sublease-app.herokuapp.com/users/OTP/step2', {
             method: 'POST',
             headers: {
@@ -70,26 +74,105 @@ export default function PhoneNumberScreen({navigation, route}){
             })
         })
         .then(res => res.json()).then(data =>{
-            console.log("STEP2");
+            console.log("STEP2 in data");
             console.log(data);
             if(data.response.success != true){
                 alert("invalid in step 2.")
             }
+            else{
+                navigation.reset(
+                    {index: 0 , routes: [{ name: 'otp', 
+                    firstName: route.params.firstName, 
+                    lastName: route.params.lastName,
+                    age: route.params.age,
+                    gender: route.params.gender,
+                    profilePic: route.params.profilePic,
+                    school: route.params.school,
+                    occupation: route.params.occupation,
+                    email: route.params.email,
+                    password: route.params.password,
+                    phoneNumber: passedPhoneNumber,
+                    authy_id: id}]}
+                )
+            }
         })
-        navigation.reset(
-            {index: 0 , routes: [{ name: 'otp', 
-            fistName: route.firstName, 
-            lastName: route.lastName,
-            age: route.age,
-            gender: route.gender,
-            profilePic: route.profilePic,
-            school: route.school,
-            email: route.email,
-            password: route.password,
-            phoneNumber: passedPhoneNumber,
-            authy_id: id}]}
-        )
+        
         setLoading(false)
+    }
+
+    async function signup(){
+        setLoading(true)
+        // console.log(route.params.firstName)
+        // console.log(route.params.lastName)
+        // console.log(route.params.gender)
+        // console.log(route.params.school)
+        // console.log(route.params.occupation)
+        // console.log(route.params.email)
+        // console.log(route.params.profilePic)
+        // console.log(password)
+       
+        console.log("Tryin to sign up.")
+        if(passedPhoneNumber.length == 10){
+            console.log("Inside Signup")
+            const res =  await fetch('https://sublease-app.herokuapp.com/users/check', {
+                method: 'POST',
+                headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    phoneNumber: passedPhoneNumber
+                })
+            }).then(res => res.json()).then(async data =>{
+                if(data.message == 'This is a valid phone number'){
+                    signupStep1()
+                }
+                else if(data.message == 'User already has an account with this phone number'){
+                    alert("Account with phone number exist, please login.")
+                    navigation.reset({index: 0 , routes: [{ name: 'Login'}]})
+                }
+                console.log(data)
+                // The USER_ID below should be unique to your Sendbird application.
+                // try {
+                //     console.log("connecting to sendbird")
+                //     console.log()
+                //     sb.connect(data.createdUser._id, function(user, error) {
+                //         if (error) {
+                //             // Handle error.
+                //             console.log("sendbird error")
+                //             console.log(err)
+                //         }
+                //         else{
+                //             console.log("sendbird connected")
+                //             console.log(user)
+                //             sb.updateCurrentUserInfo(data.createdUser.firstName, data.createdUser.profilePic, (user, err) => {
+                //                 if (!err) {
+                //                     console.log("Successfully updated current user", err)
+                //                   } else {
+                //                     console.log("Error with updating current user", err)
+                //                   }
+                //             });
+                //         }
+                //         // The user is connected to Sendbird server.
+                //     });
+                //     // The user is connected to the Sendbird server.
+                // } catch (err) {
+                //     // Handle error.
+                // }
+                // await SecureStorage.setItem("userId", data.createdUser._id)
+                // await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
+                //Create sendbird user here with userid
+                //store user info in
+            }).catch(e=>
+                console.log(e)
+            )
+        }
+        else{
+            console.log("Something is missing.")
+        }
+        setTimeout(()=>{
+            setLoading(false)
+        },2000)
     }
 
     
@@ -142,10 +225,10 @@ export default function PhoneNumberScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
             <Header>
-                {/* <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
                    
                     <Ionicons name='arrow-back-outline' size={25} />
-                </Pressable> */}
+                </Pressable>
             </Header>
                 
             <ProgressBarContainer>
@@ -164,7 +247,7 @@ export default function PhoneNumberScreen({navigation, route}){
             </ScrollView>
           
 
-            <ContinueButton disabled={loading} loading={loading} onPress={checkInput}>
+            <ContinueButton disabled={loading} loading={loading} onPress={signup}>
             {loading ?
                 <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
             :

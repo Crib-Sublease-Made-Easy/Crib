@@ -53,34 +53,41 @@ export function ContainsSpace(str){
     return /\s/.test(str);
 }
 export const amenitiesList =
-    [{ name: 'Pets Allowed', color: '#57b2f7', icon: "paw-outline" },
-    { name: "Mattress", color: '#fa4b4b', icon: 'bed-outline' },
-    { name: 'Able to renew', color: '#f79c40', icon: 'refresh-outline' },
-    { name: 'Gym', color: '#00d14d', icon: 'barbell-outline' },
-    { name: 'On-site Washer and Dryer', color: '#f79c40', icon: 'water-outline' },
-    { name: 'Wifi', color: '#00d14d', icon: 'wifi-outline' },
-    { name: 'Furnished', color: '#fa4b4b', icon: 'desktop-outline' },
-    { name: 'Utilities Included', color: '#57b2f7', icon: 'power-outline' },
-    { name: 'Pool', color: '#f79c40', icon: 'flask-outline' },
-    { name: 'Parking', color: '#57b2f7', icon: 'car-outline' },
+    [{ name: 'Pet_Friendly', color: '#57b2f7', icon: "bed-outline" },
+    { name: "Garages", color: '#fa4b4b', icon: 'bed-outline' },
+    { name: 'Swimming_Pool', color: '#f79c40', icon: 'car-outline' },
+    { name: 'Wifi', color: '#00d14d', icon: 'barbell-outline' },
+    { name: 'Gym', color: '#f79c40', icon: 'water-outline' },
+    { name: 'Washer_Dryer', color: '#00d14d', icon: 'wifi-outline' },
+    { name: 'Gated_Access', color: '#fa4b4b', icon: 'desktop-outline' },
+    { name: 'Public_Transportation', color: '#57b2f7', icon: 'power-outline' },
+    { name: 'Heating_Cooling', color: '#f79c40', icon: 'flask-outline' },
+    { name: 'Microwave', color: '#57b2f7', icon: 'car-outline' },
+    { name: 'Grill', color: '#fa4b4b', icon: 'tv-outline' },
     { name: 'TV', color: '#fa4b4b', icon: 'tv-outline' },
-    { name: 'Garages', color: '#fa4b4b', icon: 'thermometer-outline' },
-    { name: 'Gated Access', color: '#fa4b4b', icon: 'thermometer-outline' },
-    { name: 'Microwave', color: '#fa4b4b', icon: 'thermometer-outline' },
-    { name: 'Grill', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Fridge', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Couch', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Mattress', color: '#fa4b4b', icon: 'thermometer-outline' },
     { name: 'Oven', color: '#fa4b4b', icon: 'thermometer-outline' },
-    { name: 'Coffee maker', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Coffee_Maker', color: '#fa4b4b', icon: 'thermometer-outline' },
     { name: 'Toaster', color: '#fa4b4b', icon: 'thermometer-outline' },
     { name: 'Dishes', color: '#fa4b4b', icon: 'thermometer-outline' },
-    { name: 'Pots/Pans', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Pots_Pans', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Utilities_Included', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Walkin_Closet', color: '#fa4b4b', icon: 'thermometer-outline' },
     { name: 'Iron', color: '#fa4b4b', icon: 'thermometer-outline' },
     { name: 'Freezer', color: '#fa4b4b', icon: 'thermometer-outline' },
-    { name: 'Parking on Premise', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Street_Parking', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Parking_on_Premesis', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Balcony', color: '#fa4b4b', icon: 'thermometer-outline' },
+
+
+
 
 
 ]
 export const GetAmenitiesIcon = (name) =>{
-    if(name=="Pets Allowed"){
+    if(name=="Pet_Friendly"){
         return "paw-outline";
     }
     else if (name=="Mattress"){

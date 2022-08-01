@@ -16,7 +16,7 @@ export const CategoryName = styled.Text`
 
 export const EmailContainer = styled.TextInput`
     width: ${WIDTH*0.9}px;
-    background-color: ${LIGHTGREY}
+    background-color: ${EXTRALIGHT}
     height: ${HEIGHT*0.05}px
     padding-left: ${WIDTH*0.025}px
     border-radius: 10px

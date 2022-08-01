@@ -58,6 +58,28 @@ export default function OTPScreen({navigation, route}){
 
     async function signupStep3(){ 
         setLoading(true)
+
+        const formData = new FormData();
+
+        formData.append("firstName", route.firstName);                     
+        formData.append("lastName", route.lastName);  
+        formData.append("dob", route.age);      
+        formData.append("gender", route.gender);
+        formData.append("phoneNumber", route.phoneNumber);                       
+        formData.append("occupation", route.occupation)
+        formData.append("school", route.school);                       
+        formData.append("email", route.email);      
+        formData.append("token", code);      
+        formData.append("authy_id", route.authy_id);      
+
+ 
+        var array = route.profilePic.split(".");
+        formData.append("userImage", {
+            uri: route.profilePic,
+            type: 'image/' + array[1],
+            name: 'someName',
+        });
+
         console.log("TOKEN")
         console.log(code);
         console.log("AuthyID")
@@ -68,17 +90,13 @@ export default function OTPScreen({navigation, route}){
               Accept: 'application/json',
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                authy_id: route.authy_id,
-                token: code,
-                email: route.email
-            })
+            body: formData
         })
         .then(res => res.json()).then(async data =>{
             console.log("STEP3");
             console.log(data);
 
-            if(data.messge != "Success"){
+            if(data.message != "User account created successfully"){
                 alert("Incorrect code.")
                 setCode("")
                 setLoading(false)
@@ -89,6 +107,7 @@ export default function OTPScreen({navigation, route}){
                 await SecureStorage.setItem("refreshToken", data.token.refreshToken)
                 await SecureStorage.setItem("profilePic", route.profilePic)
                 await SecureStorage.setItem("email", route.email)
+                await SecureStorage.setItem("userId", data.createdUser._id)
                 console.log("got")
                 setTimeout(()=>{setLoading(false)},2000)
                 login(route.email);
@@ -99,7 +118,7 @@ export default function OTPScreen({navigation, route}){
     function backToPhoneNumber(){
         navigation.reset(
             {index: 0 , routes: [{ name: 'PhoneNumber', 
-            fistName: route.firstName, 
+            firstName: route.firstName, 
             lastName: route.lastName,
             age: route.age,
             gender: route.gender,

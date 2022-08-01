@@ -64,7 +64,7 @@ import {
     ReviewHeading, ReviewLocationContainer, ReviewDateContainer, ImageSelectionContainer, ImageText, MaxText
 } from './discoverPropertyPostingStyle';
 import Easing from 'react-native/Libraries/Animated/Easing';
-import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR  } from '../../../sharedUtils';
+import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR } from '../../../sharedUtils';
 import { SubHeadingText } from '../../Onboarding/Landing/landingStyle';
 
 
@@ -321,8 +321,8 @@ export default function PropertyPostingScreen({ navigation }) {
             postingData.append("amenities", element);
         });
 
-        console.log("AccessToken")
-        console.log(accessToken)
+        console.log("AccessToken", accessToken)
+      
         fetch('https://sublease-app.herokuapp.com/properties', {
             method: 'POST',
             headers: {
@@ -333,6 +333,7 @@ export default function PropertyPostingScreen({ navigation }) {
             body: postingData,
         })
             .then((response) => response.json()).then(data => {
+                console.log("RESPONSE", data)
                 setTimeout(()=>{
                     navigation.goBack()
                     setLoading(false)
@@ -737,7 +738,9 @@ export default function PropertyPostingScreen({ navigation }) {
                         </InfoText>
                         <InputContainer >
                             <Subheading>Amenities</Subheading>
+                            <ScrollView style={{height:HEIGHT*0.5}}>
                             <AmenitiesContainer>
+                                
                                 {amenitiesList.map((value, index) => (
                                     <View key={value.name + index + 'view'} style={{
                                         minWidth: WIDTH * 0.35, width: value.name.length * 0.03 * WIDTH, height: HEIGHT * 0.055, justifyContent: 'center',
@@ -748,14 +751,16 @@ export default function PropertyPostingScreen({ navigation }) {
                                             borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
                                         }}>
                                             <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                                <Ionicons name={value.icon} size={15} />
-                                                {"   "}{value.name}
+                                                <Ionicons name={GetAmenitiesIcon(value.name)} size={15} />
+                                                {"   "}{value.name.replace("_"," ")}
                                             </Text>
                                         </Pressable>
 
                                     </View>
                                 ))}
+                                
                             </AmenitiesContainer>
+                            </ScrollView>
                         </InputContainer>
                     </PostingSection>
 

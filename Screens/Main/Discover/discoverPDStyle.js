@@ -50,7 +50,7 @@ export const LocationText = styled.Text`
 export const AmenitiesText = styled.Text`
     font-size: ${HEIGHT*0.0175}px;
     font-weight: 400;
-    color: ${PRIMARYGREY}
+    color: black
     margin-left: ${WIDTH*0.025}px
 `
 export const BedAndBathContainer = styled.View`

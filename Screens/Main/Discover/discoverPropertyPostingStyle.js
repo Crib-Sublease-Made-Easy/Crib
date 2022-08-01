@@ -218,7 +218,7 @@ export const BedBathInput = styled.TextInput`
 
 export const AmenitiesContainer = styled.Text`
     width: ${WIDTH*0.9}px;
-    height: ${HEIGHT*0.4}px;
+   
     marginTop: ${HEIGHT*0.02}px;
 `
 

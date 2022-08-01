@@ -27,7 +27,7 @@ import { Container, PropertyDescription, ImageStyle, CardSectionOne, CardTitle, 
             PricePerMonth, ContactTanentButton, TenantInfoContainer, TenantInfo, ProfileImageContainer,
             CardSectionFour, CardSectionFive, DateContainer, DateText, DescriptionContainer, AmenitiesText} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR} from '../../../sharedUtils';
+import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, DARKGREY} from '../../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -294,8 +294,8 @@ export default function PropertyDetailScreen({navigation, route}){
                         <InfoHeaderText>Amenities:</InfoHeaderText>
                         {propData.amenities.map((value)=>(
                             <AmenitiesItem key={value + "detailamen"}>
-                                <Ionicons name={GetAmenitiesIcon(value)} size={WIDTH*0.075} color={PRIMARYCOLOR}></Ionicons>
-                                {/* <AmenitiesText>{value}</AmenitiesText> */}
+                                <Ionicons name={GetAmenitiesIcon(value)} size={25} color={DARKGREY}></Ionicons>
+                                <AmenitiesText>{value.replace("_"," ")}</AmenitiesText>
                                
                             </AmenitiesItem>
 

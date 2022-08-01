@@ -43,7 +43,7 @@ export default function EmailScreen({navigation, route}){
         }
         //Need to also check the front part of the string whatever is before @
         else{
-            navigation.navigate("Password",
+            navigation.navigate("PhoneNumber",
             {
                 firstName: route.params.firstName, 
                 lastName: route.params.lastName,
