@@ -22,7 +22,7 @@ const PRIMARYGREY = '#5e5d5d'
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-import { InboxTitle, FlatlistItemContainer, FlatlistLeft, FlatlistRight, LocationText,TextAndTime, LastMessageTime } from './messageStyle';
+import { InboxTitle, FlatlistItemContainer, FlatlistUnread, FlatlistLeft, FlatlistRight, LocationText,TextAndTime, LastMessageTime } from './messageStyle';
 
 export default function MessageScreen({navigation, route}){
     const {sb} = useContext(UserContext);
@@ -62,7 +62,7 @@ export default function MessageScreen({navigation, route}){
                 }
                 setConvoList(groupChannels)
                 // A list of group channels is successfully retrieved.
-                console.log(groupChannels)
+                // console.log(groupChannels)
                 console.log("new console list")
                 groupChannels.forEach(channel => {
                     // console.log(channel)
@@ -94,19 +94,29 @@ export default function MessageScreen({navigation, route}){
                 
                 <FlatlistItemContainer onPress={()=> navigation.navigate("Chat", {url:item.url, id: userId})}>
                         <FlatlistLeft>
+
                             <Image source = {{uri: item.coverUrl}} style = {{ width: WIDTH*0.14, height: WIDTH*0.14, borderRadius: WIDTH*0.07 }}/>
                         </FlatlistLeft>
                         <FlatlistRight>
-                            <LocationText>{item.name}</LocationText>
-                            
+                        <LocationText numberOfLines={1}>{item.name}</LocationText>
+
                             {item.lastMessage != undefined &&
                             <TextAndTime>
                                 <LastMessageTime>{item.lastMessage.message}</LastMessageTime>
                                 <LastMessageTime>{new Date(item.lastMessage.createdAt).toLocaleTimeString()  }</LastMessageTime> 
+                                
                             </TextAndTime>
                             }
                           
                         </FlatlistRight>
+                        {
+                        item.unreadMessageCount == 0 ?
+                            null
+                            :
+                            <FlatlistUnread>
+                                <Text>{item.unreadMessageCount}</Text>
+                            </FlatlistUnread>
+                        }
                 </FlatlistItemContainer>
                 )}
             />

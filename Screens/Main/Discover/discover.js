@@ -116,7 +116,7 @@ export default function DiscoverScreen({navigation, route}){
 
     const getUserId = async () =>{
         const id = await SecureStorage.getItem('userId')
-        setUserId(id); //try
+        setUserId(id); //try Im retardedhaaha
     }
     //Open The search bar container to displya all autocomplete results according to if searching is true 
     function openHeader(){

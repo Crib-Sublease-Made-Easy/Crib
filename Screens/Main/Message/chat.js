@@ -55,7 +55,9 @@ export default function ChatScreen({navigation, route}){
     }, [channel])
 
     const channelHandler = new sb.ChannelHandler();
-    channelHandler.onMessageReceived = (targetChannel, m) => {
+    channelHandler.onMessageReceived = async (targetChannel, m) => {
+      await channel.markAsRead()
+
       if (targetChannel.url === url) {
         m._id = m.messageId
         m.text = m.message
@@ -76,6 +78,7 @@ export default function ChatScreen({navigation, route}){
         if (error) {
             console.log("ERROR CHANNEL 1")
         }else{
+          await groupChannel.markAsRead()
           groupChannel.sendUserMessage(params, function(message, error) {
             if (error) {
               console.log("ERROR CHANNEL 2")
@@ -100,6 +103,8 @@ export default function ChatScreen({navigation, route}){
             // Handle error.
             console.log("ERROR CHANNEL")
         }else{
+          await groupChannel.markAsRead()
+
           await setChannel(groupChannel)
           console.log("GROUP CHANNEL", groupChannel.data)
           await getPropertyInfo(groupChannel.data)

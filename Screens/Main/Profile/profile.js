@@ -72,7 +72,7 @@ export default function ProfileScreen({navigation}){
     }, [navigation])
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("refreshToken");
-       //console.log("Access Token " + accessToken)
+        console.log("Refresh Token " + accessToken)
 
         const UID = await SecureStorage.getItem("userId");
 
