@@ -38,7 +38,7 @@ const WIDTH = Dimensions.get('screen').width;
 
 export default function PropertyDetailScreen({navigation, route}){
     console.log("Detail")
-    console.log("DATAAAA", route.params.data)
+    console.log("DATAAAA", route.params.data.propertyInfo)
     useEffect(()=>{
         console.log(route.params.uid)
         console.log(route.params.data.propertyInfo.postedBy)
@@ -293,9 +293,9 @@ export default function PropertyDetailScreen({navigation, route}){
                     <CardSectionOne>
                         <InfoHeaderText>Amenities:</InfoHeaderText>
                         {propData.amenities.map((value)=>(
-                            <AmenitiesItem key={value}>
+                            <AmenitiesItem key={value + "detailamen"}>
                                 <Ionicons name={GetAmenitiesIcon(value)} size={WIDTH*0.075} color={PRIMARYCOLOR}></Ionicons>
-                                <AmenitiesText >{value}</AmenitiesText>
+                                {/* <AmenitiesText>{value}</AmenitiesText> */}
                                
                             </AmenitiesItem>
 

@@ -13,20 +13,20 @@ import {
 
 } from 'react-native';
 
-const amenitiesList =
-    [{ name: 'Pets Allowed', color: '#57b2f7', icon: "paw-outline" },
-    { name: 'Mattress', color: '#fa4b4b', icon: 'bed-outline' },
-    { name: 'Able to renew', color: '#f79c40', icon: 'refresh-outline' },
-    { name: 'Gym', color: '#00d14d', icon: 'barbell-outline' },
-    { name: 'On-site Washer and Dryer', color: '#f79c40', icon: 'water-outline' },
-    { name: 'Wifi', color: '#00d14d', icon: 'wifi-outline' },
-    { name: 'Furnished', color: '#fa4b4b', icon: 'desktop-outline' },
-    { name: 'Utilities Included', color: '#57b2f7', icon: 'power-outline' },
-    { name: 'Pool', color: '#f79c40', icon: 'flask-outline' },
-    { name: 'Parking', color: '#57b2f7', icon: 'car-outline' },
-    { name: 'TV', color: '#fa4b4b', icon: 'tv-outline' },
-    { name: 'Heating and Cooling', color: '#fa4b4b', icon: 'thermometer-outline' },
-    ]
+// const amenitiesList =
+//     [{ name: 'Pets Allowed', color: '#57b2f7', icon: "paw-outline" },
+//     { name: 'Mattress', color: '#fa4b4b', icon: 'bed-outline' },
+//     { name: 'Able to renew', color: '#f79c40', icon: 'refresh-outline' },
+//     { name: 'Gym', color: '#00d14d', icon: 'barbell-outline' },
+//     { name: 'On-site Washer and Dryer', color: '#f79c40', icon: 'water-outline' },
+//     { name: 'Wifi', color: '#00d14d', icon: 'wifi-outline' },
+//     { name: 'Furnished', color: '#fa4b4b', icon: 'desktop-outline' },
+//     { name: 'Utilities Included', color: '#57b2f7', icon: 'power-outline' },
+//     { name: 'Pool', color: '#f79c40', icon: 'flask-outline' },
+//     { name: 'Parking', color: '#57b2f7', icon: 'car-outline' },
+//     { name: 'TV', color: '#fa4b4b', icon: 'tv-outline' },
+//     { name: 'Heating and Cooling', color: '#fa4b4b', icon: 'thermometer-outline' },
+//     ]
 
 const PROPERTIESTYPES = 
 [{type: "Room", icon:'bed'},
@@ -42,7 +42,7 @@ const BATHROOMTYPES = ["1", "2", "3", "4", "5+"];
 const PRIMARYGREY = '#5e5d5d'
 const PRIMARYCOLOR = '#4050B5'
 
-import { MEDIUMGREY,HEIGHT, WIDTH, DARKGREY } from '../../../../sharedUtils';
+import { MEDIUMGREY,HEIGHT, WIDTH, DARKGREY, amenitiesList, GetAmenitiesIcon } from '../../../../sharedUtils';
 
 import Modal from "react-native-modal";
 
@@ -78,21 +78,19 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     const [propertydateTo, setpropertydateTo] = useState(new Date(1759176355615))
     const [openFrom, setOpenFrom] = useState(false)
     const [openTo, setOpenTo] = useState(false)
-
     
 
-    function updateAmenities(name){
-        
-        if(filterAmenities.indexOf(name) != -1){
-            console.log("delete" + name)
+    function updateAmenities(name) {
+
+        if (filterAmenities.indexOf(name) != -1) {
+            console.log("deleting")
             let tempindex = filterAmenities.indexOf(name);
-            setfilterAmenities([...filterAmenities.slice(0,tempindex), ...filterAmenities.slice(tempindex+1,filterAmenities.length)])
+            setfilterAmenities([...filterAmenities.slice(0, tempindex), ...filterAmenities.slice(tempindex + 1, filterAmenities.length)])
         }
-        else{
-            console.log("add" + name)
-            setfilterAmenities(prev=>[...prev, name]);
+        else {
+            console.log("adding")
+            setfilterAmenities(prev => [...prev, name]);
         }
-        console.log(filterAmenities)
     }
 
     function resetFilter(){
@@ -397,13 +395,16 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                             ))} */}
                             {amenitiesList.map((value, index)=>(
                               
-                                <TypeOption key={value.name + value.icon + "amenities"} >
-                                    <NameIcon>
-                                        <Ionicons key={value.icon} name={value.icon} size={20} />
+                                <TypeOption key={value.name + "amenitiesfilter"} >
+                                    <NameIcon onPress={()=>updateAmenities(value.name)}>
+                                        <Ionicons key={value.icon} name={GetAmenitiesIcon(value.name)} size={20} />
                                         <PropertyTypeName>{value.name}</PropertyTypeName>
                                     </NameIcon>
                                     <Pressable onPress={()=>updateAmenities(value.name)}>
-                                        <Ionicons name='checkbox' size={25} color={filterAmenities.indexOf(value.name) != -1 ? PRIMARYCOLOR : MEDIUMGREY}/>
+                                        <View style={{height:WIDTH*0.055, width:WIDTH*0.055, borderRadius: 5, backgroundColor:filterAmenities.indexOf(value.name) != -1 ? PRIMARYCOLOR : MEDIUMGREY,
+                                        justifyContent:'center',alignItems:'center'}}>
+                                            <Ionicons name='checkmark' size={15} color='white'/>
+                                        </View>
                                     </Pressable>
                                 </TypeOption>
                                

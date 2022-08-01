@@ -64,7 +64,20 @@ export const amenitiesList =
     { name: 'Pool', color: '#f79c40', icon: 'flask-outline' },
     { name: 'Parking', color: '#57b2f7', icon: 'car-outline' },
     { name: 'TV', color: '#fa4b4b', icon: 'tv-outline' },
-    { name: 'Heating and Cooling', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Garages', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Gated Access', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Microwave', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Grill', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Oven', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Coffee maker', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Toaster', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Dishes', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Pots/Pans', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Iron', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Freezer', color: '#fa4b4b', icon: 'thermometer-outline' },
+    { name: 'Parking on Premise', color: '#fa4b4b', icon: 'thermometer-outline' },
+
+
 ]
 export const GetAmenitiesIcon = (name) =>{
     if(name=="Pets Allowed"){
@@ -102,6 +115,12 @@ export const GetAmenitiesIcon = (name) =>{
     }
     else if (name=="Heating and Cooling"){
         return "thermometer-outline";
+    }
+    else if (name=="Garages"){
+        return "car-outline"
+    }
+    else if (name=="Gated Access"){
+        return "lock-closed-outline"
     }
     else{
         return "checkbox"
