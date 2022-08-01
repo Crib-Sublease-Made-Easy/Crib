@@ -23,6 +23,8 @@ import { UserContext } from './UserContext.js';
 //Screens
 import LandingScreen from './Screens/Onboarding/Landing/landing.js';
 import LoginScreen from './Screens/Onboarding/login.js';
+import Login_OTP from './Screens/Onboarding/login_otp.js';
+
 import SignupScreen from './Screens/Onboarding/signup.js';
 import FirstLastNameScreen from './Screens/Onboarding/FirstLastName/firstLastName.js';
 import AgeScreen from './Screens/Onboarding/Age/age.js';
@@ -86,7 +88,7 @@ export default function App() {
   const [sendBirdConnected, setSendbirdConnection] = useState(false)
 
   const sb = new SendBird({ appId: appId, localCacheEnabled: true });   // The `localCacheEnabled` is optional. The default is false.
-  useEffect(() => {
+  useEffect( () => {
     console.log("NEW APP REFRESH")
     refreshAccessToken()
     connectSendbird()
@@ -246,6 +248,8 @@ export default function App() {
               }}
             />
 
+    
+
             <Stack.Screen name="Chat"
               component={ChatScreen}
               options={{
@@ -381,7 +385,13 @@ export default function App() {
             <Stack.Screen name="Email" component={EmailScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Password" component={PasswordScreen} options={{ headerShown: false }} />
             <Stack.Screen name="PhoneNumber" component={PhoneNumberScreen} options={{ headerShown: false }} />
-
+            <Stack.Screen name="Login_OTP"
+              component={Login_OTP}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
 
 
             <Stack.Screen name="EmailPassword" component={EmailPasswordScreen} options={{ headerShown: false }} />

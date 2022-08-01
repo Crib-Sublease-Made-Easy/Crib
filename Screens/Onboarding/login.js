@@ -1,128 +1,173 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
+
 import {
-  SafeAreaView,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  Dimensions,
-  Animated,
-  Easing
+    SafeAreaView,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    useColorScheme,
+    View,
+    Dimensions,
+    Pressable,
+    Animated,
+    KeyboardAvoidingView,
+    TextInput
 } from 'react-native';
-import { UserContext } from '../../UserContext';
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+Ionicons.loadFont()
+
+import { HEIGHT, WIDTH } from '../../sharedUtils';
+
 import Lottie from 'lottie-react-native';
 
-import { Container, LoginForm, Heading, StandardInputStyle, StandardButtonStyle, ButtonText, Divider, 
-         DividerLineStyle, DividerTextStyle, SignupContainer, GoogleLoginButtonStyle, StandardButton } from './loginStyle';
 
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
+import {Header, ProgressBarContainer, SubtitleText, TitleText, ContinueText, ContinueButton,
+    GeneralTextInput, TextInputContainer} from './loginStyle';
 
-import { DARKGREY, PRIMARYCOLOR } from '../../sharedUtils';
-
-
-
-export default function LoginScreen({navigation}){
-
-    //Sets the user context 
-    const {user, login} = useContext(UserContext);
-
-
-
-    //Usestate varaible for storing email and password for login 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+export default function LoginScreen({navigation, route}){
+    const [phoneNumber, setPhoneNumber] = useState("")
+    const [passedPhoneNumber, setPassedPhoneNumber]= useState("")
     const [loading, setLoading] = useState(false)
+    console.log(passedPhoneNumber)
 
-  
-    function userLogin(){
-        let loginSuccessful = false
-        setLoading(true)
-        fetch('https://sublease-app.herokuapp.com/users/login', {
+    async function signupStep1(){
+        console.log("Stepping 1")
+        console.log(phoneNumber)
+        const number = phoneNumber.replace(/[^\d]/g, '');
+        console.log(number)
+        await fetch('https://sublease-app.herokuapp.com/users/authy', {
             method: 'POST',
             headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json'
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email: email,
-                password: password,
+                phoneNumber: number,
             })
-        }).then(async e=>{
-            setTimeout( () =>  
-            {
-                setLoading(false)
-                if(e.status == 401){
-                    alert("Incorrect Email or Password.")
-                }
-                else if(e.status == 200 || e.status == 201){
-                }
+        }) 
+        .then(res => res.json()).then(async data =>{
+            console.log(" DATA 1", data)
+            if(data.authy_id != undefined){
+                // navigation.navigate('Login_OTP')
+                signupStep2(data.authy_id, number)
             }
-            , 2000);
-            return e.json()
-
-
-        }).then(async(response) => {
-            console.log("RESOPONSE", response)
-            try{
-                await SecureStorage.setItem("firstName", response.loggedInUser.firstName)
-                await SecureStorage.setItem("lastName", response.loggedInUser.lastName)
-                await SecureStorage.setItem("email", email)
-                await SecureStorage.setItem("profilePic", response.loggedInUser.profilePic)
-                await SecureStorage.setItem("userId", response.loggedInUser._id)
-                await SecureStorage.setItem("accessToken", response.token.access)
-                await SecureStorage.setItem("refreshToken", response.token.refresh)
-                console.log("got")
-                login(email);
-            } catch(err){
-                console.log(err)
+            else{
+                alert('ERROR OCCURED')
             }
-        })
-        
+        })   
+    }
+
+    async function signupStep2(authy_id, number){
+        console.log("Stepping 2")
+        console.log(phoneNumber)
+        console.log("PHONE NUMBER", number)
+        await fetch('https://sublease-app.herokuapp.com/users/OTP/step2', {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                authy_id: authy_id,
+            })
+        }) 
+        .then(res => {
+                
+                if(res.status == 201){
+                    console.log("LOGGED INNN")
+                    navigation.reset({index: 0 , routes: [{ name: 'Login_OTP', authy_id: authy_id, phoneNumber: number }]})
+                }
+                else{
+                    alert('ERROR OCCURED')
+                }
+
+                return res.json()
+        }).then (resp => console.log("DATA 2", resp))
+    }
+
+    
+
+    function checkInput(){
+        if(passedPhoneNumber.length != 10){
+            alert("Phone number is invalid")
+        }
+       else{
+            setLoading(true)
+            console.log("Will sign up")
+            signupStep1()
+       }
+
        
+
+    }
+
+    const handleInput = (e) => {
+        // this is where we'll call our future formatPhoneNumber function that we haven't written yet.
+        const formattedPhoneNumber = formatPhoneNumber(e);
+        // we'll set the input value using our setInputValue
+        setPhoneNumber(formattedPhoneNumber)
+    };
+
+
+    function formatPhoneNumber(value){
+        if (!value) return value;
+        setPassedPhoneNumber(value)
+        // clean the input for any non-digit values.
+        let number = value.replace(/[^\d]/g, '');
+        setPassedPhoneNumber(number)
+        // phoneNumberLength is used to know when to apply our formatting for the phone number
+        const phoneNumberLength = number.length;
+      
+
+
+        if (phoneNumberLength < 4) return number;
+
+        if (phoneNumberLength < 7) {
+            return `(${number.slice(0, 3)})-${number.slice(3)}`;
+        }
+        return `(${number.slice(0, 3)})-${number.slice(
+            3,
+            6
+        )}-${number.slice(6, 10)}`;
     }
 
     return(
-       
-        <SafeAreaView style={{backgroundColor:'white', flex:1}}>
-            <KeyboardAvoidingView behavior={'padding'} style={{flex:1}} >  
-                <ScrollView scrollEnabled={false}>
-                    <Image source={require('../../assets/20945146.jpg')} style={{height: HEIGHT*0.2, width: HEIGHT*0.25, alignSelf: 'center'}}/>
-                    <View >
-                        <Heading>Login</Heading>
-                        <TextInput value={email} onChangeText={(value)=> setEmail(value)} style={StandardInputStyle} placeholder='Email' placeholderTextColor={DARKGREY}/>
-                        <TextInput value={password} onChangeText={(value)=> setPassword(value)} style={StandardInputStyle} placeholder='Password' placeholderTextColor={DARKGREY}/>
+        <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
+            <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
+            <Header>
+                {/* <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                   
+                    <Ionicons name='arrow-back-outline' size={25} />
+                </Pressable> */}
+            </Header>
+                
+            <ProgressBarContainer>
 
-                    </View>
-                </ScrollView>
-                <View >
-                    <StandardButton onPress={userLogin} loading={loading} disabled={loading}> 
-                    {loading ?
-                        <Lottie source={require('../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
-                    :
-                        <ButtonText> Login </ButtonText>
-                    }
-                    </StandardButton>
-                    <SignupContainer>
-                        <Text style={{color: DARKGREY, fontWeight:'500'}}>New to Interzzz?</Text>
-                        <TouchableOpacity style={{paddingHorizontal:6}} onPress={()=>navigation.navigate('FirstLastName')}>
-                            
-                            <Text style={{color:PRIMARYCOLOR, fontWeight: '700'}}>Signup</Text>
-                            
-                        </TouchableOpacity>
-                    </SignupContainer>
-                </View>
+            </ProgressBarContainer>
+           
+            <ScrollView scrollEnabled={false}>
+                <TitleText>Login with your phone number</TitleText>
+                <SubtitleText>We will send you a one time password to verify your number</SubtitleText>
+                <TextInputContainer>
+                    <GeneralTextInput editable={!loading} value={phoneNumber} onChangeText={(value)=> handleInput(value)}
+                    keyboardType = "number-pad" placeholder="xxx-xxx-xxxx"/>
+                        
+                    
+                </TextInputContainer>
+            </ScrollView>
+          
+
+            <ContinueButton disabled={loading} loading={loading} onPress={checkInput}>
+            {loading ?
+                <Lottie source={require('../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
+            :
+                <ContinueText>Continue</ContinueText>
+            }
+            </ContinueButton>
             </KeyboardAvoidingView>
         </SafeAreaView>
-       
     )
 }
