@@ -96,7 +96,6 @@ export default function App() {
   }, [])
   const connectSendbird = async () => {
     const UID = await SecureStorage.getItem("userId");
-    setUser(UID)
     if (UID != undefined) {
       try {
         console.log("connecting to sendbird")
@@ -126,7 +125,7 @@ export default function App() {
     const rt = await SecureStorage.getItem("refreshToken");
     const id = await SecureStorage.getItem("userId");
     if (rt != undefined) {
-      setUser(UID)
+      setUser(id)
       fetch('https://sublease-app.herokuapp.com/tokens/accessRefresh', {
         method: 'POST',
         headers: {
