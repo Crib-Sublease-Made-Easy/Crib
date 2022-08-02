@@ -132,37 +132,6 @@ export default function PhoneNumberScreen({navigation, route}){
                     navigation.reset({index: 0 , routes: [{ name: 'Login'}]})
                 }
                 console.log(data)
-                // The USER_ID below should be unique to your Sendbird application.
-                // try {
-                //     console.log("connecting to sendbird")
-                //     console.log()
-                //     sb.connect(data.createdUser._id, function(user, error) {
-                //         if (error) {
-                //             // Handle error.
-                //             console.log("sendbird error")
-                //             console.log(err)
-                //         }
-                //         else{
-                //             console.log("sendbird connected")
-                //             console.log(user)
-                //             sb.updateCurrentUserInfo(data.createdUser.firstName, data.createdUser.profilePic, (user, err) => {
-                //                 if (!err) {
-                //                     console.log("Successfully updated current user", err)
-                //                   } else {
-                //                     console.log("Error with updating current user", err)
-                //                   }
-                //             });
-                //         }
-                //         // The user is connected to Sendbird server.
-                //     });
-                //     // The user is connected to the Sendbird server.
-                // } catch (err) {
-                //     // Handle error.
-                // }
-                // await SecureStorage.setItem("userId", data.createdUser._id)
-                // await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
-                //Create sendbird user here with userid
-                //store user info in
             }).catch(e=>
                 console.log(e)
             )

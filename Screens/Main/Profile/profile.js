@@ -71,6 +71,7 @@ export default function ProfileScreen({navigation}){
         console.log("In getTokens Function")
         const accessToken = await SecureStorage.getItem("accessToken");
         const UID = await SecureStorage.getItem("userId");
+        console.log("ACCESSTOKEN")
         let cachedProfilePic = await SecureStorage.getItem("profilePic");
         if(cachedProfilePic != null){
             console.log("LOADING -- Profile Pic from cache data")
