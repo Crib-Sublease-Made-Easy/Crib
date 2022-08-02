@@ -69,7 +69,7 @@ export default function ProfileScreen({navigation}){
 
     async function getTokens(){
         console.log("In getTokens Function")
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        const accessToken = await SecureStorage.getItem("accessToken");
         const UID = await SecureStorage.getItem("userId");
         let cachedProfilePic = await SecureStorage.getItem("profilePic");
         if(cachedProfilePic != null){
@@ -86,6 +86,7 @@ export default function ProfileScreen({navigation}){
         }
         }) 
         .then(res => res.json()).then(async userData =>{
+            console.log("USERDATA" , userData)
             setUserData(userData)
             //Load API data if the cached profile pic is null
             let cachedProfilePic = await SecureStorage.getItem("profilePic");
@@ -122,6 +123,7 @@ export default function ProfileScreen({navigation}){
             }
             }) 
             .then(res => res.json()).then(propertyData =>{
+                console.log("PROPERTYDATA", propertyData)
                 setPostedProperties(propertyData) 
             })
         

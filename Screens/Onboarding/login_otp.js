@@ -90,9 +90,10 @@ export default function Login_OTP({navigation, route}){
         }).then( async data =>{
             console.log(success)
             if(success){
+                console.log(data)
                 await SecureStorage.setItem("accessToken", data.token.accessToken)
-
                 await SecureStorage.setItem("profilePic", data.loggedIn.profilePic)
+                await SecureStorage.setItem("userId", data.loggedIn._id)
 
                 const something = await SecureStorage.getItem("accessToken")
                 const something2 = await SecureStorage.getItem("profilePic")
