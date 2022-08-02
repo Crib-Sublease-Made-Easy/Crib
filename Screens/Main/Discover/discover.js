@@ -437,7 +437,7 @@ export default function DiscoverScreen({navigation, route}){
 
     async function onMarkerClick(item){
         setLoading(true)
-        console.log(item)
+       
         await fetch('https://sublease-app.herokuapp.com/properties/' + item._id, {
         method: 'GET',
         headers: {
@@ -447,13 +447,14 @@ export default function DiscoverScreen({navigation, route}){
         }) 
         .then(res => res.json()).then(property =>{
             console.log(property)
-            setPinSelectedPropData(property)
+            setSelectedPin(property)
             moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
         })
         .catch(e=>{
             alert(e)
         })
-        setSelectedPin(item)
+        
+        
         setPropertyPreviewCard(true)
         openPreviewCard()
         setLoading(false)
@@ -505,9 +506,9 @@ export default function DiscoverScreen({navigation, route}){
                     onPress={()=>onMarkerClick(value)}
                     style={{zIndex: value._id == selectedPin._id ? 2 : 1}}
                    >
-                    <CustomMarker style={{backgroundColor: value._id == selectedPin._id ? PRIMARYCOLOR : 'green'}}>
+                    <CustomMarker style={{backgroundColor: value._id == selectedPin?._id ? PRIMARYCOLOR : 'green', zIndex: value._id == selectedPin._id ? 2 : 1}}>
                         <Text style={{color:'white'}}>${value.price}</Text>
-
+                       
                     </CustomMarker>
                    </Marker>
                 ))} 
@@ -533,21 +534,21 @@ export default function DiscoverScreen({navigation, route}){
             })}}>
                 
                 {selectedPin != undefined && selectedPin != "" &&
-                <TouchableOpacity disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: pinSelectedPropData, uid: userId})}}>
+                <Pressable disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: userId})}}>
                     <PreviewTopContainer>
-                        <Image source={{uri:selectedPin.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
+                        <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
                         borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
                     </PreviewTopContainer>
 
                     <PreviewBottomContainer >
-                        <PreviewLocationText>{selectedPin.loc.streetAddr}</PreviewLocationText>
-                        <PreviewPriceText>{new Date(selectedPin.availableFrom).toDateString()} - {new Date(selectedPin.availableTo).toDateString()}</PreviewPriceText>
+                        <PreviewLocationText>{selectedPin.propertyInfo.loc.streetAddr}</PreviewLocationText>
+                        <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).toDateString()} - {new Date(selectedPin.propertyInfo.availableTo).toDateString()}</PreviewPriceText>
                         
-                        <PreviewPriceText>${selectedPin.price}</PreviewPriceText>
+                        <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
 
                         
                     </ PreviewBottomContainer> 
-                </TouchableOpacity>
+                </Pressable>
                 }
             
                 <FontAwesome onPress={()=>closePreviewCard()} name="times-circle" size={30}  color='white' style={{position: 'absolute', right:WIDTH*0.025,

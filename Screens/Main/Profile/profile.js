@@ -43,7 +43,7 @@ import { Header,Container, NameText, OccupationText,EditProfilePressable,Sliding
     FavPropertyCardDateText, FavPropertyCardDateContainer
  } from './profileStyle';
 import { useEvent } from 'react-native-reanimated';
-import { LIGHTGREY } from '../../../sharedUtils';
+import { EXTRALIGHT, LIGHTGREY } from '../../../sharedUtils';
 import { FlatList } from 'react-native-gesture-handler';
 export default function ProfileScreen({navigation}){
     const scrollviewRef = useRef(null)
@@ -51,8 +51,6 @@ export default function ProfileScreen({navigation}){
     const [tabPressed, setTabPressed] = useState("Posted")
     const [postedProperties, setPostedProperties] = useState("")
     const [favoriteProperties, setFavoriteProperties] = useState([])
-
-    const [editProfileModal, setEditProfileModal] = useState(false)
 
     const translation = useRef(new Animated.Value(0)).current;
 
@@ -63,20 +61,22 @@ export default function ProfileScreen({navigation}){
     const [propertyAddr, setPropertyAddr] = useState('');
  
     useEffect(()=>{
-
         const unsubscribe = navigation.addListener('focus', () => {
             getTokens()
-        
-            });
+        });
         return unsubscribe; 
     }, [navigation])
+
     async function getTokens(){
+        console.log("In getTokens Function")
         const accessToken = await SecureStorage.getItem("refreshToken");
-        console.log("Refresh Token " + accessToken)
-
         const UID = await SecureStorage.getItem("userId");
+        let cachedProfilePic = await SecureStorage.getItem("profilePic");
+        if(cachedProfilePic != null){
+            console.log("LOADING -- Profile Pic from cache data")
+            setProfilePic(cachedProfilePic)
+        }
 
-      //  console.log("UID " + UID)
         fetch('https://sublease-app.herokuapp.com/users/' + UID, {
         method: 'GET',
         headers: {
@@ -86,44 +86,30 @@ export default function ProfileScreen({navigation}){
         }
         }) 
         .then(res => res.json()).then(async userData =>{
-            // console.log("userdata")
             setUserData(userData)
-            console.log("userdata")
-            console.log(userData)
+            //Load API data if the cached profile pic is null
             let cachedProfilePic = await SecureStorage.getItem("profilePic");
-            if(cachedProfilePic == userData.profilePic){
-                console.log("Cached profile pic is")
-                console.log(cachedProfilePic)
-                await SecureStorage.setItem("profilePic", userData.profilePic);
-                setProfilePic(cachedProfilePic)
-            }else{
-                console.log("API data is");
+            if(cachedProfilePic == null){
+                console.log("LOADING -- Profile Pic from API data")
                 await SecureStorage.setItem("profilePic", userData.profilePic);
                 setProfilePic(userData.profilePic)
             }
            
-        //    console.log("data")
-        //    console.log(userData)
-            //console.log(userData.postedProperties.length)
             if(userData.postedProperties.length != 0){
-                //console.log(userData.postedProperties[0])
                 fetchPostedProperties(userData.postedProperties[0], accessToken)
             }
             if(userData.favoriteProperties !== favoriteProperties){
-                console.log("Fav prop is not the same")
                 setFavoriteProperties([])
                 userData.favoriteProperties.forEach(propID => {
                     fetchFavoriteProperties(propID, accessToken)
                 });
-                console.log("PropData")
-            }
-           
-            
+            } 
         })
         .catch(e=>{
             alert(e)
         })
     }
+    
 
 
     async function fetchPostedProperties(id, token){
@@ -136,8 +122,6 @@ export default function ProfileScreen({navigation}){
             }
             }) 
             .then(res => res.json()).then(propertyData =>{
-                console.log("postedData")
-                console.log(propertyData)
                 setPostedProperties(propertyData) 
             })
         
@@ -194,8 +178,10 @@ export default function ProfileScreen({navigation}){
                 </Pressable>
             </Header>
             <Container>
-                <Image source={{uri: profilePic}} 
-                style={{width:WIDTH*0.35, height: WIDTH*0.35, borderRadius: WIDTH*0.175, alignSelf:'center', backgroundColor:LIGHTGREY}} />
+                <View style={{width:WIDTH*0.35, height: WIDTH*0.35, borderRadius: WIDTH*0.175,}}>
+                    <Image source={{uri: profilePic}} 
+                    style={{width:WIDTH*0.35, height: WIDTH*0.35, borderRadius: WIDTH*0.175, alignSelf:'center', backgroundColor:EXTRALIGHT}} />
+                </View>
                 <InformationContainer>
                     <View style={{ width: WIDTH*0.5, justifyContent: 'flex-start'}}>
                         <NameText>{userData.firstName} {""} {userData.lastName}</NameText>

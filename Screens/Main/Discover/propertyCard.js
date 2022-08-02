@@ -194,34 +194,16 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         }
     })
 
-    function MoveMapToPin(id){
-        console.log(id)
-        fetch(`https://sublease-app.herokuapp.com/properties/${id}`, {
-            method: 'GET',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-            }
-            }) 
-            .then(res => res.json()).then( pinInfo =>{
-                console.log("onMarkerClick")
-                console.log("The clicker pin info")
-                //console.log(pinInfo)
-                console.log("==========================================================")
-                console.log(pinInfo.propertyInfo)
-                setSelectedPin(pinInfo.propertyInfo)
-                openPreviewCard()
-                moveMap(pinInfo.propertyInfo.loc.coordinates[1] - 0.015,pinInfo.propertyInfo.loc.coordinates[0])
-
-            })
-            .catch(e=>{
-                alert(e)
-        })
+    function MoveMapToPin(pinInfo){
+   
+        setSelectedPin(pinInfo)
+        openPreviewCard()
+        moveMap(pinInfo.propertyInfo.loc.coordinates[1] - 0.015,pinInfo.propertyInfo.loc.coordinates[0])
         translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
     }
 
     const renderCards = useCallback((data, index) =>{
-       // console.log("HELLO")
+        // console.log("HELLO")
         // console.log("DATA ITEM", data.item)
 
         return(
@@ -234,7 +216,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                         opacity: 1
                         }} source={{uri:data.item.propertyInfo.imgList[0]}}/>
                         {/* <OpenMapIconContainer onPress={()=>MoveMapToPin(data)}> */}
-                        <OpenMapIconContainer onPress={()=>MoveMapToPin(data.item.propertyInfo._id)}>
+                        <OpenMapIconContainer onPress={()=>MoveMapToPin(data.item)}>
                             <FontAwesome name='location-arrow' size={HEIGHT*0.02} color='white'/>
                         </OpenMapIconContainer>
                         {/* <FavIconContainer >

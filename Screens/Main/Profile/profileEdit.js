@@ -29,6 +29,7 @@ import {HeaderContainer, Header, BackButtonContainer, NameContainer, ResetButton
         TextInputPressable, ChangeProfilePicText, AgeText} from './profileEditStyle';
 
 export default function ProfileEditScreen({navigation, route}){
+    console.log(route.params.userData)
     const userData = route.params.userData
     const [userAPIData, setUserAPIData] = useState('')
     const [profilePic, setProfilePic] = useState(route.params.userData.profilePic)
@@ -37,7 +38,6 @@ export default function ProfileEditScreen({navigation, route}){
     const userAge = Math.floor(route.params.userData.dob/(1000*60*60*24*365))
    
     useEffect(()=>{
-       
         const unsubscribe = navigation.addListener('focus', () => {
             getTokens()
         });
@@ -45,9 +45,15 @@ export default function ProfileEditScreen({navigation, route}){
     },[navigation])
     
     async function getTokens(){
+        console.log("In getTokens Function")
+        console.log("USER DATA", route.params.userData)
         const accessToken = await SecureStorage.getItem("refreshToken");
         const UID = await SecureStorage.getItem("userId");
-
+        
+        if(route.params.userData.profilePic != null){
+            console.log("LOADING -- Profile Pic from params")
+            setProfilePic(route.params.userData.profilePic)
+        }
         fetch('https://sublease-app.herokuapp.com/users/' + route.params.userData._id, {
         method: 'GET',
         headers: {
@@ -57,7 +63,6 @@ export default function ProfileEditScreen({navigation, route}){
         }
         }) 
         .then(res => res.json()).then(async userData =>{
-            console.log(userData)
             setUserAPIData(userData)
             if(route.params.userData.profilePic == null){
                 setProfilePic(userData.profilePic)
@@ -80,6 +85,7 @@ export default function ProfileEditScreen({navigation, route}){
           }).then(image => {
            
             setProfilePic(image.path)
+            console.log(route.params.userData._id)
             fetch('https://sublease-app.herokuapp.com/users/' + route.params.userData._id, {
                 method: 'PUT',
                 headers: {
@@ -90,6 +96,9 @@ export default function ProfileEditScreen({navigation, route}){
                 body: JSON.stringify({
                     profilePic: image.path,
                 })
+            }).then(resp=>resp.json()).then(async data=>{
+                console.log(data)
+                await SecureStorage.setItem("profilePic", data.profilePic)
             })
             .catch((error) => {
                 if (error.code === 'E_PICKER_CANCELLED') { // here the solution
@@ -151,7 +160,7 @@ export default function ProfileEditScreen({navigation, route}){
             </RowContainer> */}
 
             <CategoryName>Education</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditEducation", {userData: userAPIData })}>
+            <RowContainer onPress={()=> navigation.navigate("EditEducation", {uid: userAPIData._id })}>
                 <RowName>{userAPIData.school}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>

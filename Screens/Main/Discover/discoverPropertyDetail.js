@@ -185,13 +185,13 @@ export default function PropertyDetailScreen({navigation, route}){
         <Container>             
             <PropertyDescription>
     
-                <ScrollView showsVerticalScrollIndicator={false} >
+                <ScrollView showsVerticalScrollIndicator={false} onRefresh={()=>console.log("hi")} >
                     <View style={{height:HEIGHT*0.35, width:WIDTH}}>
                         <FlatList 
                         onScroll={onScroll}
                         horizontal 
                         style={{position:'absolute', width:WIDTH, height:HEIGHT*0.35, overflow:'hidden'}}
-                        data={propData.imgList}
+                        data={route.params.data.propertyInfo.imgList}
                         ref={flatListRef}
                         renderItem={({item})=>(
                            

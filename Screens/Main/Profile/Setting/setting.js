@@ -104,16 +104,16 @@ export default function SettingScreen({navigation}){
             {/* Phone number press to change */}
             <RowContainer>
               <RowName>Phone Number</RowName>
-              <RowValueContainer onPress={()=> navigation.navigate("ChangeNumber")}>
+              <RowValueContainer>
                 <RowValueText>+1 {userData.phoneNumber}</RowValueText>
-                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+                {/* <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/> */}
               </RowValueContainer>
             </RowContainer>
             <RowContainer>
               <RowName>Email</RowName>
-              <RowValueContainer onPress={()=> navigation.navigate("ChangeEmail", {email: userData.email, uid: userData._id})}>
+              <RowValueContainer >
                 <RowValueText>{userData.email}</RowValueText>
-                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+                {/* <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/> */}
               </RowValueContainer>
             </RowContainer>
 

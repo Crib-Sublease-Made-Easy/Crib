@@ -28,7 +28,8 @@ export default function EditEducationScreen({navigation, route}){
     
     async function update(){
         const accessToken = await SecureStorage.getItem("refreshToken");
-        fetch('https://sublease-app.herokuapp.com/users/' + route.params.userData._id, {
+        console.log("UID" , route.params.uid)
+        fetch('https://sublease-app.herokuapp.com/users/' + route.params.uid, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',
@@ -39,14 +40,14 @@ export default function EditEducationScreen({navigation, route}){
                 school: education.trim(),
             })
         })
-            .then((response) => response.json()).then(data => {
-                console.log("Update education reponse")
-                console.log(data)
-                navigation.navigate('ProfileEdit',{userData:data, refresh: true})
-            })
-            .catch(e => {
-                console.log(e)
-            })
+        .then((response) => response.json()).then(data => {
+            console.log("Update education reponse")
+            console.log(data)
+            navigation.navigate('ProfileEdit',{userData:data, refresh: true})
+        })
+        .catch(e => {
+            console.log(e)
+        })
     }
 
     return(
@@ -69,10 +70,6 @@ export default function EditEducationScreen({navigation, route}){
 
             <View style={{width:WIDTH, height: HEIGHT*0.03}}/>
 
-            <RowContainer>
-                <CategoryName>Old Education</CategoryName>
-                <PhoneNumberContainer editable={false} value={route.params.userData.school} />
-            </RowContainer>
             <RowContainer>
                 <CategoryName>Latest Education</CategoryName>
                 <PhoneNumberContainer onChangeText={(value)=> setEducation(value)}  value={education} />
