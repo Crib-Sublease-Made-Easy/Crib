@@ -103,11 +103,44 @@ export default function OTPScreen({navigation, route}){
             }
             else{
 
-                await SecureStorage.setItem("accessToken", data.token.accessToken)
-                await SecureStorage.setItem("refreshToken", data.token.refreshToken)
-                await SecureStorage.setItem("profilePic", route.profilePic)
-                await SecureStorage.setItem("email", route.email)
+                //The USER_ID below should be unique to your Sendbird application.
+                try {
+                    console.log("connecting to sendbird")
+                    console.log()
+                    sb.connect(data.createdUser._id, function(user, error) {
+                        if (error) {
+                            // Handle error.
+                            console.log("sendbird error")
+                            console.log(err)
+                        }
+                        else{
+                            console.log("sendbird connected")
+                            console.log(user)
+                            sb.updateCurrentUserInfo(data.createdUser.firstName, data.createdUser.profilePic, (user, err) => {
+                                if (!err) {
+                                    console.log("Successfully updated current user", err)
+                                  } else {
+                                    console.log("Error with updating current user", err)
+                                  }
+                            });
+                        }
+                        // The user is connected to Sendbird server.
+                    });
+                    // The user is connected to the Sendbird server.
+                } catch (err) {
+                    // Handle error.
+                }
                 await SecureStorage.setItem("userId", data.createdUser._id)
+                await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
+                //Create sendbird user here with userid
+                //store user info in
+
+                await SecureStorage.setItem("accessToken", data.token.accessToken)
+                await SecureStorage.setItem("profilePic", data.loggedIn.profilePic)
+                await SecureStorage.setItem("userId", data.loggedIn._id)
+                await SecureStorage.setItem("firstName", data.loggedIn.firstName)
+                await SecureStorage.setItem("firstName", data.loggedIn.lastName)
+                await SecureStorage.setItem("refreshToken", data.token.refreshToken)
                 console.log("got")
                 setTimeout(()=>{setLoading(false)},2000)
                 login(data.createdUser._id);
