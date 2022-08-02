@@ -94,12 +94,15 @@ export default function Login_OTP({navigation, route}){
                 await SecureStorage.setItem("accessToken", data.token.accessToken)
                 await SecureStorage.setItem("profilePic", data.loggedIn.profilePic)
                 await SecureStorage.setItem("userId", data.loggedIn._id)
+                await SecureStorage.setItem("firstName", data.loggedIn.firstName)
+                await SecureStorage.setItem("firstName", data.loggedIn.lastName)
+                await SecureStorage.setItem("refreshToken", data.token.refreshToken)
+                
 
-                const something = await SecureStorage.getItem("accessToken")
-                const something2 = await SecureStorage.getItem("profilePic")
+                const access_token = await SecureStorage.getItem("accessToken")
+                
 
-                console.log("something", something)
-                console.log("something", something2)
+                console.log("ACCESS_TOKEN", access_token)
 
                 setTimeout(()=>{setLoading(false)},2000)
                 login(data.loggedIn._id);
