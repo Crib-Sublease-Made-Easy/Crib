@@ -110,7 +110,7 @@ export default function OTPScreen({navigation, route}){
                 await SecureStorage.setItem("userId", data.createdUser._id)
                 console.log("got")
                 setTimeout(()=>{setLoading(false)},2000)
-                login(route.email);
+                login(data.createdUser._id);
             }
         })
     }
@@ -175,7 +175,7 @@ export default function OTPScreen({navigation, route}){
                         <SubtitleText>Didn't recieve SMS?</SubtitleText>
                     </Pressable>
                 </ScrollView>
-                <ContinueButton onPress={()=> login('test')}>
+                <ContinueButton onPress={()=> signupStep3()}>
                     <ContinueText>Continue</ContinueText>
                 </ContinueButton>
                 </KeyboardAvoidingView>

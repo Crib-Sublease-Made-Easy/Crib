@@ -84,21 +84,34 @@ export default function ProfileEditScreen({navigation, route}){
             compressImageQuality: 0.3
           }).then(image => {
            
-            setProfilePic(image.path)
             console.log(route.params.userData._id)
-            fetch('https://sublease-app.herokuapp.com/users/' + route.params.userData._id, {
+            console.log(accessToken)
+            const formData = new FormData();
+            console.log(image.path)
+            var array = image.path.split(".");      
+            formData.append("userImage", {
+                uri: image.path,
+                type: 'image/' + array[1],
+                name: 'someName',
+            }); 
+            fetch('https://sublease-app.herokuapp.com/users/profileImages/' + route.params.userData._id, {
                 method: 'PUT',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + accessToken,
                 },
-                body: JSON.stringify({
-                    profilePic: image.path,
-                })
+                body: formData
             }).then(resp=>resp.json()).then(async data=>{
+                if (data.msg != "profile pic successfully changed" ){
+                    alert("Update unsuccessful.")
+                }
+                else{
+                    setProfilePic(image.path)
+                    await SecureStorage.setItem("profilePic", data.profilePic)
+                }
                 console.log(data)
-                await SecureStorage.setItem("profilePic", data.profilePic)
+                
             })
             .catch((error) => {
                 if (error.code === 'E_PICKER_CANCELLED') { // here the solution

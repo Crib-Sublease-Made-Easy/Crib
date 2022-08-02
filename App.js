@@ -87,14 +87,16 @@ const PRIMARYCOLOR = '#4050B5'
 export default function App() {
   const [sendBirdConnected, setSendbirdConnection] = useState(false)
 
+  const [testUserId, setTestUserId] = useState('')
+
   const sb = new SendBird({ appId: appId, localCacheEnabled: true });   // The `localCacheEnabled` is optional. The default is false.
   useEffect( () => {
     console.log("NEW APP REFRESH")
     refreshAccessToken()
-    connectSendbird()
   }, [])
   const connectSendbird = async () => {
     const UID = await SecureStorage.getItem("userId");
+    setUser(UID)
     if (UID != undefined) {
       try {
         console.log("connecting to sendbird")
@@ -120,9 +122,11 @@ export default function App() {
   }
 
   const refreshAccessToken = async () => {
+      
     const rt = await SecureStorage.getItem("refreshToken");
     const id = await SecureStorage.getItem("userId");
     if (rt != undefined) {
+      setUser(UID)
       fetch('https://sublease-app.herokuapp.com/tokens/accessRefresh', {
         method: 'POST',
         headers: {
@@ -155,11 +159,12 @@ export default function App() {
           await SecureStorage.setItem("firstName", response.firstName)
           await SecureStorage.setItem("lastName", response.lastName)
           await SecureStorage.setItem("profilePic", response.profilePic)
-          login("email");
+          login(id);
         } catch (err) {
           console.log(err)
         }
       })
+      connectSendbird()
     }
   }
 
@@ -175,6 +180,7 @@ export default function App() {
     setUser(null);
   };
 
+
   const forFade = ({ current }) => ({
     cardStyle: {
       opacity: current.progress,
@@ -184,7 +190,7 @@ export default function App() {
   return (
 
     <NavigationContainer>
-      <UserContext.Provider value={{ user, login, logout, sb }}>
+      <UserContext.Provider value={{ user, login, logout, sb, USERID: user}}>
 
         {user != null ?
 

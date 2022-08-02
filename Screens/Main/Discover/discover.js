@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, useMemo, useCallback} from 'react';
+import React, {useState, useEffect, useRef, useMemo, useCallback, useContext} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -46,9 +46,14 @@ import PropertyCard from './propertyCard';
 import MapView , { Marker }from 'react-native-maps';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
+import { UserContext } from '../../../UserContext';
+
 var axios = require('axios');
 
 export default function DiscoverScreen({navigation, route}){
+
+    const {USERID} = useContext(UserContext);
+    console.log("USER", USERID)
     //Reference to the MapView
     const mapRef = useRef(null)
     //This is to control the height of the input view container
@@ -70,8 +75,6 @@ export default function DiscoverScreen({navigation, route}){
     //If user press view map in each card container, this stores the data of the property selected 
     //Access the fields by selectedPin.item.name
     const [selectedPin, setSelectedPin] = useState([])
-
-    const [pinSelectedPropData, setPinSelectedPropData] = useState([])
     
     const [propertiesData, setPropertiesData] = useState([]);
 
@@ -113,11 +116,12 @@ export default function DiscoverScreen({navigation, route}){
         
     },[currentLocation])
 
-
+    //Retrieve the user id from SecureStorage with name userId
     const getUserId = async () =>{
         const id = await SecureStorage.getItem('userId')
-        setUserId(id); //try Im retardedhaaha
+        setUserId(id); 
     }
+
     //Open The search bar container to displya all autocomplete results according to if searching is true 
     function openHeader(){
         Animated.parallel([
