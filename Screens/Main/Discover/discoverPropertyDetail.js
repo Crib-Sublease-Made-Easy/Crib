@@ -60,7 +60,6 @@ export default function PropertyDetailScreen({navigation, route}){
     const [userDate, setUserData]= useState()
     const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == route.params.uid)
     const createConversation = async () =>{
-        
         console.log("MY Userid", USERID)
         var userIds = [USERID, propData.postedBy]
         console.log("I log catsssss")

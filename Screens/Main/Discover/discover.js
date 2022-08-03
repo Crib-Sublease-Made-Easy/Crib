@@ -310,7 +310,7 @@ export default function DiscoverScreen({navigation, route}){
     }
 
     function retrieveAllPins(lat, long, distance, price, bed, bath, type, amens ){
-        
+        setPropertyPreviewCard(false)
         let s = "";
         if(type != ""){
             s = s + "&type=" + type;
