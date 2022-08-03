@@ -27,7 +27,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import PropTypesScreen from './EditPropTypeModal/propertyTypeModal';
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     HeaderImageContainer, PropertyPhotoContainer, PhotoContainer, RowContainer, RowName, CategoryName,
-    DatePriceText } from './editPropertyStyle';
+    DatePriceText, DeleteContainer,DeleteText } from './editPropertyStyle';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import { set } from 'react-native-reanimated';
@@ -175,7 +175,7 @@ export default function EditPropertyScreen({navigation, route}){
     
     return(
       
-        <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
+        <SafeAreaView style={{flex:1, backgroundColor:'white'}} >
             <HeaderContainer>
                 <BackButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
@@ -191,7 +191,7 @@ export default function EditPropertyScreen({navigation, route}){
                     </Pressable>
                 </ResetButtonContainer> */}
             </HeaderContainer>
-            <ScrollView>
+        <ScrollView scrollEnabled={false}>
             {/* <HeaderImageContainer>
                 <Image key={"defaultPropPic"} source={{ uri: headerImage}}
                     style={{ width: WIDTH * 0.9, height: HEIGHT * 0.25, borderRadius: 10, alignSelf:'center' }} />
@@ -231,21 +231,19 @@ export default function EditPropertyScreen({navigation, route}){
                 </PhotoContainer>
             </TouchableOpacity>
             
-            {
-                propImg.length == 4 &&
+            
 
-                <TouchableOpacity key={"imgList" + "floorplan"} onPress={() => SelectPropPic(4)}>
-                    <PhotoContainer >
-                       {propFloorplanImage != null ?
-                        <Image source={{ uri: propFloorplanImage == null ? null : setPropFloorplanImage  }}
-                            style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
-                        :
-                        <Ionicons name="add" size={20} color='white'/>
-                        }
-                    </PhotoContainer>
-                </TouchableOpacity>
+            <TouchableOpacity key={"imgList" + "floorplan"} onPress={() => SelectPropPic(4)}>
+                <PhotoContainer >
+                   
+                    <Image source={{ uri: propImg.length ==  4 ? null : propImg[4]  }}
+                        style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
+                   
+                   
+                </PhotoContainer>
+            </TouchableOpacity>
 
-            }
+            
             </PropertyPhotoContainer>
             <CategoryName>Location</CategoryName>
             <RowContainer>
@@ -285,11 +283,11 @@ export default function EditPropertyScreen({navigation, route}){
                 </RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
-            <RowContainer onPress={()=> deletePropertyAlert()}>
-                <RowName>Delete Property</RowName>
-            </RowContainer>
             
         </ScrollView>
+        <DeleteContainer onPress={()=> deletePropertyAlert()}>
+            <DeleteText>Delete Property</DeleteText>
+        </DeleteContainer>
        
         </SafeAreaView>
       

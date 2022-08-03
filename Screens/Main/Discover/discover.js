@@ -74,7 +74,7 @@ export default function DiscoverScreen({navigation, route}){
     const [searching, setSearching] = useState(false)
     //If user press view map in each card container, this stores the data of the property selected 
     //Access the fields by selectedPin.item.name
-    const [selectedPin, setSelectedPin] = useState([])
+    const [selectedPin, setSelectedPin] = useState(null)
     
     const [propertiesData, setPropertiesData] = useState([]);
 
@@ -450,7 +450,7 @@ export default function DiscoverScreen({navigation, route}){
         }
         }) 
         .then(res => res.json()).then(property =>{
-            console.log(property)
+            console.log("PROPERTY", property.propertyInfo._id)
             setSelectedPin(property)
             moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
         })
@@ -511,8 +511,7 @@ export default function DiscoverScreen({navigation, route}){
                     style={{zIndex: value._id == selectedPin._id ? 2 : 1}}
                    >
                     <CustomMarker style={{backgroundColor: value._id == selectedPin?._id ? PRIMARYCOLOR : 'green', zIndex: value._id == selectedPin._id ? 2 : 1}}>
-                        <Text style={{color:'white'}}>${value.price}</Text>
-                       
+                        <Text style={{color:'white'}}>${value.price}</Text>                       
                     </CustomMarker>
                    </Marker>
                 ))} 

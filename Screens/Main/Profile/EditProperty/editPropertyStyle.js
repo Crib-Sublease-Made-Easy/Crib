@@ -90,3 +90,14 @@ export const DatePriceText = styled.Text`
     font-size: ${HEIGHT*0.015}px
     color: ${DARKGREY}
 `
+
+export const DeleteContainer = styled.Pressable`
+   
+`
+
+export const DeleteText = styled.Text`
+    align-self: center
+    font-size: ${HEIGHT*0.0175}px
+    color: red
+    margin-bottom: ${HEIGHT*0.05}px
+`
