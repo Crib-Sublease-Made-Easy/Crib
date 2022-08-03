@@ -91,7 +91,33 @@ export default function PropertyDetailScreen({navigation, route}){
             'Authorization': 'Bearer ' + accessToken,
             }
             }) 
-            .then(res => res.json()).then(propertyData =>{
+            .then(res => res.json()).then( async propertyData =>{
+                console.log("TESTTT", propertyData)
+                if(propertyData.propertyInfo.deleted){
+                    const accessToken = await SecureStorage.getItem("refreshToken");
+                    console.log(accessToken)
+                    await fetch('https://sublease-app.herokuapp.com/properties/favorite', {
+                        method: 'POST',
+                        headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'bearer ' + accessToken,
+                        },
+                        body: JSON.stringify({
+                            propertyId: route.params.data.propertyInfo._id,
+                        })
+                        }) 
+                        .then(res => res.json()).then(message =>{
+                            setLiked(!liked)
+                            console.log(message)
+                        
+                        })
+                        .catch(e=>{
+                            alert(e)
+                    })
+                    alert("Property is deleted.")
+                    navigation.goBack()
+                }
                 if(route.params.data == undefined){
                     setPropData(propertyData.propertyInfo)
                 }

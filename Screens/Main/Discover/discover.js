@@ -98,6 +98,9 @@ export default function DiscoverScreen({navigation, route}){
     const [filterBathroom, setfilterBathroom] = useState("");
     const [filterPriceLower, setfilterPriceLower] = useState(0);
     const [filterPriceHigher, setfilterPriceHigher] = useState(10000);
+    const [filterAvailableFrom, setfilterAvailableFrom] = useState(new Date())
+    const [filterAvailableTo, setfilterAvailableTo] = useState(new Date(1759176355615))
+
     const [filterPreviewValue, setfilterPreviewValue] = useState(10000)
     const [filterPreviewDistanceValue, setfilterPreviewDistanceValue] = useState(150)
     const [filterAmenities, setfilterAmenities] = useState([])
@@ -105,16 +108,20 @@ export default function DiscoverScreen({navigation, route}){
     const [loading, setLoading] = useState(false)
     const [userId, setUserId] = useState(null)
     useEffect(()=>{
+        
+            console.log("REFRESHHHHHHH")
         console.log("Refreshing again!")
         //This loads the property in the flatlist 
         loadProperty()
         getUserId()
-        retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities )
+        retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom, filterAvailableTo )
         setPropertyPreviewCard(false)
         setSelectedPin([])
         setTimeout(() => {
             setFlatlistRefreshing(false)
         }, 2000);
+        
+       
         
     },[currentLocation])
 
@@ -311,7 +318,7 @@ export default function DiscoverScreen({navigation, route}){
         }   
     }
 
-    function retrieveAllPins(lat, long, distance, price, bed, bath, type, amens ){
+    function retrieveAllPins(lat, long, distance, price, bed, bath, type, amens, from, to ){
         setPropertyPreviewCard(false)
         let s = "";
         if(type != ""){
@@ -336,6 +343,8 @@ export default function DiscoverScreen({navigation, route}){
         s = s + `&longitude=${long}`
         s = s + `&priceHigh=${price}`
         s = s + `&priceLow=0`
+        s = s +`&availableFrom=${from}`
+        s = s +`&availableTo=${to}`
         console.log("S",s)
         // console.log("Retrieving pins ")
         console.log(`https://sublease-app.herokuapp.com/properties/pins?${s}`)
@@ -351,7 +360,10 @@ export default function DiscoverScreen({navigation, route}){
          
             console.log("PINS", pins)
             console.log("==========================================================")
-            setPinsData(pins)             
+            
+                setPinsData(pins)         
+            
+                
             
         })
         .catch(e=>{
@@ -525,7 +537,7 @@ export default function DiscoverScreen({navigation, route}){
             }), display: searching ? 'flex' : 'none' }}/>
 
             < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), updateQueryString(),
-            retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities )
+            retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom.getTime(), filterAvailableTo.getTime() )
             }}>
                 <Ionicons name="search-outline" size={25} />
             </ SearchHerePressable>
@@ -623,6 +635,8 @@ export default function DiscoverScreen({navigation, route}){
         filterPriceHigher={filterPriceHigher} setfilterPriceHigher={setfilterPriceHigher} filterAmenities={filterAmenities}
         setfilterAmenities={setfilterAmenities} filterPreviewValue={filterPreviewValue} setfilterPreviewValue={setfilterPreviewValue}
         filterPreviewDistanceValue={filterPreviewDistanceValue} setfilterPreviewDistanceValue={setfilterPreviewDistanceValue}
+        filterAvailableFrom={filterAvailableFrom} setfilterAvailableFrom={setfilterAvailableFrom}
+        filterAvailableTo={filterAvailableTo} setfilterAvailableTo={setfilterAvailableTo}
         />
         
         </GestureHandlerRootView>

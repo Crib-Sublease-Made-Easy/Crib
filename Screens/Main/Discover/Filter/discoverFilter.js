@@ -70,7 +70,8 @@ import { Container, HeaderContainer, BackButtonContainer,NameContainer, ResetBut
 export default function DiscoverFilterScreen({navigation, currentLocation, open, close, setFilteredProperties, setPropertyPage, setrieverieveMore,retrieveAllPins
     ,filterType, setfilterType, filterDistance, setfilterDistance, filterBedroom, setfilterBedroom,filterBathroom, setfilterBathroom
     ,filterPriceHigher, setfilterPriceHigher, filterAmenities, setfilterAmenities, propertyAmenities, setpropertyAmenities, setRetrieveMore,
-    filterPreviewValue, setfilterPreviewValue, filterPreviewDistanceValue, setfilterPreviewDistanceValue
+    filterPreviewValue, setfilterPreviewValue, filterPreviewDistanceValue, setfilterPreviewDistanceValue, filterAvailableFrom, setfilterAvailableFrom,
+    filterAvailableTo, setfilterAvailableTo
 }){
     const [containerModal, setcontainerModal] = useState(false);
     const [scrollEnabled, setscrollEnabled] = useState(true)
@@ -78,8 +79,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     
 
     //Sets DatePicker Modal Visibility
-    const [propertydateFrom, setpropertydateFrom] = useState(new Date())
-    const [propertydateTo, setpropertydateTo] = useState(new Date(1759176355615))
+    
     const [openFrom, setOpenFrom] = useState(false)
     const [openTo, setOpenTo] = useState(false)
 
@@ -101,8 +101,8 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     function resetFilter(){
         setfilterType("")
         setfilterPriceHigher(10000)
-        setpropertydateFrom(new Date())
-        setpropertydateTo(new Date(1759176355615))
+        setfilterAvailableFrom(new Date())
+        setfilterAvailableTo(new Date(1759176355615))
         setfilterAmenities([])
         setfilterBathroom("")
         setfilterBedroom("")
@@ -136,8 +136,8 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     for(let amen of filterAmenities){
         s = s + "&" + amen + "=true";
     }
-    s = s +`$availableFrom=${propertydateFrom.getTime()}`
-    s = s +`$availableTo=${propertydateTo.getTime()}`
+    s = s +`&availableFrom=${filterAvailableFrom.getTime()}`
+    s = s +`&availableTo=${filterAvailableTo.getTime()}`
     s = s + `&latitude=${currentLocation[0]}`
     s = s + `&longitude=${currentLocation[1]}`
     s = s + `&priceHigh=${filterPriceHigher}`
@@ -164,7 +164,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
         .catch(e=>{
             alert(e)
     })
-    retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities )
+    retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities,new Date(filterAvailableFrom).getTime(), new Date(filterAvailableTo).getTime() )
     }
 
     return(
@@ -263,14 +263,14 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                         <InputName>Available From</InputName>
                     </InputNameContainer>
                     <DateInputPressable onPress={()=>setOpenFrom(true)}>
-                        <PropertyTypeName>{propertydateFrom.toDateString()}</PropertyTypeName>
+                        <PropertyTypeName>{filterAvailableFrom.toDateString()}</PropertyTypeName>
                     </DateInputPressable>
                     <InputNameContainer>
                         <InputName>Available To</InputName>
                     </InputNameContainer>
                     <DateInputPressable onPress={()=>setOpenTo(true)}>
-                    {propertydateTo.getTime() < 1759176355615 ?
-                        <PropertyTypeName>{propertydateTo.toDateString()}</PropertyTypeName>
+                    {filterAvailableTo.getTime() < 1759176355615 ?
+                        <PropertyTypeName>{filterAvailableTo.toDateString()}</PropertyTypeName>
                     :
                     null
                     }
@@ -280,16 +280,16 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                         modal
                         mode='date'
                         open={openFrom}
-                        date={propertydateFrom}
+                        date={filterAvailableFrom}
                         onConfirm={(date) => {
                             if(date.getTime() < new Date().getTime()){
                                 alert("Invalid Available From Date")
                             }
-                            else if(date.getTime() >= propertydateTo.getTime()){
+                            else if(date.getTime() >= filterAvailableTo.getTime()){
                                 alert("Cannot set date to after Available From date.")
                             }
                             else{
-                                setpropertydateFrom(date)
+                                setfilterAvailableFrom(date)
                             }
                             setOpenFrom(false)
                             
@@ -303,19 +303,19 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                         modal
                         mode='date'
                         open={openTo}
-                        date={propertydateTo}
+                        date={filterAvailableTo}
                         onConfirm={(date) => {
                             if(date.getTime() < new Date().getTime()){
                                 alert("Cannot set Available To before today")
                             }
-                            else if(date.getTime() <= propertydateFrom.getTime()){
+                            else if(date.getTime() <= filterAvailableFrom.getTime()){
                                 alert("Cannot set Available To on or before Available From date")
                             }
                             else if(date.getTime() >= 1759176355615){
                                 alert("Date Selected is too far ahead, please select a closer date.") 
                             }
                             else{
-                                setpropertydateTo(date)
+                                setfilterAvailableTo(date)
                             }    
                             setOpenTo(false)            
                         }}
