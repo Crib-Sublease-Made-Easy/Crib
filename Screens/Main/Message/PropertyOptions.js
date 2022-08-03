@@ -47,7 +47,7 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                     <RowName>Report Property</RowName>
                    
                 </RowContainer>
-                <RowContainer>
+                <RowContainer onPress={()=> leaveChat()}>
                     <Ionicons name='close' size={25}  style={{paddingLeft: WIDTH*0.05}} color='red'/>
                     <RowName>Delete Conversation</RowName>
                 </RowContainer>

@@ -209,7 +209,11 @@ export default function ChatScreen({navigation, route}){
 
     //route.params.userData 
 
-
+    leaveChat = () => {
+      alert("You have successfully left this chat.")
+      channel.leave()
+      navigation.goBack()
+    }
     return(
     <SafeAreaView style={{backgroundColor:'white', flex:1}}>
     <HeaderContainer>
@@ -277,7 +281,7 @@ export default function ChatScreen({navigation, route}){
         _id: id
       }}
     />
-    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
+    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} leaveChat={()=> leaveChat()} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
     </SafeAreaView>
     )
 }

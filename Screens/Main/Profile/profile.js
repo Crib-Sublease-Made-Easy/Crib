@@ -11,7 +11,8 @@ import {
   Dimensions,
   Image,
   Pressable,
-  Animated
+  Animated,
+  Share
 } from 'react-native';
 import { User } from 'realm';
 import { UserContext } from '../../../UserContext';
@@ -67,6 +68,28 @@ export default function ProfileScreen({navigation}){
         });
         return unsubscribe; 
     }, [navigation])
+
+    const onShare = async () => {
+        try {
+          const result = await Share.share({
+            // message:
+            //   'Lighthouse | An app to find short term housing solutions made easy',
+              url: 'https://apps.apple.com/us/app/google-chrome/id535886823https://apps.apple.com/us/app/google-chrome/id535886823'
+          });
+          if (result.action === Share.sharedAction) {
+            if (result.activityType) {
+              // shared with activity type of result.activityType
+            } else {
+              // shared
+            }
+          } else if (result.action === Share.dismissedAction) {
+            // dismissed
+          }
+        } catch (error) {
+          alert(error.message);
+        }
+      };
+
 
     async function getTokens(){
         console.log("In getTokens Function")
@@ -202,8 +225,8 @@ export default function ProfileScreen({navigation}){
 
                             <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
                         </IconContainer>
-                        <IconContainer onPress={()=> navigation.navigate("PropertyPosting")}>
-                            <Ionicons name="heart"  size={25} color={PRIMARYCOLOR}/>
+                        <IconContainer onPress={()=> onShare()}>
+                            <Ionicons name="share-outline"  size={25} color={PRIMARYCOLOR}/>
                         </IconContainer>
                     </IconsContainer>
                 </InformationContainer>
