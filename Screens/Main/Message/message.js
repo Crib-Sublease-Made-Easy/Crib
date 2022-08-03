@@ -33,12 +33,13 @@ export default function MessageScreen({navigation, route}){
     const [changed, setChanged] = useState(false)
 
     useEffect(()=>{
-        
-            sb.addChannelHandler('channels', channelHandler);
+        console.log("MESSAGEEE")
+        const unsubscribe = navigation.addListener('focus', () => {
+                    console.log("FOCUSSSSSS")
             fetchConvos()
-    
-       
-      
+        });
+        sb.addChannelHandler('channels', channelHandler);
+
     }, [])
 
     const channelHandler = new sb.ChannelHandler();

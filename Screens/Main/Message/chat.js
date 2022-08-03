@@ -45,17 +45,16 @@ export default function ChatScreen({navigation, route}){
     const [propertyInfo, setPropertyInfo] = useState(null)
     const [messages, setMessages] = useState('')
     const [typingText, setTypingText] = useState('')
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     const [optionsModal, setOptionsModal] = useState(false)
 
     const [channel, setChannel] = useState(null)
     useEffect(()=>{
-      console.log("PARAMS",route.params)
+      
       sb.addChannelHandler('channels', channelHandler);
-      console.log("CHAT",JSON.stringify(url))
       getGroupChannel()
-      console.log("CHANNEL", channel)
+      console.log("USE EFFECYT")
     }, [channel])
 
     const channelHandler = new sb.ChannelHandler();
@@ -120,7 +119,8 @@ export default function ChatScreen({navigation, route}){
     }
 
     const getPropertyInfo = async (propId) =>{
-      setLoading(true)
+      console.log("RENDEREDDDDDDDDD")
+      
       await fetch('https://sublease-app.herokuapp.com/properties/' + propId, {
         method: 'GET',
         headers: {
@@ -128,9 +128,23 @@ export default function ChatScreen({navigation, route}){
           'Content-Type': 'application/json',
         }
       }).then(async e => e.json()).then(async (response) => {
-        setPropertyInfo(response)
+        console.log(response.propertyInfo.deleted)
+        
+        if(response.propertyInfo.deleted == true){
+          if(loading == true){
+            alert("This property is unavailable.")
+            channel.leave()
+            navigation.goBack()
+            setLoading(false)
+
+          } else {
+            setLoading(false)
+          }
+        } else {
+          setPropertyInfo(response)
+        }
       })
-      setLoading(false)
+
     }
 
     const loadMore = (listQuery) => {
