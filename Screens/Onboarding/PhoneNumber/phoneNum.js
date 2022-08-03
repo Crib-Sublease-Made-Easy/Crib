@@ -81,7 +81,7 @@ export default function PhoneNumberScreen({navigation, route}){
             }
             else{
                 navigation.reset(
-                    {index: 0 , routes: [{ name: 'otp', 
+                    {index: 0 , routes: [{ name: 'otp', params:{
                     firstName: route.params.firstName, 
                     lastName: route.params.lastName,
                     age: route.params.age,
@@ -92,7 +92,7 @@ export default function PhoneNumberScreen({navigation, route}){
                     email: route.params.email,
                     password: route.params.password,
                     phoneNumber: passedPhoneNumber,
-                    authy_id: id}]}
+                    authy_id: id}}]}
                 )
             }
         })

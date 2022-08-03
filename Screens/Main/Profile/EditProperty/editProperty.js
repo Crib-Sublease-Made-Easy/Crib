@@ -8,7 +8,8 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  Modal
+  Modal,
+  Alert
 } from 'react-native';
 import { User } from 'realm';
 
@@ -121,6 +122,43 @@ export default function EditPropertyScreen({navigation, route}){
         
         
     }   
+
+
+    async function deletePropertyAlert(){
+        Alert.alert(
+            'Are you sure you want to delete this property?',
+            'This action cannot be reveresed.',
+            [
+              {text: 'No', onPress: () => {}, style: 'cancel'},
+              {text: 'Delete', onPress: () => deletePropertyRequest(), style: 'destructive'},
+            ],
+            { 
+              cancelable: true 
+            }
+          );
+    }
+    async function deletePropertyRequest(){
+        const accessToken = await SecureStorage.getItem("refreshToken");
+        fetch('https://sublease-app.herokuapp.com/properties/' + propID, {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
+            }
+        }).then(res => {
+            if(res.status == 200){
+                    navigation.goBack()
+                }
+                else{
+                    alert('Unable to delete this property. Please try again later.')
+                }
+            
+        })
+        .catch((error) => {
+
+        });
+    }   
     
     return(
       
@@ -213,6 +251,10 @@ export default function EditPropertyScreen({navigation, route}){
                 </RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
+            <RowContainer onPress={()=> deletePropertyAlert()}>
+                <RowName>Delete Property</RowName>
+            </RowContainer>
+            
         </ScrollView>
        
         </SafeAreaView>

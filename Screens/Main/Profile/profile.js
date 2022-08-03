@@ -49,7 +49,7 @@ export default function ProfileScreen({navigation}){
     const scrollviewRef = useRef(null)
     const {user, logout} = useContext(UserContext)
     const [tabPressed, setTabPressed] = useState("Posted")
-    const [postedProperties, setPostedProperties] = useState("")
+    const [postedProperties, setPostedProperties] = useState(null)
     const [favoriteProperties, setFavoriteProperties] = useState([])
 
     const translation = useRef(new Animated.Value(0)).current;
@@ -62,6 +62,7 @@ export default function ProfileScreen({navigation}){
  
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
+            console.log("REFRESHHHHHHH")
             getTokens()
         });
         return unsubscribe; 
@@ -97,9 +98,8 @@ export default function ProfileScreen({navigation}){
                 setProfilePic(userData.profilePic)
             }
            
-            if(userData.postedProperties.length != 0){
                 fetchPostedProperties(userData.postedProperties[0], accessToken)
-            }
+            
             if(userData.favoriteProperties !== favoriteProperties){
                 setFavoriteProperties([])
                 userData.favoriteProperties.forEach(propID => {
@@ -125,7 +125,11 @@ export default function ProfileScreen({navigation}){
             }) 
             .then(res => res.json()).then(propertyData =>{
                 console.log("PROPERTYDATA", propertyData)
-                setPostedProperties(propertyData) 
+                if(propertyData.propertiesFound != "No Property found"){
+                    setPostedProperties(propertyData) 
+                } else {
+                    setPostedProperties(null) 
+                }
             })
         
             .catch(e=>{
@@ -224,10 +228,10 @@ export default function ProfileScreen({navigation}){
             <ScrollView ref={scrollviewRef} horizontal snapToAlignment='start' snapToInterval={WIDTH} decelerationRate='fast'
                 style={{width:WIDTH, height:HEIGHT*0.4}} scrollEnabled={false}>
                 <View style={{ width:WIDTH, height:HEIGHT*0.4, justifyContent:'center', alignItems:'center'}}>
-                    {postedProperties != "" ?
+                    {postedProperties != null ?
                         <Pressable onPress={()=>navigation.navigate("PropertyDetail", {data: postedProperties, uid: userData._id})}>
                             <Image key={"defaultPropPic"}
-                            source={{uri: postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
+                            source={{uri: postedProperties == [] ? null : postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
                             <PostedPropertyInfoContainer>
                                 <PropertyName>{postedProperties.propertyInfo.loc.streetAddr} { "," } {postedProperties.propertyInfo.loc.secondaryTxt}</PropertyName>
                                 <DatePriceText>

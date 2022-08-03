@@ -64,9 +64,9 @@ import { Container, HeaderContainer, BackButtonContainer,NameContainer, ResetBut
         BedroomOptionsText, AmenitiesContainer, NameIcon, DateInputPressable, Footer, ResetText, ApplyButton, 
     ApplyText} from './discoverFilterStyle';
 
-export default function DiscoverFilterScreen({navigation, currentLocation, open, close, setFilteredProperties, setPropertyPage, setRetrieveMore,retrieveAllPins
+export default function DiscoverFilterScreen({navigation, currentLocation, open, close, setFilteredProperties, setPropertyPage, setrieverieveMore,retrieveAllPins
     ,filterType, setfilterType, filterDistance, setfilterDistance, filterBedroom, setfilterBedroom,filterBathroom, setfilterBathroom
-    ,filterPriceHigher, setfilterPriceHigher, filterAmenities, setfilterAmenities, propertyAmenities, setpropertyAmenities
+    ,filterPriceHigher, setfilterPriceHigher, filterAmenities, setfilterAmenities, propertyAmenities, setpropertyAmenities, setRetrieveMore
 }){
     const [containerModal, setcontainerModal] = useState(false);
     const [scrollEnabled, setscrollEnabled] = useState(true)
@@ -146,8 +146,12 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
         }) 
         .then(res => res.json()).then(properties =>{
             console.log("filtered properties is:")
+            if(properties.propertiesFound != 'none'){
+                setFilteredProperties([...properties])
+            } else{
+                setFilteredProperties([])
+            }
             console.log(properties)
-            setFilteredProperties([...properties])
             close()
         })
         .catch(e=>{
