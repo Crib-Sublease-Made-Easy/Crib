@@ -29,6 +29,7 @@ import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButto
     DatePriceText } from './editPropertyStyle';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import { set } from 'react-native-reanimated';
 
 export default function EditPropertyScreen({navigation, route}){
 
@@ -37,7 +38,7 @@ export default function EditPropertyScreen({navigation, route}){
             getTokens()
         });
         return unsubscribe; 
-    },[navigation])
+    },[navigation, ])
    
     // console.log(propData)
 
@@ -49,7 +50,7 @@ export default function EditPropertyScreen({navigation, route}){
     const [propDateFrom, setPropDateFrom] = useState('')
     const [propDateTo, setPropDateTo] = useState('')
     const [propDescription, setPropDescription] = useState('')
-    const [propImg, setPropImg] = useState([])
+    const [propImg, setPropImg] = useState(route.params.propertyData.imgList)
     const [propAmen, setPropAmen] = useState('')
     const [headerImage, setHeaderImage] = useState(null)
 
@@ -83,6 +84,7 @@ export default function EditPropertyScreen({navigation, route}){
             setPropAmen(propData.propertyInfo.amenities)
             setPropID(propData.propertyInfo._id)
             setPropImg(propData.propertyInfo.imgList)
+            console.log(propData.propertyInfo.imgList)
 
         })
         .catch(e=>{
@@ -90,7 +92,8 @@ export default function EditPropertyScreen({navigation, route}){
         })
     }
 
-    async function SelectProfilePic(index){
+    async function SelectPropPic(index){
+       
         const accessToken = await SecureStorage.getItem("refreshToken");
         ImagePicker.openPicker({
             width: 300,
@@ -98,19 +101,29 @@ export default function EditPropertyScreen({navigation, route}){
             cropping:true,
             compressImageQuality: 0.3
           }).then(image => {
-           
 
-            setProfilePic(image.path)
-            fetch('https://sublease-app.herokuapp.com/users/' + route.params.userData._id, {
+            const formData = new FormData();
+            var array = image.path.split(".");      
+            formData.append("propertyImage" , {
+                uri: image.path,
+                type: 'image/' + array[1],
+                name: 'someName',
+            }); 
+            formData.append("changeIdx", index);
+           
+           
+            fetch('https://sublease-app.herokuapp.com/properties/propertyImages/' + propID, {
                 method: 'PUT',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + accessToken,
                 },
-                body: JSON.stringify({
-                    profilePic: image.path,
-                })
+                body: formData
+            })
+            .then(res => res.json()).then(data=>{
+                setPropImg([...propImg.slice(0, index),data.propertyImage,...propImg.slice(index + 1),])
+                console.log(data)
             })
             .catch((error) => {
                 if (error.code === 'E_PICKER_CANCELLED') { // here the solution
@@ -150,19 +163,40 @@ export default function EditPropertyScreen({navigation, route}){
             </View>
             <CategoryName>Image Gallery</CategoryName>
             <PropertyPhotoContainer >
-            {propImg.map((value, index)=>(
-                <TouchableOpacity key={"imgList" + value} onPress={() => SelectProfilePic(index)}>
-                    <PhotoContainer >
-                        <Image source={{ uri: value }}
-                            style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
-                        {/* <Text>{propertyphotoGallery[index]}</Text> */}
-                    </PhotoContainer>
-                </TouchableOpacity>
-            ))}
+            
+            <TouchableOpacity key={"imgListChange" + propImg[0]} onPress={() => SelectPropPic(0)}>
+                <PhotoContainer >
+                    <Image source={{ uri: propImg[0] }}
+                        style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
+                    {/* <Text>{propertyphotoGallery[index]}</Text> */}
+                </PhotoContainer>
+            </TouchableOpacity>
+            <TouchableOpacity key={"imgLisChange" + propImg[1]} onPress={() => SelectPropPic(1)}>
+                <PhotoContainer >
+                    <Image source={{ uri: propImg[ 1] }}
+                        style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
+                    {/* <Text>{propertyphotoGallery[index]}</Text> */}
+                </PhotoContainer>
+            </TouchableOpacity>
+            <TouchableOpacity key={"imgListChange" +propImg[2] } onPress={() => SelectPropPic(2)}>
+                <PhotoContainer >
+                    <Image source={{ uri: propImg[2] }}
+                        style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
+                    {/* <Text>{propertyphotoGallery[index]}</Text> */}
+                </PhotoContainer>
+            </TouchableOpacity>
+            <TouchableOpacity key={"imgListChange" + propImg[3]} onPress={() => SelectPropPic(3)}>
+                <PhotoContainer >
+                    <Image source={{ uri: propImg[3] }}
+                        style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
+                    {/* <Text>{propertyphotoGallery[index]}</Text> */}
+                </PhotoContainer>
+            </TouchableOpacity>
+            
             {
                 propImg.length == 4 &&
 
-                <TouchableOpacity key={"imgList" + "floorplan"} onPress={() => SelectProfilePic(4)}>
+                <TouchableOpacity key={"imgList" + "floorplan"} onPress={() => SelectPropPic(4)}>
                     <PhotoContainer >
                        {propFloorplanImage != null ?
                         <Image source={{ uri: propFloorplanImage == null ? null : setPropFloorplanImage  }}

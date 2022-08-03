@@ -45,7 +45,6 @@ export default function PropertyDetailScreen({navigation, route}){
       fetchProperties()
       getTokens()
     }, [])
-   
     const flatListRef = useRef(null)
     const propertyAmenities = (["Furnished", "Pets Allowed", "Able to renew", "On-site waher and dryer"]);
     const [propData, setPropData] = useState(route.params.data.propertyInfo);
@@ -53,7 +52,7 @@ export default function PropertyDetailScreen({navigation, route}){
     const viewabilityConfigCallbackPairs = useRef([
         { onViewableItemsChanged: testFuction },
     ]);
-    const {sb} = useContext(UserContext);
+    const {sb, USERID} = useContext(UserContext);
     const [flatingScrolling, setFlatlistScrolling] = useState(false)
     const [flatlistIndex, setFlatlistIndex] = useState(0)
     const [propAPIData, setPropAPIData] = useState()
@@ -61,9 +60,9 @@ export default function PropertyDetailScreen({navigation, route}){
     const [userDate, setUserData]= useState()
     const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == route.params.uid)
     const createConversation = async () =>{
-
-        console.log("MY Userid", UID)
-        var userIds = [UID, propData.postedBy]
+        
+        console.log("MY Userid", USERID)
+        var userIds = [USERID, propData.postedBy]
         console.log("I log catsssss")
         
         sb.GroupChannel.createChannelWithUserIds(userIds, false, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
@@ -76,7 +75,7 @@ export default function PropertyDetailScreen({navigation, route}){
             //console.log(groupChannel)
             // A group channel with additional information is successfully created.
             var channelUrl = groupChannel.url;
-            navigation.navigate("Chat", {url:channelUrl, id: UID})
+            navigation.navigate("Chat", {url:channelUrl, id: USERID})
             console.log(channelUrl)
         });
 

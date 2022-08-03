@@ -1,5 +1,5 @@
 //Lobby
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, {useState, useEffect, useRef, useContext, useCallback} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -30,23 +30,25 @@ export default function MessageScreen({navigation, route}){
     const [convoList, setConvoList] = useState('')
     const [userId, setUserId] = useState('')
     const [receiverName, setReceiverName] = useState('')
+    const [changed, setChanged] = useState(false)
 
     useEffect(()=>{
-        const unsubscribe = navigation.addListener('focus', () => {
-            // The screen is focused
-            // Call any action
+        
             sb.addChannelHandler('channels', channelHandler);
             fetchConvos()
-        });
-        return unsubscribe
+    
+       
       
     }, [])
 
     const channelHandler = new sb.ChannelHandler();
     channelHandler.onChannelChanged = channel => {
+        console.log("rEFRESH")
+
         fetchConvos()
       };
-    const fetchConvos = async() => {
+    const fetchConvos = useCallback(async() => {
+        console.log("rEFRESH")
         const UID = await SecureStorage.getItem("userId");
         setUserId(UID)
         var listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
@@ -63,7 +65,7 @@ export default function MessageScreen({navigation, route}){
                 setConvoList(groupChannels)
                 // A list of group channels is successfully retrieved.
                 // console.log(groupChannels)
-                console.log("new console list")
+                // console.log("new console list")
                 groupChannels.forEach(channel => {
                     // console.log(channel)
                     // console.log("===============")
@@ -71,11 +73,11 @@ export default function MessageScreen({navigation, route}){
                    
                   
                 });
-                console.log("After")
+                // console.log("After")
         
             });
         }
-    }
+    },[])
 
     //navigation.navigate("PAGENAME",{userData: userData})
 

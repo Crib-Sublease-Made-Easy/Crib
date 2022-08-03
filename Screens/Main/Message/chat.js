@@ -19,6 +19,8 @@ import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from '
 import {GiftedChat, Actions, Bubble , InputToolbar, Send} from 'react-native-gifted-chat';
 import { ifIphoneX , getBottomSpace} from 'react-native-iphone-x-helper'
 
+import PropertyOptionsModal from './PropertyOptions';
+
 const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
 
@@ -44,6 +46,8 @@ export default function ChatScreen({navigation, route}){
     const [messages, setMessages] = useState('')
     const [typingText, setTypingText] = useState('')
     const [loading, setLoading] = useState(false)
+
+    const [optionsModal, setOptionsModal] = useState(false)
 
     const [channel, setChannel] = useState(null)
     useEffect(()=>{
@@ -214,10 +218,12 @@ export default function ChatScreen({navigation, route}){
           }
           {channel != null ?
           <ChatImageSettingContainer>
-              <Pressable disabled={loading} style={{alignItems:'center'}} onPress={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}>
+              {/* <Pressable disabled={loading} style={{alignItems:'center'}} >
                 <Image source={{uri:channel.coverUrl}} style={{height:HEIGHT*0.035, width:HEIGHT*0.035, borderRadius:HEIGHT*0.025/2, backgroundColor:'grey'}}/>
+              </Pressable> */}
+              <Pressable onPress={()=> setOptionsModal(true)}>
+                <Ionicons name="ellipsis-horizontal" size={25} />
               </Pressable>
-              <Ionicons name="ellipsis-vertical" size={25} />
           </ChatImageSettingContainer>
           : null}
           
@@ -257,7 +263,7 @@ export default function ChatScreen({navigation, route}){
         _id: id
       }}
     />
-    
+    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
     </SafeAreaView>
     )
 }

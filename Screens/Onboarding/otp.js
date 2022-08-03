@@ -37,19 +37,19 @@ import Modal from "react-native-modal";
 
 export default function OTPScreen({navigation, route}){
 
-    const {user, login} = useContext(UserContext);
+    const {user, login, sb} = useContext(UserContext);
     const [phoneNumber, setphoneNumber] = useState('')
     const [code, setCode] = useState('')
     const [pinReady, setpinReady] = useState(false)
-    const [authyID, setauthyID] = useState(route.authy_id)
+    const [authyID, setauthyID] = useState(route.params.authy_id)
     const [smsErrorModal, setSMSErrorModal] = useState(false)
     const [laoding, setLoading] = useState(false)
 
-    console.log(route.authy_id)
+    console.log(route.params.authy_id)
     const MAX_CODE_LENGTH = 6;
 
     useEffect(()=> {
-        setauthyID(route.authy_id)
+        setauthyID(route.params.authy_id)
         if(code.length == 6){
             signupStep3();
         }
@@ -61,21 +61,21 @@ export default function OTPScreen({navigation, route}){
 
         const formData = new FormData();
 
-        formData.append("firstName", route.firstName);                     
-        formData.append("lastName", route.lastName);  
-        formData.append("dob", route.age);      
-        formData.append("gender", route.gender);
-        formData.append("phoneNumber", route.phoneNumber);                       
-        formData.append("occupation", route.occupation)
-        formData.append("school", route.school);                       
-        formData.append("email", route.email);      
+        formData.append("firstName", route.params.firstName);                     
+        formData.append("lastName", route.params.lastName);  
+        formData.append("dob", route.params.age);      
+        formData.append("gender", route.params.gender);
+        formData.append("phoneNumber", route.params.phoneNumber);                       
+        formData.append("occupation", route.params.occupation)
+        formData.append("school", route.params.school);                       
+        formData.append("email", route.params.email);      
         formData.append("token", code);      
-        formData.append("authy_id", route.authy_id);      
+        formData.append("authy_id", route.params.authy_id);      
 
  
-        var array = route.profilePic.split(".");
+        var array = route.params.profilePic.split(".");
         formData.append("userImage", {
-            uri: route.profilePic,
+            uri: route.params.profilePic,
             type: 'image/' + array[1],
             name: 'someName',
         });
@@ -83,7 +83,7 @@ export default function OTPScreen({navigation, route}){
         console.log("TOKEN")
         console.log(code);
         console.log("AuthyID")
-        console.log(route.authy_id);
+        console.log(route.params.authy_id);
         fetch('https://sublease-app.herokuapp.com/users/OTP/step3', {
             method: 'POST',
             headers: {
@@ -136,10 +136,10 @@ export default function OTPScreen({navigation, route}){
                 //store user info in
 
                 await SecureStorage.setItem("accessToken", data.token.accessToken)
-                await SecureStorage.setItem("profilePic", data.loggedIn.profilePic)
-                await SecureStorage.setItem("userId", data.loggedIn._id)
-                await SecureStorage.setItem("firstName", data.loggedIn.firstName)
-                await SecureStorage.setItem("firstName", data.loggedIn.lastName)
+                await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
+                await SecureStorage.setItem("userId", data.createdUser._id)
+                await SecureStorage.setItem("firstName", data.createdUser.firstName)
+                await SecureStorage.setItem("firstName", data.createdUser.lastName)
                 await SecureStorage.setItem("refreshToken", data.token.refreshToken)
                 console.log("got")
                 setTimeout(()=>{setLoading(false)},2000)
@@ -151,14 +151,15 @@ export default function OTPScreen({navigation, route}){
     function backToPhoneNumber(){
         navigation.reset(
             {index: 0 , routes: [{ name: 'PhoneNumber', 
-            firstName: route.firstName, 
-            lastName: route.lastName,
-            age: route.age,
-            gender: route.gender,
-            profilePic: route.profilePic,
-            school: route.school,
-            email: route.email,
-            password: route.password, }]}
+            params: {
+            firstName: route.params.firstName, 
+            lastName: route.params.lastName,
+            age: route.params.age,
+            gender: route.params.gender,
+            profilePic: route.params.profilePic,
+            school: route.params.school,
+            email: route.params.email,
+            password: route.params.password, }}]}
             
         )
     }
@@ -172,7 +173,7 @@ export default function OTPScreen({navigation, route}){
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                authy_id: route.authy_id
+                authy_id: route.params.authy_id
             })
         })
         .then(res => res.json()).then(data =>{
@@ -222,7 +223,7 @@ export default function OTPScreen({navigation, route}){
                         Is this number correct?
                     </ModalHeaderText>
                     <UserNumberText>
-                        +1 ({route.phoneNumber.slice(0, 3)})-{route.phoneNumber.slice(3,6)}-{route.phoneNumber.slice(6, 10)}
+                        +1 ({route.params.phoneNumber.slice(0, 3)})-{route.params.phoneNumber.slice(3,6)}-{route.params.phoneNumber.slice(6, 10)}
                     </UserNumberText>
                     <ModalOptionContainer>
                         <ModalOption onPress={()=> {setSMSErrorModal(false), backToPhoneNumber()}}>
