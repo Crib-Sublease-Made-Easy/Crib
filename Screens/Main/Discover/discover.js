@@ -107,6 +107,8 @@ export default function DiscoverScreen({navigation, route}){
 
     const [loading, setLoading] = useState(false)
     const [userId, setUserId] = useState(null)
+    const [filterApplied, setFilterApplied] = useState(false)
+
     useEffect(()=>{
         
             console.log("REFRESHHHHHHH")
@@ -593,9 +595,15 @@ export default function DiscoverScreen({navigation, route}){
                             <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />
                         </DeleteIconContainer>
                         <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
-                            <View style={{borderWidth:1, padding: 7, borderRadius: 50, borderColor: '#D3D3D3', }}>
+                            {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) ?
+                            <View style={{borderWidth:2, padding: 7, borderRadius: 50, borderColor: '#8559E3' }}>
                             <Ionicons name="options-sharp" size={20} />
                             </View>
+                            :
+                            <View style={{borderWidth:1, padding: 7, borderRadius: 50, borderColor: '#D3D3D3'}}>
+                            <Ionicons name="options-sharp" size={20} />
+                            </View>                        
+                            }
                         </DeleteIconContainer> 
 
                     </SearchInputCancelIconContainer>
