@@ -310,13 +310,13 @@ export default function PropertyPostingScreen({ navigation }) {
 
         postingData.append("price", propertyPrice.split("$")[1]);                     //String 
         postingData.append("description", propertyDescription);         //String 
-        postingData.append("availableFrom", propertydateFrom.toString());          //String
-        postingData.append("availableTo", propertydateTo.toString());              //String
+        postingData.append("availableFrom", propertydateFrom);          //String
+        postingData.append("availableTo", propertydateTo);              //String
         postingData.append("bed", propertyNumBed);                      //String
         postingData.append("bath", propertyNumBath);                    //String 
         postingData.append("title", "Name");                    //String
         // postingData.append("propertyAmenities", propertyAmenities);     //Array of String 
-        postingData.append("timePosted", new Date().toString())
+        postingData.append("timePosted", new Date())
         propertyAmenities.forEach(element => {
             postingData.append("amenities", element);
         });
