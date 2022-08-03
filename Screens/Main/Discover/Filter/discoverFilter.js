@@ -51,6 +51,9 @@ Ionicons.loadFont()
 
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
+import Slider from '@react-native-community/slider';
+
+
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
@@ -66,7 +69,8 @@ import { Container, HeaderContainer, BackButtonContainer,NameContainer, ResetBut
 
 export default function DiscoverFilterScreen({navigation, currentLocation, open, close, setFilteredProperties, setPropertyPage, setrieverieveMore,retrieveAllPins
     ,filterType, setfilterType, filterDistance, setfilterDistance, filterBedroom, setfilterBedroom,filterBathroom, setfilterBathroom
-    ,filterPriceHigher, setfilterPriceHigher, filterAmenities, setfilterAmenities, propertyAmenities, setpropertyAmenities, setRetrieveMore
+    ,filterPriceHigher, setfilterPriceHigher, filterAmenities, setfilterAmenities, propertyAmenities, setpropertyAmenities, setRetrieveMore,
+    filterPreviewValue, setfilterPreviewValue, filterPreviewDistanceValue, setfilterPreviewDistanceValue
 }){
     const [containerModal, setcontainerModal] = useState(false);
     const [scrollEnabled, setscrollEnabled] = useState(true)
@@ -78,6 +82,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     const [propertydateTo, setpropertydateTo] = useState(new Date(1759176355615))
     const [openFrom, setOpenFrom] = useState(false)
     const [openTo, setOpenTo] = useState(false)
+
     
 
     function updateAmenities(name) {
@@ -131,6 +136,8 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     for(let amen of filterAmenities){
         s = s + "&" + amen + "=true";
     }
+    s = s +`$availableFrom=${propertydateFrom.getTime()}`
+    s = s +`$availableTo=${propertydateTo.getTime()}`
     s = s + `&latitude=${currentLocation[0]}`
     s = s + `&longitude=${currentLocation[1]}`
     s = s + `&priceHigh=${filterPriceHigher}`
@@ -209,22 +216,22 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                 <InputName>Max Budget</InputName>
                         </InputNameContainer>
                         <InputPriceRangeContainer>
-                                <PriceRangeText>${filterPriceHigher} / month</PriceRangeText>
+                                <PriceRangeText>${filterPreviewValue} / month</PriceRangeText>
                         </InputPriceRangeContainer>
                     </InputSection>
                     <View style={{alignItems:'center'}}>
-                    <MultiSlider
+                    {/* <MultiSlider
                     isMarkersSeparated={true}
                     enabledTwo={false}
                     values={[filterPriceHigher]}
-                    onValuesChangeStart={()=> setscrollEnabled(false)}
-                    onValuesChangeFinish={()=> setscrollEnabled(true)}
-                    onValuesChange={(value)=> setfilterPriceHigher(value)}
+                    onValueChangeStart={()=> setscrollEnabled(false)}
+                    onValueChangeFinish={()=> setscrollEnabled(true)}
+                    onValueChange={(value)=> setfilterPriceHigher(value)}
                     min={0}
                     max={10000}
                     
                     step={10}
-                    enabledOne={true}
+                    
                     
                     selectedStyle={{
                         backgroundColor: PRIMARYCOLOR
@@ -235,6 +242,19 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                     }}
                     sliderLength={WIDTH*0.8}
                 
+                    /> */}
+                    <Slider
+                        style={{width: WIDTH*0.8, height: HEIGHT*0.1}}
+                        value={filterPriceHigher}
+                        onValueChange={(value)=> setfilterPreviewValue(value)}
+                        onValuesChangeStart={()=> setscrollEnabled(false)}
+                        onValuesChangeFinish={()=> setscrollEnabled(true)}
+                        onSlidingComplete={(value)=> setfilterPriceHigher(value)}
+                        minimumValue={0}
+                        maximumValue={10000}
+                        step={100}
+                        minimumTrackTintColor={PRIMARYCOLOR}
+                        maximumTrackTintColor={MEDIUMGREY}
                     />
                     </View>
                 </PriceInputSection>
@@ -310,11 +330,11 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                 <InputName>Max Distance</InputName>
                         </InputNameContainer>
                         <InputPriceRangeContainer>
-                                <PriceRangeText>{filterDistance} miles</PriceRangeText>
+                                <PriceRangeText>{filterPreviewDistanceValue} miles</PriceRangeText>
                         </InputPriceRangeContainer>
                     </InputSection>
                     <View style={{alignItems:'center'}}>
-                    <MultiSlider
+                    {/* <MultiSlider
                     isMarkersSeparated={true}
                     enabledTwo={false}
                     values={[filterDistance]}
@@ -336,6 +356,19 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                     }}
                     sliderLength={WIDTH*0.8}
                 
+                    /> */}
+                    <Slider
+                        style={{width: WIDTH*0.8, height: HEIGHT*0.1}}
+                        value={filterPreviewDistanceValue}
+                        onValueChange={(value)=> setfilterPreviewDistanceValue(value)}
+                        onValuesChangeStart={()=> setscrollEnabled(false)}
+                        onValuesChangeFinish={()=> setscrollEnabled(true)}
+                        onSlidingComplete={(value)=> setfilterDistance(value)}
+                        minimumValue={0}
+                        maximumValue={150}
+                        step={5}
+                        minimumTrackTintColor={PRIMARYCOLOR}
+                        maximumTrackTintColor={MEDIUMGREY}
                     />
                     </View>
                 </PriceInputSection>

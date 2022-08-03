@@ -98,6 +98,8 @@ export default function DiscoverScreen({navigation, route}){
     const [filterBathroom, setfilterBathroom] = useState("");
     const [filterPriceLower, setfilterPriceLower] = useState(0);
     const [filterPriceHigher, setfilterPriceHigher] = useState(10000);
+    const [filterPreviewValue, setfilterPreviewValue] = useState(10000)
+    const [filterPreviewDistanceValue, setfilterPreviewDistanceValue] = useState(150)
     const [filterAmenities, setfilterAmenities] = useState([])
 
     const [loading, setLoading] = useState(false)
@@ -619,7 +621,8 @@ export default function DiscoverScreen({navigation, route}){
         setfilterDistance={setfilterDistance} filterBedroom={filterBedroom} setfilterBedroom={setfilterBedroom} filterBathroom={filterBathroom}
         setfilterBathroom={setfilterBathroom} filterPriceLower={filterPriceLower} setfilterPriceLower={setfilterPriceLower}
         filterPriceHigher={filterPriceHigher} setfilterPriceHigher={setfilterPriceHigher} filterAmenities={filterAmenities}
-        setfilterAmenities={setfilterAmenities}
+        setfilterAmenities={setfilterAmenities} filterPreviewValue={filterPreviewValue} setfilterPreviewValue={setfilterPreviewValue}
+        filterPreviewDistanceValue={filterPreviewDistanceValue} setfilterPreviewDistanceValue={setfilterPreviewDistanceValue}
         />
         
         </GestureHandlerRootView>
