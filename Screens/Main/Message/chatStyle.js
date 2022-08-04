@@ -8,9 +8,9 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, EXTRALIGHT, MEDIUMGREY, DARKGRE
 const PRIMARYGREY = '#5e5d5d'
 
 export const MessageContainer = styled.View`
+    
     width: ${WIDTH*0.9}px;
-    align-self:center
-    margin-top: ${HEIGHT*0.01}px
+    margin-left: ${WIDTH*0.05}px
     flex-direction:row
     justify-content: space-between
     align-items: center
@@ -20,11 +20,14 @@ export const MessageContainer = styled.View`
     padding-right: ${WIDTH*0.01}px
     border-width: 1px;
     border-color: ${LIGHTGREY}
+    padding-vertical:${HEIGHT*0.005}px
     
 `
 export const MessageInput = styled.TextInput`
     width: ${WIDTH*0.7}px;
-    height: ${HEIGHT*0.055}px;   
+   
+    
+    max-height: ${HEIGHT*0.08}px;
 `
 
 export const SendButton = styled.Pressable`

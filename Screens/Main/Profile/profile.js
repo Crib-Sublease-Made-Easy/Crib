@@ -48,7 +48,8 @@ import { EXTRALIGHT, LIGHTGREY } from '../../../sharedUtils';
 import { FlatList } from 'react-native-gesture-handler';
 export default function ProfileScreen({navigation}){
     const scrollviewRef = useRef(null)
-    const {user, logout} = useContext(UserContext)
+    const {USERID} = useContext(UserContext);
+
     const [tabPressed, setTabPressed] = useState("Posted")
     const [postedProperties, setPostedProperties] = useState(null)
     const [favoriteProperties, setFavoriteProperties] = useState([])
@@ -92,17 +93,15 @@ export default function ProfileScreen({navigation}){
 
 
     async function getTokens(){
-        console.log("In getTokens Function")
         const accessToken = await SecureStorage.getItem("accessToken");
-        const UID = await SecureStorage.getItem("userId");
-        console.log("ACCESSTOKEN")
         let cachedProfilePic = await SecureStorage.getItem("profilePic");
+        console.log(USERID)
         if(cachedProfilePic != null){
-            console.log("LOADING -- Profile Pic from cache data")
+            console.log("CACHE RETRIEVE -- ProdilePic")
             setProfilePic(cachedProfilePic)
         }
 
-        fetch('https://sublease-app.herokuapp.com/users/' + UID, {
+        fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
         method: 'GET',
         headers: {
         Accept: 'application/json',
@@ -111,19 +110,20 @@ export default function ProfileScreen({navigation}){
         }
         }) 
         .then(res => res.json()).then(async userData =>{
-            console.log("USERDATA" , userData)
             setUserData(userData)
             //Load API data if the cached profile pic is null
             let cachedProfilePic = await SecureStorage.getItem("profilePic");
             if(cachedProfilePic == null){
-                console.log("LOADING -- Profile Pic from API data")
+                console.log("CACHE SET -- ProdilePic")
                 await SecureStorage.setItem("profilePic", userData.profilePic);
                 setProfilePic(userData.profilePic)
             }
-           
+                
                 fetchPostedProperties(userData.postedProperties[0], accessToken)
-            
-            if(userData.favoriteProperties !== favoriteProperties){
+                // console.log("FAV PROP", favoriteProperties)
+                // console.log("FAV PROP FETCH", userData.favoriteProperties)
+
+            if(userData.favoriteProperties != favoriteProperties){
                 setFavoriteProperties([])
                 userData.favoriteProperties.forEach(propID => {
                     fetchFavoriteProperties(propID, accessToken)
@@ -138,6 +138,7 @@ export default function ProfileScreen({navigation}){
 
 
     async function fetchPostedProperties(id, token){
+        const postedID = await SecureStorage.getItem("postedProperty")
         await fetch('https://sublease-app.herokuapp.com/properties/' + id, {
             method: 'GET',
             headers: {
@@ -146,13 +147,26 @@ export default function ProfileScreen({navigation}){
             'Authorization': 'Bearer ' + token,
             }
             }) 
-            .then(res => res.json()).then(propertyData =>{
-                console.log("PROPERTYDATA", propertyData)
-                if(propertyData.propertiesFound != "No Property found"){
-                    setPostedProperties(propertyData) 
-                } else {
+            .then(res => res.json()).then(async propertyData =>{
+                
+                if(propertyData.propertiesFound != "No Property found" ){
+                    
+                    if(propertyData.propertyInfo._id != postedID){
+                        
+                        console.log("UPDATE")
+                        console.log(propertyData.propertyInfo._id)
+                        console.log(postedID)
+                        
+                        setPostedProperties(propertyData) 
+                        await SecureStorage.setItem("postedProperty", propertyData.propertyInfo._id)
+                    }
+                }
+                else {
                     setPostedProperties(null) 
                 }
+                // console.log("POSTED PROP FETCH",propertyData)
+                // console.log("POSTED PROP", postedProperties)
+                
             })
         
             .catch(e=>{
@@ -171,13 +185,13 @@ export default function ProfileScreen({navigation}){
             }) 
             .then(res => res.json()).then(propertyData =>{
                 // console.log("propertyData")
-               
+             
                 setFavoriteProperties(prev => [...prev, propertyData]) 
             })
             .catch(e=>{
                 alert(e)
         })
-    }, [profilePic])
+    }, [])
 
 
     function PressPosted(){
@@ -217,7 +231,7 @@ export default function ProfileScreen({navigation}){
                         <NameText>{userData.firstName} {""} {userData.lastName}</NameText>
                     </View>
                     <IconsContainer>
-                        <IconContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
+                        <IconContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData, setProfilePic:setProfilePic})}>
                             <Ionicons name="create"  size={25}/>
                         </IconContainer>
                         {/* <IconContainer onPress={()=> navigation.reset({index: 0 , routes: [{ name: 'PropertyPosting'}]} )}> */}

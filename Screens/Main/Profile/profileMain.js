@@ -36,6 +36,7 @@ export default function ProfileTab(){
 
     <Tab.Navigator 
         screenOptions={({ route }) => ({
+          lazy: false,
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 

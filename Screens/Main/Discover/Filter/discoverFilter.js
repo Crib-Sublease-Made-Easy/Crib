@@ -103,6 +103,8 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
         setfilterPriceHigher(10000)
         setfilterAvailableFrom(new Date())
         setfilterAvailableTo(new Date(1759176355615))
+        setfilterPreviewDistanceValue(150)
+        setfilterPreviewValue(10000)
         setfilterAmenities([])
         setfilterBathroom("")
         setfilterBedroom("")
@@ -269,11 +271,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                         <InputName>Available To</InputName>
                     </InputNameContainer>
                     <DateInputPressable onPress={()=>setOpenTo(true)}>
-                    {filterAvailableTo.getTime() < 1759176355615 ?
                         <PropertyTypeName>{filterAvailableTo.toDateString()}</PropertyTypeName>
-                    :
-                    null
-                    }
                     </DateInputPressable>
                     <DatePicker
                         

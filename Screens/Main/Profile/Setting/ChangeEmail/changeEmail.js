@@ -7,12 +7,13 @@ import {
   View
 } from 'react-native';
 import { User } from 'realm';
-import { UserContext } from '../../../UserContext';
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../../sharedUtils'
+
+import { UserContext } from '../../../../../UserContext';
 
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer, ContainsSpace } from '../../../../../sharedUtils';
 
@@ -23,6 +24,7 @@ Ionicons.loadFont()
 export default function ChangeEmailScreen({navigation, route}){
 
     const [email, setEmail] = useState('')
+    const {USERID} = useContext(UserContext);
 
     async function update(){
         let stringAfterAt = email.indexOf("@") == -1 ? undefined : email.substring(email.indexOf("@"));
@@ -47,7 +49,7 @@ export default function ChangeEmailScreen({navigation, route}){
         else{
             console.log(route.params.propID)
             const accessToken = await SecureStorage.getItem("refreshToken");
-            fetch('https://sublease-app.herokuapp.com/users/' + route.params.uid, {
+            fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
                 method: 'PUT',
                 headers: {
                     Accept: 'application/json',

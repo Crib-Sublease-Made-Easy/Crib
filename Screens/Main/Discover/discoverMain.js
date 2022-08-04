@@ -35,7 +35,9 @@ export default function DiscoverTab(){
     return(
 
     <Tab.Navigator 
+        
         screenOptions={({ route }) => ({
+          lazy: false,
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 

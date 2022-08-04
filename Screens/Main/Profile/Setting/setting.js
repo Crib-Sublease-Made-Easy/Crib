@@ -111,9 +111,9 @@ export default function SettingScreen({navigation}){
             </RowContainer>
             <RowContainer>
               <RowName>Email</RowName>
-              <RowValueContainer >
+              <RowValueContainer onPress={()=>navigation.navigate("ChangeEmail", {email: userData.email})}>
                 <RowValueText>{userData.email}</RowValueText>
-                {/* <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/> */}
+                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
               </RowValueContainer>
             </RowContainer>
 

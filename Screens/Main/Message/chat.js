@@ -251,25 +251,23 @@ export default function ChatScreen({navigation, route}){
       
       ref={GiftedChatRef}
       bottomOffset={getBottomSpace()}
-      renderInputToolbar = {(props)=>(
-       
-          <MessageContainer>
-            <MessageInput value={typingText} onChangeText={(value)=> setTypingText(value)} placeholder="Enter a message ..." />
+     
+      
+     
+
+      renderInputToolbar={(props)=>(
+        <MessageContainer>
+            <MessageInput multiline value={typingText} onChangeText={(value)=> setTypingText(value)} placeholder="Enter a message ..." />
            
             <TouchableOpacity onPress={()=> typingText != "" && props.onSend({text: typingText} )}>
               <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
             </TouchableOpacity>
             
-          </MessageContainer>
-       
+        </MessageContainer>
       )}
-        // renderSend = {(props)=>(
-        //   <TouchableOpacity onPress={()=> props.onSend({text: "Hello"})}>
-        //     <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
-        //   </TouchableOpacity>
-        // )}
-     
       
+        
+      onInputTextChanged={()=>{console.log("hello")}}
       
       messages={messages}
       onSend={messages => onSend(messages)}
