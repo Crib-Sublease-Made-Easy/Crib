@@ -34,6 +34,7 @@ export default function ProfileEditScreen({navigation, route}){
     const [userAPIData, setUserAPIData] = useState('')
     const [profilePic, setProfilePic] = useState(route.params.userData.profilePic)
     const [education, setEducation] = useState(route.params.userData.school)
+    const [initialLoad, setInitialLoad] = useState(false)
    
     const userAge = Math.floor(route.params.userData.dob/(1000*60*60*24*365))
    

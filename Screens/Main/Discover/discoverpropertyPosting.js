@@ -20,6 +20,9 @@ import {
     TouchableOpacity
 } from 'react-native';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 //Icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
@@ -332,8 +335,9 @@ export default function PropertyPostingScreen({ navigation }) {
             },
             body: postingData,
         })
-            .then((response) => response.json()).then(data => {
+            .then((response) => response.json()).then( async data => {
                 console.log("RESPONSE", data)
+                await SecureStorage.setItem("postedProperty", "new")
                 setTimeout(()=>{
                     navigation.goBack()
                     setLoading(false)

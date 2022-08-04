@@ -41,9 +41,8 @@ export const Container = styled.View`
 
 export const NameText = styled.Text`
     font-size: ${HEIGHT*0.03}px;
-    
+    width: ${WIDTH*0.9}px
     font-weight: 500;
-    
     text-align:center
     
 `
@@ -72,6 +71,7 @@ export const SlidingContainer = styled.View`
     flex-direction: row;
     justify-content: space-around
     align-items: center
+    
 `
 
 export const PostContainer = styled.Pressable`
@@ -129,10 +129,10 @@ export const DatePriceText = styled.Text`
 `
 
 export const InformationContainer = styled.View`
-  width: ${WIDTH*0.8}px;
+  width: ${WIDTH*0.9}px;
   justify-content: space-between
   align-items: center
- 
+  max-height: ${HEIGHT*0.15}px
   margin-top:${HEIGHT*0.015}px
 
 `
@@ -141,14 +141,19 @@ export const IconContainer = styled.Pressable`
   height: ${WIDTH*0.1}px
   width: ${WIDTH*0.1}px
   margin-top: ${HEIGHT*0.025}px
-  border-radius: ${WIDTH*0.05}px
-  background-color: rgba(217,217,217,0.5)
+  border-radius:10px
+  background-color: white
   justify-content: center;
   align-items: center
+  shadow-offset: 0 0px
+  shadow-color: ${DARKGREY};
+  shadow-radius: 10px;
+  shadow-opacity: 0.4;
+  elevation: 10
 `
 
 export const IconsContainer = styled.View`
-  width: ${WIDTH*0.6}px
+  width: ${WIDTH*0.7}px
   justify-content: space-around;
   align-items: center
   flex-direction: row
