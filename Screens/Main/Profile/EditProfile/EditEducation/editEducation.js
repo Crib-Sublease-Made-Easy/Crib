@@ -63,7 +63,7 @@ export default function EditEducationScreen({navigation, route}){
                 </NameContainer>
                 <ResetButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
-                        <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
+                        <Ionicons name='checkmark' size={25} style={{paddingHorizontal:WIDTH*0.02}} color='black'/>
                     </Pressable>
                 </ResetButtonContainer>
             </HeaderContainer>

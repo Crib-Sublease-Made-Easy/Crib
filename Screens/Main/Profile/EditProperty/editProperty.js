@@ -24,13 +24,14 @@ FontAwesome.loadFont()
 
 import ImagePicker from 'react-native-image-crop-picker';
 
+
 import PropTypesScreen from './EditPropTypeModal/propertyTypeModal';
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     HeaderImageContainer, PropertyPhotoContainer, PhotoContainer, RowContainer, RowName, CategoryName,
     DatePriceText, DeleteContainer,DeleteText } from './editPropertyStyle';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useSafeAreaFrame } from 'react-native-safe-area-context';
-import { set } from 'react-native-reanimated';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function EditPropertyScreen({navigation, route}){
 
@@ -60,6 +61,7 @@ export default function EditPropertyScreen({navigation, route}){
 
 
     async function getTokens(){
+        console.log("refresh")
         const accessToken = await SecureStorage.getItem("refreshToken");
         const UID = await SecureStorage.getItem("userId");
 
@@ -85,7 +87,7 @@ export default function EditPropertyScreen({navigation, route}){
             setPropAmen(propData.propertyInfo.amenities)
             setPropID(propData.propertyInfo._id)
             setPropImg(propData.propertyInfo.imgList)
-            console.log(propData.propertyInfo.imgList)
+            //console.log(propData.propertyInfo.imgList)
 
         })
         .catch(e=>{
@@ -122,8 +124,9 @@ export default function EditPropertyScreen({navigation, route}){
                 },
                 body: formData
             })
-            .then(res => res.json()).then(data=>{
+            .then(res => res.json()).then(async data=>{
                 setPropImg([...propImg.slice(0, index),data.propertyImage,...propImg.slice(index + 1),])
+                await AsyncStorage.removeItem('postedProperty')
                 console.log(data)
             })
             .catch((error) => {
@@ -161,6 +164,7 @@ export default function EditPropertyScreen({navigation, route}){
             }
         }).then(res => {
             if(res.status == 200){
+
                     navigation.goBack()
                 }
                 else{

@@ -40,7 +40,7 @@ import { Header,Container, NameText, OccupationText,EditProfilePressable,Sliding
     PostContainer, FavContainer, PostedText, FavText,  DefaultPostFavText, PostedPropertyInfoContainer,
     PropertyName, DatePriceText, InformationContainer, IconContainer, IconsContainer,PriceEditContainer,
     EditPropertyPressable, EditText, FavPropertyCard, FavPropertyCardName, FavPropertyCardContent,
-    FavPropertyCardDateText, FavPropertyCardDateContainer
+    FavPropertyCardDateText, FavPropertyCardDateContainer, PostedPropertyCard
  } from './profileStyle';
 import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, MEDIUMGREY, DARKGREY } from '../../../sharedUtils';
 export default function ProfileScreen({navigation}){
@@ -101,7 +101,7 @@ export default function ProfileScreen({navigation}){
         .then(res => res.json()).then(async userData =>{
             setUserData(userData)
             //Load API data if the cached profile pic is null
-            let cachedProfilePic = await SecureStorage.getItem("profilePic");
+            let cachedProfilePic = await AsyncStorage.getItem("profilePic");
             if(profilePic == null){
                 if(cachedProfilePic != null && cachedProfilePic == userData.profilePic ){
                     console.log("UPDATE --- CACHE --- profilePic")
@@ -113,15 +113,28 @@ export default function ProfileScreen({navigation}){
                     await SecureStorage.setItem("profilePic", userData.profilePic);
                 }
             }
-    
-            fetchPostedProperties(userData.postedProperties[0], accessToken)
-
-            if(userData.favoriteProperties != favoriteProperties){
+            let cachedFavoriteProperties = await AsyncStorage.getItem("favoriteProperties")
+            let cachedFavoritePropertiesId = await AsyncStorage.getItem("favoritePropertiesId")
+          
+            let compare = new Object(JSON.parse(cachedFavoritePropertiesId)).toString() == userData.favoriteProperties;
+            if(cachedFavoriteProperties == null || !compare){
+                console.log("UPDATE --- API --- favoriteProperties")
                 setFavoriteProperties([])
                 userData.favoriteProperties.forEach(propID => {
                     fetchFavoriteProperties(propID, accessToken)
                 });
-            } 
+                await AsyncStorage.setItem('favoriteProperties', JSON.stringify(favoriteProperties))
+                await AsyncStorage.setItem('favoritePropertiesId', JSON.stringify(userData.favoriteProperties))
+                
+            }
+            else{
+                console.log("UPDATE --- CACHE --- favoriteProperties")
+                setFavoriteProperties(JSON.parse(cachedFavoriteProperties))
+            }
+
+            fetchPostedProperties(userData.postedProperties[0], accessToken)
+
+           
         })
         .catch(e=>{
             alert(e)
@@ -143,44 +156,38 @@ export default function ProfileScreen({navigation}){
             .then(res => res.json()).then(async propertyData =>{
                 if(propertyData.propertiesFound != "No Property found" ){
                     
-                    try {
+                      
+                        console.log("happy")
                         const tempPropData = await AsyncStorage.getItem('postedProperty')
-                        if(tempPropData == null) {
+                        console.log(tempPropData)
+                        console.log(propertyData)
+
+                        let compare = (new Object(JSON.parse(tempPropData)).toString() == propertyData)
+                        console.log(compare)
+                        await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
+                        if(!compare || tempPropData == null) {
                             console.log("UPDATE --- API --- POSTED PROPERTY")
-                            try{
-                                await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
-                                setPostedProperties(propertyData)
-                            }
-                            catch{
-                                console.log("SETTING ASYNCSTORAGE ERRER IN FETCH POSTED PROPERTY")
-                            }
+                            
+                            await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
+                            setPostedProperties(propertyData)
+                        
+                            console.log("SETTING ASYNCSTORAGE ERRER IN FETCH POSTED PROPERTY")
+                            
                         }
                         else{
                             console.log("UPDATE --- CACHE --- POSTED PROPERTY")
                             setPostedProperties(JSON.parse((tempPropData)))
                         }
-                        } catch(e) {
-                        // error reading value
-                    }
-                    // if(propertyData.propertyInfo._id != cachedPostedPropertyId || postedProperties == null){
-                    //     if(propertyData.propertyInfo._id != cachedPostedPropertyId){
-                    //         console.log("UPDATE --- API --- POSTED PROPERTY")
-                    //         setPostedProperties(propertyData) 
-                    //         await SecureStorage.setItem("postedProperty", propertyData.propertyInfo._id)
-                    //     }
-                    //     else{
-                    //         console.log("UPDATE --- CACHE --- POSTED PROPERTY")
-                    //         setPostedProperties(cachedPostedProperty) 
-                    //     }
-                    // }
+                       
+                    
                 }
-                // else {
-                //     setPostedProperties(null) 
-                // }
-               
+                else{
+                    console.log("REMOVE--- CACHE --- POSTED PROPERTY")
+                    await AsyncStorage.removeItem('postedProperty')
+                    setPostedProperties(null)
+                }
+
                 
-                // console.log("POSTED PROP FETCH",propertyData)
-                // console.log("POSTED PROP", postedProperties)
                 
             })
         
@@ -199,8 +206,9 @@ export default function ProfileScreen({navigation}){
             }
             }) 
             .then(res => res.json()).then(propertyData =>{
+
                 // console.log("propertyData")
-             
+                
                 setFavoriteProperties(prev => [...prev, propertyData]) 
             })
             .catch(e=>{
@@ -247,7 +255,7 @@ export default function ProfileScreen({navigation}){
                     <NameText>{userData.firstName} {""} {userData.lastName}</NameText>
 
                     <IconsContainer>
-                        <IconContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData, setProfilePic:setProfilePic})}>
+                        <IconContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
                             <Ionicons name="create"  size={25} color={GOOGLEBLUE}/>
                         </IconContainer>
                         {/* <IconContainer onPress={()=> navigation.reset({index: 0 , routes: [{ name: 'PropertyPosting'}]} )}> */}
@@ -280,10 +288,10 @@ export default function ProfileScreen({navigation}){
                 </SlidingContainer>
 
             <ScrollView ref={scrollviewRef} horizontal snapToAlignment='start' snapToInterval={WIDTH} decelerationRate='fast'
-                style={{width:WIDTH, maxHeight:HEIGHT*0.4}} scrollEnabled={false}>
-                <View style={{ width:WIDTH, height:HEIGHT*0.4, alignItems:'center'}}>
+                style={{width:WIDTH, maxHeight:HEIGHT*0.45, }} scrollEnabled={false}>
+                <View style={{ width:WIDTH, alignItems:'center' , paddingVertical: HEIGHT*0.02}}>
                     {postedProperties != null ?
-                        <Pressable onPress={()=>navigation.navigate("PropertyDetail", {data: postedProperties, uid: userData._id})}>
+                        <PostedPropertyCard onPress={()=>navigation.navigate("PropertyDetail", {data: postedProperties, uid: userData._id})}>
                             <Image key={"defaultPropPic"}
                             source={{uri: postedProperties == [] ? null : postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
                             <PostedPropertyInfoContainer>
@@ -302,7 +310,7 @@ export default function ProfileScreen({navigation}){
                                     </EditPropertyPressable>
                                 </PriceEditContainer>
                             </PostedPropertyInfoContainer>
-                        </Pressable>
+                        </PostedPropertyCard>
                     :
                         <Pressable style={{width:WIDTH, height:'100%', alignItems:'center', justifyContent:'center'}}
                             onPress={()=>navigation.reset(index=0, route=[{name: 'PropertyPosting'}] )}>
@@ -323,12 +331,12 @@ export default function ProfileScreen({navigation}){
                         </View>
                         :
                         <ScrollView contentContainerStyle={{alignSelf:'center'}}
-                        style={{alignSelf:'center',}} showsVerticalScrollIndicator={false}>
+                        style={{alignSelf:'center', width: WIDTH, paddingTop: HEIGHT*0.01}} showsVerticalScrollIndicator={false}>
                             {favoriteProperties.map((item)=>(
                             <FavPropertyCard key={item.propertyInfo._id}>
                                 <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
                                 <Image source={{uri: item.propertyInfo.imgList[0]}} 
-                                style={{width:'100%', height:'100%', borderRadius:10}}/>
+                                style={{width:'100%', height:'100%', borderTopLeftRadius:10, borderBottomLeftRadius:10}}/>
                                 </Pressable>
                                 <FavPropertyCardContent onPress={()=> navigation.navigate("PropertyDetail", {data: item, uid: userData._id})}>
                                     <FavPropertyCardName>{item.propertyInfo.loc.streetAddr}</FavPropertyCardName>
