@@ -18,7 +18,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR, MEDIUMGREY } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR, MEDIUMGREY, ContinueButton, ContinueText, ProgressText } from '../../../sharedUtils';
 
 
 const GENDERS = [
@@ -29,7 +29,7 @@ const GENDERS = [
 ]
 
 import { AgeContainer, Header, ProgressBarContainer, SubtitleText, TitleText, GenderRowContainer, GenderName,
-    GenderInputContainer, ContinueText, ContinueButton } from './genderStyle';
+    GenderInputContainer, } from './genderStyle';
 
 export default function GenderScreen({navigation, route}){
    
@@ -61,12 +61,12 @@ export default function GenderScreen({navigation, route}){
             </Header>
                 
             <ProgressBarContainer>
-
+                <ProgressText>Step  3 / 9</ProgressText>
             </ProgressBarContainer>
 
             <ScrollView scrollEnabled={false}>
                 <TitleText>What is your gender?</TitleText>
-                <SubtitleText>Select gender that identifies you the most.</SubtitleText>
+                <SubtitleText>Select gender that you identify with most</SubtitleText>
                 <GenderInputContainer>
                     {GENDERS.map((value)=>(
                     <GenderRowContainer key = {value.name + "RowContainer" } onPress={()=> setGender(value.name)}>

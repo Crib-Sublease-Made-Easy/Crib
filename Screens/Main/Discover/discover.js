@@ -53,7 +53,7 @@ var axios = require('axios');
 export default function DiscoverScreen({navigation, route}){
 
     const {USERID} = useContext(UserContext);
-    console.log("USER", USERID)
+  
     //Reference to the MapView
     const mapRef = useRef(null)
     //This is to control the height of the input view container
@@ -89,7 +89,7 @@ export default function DiscoverScreen({navigation, route}){
 
     const [flatlistRefreshing, setFlatlistRefreshing] = useState(false)
 
-    const [mapCenterLocation, setMapCenterLocation] = useState([])
+    const [mapCenterLocation, setMapCenterLocation] = useState([37.78825,-122.4324])
 
     const [filterType, setfilterType] = useState('')
     const [filterSort, setfilterSort] = useState('')
@@ -111,8 +111,8 @@ export default function DiscoverScreen({navigation, route}){
 
     useEffect(()=>{
         
-            console.log("REFRESHHHHHHH")
-        console.log("Refreshing again!")
+        console.log("USEFFECT")
+       
         //This loads the property in the flatlist 
         loadProperty()
         getUserId()
@@ -247,7 +247,7 @@ export default function DiscoverScreen({navigation, route}){
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
 
-        console.log(s);
+       
     
         fetch('https://sublease-app.herokuapp.com/properties/query?page=0' + s, {
             method: 'GET',
@@ -257,9 +257,7 @@ export default function DiscoverScreen({navigation, route}){
             }
             }) 
             .then(res => res.json()).then(properties =>{
-                // console.log("Filtered properties is:")
-                // console.log("==========================================================")
-                console.log(properties)
+                
                 setFilteredProperties(properties)
                 setFlatlistRefreshing(true)
                 
@@ -270,7 +268,6 @@ export default function DiscoverScreen({navigation, route}){
     },[currentLocation])
 
     const loadMoreProperties = async() => {
-        console.log("Inside load more data")
         if(retrieveMore){
             setPropertyPage(propertyPage+1);
         }
@@ -297,7 +294,6 @@ export default function DiscoverScreen({navigation, route}){
         s = s + `&longitude=${currentLocation[1]}`
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
-        console.log("PAGE", propertyPage)
         if(propertyPage != 0){
             await fetch('https://sublease-app.herokuapp.com/properties/query?page=' + propertyPage + s, {
             method: 'GET',
@@ -347,9 +343,7 @@ export default function DiscoverScreen({navigation, route}){
         s = s + `&priceLow=0`
         s = s +`&availableFrom=${from}`
         s = s +`&availableTo=${to}`
-        console.log("S",s)
         // console.log("Retrieving pins ")
-        console.log(`https://sublease-app.herokuapp.com/properties/pins?${s}`)
         fetch(`https://sublease-app.herokuapp.com/properties/pins?${s}` , {
         method: 'GET',
         headers: {
@@ -358,10 +352,9 @@ export default function DiscoverScreen({navigation, route}){
         }
         }) 
         .then(res => res.json()).then( pins =>{
-            console.log("Loading PinsData")
-            console.log("PINS", pins)
-            console.log("==========================================================")
+           
             if(pins.length == 0){
+                console.log("PINS DATA IS EMPTY")
                 setPinsData([])
             }
             else{
@@ -417,8 +410,8 @@ export default function DiscoverScreen({navigation, route}){
         axios(config)
         .then(async (response)=> {           
             // console.log(data)
-            lat = response.data.results[0].geometry.location.lat;
-            long = response.data.results[0].geometry.location.lng
+            let lat = response.data.results[0].geometry.location.lat;
+            let long = response.data.results[0].geometry.location.lng
             setCurrentLocation([lat,long])
             moveMap(lat - 0.015, long)
         })
@@ -428,33 +421,6 @@ export default function DiscoverScreen({navigation, route}){
        
        
 
-    }
-
-    //Function to set the current location in variable currentLocation 
-    //Input: name of the address 
-    //Output: NONE
-    async function locationStringToLatLong(name){
-        var lat;
-        let spacelessLocation = name.replaceAll(" ", "+");
-        var config = {
-            method: 'get',
-            url: `https://maps.googleapis.com/maps/api/geocode/json?address=${spacelessLocation}&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`,
-        };
-        axios(config)
-        .then(async (data)=> {           
-            // console.log(data)
-            // lat = response.data.results[0].geometry.location.lat;
-            // long = response.data.results[0].geometry.location.lng
-            // setCurrentLocation([lat,long])
-           
-            // console.log(data.data.results[0].geometry.location.lng)
-            lat = data.data.results[0].geometry.location.lat
-            return lat
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-      
     }
 
     async function onMarkerClick(item){
@@ -521,7 +487,7 @@ export default function DiscoverScreen({navigation, route}){
                 ></Marker>
                 
             
-                {pinsData != undefined && pinsData.map((value,index)=>(
+                {pinsData.length != 0 && pinsData.map((value,index)=>(
                     <Marker
                     key={value._id}
                     coordinate={{ latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
@@ -584,12 +550,15 @@ export default function DiscoverScreen({navigation, route}){
             
             {/* This sets the container of the search input */}
             <Animated.View style={ { height: translation, width: widthtranslation, marginLeft: WIDTH*0.05,
-             shadowColor: 'black', shadowRadius: 13, shadowOpacity: 0.2, backgroundColor:'white',
-            elevation: 5, borderRadius: 25, shadowOffset: {width: 0, height: 0}}} >
+             shadowColor: 'black', shadowRadius: 13, shadowOpacity: 0.32, backgroundColor:'white',
+            elevation: 7, borderRadius: 25, shadowOffset: {width: 0, height: 0}}}  >
                     <SearchInputCancelIconContainer>
+
+                        {/* The search icon on the search outlien */}
                         <SeachIconContainer>
                             <Ionicons name='search-outline' size={25}  color={TEXTINPUTBORDERCOLOR} />
                         </SeachIconContainer>
+                        {/* This is the actual search input when user press on search bar  */}
                         <PlaceholderLogoTextContainer placeholderTextColor={TEXTINPUTBORDERCOLOR} placeholderTextWeight='500'
                         placeholder="Search location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={()=>{setautocompleteLocation([]), setlocationQuery("")}}
                         onEndEditing={()=>{closeHeader(), setSearching(false), setautocompleteLocation([]), Keyboard.dismiss()}} onFocus={()=> {openHeader(),setSearching(true), setPropertyPreviewCard(false)}}/>

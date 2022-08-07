@@ -15,9 +15,9 @@ Ionicons.loadFont()
 
 import DatePicker from 'react-native-date-picker'
   
-import { HEIGHT, WIDTH, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, ContinueButton, ContinueText, ProgressText } from '../../../sharedUtils';
 
-import { AgeContainer, Header, ProgressBarContainer, SubtitleText, TitleText, ContinueButton, ContinueText, DatePlaceHolder } from './ageStyle';
+import { AgeContainer, Header, ProgressBarContainer, SubtitleText, TitleText, DatePlaceHolder } from './ageStyle';
 
 export default function AgeScreen({navigation, route}){
    
@@ -50,15 +50,7 @@ export default function AgeScreen({navigation, route}){
                 age: age.getTime()
             })
         }
-        // console.log("On Age Page");
-        // console.log("firstName " + route.params.firstName)
-        // console.log("lastName " + route.params.lastName)
-        // console.log("gender " + route.params.gender)
-        // console.log("school " +route.params.school)
-        // console.log("occupation " + route.params.occupation)
-        // console.log("email " + route.params.email)
-       
-        
+
     }
 
 
@@ -73,11 +65,11 @@ export default function AgeScreen({navigation, route}){
                 </Header>
                 
                 <ProgressBarContainer>
-
+                    <ProgressText>Step  2 / 9</ProgressText>
                 </ProgressBarContainer>
                 <ScrollView>
                     <TitleText>How old are you?</TitleText>
-                    <SubtitleText>We’ll get your age using your birthday below</SubtitleText>
+                    <SubtitleText>You must be over 16 to signup</SubtitleText>
                     <AgeContainer onPress={()=>setDatePickerModal(true)}>
                         <DatePlaceHolder> {(age.getMonth() % 13) + 1} / {age.getDate()} / {age.getFullYear()} </DatePlaceHolder>
                     </AgeContainer>

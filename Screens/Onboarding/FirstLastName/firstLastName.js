@@ -4,15 +4,16 @@ import {
     SafeAreaView,
     KeyboardAvoidingView,
     ScrollView,
-    Pressable
+    Pressable,
+    Text
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { WIDTH, HEIGHT, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR , OnlyLetters,  ProgressBarCapacity, ProgressBar, TrimSpace } from '../../../sharedUtils';
+import { WIDTH, HEIGHT, OnlyLetters, ProgressText, ContinueButton, ContinueText } from '../../../sharedUtils';
 
-import { Header, ProgressBarContainer, TitleText, GeneralTextInput, ContinueButton, ContinueText,
+import { Header, ProgressBarContainer, TitleText, GeneralTextInput, 
     TextInputContainer,} from './firstLastNameStyle';
 
 import Lottie from 'lottie-react-native';
@@ -63,16 +64,11 @@ export default function FirstLastNameScreen({navigation, route}){
             </Header>
             
             <ProgressBarContainer>
-                {/* <ProgressBarCapacity>
-                    <ProgressBar>
-
-                    </ProgressBar>
-                </ProgressBarCapacity> */}
-
+                <ProgressText>Step  1 / 9</ProgressText>
             </ProgressBarContainer>
 
             <ScrollView scrollEnabled={false}>
-                <TitleText>Tell us a bit about you ...</TitleText>
+                <TitleText>Tell us a bit about youself ...</TitleText>
                 <TextInputContainer>
                     <GeneralTextInput value={firstName} onChangeText={(value)=>setFirstName(value)} placeholder="First Name"  />
                     <GeneralTextInput value={lastName} onChangeText={(value)=>setLastName(value)} placeholder="Last Name"  />

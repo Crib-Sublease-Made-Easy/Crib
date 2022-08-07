@@ -12,10 +12,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
   
-import { HEIGHT, WIDTH, ContainsSpace, OnlyLetters } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, ContainsSpace, ContinueButton, ContinueText, ProgressText} from '../../../sharedUtils';
 
 
-import {Header, ProgressBarContainer, SubtitleText, TitleText, ContinueText, ContinueButton,
+import {Header, ProgressBarContainer, SubtitleText, TitleText, 
     GeneralTextInput, TextInputContainer} from './emailStyle';
 
 export default function EmailScreen({navigation, route}){
@@ -52,7 +52,7 @@ export default function EmailScreen({navigation, route}){
                 profilePic: route.params.profilePic,
                 school: route.params.school,
                 occupation: route.params.occupation,
-                email: email,
+                email: email.toLocaleLowerCase().trim(),
             })
         }
     }
@@ -68,12 +68,12 @@ export default function EmailScreen({navigation, route}){
             </Header>
                 
             <ProgressBarContainer>
-
+                <ProgressText>Step  7 / 9</ProgressText>
             </ProgressBarContainer>
            
             <ScrollView>
-                <TitleText>What email can we contact you?</TitleText>
-                <SubtitleText>This will be your login credential</SubtitleText>
+                <TitleText>What is your email?</TitleText>
+                <SubtitleText>We will to keep you updated </SubtitleText>
                 <TextInputContainer>
                     <GeneralTextInput value={email} onChangeText={(value)=> setEmail(value)} placeholder="Ex: lighthouse@gmail.com"  />
                 </TextInputContainer>
@@ -83,7 +83,7 @@ export default function EmailScreen({navigation, route}){
             <ContinueButton onPress={()=> checkInput()}>
                 <ContinueText>Continue</ContinueText>
             </ContinueButton>
-            </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
         </SafeAreaView>
     )
 }

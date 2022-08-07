@@ -110,7 +110,7 @@ export default function ProfileScreen({navigation}){
                 else{
                     console.log("UPDATE --- API --- profilePic")
                     setProfilePic(userData.profilePic)
-                    await SecureStorage.setItem("profilePic", userData.profilePic);
+                    await AsyncStorage.setItem("profilePic", userData.profilePic);
                 }
             }
             let cachedFavoriteProperties = await AsyncStorage.getItem("favoriteProperties")
@@ -155,15 +155,10 @@ export default function ProfileScreen({navigation}){
             }) 
             .then(res => res.json()).then(async propertyData =>{
                 if(propertyData.propertiesFound != "No Property found" ){
-                    
-                      
-                        console.log("happy")
+                
                         const tempPropData = await AsyncStorage.getItem('postedProperty')
-                        console.log(tempPropData)
-                        console.log(propertyData)
-
+                       
                         let compare = (new Object(JSON.parse(tempPropData)).toString() == propertyData)
-                        console.log(compare)
                         await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
                         if(!compare || tempPropData == null) {
                             console.log("UPDATE --- API --- POSTED PROPERTY")

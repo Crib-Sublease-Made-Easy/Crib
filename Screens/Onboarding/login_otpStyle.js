@@ -5,11 +5,7 @@ import styled from 'styled-components/native';
 import React, {useRef, useState} from 'react'
 
 
-
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
-
-const PRIMARYCOLOR = '#8559E3'
+import { HEIGHT, WIDTH, PRIMARYCOLOR, FONTFAMILY, MEDIUMGREY, LIGHTGREY } from '../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -24,15 +20,18 @@ export const Container = styled.View`
   height: 100%;
   width: 100%;
   padding-top: ${HEIGHT*0.02}px;
-  
   backgroundColor: white
 `
 
 export const Heading = styled.Text`
-  color: black;
-  fontWeight: 500
-  fontSize: ${HEIGHT*0.05}px;
-  padding-left: 10%;
+    color: black;
+    fontWeight: 500
+    fontSize: ${HEIGHT*0.04}px;
+    
+    font-family: ${FONTFAMILY}
+    width: ${WIDTH*0.8}px
+    align-self: center
+ 
 `
 export const PhoneNumberContainer = styled.View`
     height: ${HEIGHT*0.15}px;
@@ -50,33 +49,18 @@ export const ButtonText = styled.Text`
 
 export const HeadingImageContainer = styled.View`
     width: ${WIDTH}px
-    height: ${HEIGHT*0.25}px
+   
   
 `
 
-export const ContinueText = styled.Text`
-    font-size: ${ HEIGHT*0.025}px;
-    font-weight: 500
-    color: white
-`
 export const SubtitleText = styled.Text`
     width: ${WIDTH*0.8}px;
     margin-top: ${HEIGHT*0.01}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
-    color: ${PRIMARYGREY}
+    font-family: ${FONTFAMILY}
 `
 
-export const ContinueButton = styled.Pressable`
-    width: ${WIDTH*0.7}px;
-    height: ${ HEIGHT*0.07}px;
-    background-color: ${PRIMARYCOLOR}
-    align-self: center
-    border-radius: 25px
-    justify-content: center
-    align-items: center
-    margin-bottom: ${HEIGHT*0.075}px;
-`
 
 export const ModalView = styled.View`
     width: ${WIDTH*0.65}px;
@@ -88,10 +72,10 @@ export const ModalView = styled.View`
 
 export const ModalHeaderText = styled.Text`
     width: ${WIDTH*0.8}px;
-    
     font-size: ${HEIGHT*0.02}px;
     padding-left:${WIDTH*0.05}px;
     padding-left: ${WIDTH*0.05}px
+    font-family: ${FONTFAMILY}
 `
 
 export const UserNumberText = styled.Text`
@@ -101,6 +85,7 @@ export const UserNumberText = styled.Text`
     font-size: ${HEIGHT*0.025}px;
     padding-left:${WIDTH*0.05}px;
     padding-left: ${WIDTH*0.05}px
+    font-family: ${FONTFAMILY}
 `
 export const ModalOptionContainer = styled.View`
     flex-direction: row;
@@ -118,11 +103,14 @@ export const ModalOption = styled.Pressable`
     align-items: center
    
 `
+export const InputFollowUpContainer = styled.View`
+    padding-vertical: ${HEIGHT*0.05}px
+`
 
 //Following are all OTP input stuff
 
 export const OTPInputContainer = styled.Pressable`
-    width: ${WIDTH*0.9}px;
+    width: ${WIDTH*0.8}px;
     flex-direction: row;
     justify-content: space-around;
     margin-top: ${HEIGHT*0.03}px
@@ -145,7 +133,7 @@ export const OTPInputSection = styled.View`
 `
 
 export const OTPInput = styled.View`
-    background-color: #E0E0E0
+    background-color: ${LIGHTGREY}
     min-width: ${WIDTH*0.12}px
     justify-content: center
     border-radius: 15px;
@@ -193,13 +181,13 @@ export default OTPInputField = ({setPinReady, code, setCode, maxLength}) => {
                 value={code}
                 onChangeText={setCode}
                 maxLength={maxLength}
-                keyboardType="number-pad"
-                returnKeyType="done"
+                keyboardType="numeric"
+                returnKeyType="default"
                 ref={textInputRef}
                 onBlur={handleBlur}
-                
-                
-            />
+            >
+            </HiddenTextInput>
+
         </OTPInputSection>
     )
 }

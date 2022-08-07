@@ -1,9 +1,14 @@
 import {
     Dimensions,
+    Pressable
 } from 'react-native';
+
+import styled from 'styled-components/native';
+
 
 //Color 
 export const PRIMARYCOLOR = '#8559E3'
+export const OPACITYPRIMARYCOLOR = 'rgba(133, 89, 227, 1)'
 
 //Dark Grey
 export const TEXTINPUTBORDERCOLOR = '#989898'
@@ -24,9 +29,9 @@ export const GOOGLEBLUE = '#4c8bf5'
 export const HEIGHT = Dimensions.get('screen').height;
 export const WIDTH = Dimensions.get('screen').width;
 
-import styled from 'styled-components/native';
-
+export const FONTFAMILY = 'NotoSerif'
 //Progress Bar
+export const TESTFONT = 'Merriweather'
 
 export const ProgressBarCapacity = styled.View`
     width: ${WIDTH*0.8}px;
@@ -154,9 +159,6 @@ export const BackButtonContainer = styled.View`
 `
 
 
-
-
-
 export const NameContainer = styled.View`
     width: ${WIDTH*0.5}px;
     justify-content: center;
@@ -174,4 +176,35 @@ export const ResetButtonContainer = styled.View`
 export const Header = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     font-weight: 500;
+`
+
+export const ProgressText = styled.Text`
+    width: ${WIDTH*0.9}px;
+    text-align: center;
+    align-self: center
+    font-family: ${FONTFAMILY}
+`
+
+//Continue Button used in sign up 
+export const ContinueButton = styled(Pressable)`
+    width: ${WIDTH*0.7}px;
+    height: ${ HEIGHT*0.07}px;
+    backgroundColor:  ${props=>(props.loading ? MEDIUMGREY : PRIMARYCOLOR)}}
+    align-self: center
+    border-radius: 25px
+    justify-content: center
+    align-items: center
+    margin-bottom: ${HEIGHT*0.025}px;
+    shadow-offset: 0 0
+    shadow-color: black;
+    shadow-radius: 5px;
+    shadow-opacity: 0.2;
+    elevation: 5
+`
+//Continue Button Text used in sign up 
+export const ContinueText = styled.Text`
+    font-size: ${ HEIGHT*0.025}px;
+    font-weight: 400
+    color: white
+    font-family: ${FONTFAMILY}
 `

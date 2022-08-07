@@ -20,9 +20,9 @@ Ionicons.loadFont()
 
 import {Picker} from '@react-native-picker/picker';
 
-import { HEIGHT, WIDTH, DARKGREY } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, DARKGREY, ContinueButton, ContinueText, ProgressText } from '../../../sharedUtils';
 
-import {Header, ProgressBarContainer, SubtitleText, TitleText, ContinueText, ContinueButton,
+import {Header, ProgressBarContainer, SubtitleText, TitleText,
     GeneralTextInput, TextInputContainer, FollowUpContainer, FollowUpText} from './occupationStyle';
 
 export default function OccupationScreen({navigation, route}){
@@ -46,37 +46,33 @@ export default function OccupationScreen({navigation, route}){
 
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
-           
-            <Header>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
-                    {/* <FontAwesome name='arrow-left' size={25} /> */}
-                    <Ionicons name='arrow-back-outline' size={25} />
-                </Pressable>
-            </Header>
-                
-            <ProgressBarContainer>
-
-            </ProgressBarContainer>
-            <ScrollView scrollEnabled={false}>
-                <TitleText>Occupation (Optional)</TitleText>
-                <SubtitleText>Choose your latest occupation</SubtitleText>
-                <TextInputContainer >
-                    <GeneralTextInput value={occupation} onChangeText={(value)=> setOccupation(value)} placeholder="Ex: Plummer"  />
-                </TextInputContainer>
-
-                <FollowUpContainer>
-                    <Pressable onPress={() => setShowPicker(!showPicker)}>
-                        <Ionicons size={20} name={showPicker ? 'checkbox' : 'checkbox-outline'} color={DARKGREY} style={{ paddingVertical: HEIGHT * 0.01 }} />
+           <KeyboardAvoidingView behavior='padding' style={{flex: 1}}>
+                <Header>
+                    <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                        {/* <FontAwesome name='arrow-left' size={25} /> */}
+                        <Ionicons name='arrow-back-outline' size={25} />
                     </Pressable>
-                    <FollowUpText>Show selection</FollowUpText>
-                </FollowUpContainer>
-            </ScrollView>
+                </Header>
+                    
+                <ProgressBarContainer>
+                    <ProgressText> Step  6 / 9</ProgressText>
+                </ProgressBarContainer>
+
+                <ScrollView scrollEnabled={false}>
+                    <TitleText>Occupation (Optional)</TitleText>
+                    <SubtitleText>Choose your latest occupation</SubtitleText>
+                    <TextInputContainer >
+                        <GeneralTextInput value={occupation} onChangeText={(value)=> setOccupation(value)} placeholder="Ex: Plummer"  />
+                    </TextInputContainer>
+
+                
+                </ScrollView>
 
 
-            <ContinueButton onPress={()=> checkInput()}>
-                <ContinueText>Continue</ContinueText>
-            </ContinueButton>
-            
+                <ContinueButton onPress={()=> checkInput()}>
+                    <ContinueText>Continue</ContinueText>
+                </ContinueButton>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     )
 }

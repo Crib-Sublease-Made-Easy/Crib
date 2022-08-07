@@ -19,12 +19,12 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { HEIGHT, WIDTH } from '../../sharedUtils';
+import { HEIGHT, WIDTH, ContinueButton, ContinueText } from '../../sharedUtils';
 
 import Lottie from 'lottie-react-native';
 
 
-import {Header, ProgressBarContainer, SubtitleText, TitleText, ContinueText, ContinueButton,
+import {Header, ProgressBarContainer, SubtitleText, TitleText,
     GeneralTextInput, TextInputContainer} from './loginStyle';
 
 export default function LoginScreen({navigation, route}){
@@ -138,10 +138,10 @@ export default function LoginScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
             <Header>
-                {/* <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.navigate('Landing') }>
                    
                     <Ionicons name='arrow-back-outline' size={25} />
-                </Pressable> */}
+                </Pressable>
             </Header>
                 
             <ProgressBarContainer>

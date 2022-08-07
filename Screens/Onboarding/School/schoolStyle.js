@@ -12,11 +12,9 @@ import {
     Pressable,
     Animated
 } from 'react-native';
-  
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
 
-const PRIMARYCOLOR = '#8559E3'
+import { HEIGHT, WIDTH, PRIMARYCOLOR, FONTFAMILY} from '../../../sharedUtils';
+
 const TEXTINPUTBORDERCOLOR = '#989898'
 
 import styled from 'styled-components/native';
@@ -34,10 +32,11 @@ export const ProgressBarContainer = styled.View`
     height: ${HEIGHT*0.05}px
 `
 export const TitleText = styled.Text`
-    font-size: ${HEIGHT*0.045}px;
+    font-size: ${HEIGHT*0.04}px;
     font-weight: 500;
     width: ${WIDTH*0.9}px
     padding-left: ${WIDTH*0.1}px
+    font-family: ${FONTFAMILY}
 `
 
 export const SubtitleText = styled.Text`
@@ -45,6 +44,8 @@ export const SubtitleText = styled.Text`
     margin-top: ${HEIGHT*0.025}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
+    font-family: ${FONTFAMILY}
+
 `
 export const GeneralTextInput = styled.TextInput`
     width: ${WIDTH*0.8}px;
@@ -53,26 +54,13 @@ export const GeneralTextInput = styled.TextInput`
     padding-left: ${WIDTH*0.025}px
     border-color: ${TEXTINPUTBORDERCOLOR}
     align-self: center   
+    font-family: ${FONTFAMILY}
+    font-size: ${HEIGHT*0.02}px
 `
 export const TextInputContainer = styled.View`
     padding-top: ${HEIGHT*0.025}px
 `
 
-export const ContinueText = styled.Text`
-    font-size: ${ HEIGHT*0.025}px;
-    font-weight: 500
-    color: white
-`
-export const ContinueButton = styled.Pressable`
-    width: ${WIDTH*0.7}px;
-    height: ${ HEIGHT*0.07}px;
-    background-color: ${PRIMARYCOLOR}
-    align-self: center
-    border-radius: 25px
-    justify-content: center
-    align-items: center
-    margin-bottom: ${HEIGHT*0.025}px;
-`
 
 export const FollowUpContainer = styled.View`
     padding-vertical: ${HEIGHT*0.02}px

@@ -1,4 +1,4 @@
-import { WIDTH, HEIGHT, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR, MEDIUMGREY } from '../../../sharedUtils';
+import { WIDTH, HEIGHT, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR, MEDIUMGREY, FONTFAMILY } from '../../../sharedUtils';
 import styled from 'styled-components/native';
 
 import {
@@ -22,10 +22,11 @@ export const ProgressBarContainer = styled(View)`
 
 
 export const TitleText = styled.Text`
-    font-size: ${HEIGHT*0.045}px;
-    font-weight: 500;
+    font-size: ${HEIGHT*0.035}px;
+    font-weight: 400;
     width: ${WIDTH*0.7}px
     padding-left: ${WIDTH*0.1}px
+    font-family: ${FONTFAMILY}
 `
 
 export const TextInputContainer = styled.View`
@@ -39,20 +40,7 @@ export const GeneralTextInput = styled.TextInput`
     padding-left: ${WIDTH*0.025}px
     border-color: ${TEXTINPUTBORDERCOLOR}
     align-self: center   
+    font-family: ${FONTFAMILY}
+    font-size: ${HEIGHT*0.02}px
 `
 
-export const ContinueButton = styled(Pressable)`
-    width: ${WIDTH*0.7}px;
-    height: ${ HEIGHT*0.07}px;
-    backgroundColor:  ${props=>(props.loading ? MEDIUMGREY : PRIMARYCOLOR)}}
-    align-self: center
-    border-radius: 25px
-    justify-content: center
-    align-items: center
-    margin-bottom: ${HEIGHT*0.025}px;
-`
-export const ContinueText = styled.Text`
-    font-size: ${ HEIGHT*0.025}px;
-    font-weight: 500
-    color: white
-`

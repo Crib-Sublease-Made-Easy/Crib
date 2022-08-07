@@ -13,13 +13,11 @@ import {
     Animated
 } from 'react-native';
   
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
-
-const PRIMARYCOLOR = '#8559E3'
 const TEXTINPUTBORDERCOLOR = '#989898'
 
 import styled from 'styled-components/native';
+
+import { FONTFAMILY, HEIGHT, WIDTH, PRIMARYCOLOR } from '../../../sharedUtils';
 
 export const Header = styled.View`
   width: ${WIDTH*0.9}px
@@ -34,10 +32,11 @@ export const ProgressBarContainer = styled.View`
     height: ${HEIGHT*0.05}px
 `
 export const TitleText = styled.Text`
-    font-size: ${HEIGHT*0.045}px;
+    font-size: ${HEIGHT*0.04}px;
     font-weight: 500;
     width: ${WIDTH*0.9}px
     padding-left: ${WIDTH*0.1}px
+    font-family: ${FONTFAMILY}
 `
 
 export const GeneralTextInput = styled.TextInput`
@@ -54,6 +53,7 @@ export const SubtitleText = styled.Text`
     margin-top: ${HEIGHT*0.025}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
+    font-family: ${FONTFAMILY}
 `
 
 export const AgeContainer = styled.Pressable`
@@ -61,11 +61,12 @@ export const AgeContainer = styled.Pressable`
     height: ${HEIGHT*0.075}px;
     margin-top: ${HEIGHT*0.05}px
     border-radius: 20px;
-    border-width: 3px;
+   
     border-color: ${PRIMARYCOLOR}
     align-self: center
     justify-content: center;
     align-items: center
+    background-color: 'rgba(133, 89, 227, 0.2)'
 `
 
 export const ContinueButton = styled.Pressable`
@@ -85,6 +86,6 @@ export const ContinueText = styled.Text`
 `
 export const DatePlaceHolder = styled.Text`
     font-size:${HEIGHT*0.03}px;
-    font-weight: 500
+    font-family: ${FONTFAMILY}
    
 `

@@ -2,12 +2,9 @@ import React, {useState, useEffect} from 'react';
 import {Dimensions, Pressable} from 'react-native';
 
 import styled from 'styled-components/native';
-import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR } from '../../../sharedUtils';
+import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR, HEIGHT, WIDTH, FONTFAMILY, TESTFONT } from '../../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
-
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
 
 export const ImageStyle= {position:'absolute', width:WIDTH, height:HEIGHT*0.35,}
 
@@ -23,14 +20,20 @@ export const PropertyDescription = styled.View`
     width: ${WIDTH}px;
     position: relative
 `
+
 export const CardTitle = styled.Text`
-    font-size: ${HEIGHT*0.02}px;
-    font-weight: 600;
+    font-family: ${FONTFAMILY}
+    max-height: ${HEIGHT*0.075}px
+    font-size: ${HEIGHT*0.03}px;
+    margin-top: ${HEIGHT*0.025}px
+    font-weight: 500;
     width: ${WIDTH*0.9}px;
+   
+    
 `
 export const CardSectionOne = styled.View`
-    margin-top: ${HEIGHT*0.025}px
-    padding-vertical: ${HEIGHT*0.01}px
+   
+    padding-vertical: ${HEIGHT*0.025}px
     width:${WIDTH*0.9}px
     align-self:center
 `
@@ -42,9 +45,10 @@ export const LocationDistanceContainer = styled.View`
    
 `
 export const LocationText = styled.Text`
+    font-family: ${FONTFAMILY}
     font-size: ${HEIGHT*0.0175}px;
     font-weight: 400;
-    color: ${PRIMARYGREY}
+    color: black
 `
 
 export const AmenitiesText = styled.Text`
@@ -209,4 +213,14 @@ export const DescriptionContainer = styled.View`
     border-radius: 10px
     padding-vertical: ${HEIGHT*0.01}px;
     padding-horizontal: ${WIDTH*0.02}px
+`
+
+export const TypeText = styled.Text`
+    font-family: ${FONTFAMILY}
+    font-size: ${HEIGHT*0.02}px;
+    width: ${WIDTH*0.9}px
+    align-self: center;
+    text-align: left
+    font-weight: 600
+    color: #3500a8
 `

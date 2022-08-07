@@ -18,8 +18,6 @@ import {
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
-
-import {Picker} from '@react-native-picker/picker';
   
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
@@ -28,18 +26,9 @@ const PRIMARYCOLOR = '#8559E3'
 const PRIMARYGREY = '#D9D9D9'
 const TEXTINPUTBORDERCOLOR = '#989898'
 
-const cropData = {
-    offset: {x: WIDTH, y: HEIGHT},
-    size: {width: WIDTH, height: WIDTH},
-   
-};
+import { Header, TitleText, SubtitleText, ProgressBarContainer, ProfilePicContainer, } from './profilePicStyle';
 
-
-import { Header, TitleText, SubtitleText, ProgressBarContainer, ProfilePicContainer, 
-    ContinueButton, ContinueText } from './profilePicStyle';
-
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-
+import { ContinueButton, ContinueText, ProgressText } from '../../../sharedUtils';
 import ImagePicker from 'react-native-image-crop-picker';
 
 export default function ProfilePicScreen({navigation, route}){
@@ -64,15 +53,22 @@ export default function ProfilePicScreen({navigation, route}){
     }
 
     function SelectProfilePic(){
-        ImagePicker.openPicker({
-            width: 300,
-            height: 300,
-            cropping:true,
-            compressImageQuality: 0.3
-          }).then(image => {
-          
-            setProfilePic(image.path)
-          });
+        try{
+            ImagePicker.openPicker({
+                width: 300,
+                height: 300,
+                cropping:true,
+                compressImageQuality: 0.3
+            }).then(image => {
+            
+                setProfilePic(image.path)
+            }).catch(e=>{
+                console.log("Cancelled")
+            })
+        }
+        catch{
+            console.log("Cancelled")
+        }
     }
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
@@ -83,11 +79,11 @@ export default function ProfilePicScreen({navigation, route}){
                 </Pressable>
             </Header>
             <ProgressBarContainer>
-
+                <ProgressText>Step  4 / 9</ProgressText>
             </ProgressBarContainer>
             <ScrollView scrollEnabled={false}>
-                <TitleText>Show others who you are ...</TitleText>
-                <SubtitleText>Press to select your profile picture</SubtitleText>
+                <TitleText>Select your profile picture ...</TitleText>
+                <SubtitleText>Press icon to select</SubtitleText>
                 <ProfilePicContainer onPress={SelectProfilePic}>
                     <Ionicons name='image-outline' size={50} color={PRIMARYGREY}/>
                     {profilePic != "" &&

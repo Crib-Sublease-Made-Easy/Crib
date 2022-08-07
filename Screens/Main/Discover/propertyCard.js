@@ -158,6 +158,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
 
     // Swipable Bottom Sheet
     const translateY = useSharedValue(0)
+    const velocityY = useSharedValue(0)
 
     function enableFlatlistScroll(arg){
         setPreviewing(arg);
@@ -173,18 +174,49 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     translateY.value = event.translationY + context.value.y
     
     translateY.value = Math.max(translateY.value, HEIGHT/40);
+
+    velocityY.value = event.velocityY;
+
    
     }).onEnd(()=>{
-    //console.log(translateY.value)
-    if(translateY.value  < HEIGHT/1.59 ){
+    //console.log(velocityY.value)
+    if(translateY.value  < HEIGHT*0.35){
+      if(Math.abs(velocityY.value) > 1750){
+        console.log("1")
+        translateY.value = withSpring(HEIGHT/1.4, {stiffness: 70, mass: 0.3, damping:10})
+      }
+      else{
+        console.log("2")
         translateY.value = withSpring(HEIGHT/40, {stiffness: 50, mass: 0.3, damping:15})
-        runOnJS(enableFlatlistScroll)(false)
+      }       
     }
+    else{
+      if(Math.abs(velocityY.value) > 1750){
+        console.log("3")
+        translateY.value = withSpring(HEIGHT/40, {stiffness: 70, mass: 0.3, damping:10})
+      }
+      else{
+        console.log("4")
+        translateY.value = withSpring(HEIGHT/1.4, {stiffness: 70, mass: 0.3, damping:15})
+      }
+    }
+  //   else if(translateY.value  < HEIGHT/1.59 && Math.abs(velocityY.value) >1500){
+  //     console.log("2")
+  //       translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
+       
+  //   }
 
-    if (translateY.value  > HEIGHT/6.69 ){
-        translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
-        runOnJS(enableFlatlistScroll)(true)
-    }
+  //   else if (translateY.value  > HEIGHT/6.69 && Math.abs(velocityY.value) <1500){
+  //     console.log("3")
+  //       translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
+      
+  //   }
+  //   else if (translateY.value  > HEIGHT/6.69 && Math.abs(velocityY.value) > 1500){
+  //     console.log("4")
+  //     translateY.value = withSpring(HEIGHT/40, {stiffness: 50, mass: 0.3, damping:15})
+    
+  // }
+
     })
     
     

@@ -20,13 +20,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
   
-import { HEIGHT, WIDTH , LIGHTGREY, DARKGREY} from '../../../sharedUtils';
+import { HEIGHT, WIDTH , LIGHTGREY, DARKGREY, ContinueButton, ContinueText, ProgressText} from '../../../sharedUtils';
 
 import {Picker} from '@react-native-picker/picker';
 
-
-import {Header, ProgressBarContainer, SubtitleText, TitleText, ContinueText, ContinueButton, FollowUpContainer, FollowUpText,
+import {Header, ProgressBarContainer, SubtitleText, TitleText,  FollowUpContainer, FollowUpText,
     GeneralTextInput, TextInputContainer} from './schoolStyle';
+
 
 export default function SchoolScreen({navigation, route}){
     const [school, setSchool] = useState("")
@@ -55,7 +55,7 @@ export default function SchoolScreen({navigation, route}){
             </Header>
                 
             <ProgressBarContainer>
-
+                <ProgressText>Step  5 / 9</ProgressText>
             </ProgressBarContainer>
            
             <ScrollView scrollEnabled={false}>

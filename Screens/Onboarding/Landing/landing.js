@@ -23,7 +23,7 @@ Ionicons.loadFont()
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-import { PRIMARYCOLOR } from '../../../sharedUtils';
+import { PRIMARYCOLOR, FONTFAMILY } from '../../../sharedUtils';
 
 import { TopContainer, BottomContainer, HeadingText, SubHeadingText, JoinButton, LoginText, JoinText, JoinPressableText } from './landingStyle';
 
@@ -38,17 +38,14 @@ export default function LandingScreen({navigation}){
 
             </TopContainer>
             <BottomContainer>
-                <HeadingText>Let's Get Started</HeadingText>
-                <SubHeadingText>
-                    Connecting with tennants for short
-                    term housing made easy.
-                </SubHeadingText>
+                <HeadingText>Find your Crib</HeadingText>
+                <SubHeadingText>Sublease made easy.</SubHeadingText>
                 <JoinButton onPress={()=>navigation.navigate('FirstLastName')}>
                     <JoinText>Join Now</JoinText>
                 </JoinButton>
             </BottomContainer>
-            <Pressable onPress={()=>navigation.reset({index: 0 , routes: [{ name: 'Login' }]})}>
-                <LoginText>Already have an account?  Login  </LoginText>
+            <Pressable onPress={()=>navigation.navigate("Login")}>
+                <LoginText>Already a member?  <Text style={{fontFamily: FONTFAMILY, fontWeight: '500'}}>Login </Text> </LoginText>
             </Pressable>
         </SafeAreaView>
     )

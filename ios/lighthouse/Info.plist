@@ -53,6 +53,16 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Merriweather-Regular.ttf</string>
+		<string>Merriweather-Bold.ttf</string>
+		<string>Merriweather-Light.ttf</string>
+		<string>Merriweather-Black.ttf</string>
+		<string>NotoSerif-Italic.tff</string>
+		<string>NotoSerif-Regular.ttf</string>
+		<string>NotoSerif-Bold.ttf</string>
+	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

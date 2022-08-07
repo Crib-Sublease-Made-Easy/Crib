@@ -12,16 +12,12 @@ import {
     Pressable,
     Animated
 } from 'react-native';
-  
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
 
-const PRIMARYCOLOR = '#8559E3'
+import { HEIGHT, WIDTH, PRIMARYCOLOR, FONTFAMILY, MEDIUMGREY } from '../../../sharedUtils';
+
 const TEXTINPUTBORDERCOLOR = '#989898'
 
 import styled from 'styled-components/native';
-
-import { MEDIUMGREY } from '../../../sharedUtils';
 
 
 export const Header = styled.View`
@@ -37,10 +33,11 @@ export const ProgressBarContainer = styled.View`
     height: ${HEIGHT*0.05}px
 `
 export const TitleText = styled.Text`
-    font-size: ${HEIGHT*0.045}px;
+    font-size: ${HEIGHT*0.04}px;
     font-weight: 500;
     width: ${WIDTH*0.9}px
     padding-left: ${WIDTH*0.1}px
+    font-family: ${FONTFAMILY}
 `
 
 export const SubtitleText = styled.Text`
@@ -48,15 +45,17 @@ export const SubtitleText = styled.Text`
     margin-top: ${HEIGHT*0.025}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
+    font-family: ${FONTFAMILY}
 `
 export const GeneralTextInput = styled.TextInput`
     width: ${WIDTH*0.8}px;
     height: ${HEIGHT*0.075}px
-    font-size: ${HEIGHT*0.03}px
+    font-size: ${HEIGHT*0.025}px
     border-bottom-width: 2px;
     padding-left: ${WIDTH*0.025}px
     border-color: ${TEXTINPUTBORDERCOLOR}
     align-self: center   
+    font-family: ${FONTFAMILY}
 `
 export const TextInputContainer = styled.View`
     padding-top: ${HEIGHT*0.025}px

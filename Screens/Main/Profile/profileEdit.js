@@ -74,6 +74,8 @@ export default function ProfileEditScreen({navigation, route}){
             else{
                 console.log("UPDATE --- PARAMS --- occupation")
             }
+
+            // This is to set the profile pic 
             if(cachedProfilePic == null && (userData.profilePic != route.params.userData.profilePic)){
                 console.log("UPDATE --- API --- profilePic")
                 setProfilePic(userData.profilePic)
@@ -82,6 +84,9 @@ export default function ProfileEditScreen({navigation, route}){
             else if(profilePic == null){
                 console.log("UPDATE --- CACHE --- profilePic")
                 setProfilePic(cachedProfilePic)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- profilePic")
             }
         })
         .catch(e=>{

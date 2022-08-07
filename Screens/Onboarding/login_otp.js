@@ -18,19 +18,20 @@ import {
   Pressable
 } from 'react-native';
 
-import { Container, Heading, SignupForm, ButtonText, StandardButtonStyle, StandardInputStyle,
-    HeadingImageContainer,PhoneNumberContainer, ContinueButton, ContinueText, SubtitleText, 
-    ModalView, ModalHeaderText, UserNumberText, ModalOptionContainer, ModalOption} from './otpStyle';
+import { Container, Heading, HeadingImageContainer, SubtitleText, 
+    ModalView, ModalHeaderText, UserNumberText, ModalOptionContainer, ModalOption,
+    InputFollowUpContainer} from './login_otpStyle';
 
-import OTPInputField from  './otpStyle'
+import { ContinueButton , ContinueText, FONTFAMILY} from '../../sharedUtils';
+
+import OTPInputField from  './login_otpStyle'
 import { UserContext } from '../../UserContext';
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const PRIMARYCOLOR = '#8559E3'
+import { HEIGHT, WIDTH, PRIMARYCOLOR } from '../../sharedUtils';
 
 import Modal from "react-native-modal";
 
@@ -95,8 +96,16 @@ export default function Login_OTP({navigation, route}){
                 await SecureStorage.setItem("profilePic", data.loggedIn.profilePic)
                 await SecureStorage.setItem("userId", data.loggedIn._id)
                 await SecureStorage.setItem("firstName", data.loggedIn.firstName)
-                await SecureStorage.setItem("firstName", data.loggedIn.lastName)
+                await SecureStorage.setItem("lastName", data.loggedIn.lastName)
                 await SecureStorage.setItem("refreshToken", data.token.refreshToken)
+
+                await AsyncStorage.setItem("userId", data.loggedIn._id)
+                await AsyncStorage.setItem("firstName", data.loggedIn.firstName)
+                await AsyncStorage.setItem("lastName", data.loggedIn.lastName)
+                await AsyncStorage.setItem("profilePic", data.loggedIn.profilePic)
+                await AsyncStorage.setItem("userId", data.loggedIn._id)
+
+                
                 
 
                 const access_token = await SecureStorage.getItem("accessToken")
@@ -111,17 +120,9 @@ export default function Login_OTP({navigation, route}){
         })
     }
 
-    function backToPhoneNumber(){
+    function backToLogin(){
         navigation.reset(
-            {index: 0 , routes: [{ name: 'PhoneNumber', 
-            fistName: route.firstName, 
-            lastName: route.lastName,
-            age: route.age,
-            gender: route.gender,
-            profilePic: route.profilePic,
-            school: route.school,
-            email: route.email,
-            password: route.password, }]}
+            {index: 0 , routes: [{ name: 'Login'}]}
             
         )
     }
@@ -158,9 +159,8 @@ export default function Login_OTP({navigation, route}){
                     <HeadingImageContainer>
                         <Heading>Enter OTP</Heading>
                         <SubtitleText>Please enter the one time password sent to you through sms</SubtitleText>
-                        <Image source={require('../../assets/otp.jpg')} style={{ height: HEIGHT*0.15, width: HEIGHT*0.2, alignSelf: 'center', }}/>
                     </HeadingImageContainer>
-                    
+                    <InputFollowUpContainer>
                     <OTPInputField
                         setPinReady={pinReady}
                         code={code}
@@ -171,8 +171,9 @@ export default function Login_OTP({navigation, route}){
                     <Pressable onPress={()=>setSMSErrorModal(true)}>
                         <SubtitleText>Didn't recieve SMS?</SubtitleText>
                     </Pressable>
+                    </InputFollowUpContainer>
                 </ScrollView>
-                <ContinueButton onPress={()=> login('test')}>
+                <ContinueButton style={{marginBottom: HEIGHT*0.1}} onPress={()=> login('test')}>
                     <ContinueText>Continue</ContinueText>
                 </ContinueButton>
                 </KeyboardAvoidingView>
@@ -189,11 +190,11 @@ export default function Login_OTP({navigation, route}){
                         +1 ({route.phoneNumber.slice(0, 3)})-{route.phoneNumber.slice(3,6)}-{route.phoneNumber.slice(6, 10)}
                     </UserNumberText>
                     <ModalOptionContainer>
-                        <ModalOption onPress={()=> {setSMSErrorModal(false), backToPhoneNumber()}}>
-                            <Text>No</Text>
+                        <ModalOption onPress={()=> {setSMSErrorModal(false),  backToLogin()}}>
+                            <Text style={{fontFamily: FONTFAMILY}}>No</Text>
                         </ModalOption>
                         <ModalOption onPress={resendSMS}>
-                            <Text style={{color: PRIMARYCOLOR}}>Resend code</Text>
+                            <Text style={{fontFamily: FONTFAMILY, color: PRIMARYCOLOR}}>Resend code</Text>
                         </ModalOption>
                     </ModalOptionContainer>
                 </ModalView>

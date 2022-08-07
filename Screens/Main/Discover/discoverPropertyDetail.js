@@ -27,7 +27,7 @@ import { Container, PropertyDescription, ImageStyle, CardSectionOne, CardTitle, 
         LocationText, BedAndBathContainer, BedBathLogo, Divider, CardSectionTwo, InfoHeaderText,
             InfoContainer, BothInfoContainer, InfoText, DescriptionText, AmenitiesItem, Footer,
             PricePerMonth, ContactTanentButton, TenantInfoContainer, TenantInfo, ProfileImageContainer,
-            CardSectionFour, CardSectionFive, DateContainer, DateText, DescriptionContainer, AmenitiesText} from './discoverPDStyle'
+           DateContainer, DateText, DescriptionContainer, AmenitiesText, TypeText} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
 import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, DARKGREY} from '../../../sharedUtils';
 
@@ -39,14 +39,12 @@ const WIDTH = Dimensions.get('screen').width;
 
 
 export default function PropertyDetailScreen({navigation, route}){
-    console.log("Detail")
-    console.log("DATAAAA", route.params.data.propertyInfo)
+    
     useEffect(()=>{
-        console.log(route.params.uid)
-        console.log(route.params.data.propertyInfo.postedBy)
       fetchProperties()
-      getTokens()
+     
     }, [])
+
     const flatListRef = useRef(null)
     const propertyAmenities = (["Furnished", "Pets Allowed", "Able to renew", "On-site waher and dryer"]);
     const [propData, setPropData] = useState(route.params.data.propertyInfo);
@@ -59,12 +57,9 @@ export default function PropertyDetailScreen({navigation, route}){
     const [flatlistIndex, setFlatlistIndex] = useState(0)
     const [propAPIData, setPropAPIData] = useState()
     const [liked, setLiked]  = useState()
-    const [userDate, setUserData]= useState()
     const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == route.params.uid)
     const createConversation = async () =>{
-        console.log("MY Userid", USERID)
         var userIds = [USERID, propData.postedBy]
-        console.log("I log catsssss")
         
         sb.GroupChannel.createChannelWithUserIds(userIds, false, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
             if (error) {
@@ -77,7 +72,6 @@ export default function PropertyDetailScreen({navigation, route}){
             // A group channel with additional information is successfully created.
             var channelUrl = groupChannel.url;
             navigation.navigate("Chat", {url:channelUrl, id: USERID})
-            console.log(channelUrl)
         });
 
         
@@ -85,6 +79,7 @@ export default function PropertyDetailScreen({navigation, route}){
 
     async function fetchProperties(){
         const accessToken = await SecureStorage.getItem("refreshToken");
+        console.log("FETCH PROPERTYDETAIL")
         await fetch('https://sublease-app.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
             method: 'GET',
             headers: {
@@ -94,10 +89,8 @@ export default function PropertyDetailScreen({navigation, route}){
             }
             }) 
             .then(res => res.json()).then( async propertyData =>{
-                console.log("TESTTT", propertyData)
                 if(propertyData.propertyInfo.deleted){
                     const accessToken = await SecureStorage.getItem("refreshToken");
-                    console.log(accessToken)
                     await fetch('https://sublease-app.herokuapp.com/properties/favorite', {
                         method: 'POST',
                         headers: {
@@ -111,7 +104,6 @@ export default function PropertyDetailScreen({navigation, route}){
                         }) 
                         .then(res => res.json()).then(message =>{
                             setLiked(!liked)
-                            console.log(message)
                         
                         })
                         .catch(e=>{
@@ -147,9 +139,9 @@ export default function PropertyDetailScreen({navigation, route}){
     }, []);
 
     async function likeProperty(){
-        console.log("ID" , route.params.data.propertyInfo._id)
+       
         const accessToken = await SecureStorage.getItem("refreshToken");
-        console.log(accessToken)
+      
         await fetch('https://sublease-app.herokuapp.com/properties/favorite', {
             method: 'POST',
             headers: {
@@ -163,48 +155,10 @@ export default function PropertyDetailScreen({navigation, route}){
             }) 
             .then(res => res.json()).then(message =>{
                 setLiked(!liked)
-                
-                //Return list of properties liked 
-                
-               
+
             })
             .catch(e=>{
                 alert(e)
-        })
-    }
-
-    async function getTokens(){
-       
-        const accessToken = await SecureStorage.getItem("refreshToken");
-       //console.log("Access Token " + accessToken)
-
-        const UID = await SecureStorage.getItem("userId");
-
-      //  console.log("UID " + UID)
-        fetch('https://sublease-app.herokuapp.com/users/' + UID, {
-        method: 'GET',
-        headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken,
-        }
-        }) 
-        .then(res => res.json()).then(async userData =>{
-            // console.log("userdata")
-            setUserData(userData)
-            console.log("userdata")
-            console.log(userData)
-           
-            if (userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) != -1){
-                setLiked(true)
-            }
-          
-           
-            
-            
-        })
-        .catch(e=>{
-            alert(e)
         })
     }
 
@@ -259,6 +213,7 @@ export default function PropertyDetailScreen({navigation, route}){
                     </View>
                     
                     <CardSectionOne>
+                        <TypeText>{propData.type} for rent</TypeText>
                         <CardTitle>{propData.loc.streetAddr}</CardTitle>
                         <LocationDistanceContainer>
                             <Ionicons name="location-outline" size={20} />

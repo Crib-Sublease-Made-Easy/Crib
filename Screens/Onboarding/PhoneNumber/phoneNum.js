@@ -19,12 +19,12 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { HEIGHT, WIDTH } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, ContinueText, ProgressText } from '../../../sharedUtils';
 
 import Lottie from 'lottie-react-native';
 
 
-import {Header, ProgressBarContainer, SubtitleText, TitleText, ContinueText, ContinueButton,
+import {Header, ProgressBarContainer, SubtitleText, TitleText, 
     GeneralTextInput, TextInputContainer} from './phoneNumStyle';
 
 export default function PhoneNumberScreen({navigation, route}){
@@ -102,15 +102,7 @@ export default function PhoneNumberScreen({navigation, route}){
 
     async function signup(){
         setLoading(true)
-        // console.log(route.params.firstName)
-        // console.log(route.params.lastName)
-        // console.log(route.params.gender)
-        // console.log(route.params.school)
-        // console.log(route.params.occupation)
-        // console.log(route.params.email)
-        // console.log(route.params.profilePic)
-        // console.log(password)
-       
+
         console.log("Tryin to sign up.")
         if(passedPhoneNumber.length == 10){
             console.log("Inside Signup")
@@ -137,7 +129,7 @@ export default function PhoneNumberScreen({navigation, route}){
             )
         }
         else{
-            console.log("Something is missing.")
+            alert("Invalid phone number. Please try again.")
         }
         setTimeout(()=>{
             setLoading(false)
@@ -173,7 +165,7 @@ export default function PhoneNumberScreen({navigation, route}){
         setPassedPhoneNumber(value)
         // clean the input for any non-digit values.
         let number = value.replace(/[^\d]/g, '');
-        setPassedPhoneNumber(number)
+        setPassedPhoneNumber(number.substring(0,10))
         // phoneNumberLength is used to know when to apply our formatting for the phone number
         const phoneNumberLength = number.length;
       
@@ -201,7 +193,7 @@ export default function PhoneNumberScreen({navigation, route}){
             </Header>
                 
             <ProgressBarContainer>
-
+                <ProgressText>Step  8 / 9</ProgressText>
             </ProgressBarContainer>
            
             <ScrollView scrollEnabled={false}>
