@@ -99,11 +99,14 @@ export default function App() {
 
 //OneSignal Init Code
 OneSignal.setLogLevel(6, 0);
-OneSignal.setAppId("3573fb4c-2c3e-4245-b509-4a75f1c5edd1");
+OneSignal.setAppId("440ad232-b229-4ea1-963b-5037d3ac9413");
 //END OneSignal Init Code
 
 //Prompt for push on iOS
-OneSignal.promptForPushNotificationsWithUserResponse(response => {
+OneSignal.promptForPushNotificationsWithUserResponse(async response => {
+  const deviceState = await OneSignal.getDeviceState();
+  await SecureStorage.setItem("oneSignalUserID", deviceState.userId);
+  console.log("DEVICE STATE", deviceState)
   console.log("Prompt response:", response);
 });
 
@@ -124,11 +127,11 @@ OneSignal.setNotificationOpenedHandler(notification => {
 });
 
 
-
   useEffect(async () => {
-    
+    let userID
     console.log("NEW APP REFRESH")
     refreshAccessToken()
+
   }, [])
   const connectSendbird = async () => {
     const UID = await SecureStorage.getItem("userId");

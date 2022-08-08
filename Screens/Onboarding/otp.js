@@ -58,7 +58,7 @@ export default function OTPScreen({navigation, route}){
 
     async function signupStep3(){ 
         setLoading(true)
-
+        let oneSignalUserId = await SecureStorage.getItem('oneSignalUserID');
         const formData = new FormData();
 
         formData.append("firstName", route.params.firstName);                     
@@ -71,6 +71,7 @@ export default function OTPScreen({navigation, route}){
         formData.append("email", route.params.email);      
         formData.append("token", code);      
         formData.append("authy_id", route.params.authy_id);      
+        formData.append("oneSignalUserId", oneSignalUserId);      
 
  
         var array = route.params.profilePic.split(".");

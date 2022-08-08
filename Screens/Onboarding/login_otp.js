@@ -57,6 +57,7 @@ export default function Login_OTP({navigation, route}){
     },[code])
 
     async function userLogin(){ 
+        let oneSignalUserId = await SecureStorage.getItem('oneSignalUserID');
         setLoading(true)
         console.log("TOKEN")
         console.log(code);
@@ -72,7 +73,8 @@ export default function Login_OTP({navigation, route}){
             body: JSON.stringify({
                 authy_id: route.authy_id,
                 token: code,
-                phoneNumber: route.phoneNumber
+                phoneNumber: route.phoneNumber,
+                oneSignalUserId: oneSignalUserId
             })
         })
         .then( res => {
