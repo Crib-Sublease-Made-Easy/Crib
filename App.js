@@ -79,6 +79,11 @@ const Stack = createSharedElementStackNavigator();
 
 const appId = '14BD0602-4159-48D7-9292-66136C479B46';
 
+import OneSignal from 'react-native-onesignal';
+
+
+
+
 
 
 const PRIMARYCOLOR = '#4050B5'
@@ -89,10 +94,44 @@ export default function App() {
   const [testUserId, setTestUserId] = useState('')
 
   const sb = new SendBird({ appId: appId, localCacheEnabled: true });   // The `localCacheEnabled` is optional. The default is false.
+
+
+
+//OneSignal Init Code
+OneSignal.setLogLevel(6, 0);
+OneSignal.setAppId("440ad232-b229-4ea1-963b-5037d3ac9413");
+//END OneSignal Init Code
+
+//Prompt for push on iOS
+OneSignal.promptForPushNotificationsWithUserResponse(async response => {
+  const deviceState = await OneSignal.getDeviceState();
+  await SecureStorage.setItem("oneSignalUserID", deviceState.userId);
+  console.log("DEVICE STATE", deviceState)
+  console.log("Prompt response:", response);
+});
+
+//Method for handling notifications received while app in foreground
+OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
+  console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
+  let notification = notificationReceivedEvent.getNotification();
+  console.log("notification: ", notification);
+  const data = notification.additionalData
+  console.log("additionalData: ", data);
+  // Complete with null means don't show a notification.
+  notificationReceivedEvent.complete(notification);
+});
+
+//Method for handling notifications opened
+OneSignal.setNotificationOpenedHandler(notification => {
+  console.log("OneSignal: notification opened:", notification);
+});
+
+
   useEffect(async () => {
-    
+    let userID
     console.log("NEW APP REFRESH")
     refreshAccessToken()
+
   }, [])
   const connectSendbird = async () => {
     const UID = await SecureStorage.getItem("userId");

@@ -156,9 +156,9 @@ export default function ProfileScreen({navigation}){
             }) 
             .then(res => res.json()).then(async propertyData =>{
                 if(propertyData.propertiesFound != "No Property found" ){
-                
+                               
                         const tempPropData = await AsyncStorage.getItem('postedProperty')
-                       
+
                         let compare = (new Object(JSON.parse(tempPropData)).toString() == propertyData)
                         await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
                         if(!compare || tempPropData == null) {

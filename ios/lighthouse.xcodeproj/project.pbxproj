@@ -11,21 +11,12 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		5DEC1EE4289F15F3000B5C71 /* NotoSerif-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEC1EE0289F15F3000B5C71 /* NotoSerif-BoldItalic.ttf */; };
-		5DEC1EE5289F15F3000B5C71 /* NotoSerif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEC1EE1289F15F3000B5C71 /* NotoSerif-Bold.ttf */; };
-		5DEC1EE6289F15F3000B5C71 /* NotoSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEC1EE2289F15F3000B5C71 /* NotoSerif-Regular.ttf */; };
-		5DEC1EE7289F15F3000B5C71 /* NotoSerif-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEC1EE3289F15F3000B5C71 /* NotoSerif-Italic.ttf */; };
-		5DEC1EF0289F999A000B5C71 /* Merriweather-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEC1EE8289F9999000B5C71 /* Merriweather-Black.ttf */; };
-		5DEC1EF1289F999A000B5C71 /* Merriweather-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEC1EE9289F9999000B5C71 /* Merriweather-BlackItalic.ttf */; };
-		5DEC1EF2289F999A000B5C71 /* Merriweather-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEC1EEA289F9999000B5C71 /* Merriweather-BoldItalic.ttf */; };
-		5DEC1EF3289F999A000B5C71 /* Merriweather-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEC1EEB289F9999000B5C71 /* Merriweather-Regular.ttf */; };
-		5DEC1EF4289F999A000B5C71 /* Merriweather-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEC1EEC289F9999000B5C71 /* Merriweather-Italic.ttf */; };
-		5DEC1EF5289F999A000B5C71 /* Merriweather-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEC1EED289F9999000B5C71 /* Merriweather-LightItalic.ttf */; };
-		5DEC1EF6289F999A000B5C71 /* Merriweather-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEC1EEE289F999A000B5C71 /* Merriweather-Bold.ttf */; };
-		5DEC1EF7289F999A000B5C71 /* Merriweather-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DEC1EEF289F999A000B5C71 /* Merriweather-Light.ttf */; };
-		60BD982FD9C7913B4A6B249E /* libPods-lighthouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BDAA48A62A4511D029FAFF78 /* libPods-lighthouse.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		A376329B4AC0D9E6AF178F38 /* libPods-lighthouse-lighthouseTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 934314D8FA5AA37422C7A63D /* libPods-lighthouse-lighthouseTests.a */; };
+		98BFE8EE42A8EAE72EE24423 /* libPods-lighthouse-lighthouseTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D294CC9A1B114B3D5811AE6A /* libPods-lighthouse-lighthouseTests.a */; };
+		B1C384E1289C497B00B4D85F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C384E0289C497B00B4D85F /* NotificationService.swift */; };
+		B1C384E5289C497B00B4D85F /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B1C384DE289C497A00B4D85F /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F3C3C9821A12D08277573410 /* libPods-lighthouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E94C71CB30E44EB29B9C063A /* libPods-lighthouse.a */; };
+		FFD8EFC1E9C7B331EF2711C4 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9869C396CF4FDE0EBB3CDCF6 /* libPods-OneSignalNotificationServiceExtension.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +27,28 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = lighthouse;
 		};
+		B1C384E3289C497B00B4D85F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B1C384DD289C497A00B4D85F;
+			remoteInfo = OneSignalNotificationServiceExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B1C384E9289C497B00B4D85F /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B1C384E5289C497B00B4D85F /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* lighthouseTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lighthouseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,10 +75,18 @@
 		5DEC1EEF289F999A000B5C71 /* Merriweather-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Merriweather-Light.ttf"; path = "../../../../Downloads/Merriweather/Merriweather-Light.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = lighthouse/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		87E9DB9D7E6D01C19CF19898 /* Pods-lighthouse.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse.debug.xcconfig"; path = "Target Support Files/Pods-lighthouse/Pods-lighthouse.debug.xcconfig"; sourceTree = "<group>"; };
-		934314D8FA5AA37422C7A63D /* libPods-lighthouse-lighthouseTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lighthouse-lighthouseTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BDAA48A62A4511D029FAFF78 /* libPods-lighthouse.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lighthouse.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9869C396CF4FDE0EBB3CDCF6 /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E252406F4A042184B10C9A8 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
+		B1C384D7289C488200B4D85F /* lighthouse.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = lighthouse.entitlements; path = lighthouse/lighthouse.entitlements; sourceTree = "<group>"; };
+		B1C384DE289C497A00B4D85F /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1C384E0289C497B00B4D85F /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		B1C384E2289C497B00B4D85F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B1C3853A289C4C9300B4D85F /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
+		C5A57D16E2F12ABE2292D2F2 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
+		D294CC9A1B114B3D5811AE6A /* libPods-lighthouse-lighthouseTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lighthouse-lighthouseTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7C8A5A16BE2BDDCE4223568 /* Pods-lighthouse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse.release.xcconfig"; path = "Target Support Files/Pods-lighthouse/Pods-lighthouse.release.xcconfig"; sourceTree = "<group>"; };
 		E62EE8B0A1820B06F682DC6B /* Pods-lighthouse-lighthouseTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse-lighthouseTests.release.xcconfig"; path = "Target Support Files/Pods-lighthouse-lighthouseTests/Pods-lighthouse-lighthouseTests.release.xcconfig"; sourceTree = "<group>"; };
+		E94C71CB30E44EB29B9C063A /* libPods-lighthouse.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lighthouse.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -75,7 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A376329B4AC0D9E6AF178F38 /* libPods-lighthouse-lighthouseTests.a in Frameworks */,
+				98BFE8EE42A8EAE72EE24423 /* libPods-lighthouse-lighthouseTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +103,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60BD982FD9C7913B4A6B249E /* libPods-lighthouse.a in Frameworks */,
+				F3C3C9821A12D08277573410 /* libPods-lighthouse.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B1C384DB289C497A00B4D85F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FFD8EFC1E9C7B331EF2711C4 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +138,7 @@
 		13B07FAE1A68108700A75B9A /* lighthouse */ = {
 			isa = PBXGroup;
 			children = (
+				B1C384D7289C488200B4D85F /* lighthouse.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -124,8 +153,9 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				BDAA48A62A4511D029FAFF78 /* libPods-lighthouse.a */,
-				934314D8FA5AA37422C7A63D /* libPods-lighthouse-lighthouseTests.a */,
+				E94C71CB30E44EB29B9C063A /* libPods-lighthouse.a */,
+				D294CC9A1B114B3D5811AE6A /* libPods-lighthouse-lighthouseTests.a */,
+				9869C396CF4FDE0EBB3CDCF6 /* libPods-OneSignalNotificationServiceExtension.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -163,6 +193,7 @@
 				13B07FAE1A68108700A75B9A /* lighthouse */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* lighthouseTests */,
+				B1C384DF289C497B00B4D85F /* OneSignalNotificationServiceExtension */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -177,8 +208,19 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* lighthouse.app */,
 				00E356EE1AD99517003FC87E /* lighthouseTests.xctest */,
+				B1C384DE289C497A00B4D85F /* OneSignalNotificationServiceExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B1C384DF289C497B00B4D85F /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				B1C3853A289C4C9300B4D85F /* OneSignalNotificationServiceExtension.entitlements */,
+				B1C384E0289C497B00B4D85F /* NotificationService.swift */,
+				B1C384E2289C497B00B4D85F /* Info.plist */,
+			);
+			path = OneSignalNotificationServiceExtension;
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
@@ -188,6 +230,8 @@
 				D7C8A5A16BE2BDDCE4223568 /* Pods-lighthouse.release.xcconfig */,
 				06C366FE81EA103C86358536 /* Pods-lighthouse-lighthouseTests.debug.xcconfig */,
 				E62EE8B0A1820B06F682DC6B /* Pods-lighthouse-lighthouseTests.release.xcconfig */,
+				C5A57D16E2F12ABE2292D2F2 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
+				9E252406F4A042184B10C9A8 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -203,8 +247,8 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				6594A9747051122D1748136D /* [CP] Embed Pods Frameworks */,
 				37102D40C91B4DF2AC42A79C /* [CP] Copy Pods Resources */,
+				5B01AA3A9F4876D340133D1A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -226,17 +270,37 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				8EF3A146A2890E0F6F2C2C63 /* [CP] Embed Pods Frameworks */,
 				6FE99928C6FE2F95909201F6 /* [CP] Copy Pods Resources */,
+				04FFE92958FABA83F0EE70B5 /* [CP] Embed Pods Frameworks */,
+				B1C384E9289C497B00B4D85F /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B1C384E4289C497B00B4D85F /* PBXTargetDependency */,
 			);
 			name = lighthouse;
 			productName = lighthouse;
 			productReference = 13B07F961A680F5B00A75B9A /* lighthouse.app */;
 			productType = "com.apple.product-type.application";
+		};
+		B1C384DD289C497A00B4D85F /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B1C384E6289C497B00B4D85F /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
+			buildPhases = (
+				6DA246DAB78931B03AD9A334 /* [CP] Check Pods Manifest.lock */,
+				B1C384DA289C497A00B4D85F /* Sources */,
+				B1C384DB289C497A00B4D85F /* Frameworks */,
+				B1C384DC289C497A00B4D85F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OneSignalNotificationServiceExtension;
+			productName = OneSignalNotificationServiceExtension;
+			productReference = B1C384DE289C497A00B4D85F /* OneSignalNotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -244,6 +308,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1210;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -252,6 +317,9 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1120;
+					};
+					B1C384DD289C497A00B4D85F = {
+						CreatedOnToolsVersion = 12.4;
 					};
 				};
 			};
@@ -270,6 +338,7 @@
 			targets = (
 				13B07F861A680F5B00A75B9A /* lighthouse */,
 				00E356ED1AD99517003FC87E /* lighthouseTests */,
+				B1C384DD289C497A00B4D85F /* OneSignalNotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -286,20 +355,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5DEC1EE6289F15F3000B5C71 /* NotoSerif-Regular.ttf in Resources */,
-				5DEC1EF0289F999A000B5C71 /* Merriweather-Black.ttf in Resources */,
-				5DEC1EF5289F999A000B5C71 /* Merriweather-LightItalic.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				5DEC1EF6289F999A000B5C71 /* Merriweather-Bold.ttf in Resources */,
-				5DEC1EE7289F15F3000B5C71 /* NotoSerif-Italic.ttf in Resources */,
-				5DEC1EF3289F999A000B5C71 /* Merriweather-Regular.ttf in Resources */,
-				5DEC1EF2289F999A000B5C71 /* Merriweather-BoldItalic.ttf in Resources */,
-				5DEC1EF7289F999A000B5C71 /* Merriweather-Light.ttf in Resources */,
-				5DEC1EE5289F15F3000B5C71 /* NotoSerif-Bold.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				5DEC1EE4289F15F3000B5C71 /* NotoSerif-BoldItalic.ttf in Resources */,
-				5DEC1EF4289F999A000B5C71 /* Merriweather-Italic.ttf in Resources */,
-				5DEC1EF1289F999A000B5C71 /* Merriweather-BlackItalic.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B1C384DC289C497A00B4D85F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +383,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		04FFE92958FABA83F0EE70B5 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		08A0ADF0778A3DCCDBB3EB9F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -359,7 +440,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lighthouse-lighthouseTests/Pods-lighthouse-lighthouseTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6594A9747051122D1748136D /* [CP] Embed Pods Frameworks */ = {
+		5B01AA3A9F4876D340133D1A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -374,6 +455,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lighthouse-lighthouseTests/Pods-lighthouse-lighthouseTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6DA246DAB78931B03AD9A334 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OneSignalNotificationServiceExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6FE99928C6FE2F95909201F6 /* [CP] Copy Pods Resources */ = {
@@ -415,23 +518,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8EF3A146A2890E0F6F2C2C63 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -471,6 +557,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B1C384DA289C497A00B4D85F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1C384E1289C497B00B4D85F /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -478,6 +572,11 @@
 			isa = PBXTargetDependency;
 			target = 13B07F861A680F5B00A75B9A /* lighthouse */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
+		};
+		B1C384E4289C497B00B4D85F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B1C384DD289C497A00B4D85F /* OneSignalNotificationServiceExtension */;
+			targetProxy = B1C384E3289C497B00B4D85F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -487,6 +586,8 @@
 			baseConfigurationReference = 06C366FE81EA103C86358536 /* Pods-lighthouse-lighthouseTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				DEVELOPMENT_TEAM = R26A35UA9U;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -514,7 +615,9 @@
 			baseConfigurationReference = E62EE8B0A1820B06F682DC6B /* Pods-lighthouse-lighthouseTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = R26A35UA9U;
 				INFOPLIST_FILE = lighthouseTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -537,8 +640,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 87E9DB9D7E6D01C19CF19898 /* Pods-lighthouse.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = lighthouse/lighthouse.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R26A35UA9U;
 				ENABLE_BITCODE = NO;
@@ -564,8 +669,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D7C8A5A16BE2BDDCE4223568 /* Pods-lighthouse.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = lighthouse/lighthouse.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R26A35UA9U;
 				INFOPLIST_FILE = lighthouse/Info.plist;
@@ -720,6 +827,74 @@
 			};
 			name = Release;
 		};
+		B1C384E7289C497B00B4D85F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C5A57D16E2F12ABE2292D2F2 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = R26A35UA9U;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.lighthouseLHY.OneSignalNotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		B1C384E8289C497B00B4D85F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9E252406F4A042184B10C9A8 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = R26A35UA9U;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.lighthouseLHY.OneSignalNotificationService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -746,6 +921,15 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B1C384E6289C497B00B4D85F /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B1C384E7289C497B00B4D85F /* Debug */,
+				B1C384E8289C497B00B4D85F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
