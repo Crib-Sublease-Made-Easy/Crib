@@ -12,6 +12,7 @@ export const InboxTitle = styled.Text`
     align-self: center;
     font-size: ${HEIGHT*0.035}px
     margin-top: ${HEIGHT*0.05}px
+    font-weight: 500
 `
 
 export const FlatlistItemContainer = styled.TouchableOpacity`
