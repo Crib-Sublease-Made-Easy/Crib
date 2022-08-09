@@ -16,6 +16,7 @@ Ionicons.loadFont()
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
+import { UserContext } from '../../../../../UserContext'
 
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     RowContainer, CategoryName, PhoneNumberContainer, HelpText } from './editOccupationStyle';
@@ -24,11 +25,14 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
 export default function EditOccupationScreen({navigation, route}){
+    const {USERID} = useContext(UserContext);
+
     const [occupation, setOccupation] = useState('')
+    
 
     async function update(){
         const accessToken = await SecureStorage.getItem("refreshToken");
-        fetch('https://sublease-app.herokuapp.com/users/' + route.params.userData._id, {
+        fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',
@@ -43,7 +47,7 @@ export default function EditOccupationScreen({navigation, route}){
             
             console.log(data)
 
-            navigation.navigate('ProfileEdit',{userData:data})
+            navigation.navigate('ProfileEdit')
         })
         .catch(e => {
             console.log(e)
@@ -63,17 +67,12 @@ export default function EditOccupationScreen({navigation, route}){
                 </NameContainer>
                 <ResetButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
-                        <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
+                        <Ionicons name='checkmark' size={25} style={{paddingHorizontal:WIDTH*0.02}} color='black' />
                     </Pressable>
                 </ResetButtonContainer>
             </HeaderContainer>
 
             <View style={{width:WIDTH, height: HEIGHT*0.03}}/>
-
-            <RowContainer>
-                <CategoryName>Old Occupation</CategoryName>
-                <PhoneNumberContainer editable={false} value={route.params.userData.occupation} />
-            </RowContainer>
             <RowContainer>
                 <CategoryName>Latest Occupation</CategoryName>
                 <PhoneNumberContainer onChangeText={(value)=> setOccupation(value)}  value={occupation} />

@@ -4,12 +4,12 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, DARKGREY, EXTRALIGH
 export const HeaderContainer = styled.View`
     width: ${WIDTH}px;
     height: ${HEIGHT*0.05}px;
-    border-top-right-radius: 20px;
-    border-top-left-radius: 20px;
+    
     flex-direction: row;
     border-bottom-width: 0.5px;
     border-color: #E0E0E0
     align-self:center
+    aling-items: center
 `
 
 export const BackButtonContainer = styled.View`
@@ -25,6 +25,7 @@ export const NameContainer = styled.View`
     width: ${WIDTH*0.5}px;
     justify-content: center;
     align-items:center
+    height: 100%
  
   `
 
@@ -37,9 +38,14 @@ export const ResetButtonContainer = styled.View`
 `
 
 export const Header = styled.Text`
-    margin-top: ${HEIGHT*0.025}px
     font-size: ${HEIGHT*0.02}px;
     font-weight: 500;
+`
+export const NameText = styled.Text`
+    font-size: ${HEIGHT*0.02}px;
+    width: ${WIDTH*0.9}px
+    font-weight: 500;
+    text-align:center
 `
 
 export const TopContainer = styled.View`
@@ -57,6 +63,7 @@ export const ImageContainer = styled.Pressable`
 `
 
 export const NameJobContainer = styled.View`
+    padding-vertical: ${HEIGHT*0.025}px
     width: ${WIDTH*0.9}px;
     justify-content: center
     align-items:center

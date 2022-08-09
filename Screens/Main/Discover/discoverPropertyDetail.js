@@ -16,6 +16,8 @@ import {
   } from 'react-native';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {UserContext} from '../../../UserContext'
 import { SharedElement } from 'react-navigation-shared-element';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -161,7 +163,9 @@ export default function PropertyDetailScreen({navigation, route}){
             }) 
             .then(res => res.json()).then(message =>{
                 setLiked(!liked)
-                console.log(message)
+                
+                //Return list of properties liked 
+                
                
             })
             .catch(e=>{

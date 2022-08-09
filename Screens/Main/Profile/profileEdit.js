@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useState, useRef, useEffect, useContext} from 'react'
 import {
     SafeAreaView,
     Image,
@@ -11,7 +11,7 @@ import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handl
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
@@ -21,22 +21,22 @@ Ionicons.loadFont()
 
 import ImagePicker from 'react-native-image-crop-picker';
 
+import { UserContext } from '../../../UserContext';
 
 import { DARKGREY, HEIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR, WIDTH, EXTRALIGHT } from '../../../sharedUtils';
 
 import {HeaderContainer, Header, BackButtonContainer, NameContainer, ResetButtonContainer, TopContainer, ImageContainer
         ,NameJobContainer, JobText, RowContainer, CategoryName, AboutMeInput, RowName, RowContainerCol, 
-        TextInputPressable, ChangeProfilePicText, AgeText} from './profileEditStyle';
+        TextInputPressable, ChangeProfilePicText, AgeText, NameText} from './profileEditStyle';
 
 export default function ProfileEditScreen({navigation, route}){
-    console.log(route.params.userData)
-    const userData = route.params.userData
-    const [userAPIData, setUserAPIData] = useState('')
-    const [profilePic, setProfilePic] = useState(route.params.userData.profilePic)
-    const [education, setEducation] = useState(route.params.userData.school)
-    const [initialLoad, setInitialLoad] = useState(false)
-   
-    const userAge = Math.floor(route.params.userData.dob/(1000*60*60*24*365))
+
+    const {USERID} = useContext(UserContext);
+    const [userAPIData, setUserAPIData] = useState(route.params.userData)
+    const [profilePic, setProfilePic] = useState(route.params.userData == undefined ? null : route.params.userData.profilePic)
+    const [school, setSchool] = useState(route.params.userData == undefined ? null : route.params.userData.school)
+    const [occupation, setOccupation] =  useState(route.params.userData == undefined ? null : route.params.userData.occupation)
+    //const userAge = Math.floor(route.params.userData.dob/(1000*60*60*24*365))
    
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
@@ -46,16 +46,9 @@ export default function ProfileEditScreen({navigation, route}){
     },[navigation])
     
     async function getTokens(){
-        console.log("In getTokens Function")
-        console.log("USER DATA", route.params.userData)
         const accessToken = await SecureStorage.getItem("refreshToken");
-        const UID = await SecureStorage.getItem("userId");
-        
-        if(route.params.userData.profilePic != null){
-            console.log("LOADING -- Profile Pic from params")
-            setProfilePic(route.params.userData.profilePic)
-        }
-        fetch('https://sublease-app.herokuapp.com/users/' + route.params.userData._id, {
+
+        fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
         method: 'GET',
         headers: {
         Accept: 'application/json',
@@ -65,10 +58,30 @@ export default function ProfileEditScreen({navigation, route}){
         }) 
         .then(res => res.json()).then(async userData =>{
             setUserAPIData(userData)
-            if(route.params.userData.profilePic == null){
+            //set the profilePic state varaible 
+            const cachedProfilePic = await AsyncStorage.getItem("profilePic")
+            if(school == null || userData.school != school){
+                console.log("UPDATE --- API --- school")
+                setSchool(userData.school)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- school")
+            }
+            if(occupation == null || userData.occupation != occupation){
+                console.log("UPDATE --- API --- school")
+                setOccupation(userData.occupation)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- occupation")
+            }
+            if(cachedProfilePic == null && (userData.profilePic != route.params.userData.profilePic)){
+                console.log("UPDATE --- API --- profilePic")
                 setProfilePic(userData.profilePic)
-                await SecureStorage.removeItem("profilePic")
-                await SecureStorage.setItem("ProfilePic", userData.profilePic)
+                await AsyncStorage.setItem("profilePic", userData.profilePic)
+            }
+            else if(profilePic == null){
+                console.log("UPDATE --- CACHE --- profilePic")
+                setProfilePic(cachedProfilePic)
             }
         })
         .catch(e=>{
@@ -77,49 +90,54 @@ export default function ProfileEditScreen({navigation, route}){
     }
 
     async function SelectProfilePic(){
-        const accessToken = await SecureStorage.getItem("refreshToken");
-        ImagePicker.openPicker({
-            width: 300,
-            height: 300,
-            cropping:true,
-            compressImageQuality: 0.3
-          }).then(image => {
-           
-            console.log(route.params.userData._id)
-            console.log(accessToken)
-            const formData = new FormData();
-            console.log(image.path)
-            var array = image.path.split(".");      
-            formData.append("userImage", {
-                uri: image.path,
-                type: 'image/' + array[1],
-                name: 'someName',
-            }); 
-            fetch('https://sublease-app.herokuapp.com/users/profileImages/' + route.params.userData._id, {
-                method: 'PUT',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + accessToken,
-                },
-                body: formData
-            }).then(resp=>resp.json()).then(async data=>{
-                if (data.msg != "profile pic successfully changed" ){
-                    alert("Update unsuccessful.")
-                }
-                else{
-                    setProfilePic(image.path)
-                    await SecureStorage.setItem("profilePic", data.profilePic)
-                }
-                console.log(data)
-                
-            })
-            .catch((error) => {
-                if (error.code === 'E_PICKER_CANCELLED') { // here the solution
-                  return false;
-                }
+        try{
+            const accessToken = await SecureStorage.getItem("refreshToken");
+            ImagePicker.openPicker({
+                width: 300,
+                height: 300,
+                cropping:true,
+                compressImageQuality: 0.3
+            }).then(image => {
+        
+                const formData = new FormData();
+            
+                var array = image.path.split(".");      
+                formData.append("userImage", {
+                    uri: image.path,
+                    type: 'image/' + array[1],
+                    name: 'someName',
+                }); 
+
+                fetch('https://sublease-app.herokuapp.com/users/profileImages/' + USERID, {
+                    method: 'PUT',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + accessToken,
+                    },
+                    body: formData
+                }).then(resp=>resp.json()).then(async data=>{
+                    if (data.msg != "profile pic successfully changed" ){
+                        alert("Update unsuccessful.")
+                    }
+                    else{
+                        console.log("SET --- CACHE --- profilePic")
+                        setProfilePic(data.profilePic)
+                        await AsyncStorage.setItem("profilePic", data.profilePic)
+                    }
+                })
+                .catch((error) => {
+                    if (error.code === 'E_PICKER_CANCELLED') { // here the solution
+                    return false;
+                    }
+                });
             });
-          });
+        }
+        catch{
+            if (error.code === 'E_PICKER_CANCELLED') { // here the solution
+                return false;
+            }
+        }
         
         
     }   
@@ -151,8 +169,8 @@ export default function ProfileEditScreen({navigation, route}){
                         </Pressable>
                     </ImageContainer>
                     <NameJobContainer>
-                        <Header>{userData.firstName}  {userData.lastName}</Header>
-                        <AgeText style={{color:DARKGREY}}>{userAge} years old</AgeText>
+                        <NameText>{userAPIData.firstName}  {userAPIData.lastName}</NameText>
+                        {/* <AgeText style={{color:DARKGREY}}>{userAge} years old</AgeText> */}
                     </NameJobContainer>
             </TopContainer>
             
@@ -174,14 +192,14 @@ export default function ProfileEditScreen({navigation, route}){
             </RowContainer> */}
 
             <CategoryName>Education</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditEducation", {uid: userAPIData._id })}>
-                <RowName>{userAPIData.school}</RowName>
+            <RowContainer onPress={()=> navigation.navigate("EditEducation", {uid: USERID })}>
+                <RowName>{school}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
 
             <CategoryName>Occupation</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditOccupation", {userData: userAPIData})}>
-                <RowName>{userAPIData.occupation}</RowName>
+            <RowContainer onPress={()=> navigation.navigate("EditOccupation")}>
+                <RowName>{occupation}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
         </ScrollView>

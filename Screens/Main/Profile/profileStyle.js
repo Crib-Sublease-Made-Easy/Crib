@@ -44,7 +44,6 @@ export const NameText = styled.Text`
     width: ${WIDTH*0.9}px
     font-weight: 500;
     text-align:center
-    
 `
 
 export const OccupationText = styled.Text`
@@ -189,6 +188,19 @@ export const FavPropertyCard = styled.Pressable`
   border-radius: 10px;
   background-color:white;  
   flex-direction: row
+  shadow-color: black;
+  shadow-radius: 5px;
+  shadow-offset: 0 4px;
+  shadow-opacity: 0.2;
+  elevation: 2
+`
+export const PostedPropertyCard = styled.Pressable`
+  border-radius: 10px
+  background-color: white
+  max-height: 95%
+
+
+  
 `
 export const FavPropertyCardContent = styled.Pressable`
   padding-horizontal: ${WIDTH*0.02}px
