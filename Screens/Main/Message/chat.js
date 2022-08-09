@@ -90,10 +90,38 @@ export default function ChatScreen({navigation, route}){
             // The message is successfully sent to the channel.
             // The current user can receive messages from other users through the onMessageReceived() method of an event handler.
               console.log("Message was successfully sent")
-            
+              if(channel.members.length > 1){
+              fetch('https://sublease-app.herokuapp.com/notifications/sendMessage', {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    participant1: channel.member[0]._id,
+                    participant2: channel.member[1]._id,
+                    senderId: id,
+                    message: messages[0].text
+                })
+            })
+            .then( res => {
+                if(res.status == 200){          
+                    alert("SET VARIABLES")
+    
+                    success =true
+                } else{
+                    alert("Incorrect code.")
+                    setCode("")
+                    success=false
+                }
+                
+                return res.json()
+            })
+          }
             
           }
           });
+        
         }
       })
       setTypingText("")
