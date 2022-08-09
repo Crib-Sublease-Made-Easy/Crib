@@ -23,6 +23,7 @@ const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
 import { InboxTitle, FlatlistItemContainer, FlatlistUnread, FlatlistLeft, FlatlistRight, LocationText,TextAndTime, LastMessageTime } from './messageStyle';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MessageScreen({navigation, route}){
     const {sb} = useContext(UserContext);
@@ -58,12 +59,22 @@ export default function MessageScreen({navigation, route}){
         listQuery.limit = 15;   // The value of pagination limit could be set up to 100.
         
         if (listQuery.hasNext) {
-            listQuery.next(function(groupChannels, error) {
+            listQuery.next(async function(groupChannels, error) {
                 if (error) {
                     // Handle error.
                     console.log("error", error)
                 }
+                const tempConvoList = await AsyncStorage.getItem("convoList")
+                // if(new Object(JSON.parse(tempConvoList)).toLocaleString() == new Object(groupChannels).toLocaleString()){
+                //     console.log("UPDATE --- CACHE --- convoList")
+                //     setConvoList(tempConvoList)
+                // }
+                // else{
+                //     console.log("UPDATE --- API --- convoList")
+                //     setConvoList(groupChannels)
+                // }
                 setConvoList(groupChannels)
+                
                 // A list of group channels is successfully retrieved.
                 // console.log(groupChannels)
                 // console.log("new console list")

@@ -43,7 +43,7 @@ export default function EditEducationScreen({navigation, route}){
         .then((response) => response.json()).then(data => {
             console.log("Update education reponse")
             console.log(data)
-            navigation.navigate('ProfileEdit',{userData:data, refresh: true})
+            navigation.navigate('ProfileEdit',{userData:data,})
         })
         .catch(e => {
             console.log(e)

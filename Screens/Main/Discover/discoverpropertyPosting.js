@@ -57,17 +57,17 @@ const bathroomList = ["1", "2", "3", "4+"]
 
 
 import {
-    ModalView, Heading, ButtonContainer, ImageContainer, NextContainer, InfoText, ContinueButton,
-    ContinueText, PostingSection, InfoTextSection2, SearchContainer, SearchInput, Subheading,
+    ModalView, Heading, ButtonContainer, ImageContainer, NextContainer, InfoText, PostingSection, InfoTextSection2, SearchContainer, SearchInput, Subheading,
     InputContainer, DateSelectContainer, DateContainer, DateSelectPressable, BedBathInput, AmenitiesContainer,
     PropertyPhotoContainer, PhotoContainer, PropertyDescriptionInput, Divider, ReviewInfoText, ReviewSectionContainer,
     BedAndBathContainer, BedBathLogo, LocationText, ReviewPropertyDescriptionInput, Footer, ContactTanentButton,
     PricePerMonth, PropertyTypeCard, PriceInputSearchContainer, CategoryName, RowContainer, RowValueContainer, RowName,
     FollowUpContainer, FollowUpText, DateCategoryName, BedroomContaienr, BedroomItemContainer, RowContainerCol,
-    ReviewHeading, ReviewLocationContainer, ReviewDateContainer, ImageSelectionContainer, ImageText, MaxText
+    ReviewHeading, ReviewLocationContainer, ReviewDateContainer, ImageSelectionContainer, ImageText, CribText,
+    ContinueText
 } from './discoverPropertyPostingStyle';
 import Easing from 'react-native/Libraries/Animated/Easing';
-import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR } from '../../../sharedUtils';
+import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton} from '../../../sharedUtils';
 import { SubHeadingText } from '../../Onboarding/Landing/landingStyle';
 
 
@@ -152,21 +152,10 @@ export default function PropertyPostingScreen({ navigation }) {
        
         else {
             setscrollviewIndex(val)
-            console.log("Type: " + propertyType)
-            console.log("Address: " + propertyLocation)
-            console.log("Images: " + propertyphotoGallery.length)
-            console.log("Price: " + propertyPrice)
-            console.log("Negotiable: " + propertyPriceNego)
-            console.log("Description: " + propertyDescription)
-            console.log("AvailableFrom: " + propertydateFrom.getTime())
-            console.log("AvailableTo: " + propertydateTo.getTime())
-            console.log("Bed: " + propertyNumBed)
-            console.log("Bath: " + propertyNumBath)
-            console.log("AmenitiesList: ")
+            
             propertyAmenities.forEach(element => {
                 console.log(element)
             });
-            console.log("====================")
             setTimeout(() => {
                 scrollView.current.scrollTo({ x: WIDTH * val });
                 setscrollviewIndex(val)
@@ -350,8 +339,6 @@ export default function PropertyPostingScreen({ navigation }) {
 
     }
 
-
-
     async function selectGallery(name) {
         console.log(name)
         ImagePicker.openPicker({
@@ -454,7 +441,7 @@ export default function PropertyPostingScreen({ navigation }) {
             <ModalView>
                 <ButtonContainer>
                     <Pressable disabled={loading} onPress={() => moveScrollView(scrollviewIndex - 1)} style={{ width: WIDTH * 0.1 }}>
-                        <Ionicons name="arrow-back-outline" size={30} color='white'></Ionicons>
+                        <Ionicons name="arrow-back" size={30} color='white'></Ionicons>
                     </Pressable>
                     <Pressable style={{ display: scrollviewIndex == 10 || scrollviewIndex == 9 || scrollviewIndex == 0 ? 'none' : 'flex', }}
                         onPress={() => moveScrollView(scrollviewIndex + 1)}>
@@ -470,21 +457,21 @@ export default function PropertyPostingScreen({ navigation }) {
                     }}
                     scrollEnabled={false} horizontal snapToAlignment='end' decelerationRate='fast' snapToInterval={WIDTH} ref={scrollView} onTouchEnd={() => setexpended(true)} >
                     <PostingSection style={{ width: WIDTH, height: HEIGHT, alignItems: 'center', }}>
-                        <Heading>Sublease your property in just a few steps </Heading>
+                        <Heading>Sublease your <CribText>Crib</CribText></Heading>
                         <InfoText>
                             We make subleasing as easy as possible.
                         </InfoText>
-                        <ImageContainer>
-                            <Image source={require('../../../assets/room.jpeg')} style={{ height: HEIGHT * 0.25, width: '100%', marginTop: HEIGHT * 0.1, borderRadius: 10 }} />
-                        </ImageContainer>
+                        
+                            <Lottie source={require('../../../postingfirstpage.json')}  autoPlay={scrollviewIndex == 0 ? true : false} loop style={{width:WIDTH*0.9, height: WIDTH*0.9, }}/>
+                       
 
                     </PostingSection>
 
                     {/* Choose apartment type  */}
                     <PostingSection >
-                        <Heading>Type of sublease</Heading>
+                        <Heading>Property Type</Heading>
                         <InfoText>
-                            Please select your apartment type.
+                            Please select one of the options.
                         </InfoText>
 
                         <View style={{ marginTop: HEIGHT * 0.015 }}>

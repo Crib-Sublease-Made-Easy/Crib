@@ -115,9 +115,10 @@ export default function ProfileScreen({navigation}){
             }
             let cachedFavoriteProperties = await AsyncStorage.getItem("favoriteProperties")
             let cachedFavoritePropertiesId = await AsyncStorage.getItem("favoritePropertiesId")
-          
+
             let compare = new Object(JSON.parse(cachedFavoritePropertiesId)).toString() == userData.favoriteProperties;
-            if(cachedFavoriteProperties == null || !compare){
+            
+            if(cachedFavoriteProperties == null || !compare ){
                 console.log("UPDATE --- API --- favoriteProperties")
                 setFavoriteProperties([])
                 userData.favoriteProperties.forEach(propID => {

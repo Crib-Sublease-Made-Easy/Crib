@@ -2,13 +2,10 @@ import React, {useState, useEffect} from 'react';
 import {Dimensions, Pressable} from 'react-native';
 
 import styled from 'styled-components/native';
-import { DARKGREY, LIGHTGREY, MEDIUMGREY } from '../../../sharedUtils';
+import { DARKGREY, LIGHTGREY, MEDIUMGREY, HEIGHT, WIDTH, PRIMARYCOLOR, FONTFAMILY, EXTRALIGHT } from '../../../sharedUtils';
 
-const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
 
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
 
 export const ModalView = styled.View`
     position: absolute;
@@ -28,6 +25,15 @@ export const Heading = styled.Text`
     text-align: left;
     width: ${WIDTH*0.9}px;
     color: white
+    
+`
+export const CribText = styled.Text`
+    font-size: ${HEIGHT*0.035}px;
+    font-weight:700;
+    text-align: left;
+    width: ${WIDTH*0.9}px;
+    color: white
+    font-family: ${FONTFAMILY}
 `
 export const ReviewHeading = styled.Text`
     font-size: ${HEIGHT*0.025}px;
@@ -63,29 +69,11 @@ export const InfoText = styled.Text`
     color: white;
     text-align: left
     font-size: ${HEIGHT*0.0175}px;
-    font-weight: 400;
+    font-weight: 500;
     margin-top: ${HEIGHT*0.02}px;
     align-self: center
     
-`
-
-export const ContinueButton = styled.Pressable`
-    width: ${WIDTH*0.8}px;
-    height: ${HEIGHT*0.075}px;
-    background-color: ${PRIMARYCOLOR};
-    align-self:center;
-    margin-top:${HEIGHT*0.03}px;
-    border-radius: 20px;
-    justify-content: center;
-    align-items:center
-`
-
-export const ContinueText = styled.Text`
-    font-size: ${HEIGHT*0.02}px;
-    font-weight:500;
-    align-self: center
-    color: white
-   
+    
 `
 
 export const PostingSection = styled.View`
@@ -400,7 +388,7 @@ export const ImageContainer = styled.Pressable`
     height: ${HEIGHT*0.2}px
     margin-top: ${HEIGHT*0.015}px
     border-radius: 10px;
-    background-color: ${LIGHTGREY}
+    background-color: ${MEDIUMGREY}
     align-self: center
     justify-content: center;
     align-items: center
@@ -411,4 +399,11 @@ export const MaxText = styled.Text`
     align-self: center
     margin-top: ${HEIGHT*0.01}px
     color: white
+`
+//Continue Button Text used in sign up 
+export const ContinueText = styled.Text`
+    font-size: ${ HEIGHT*0.025}px;
+    font-weight: 500
+    color: white
+    
 `

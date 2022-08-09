@@ -107,15 +107,14 @@ export default function DiscoverScreen({navigation, route}){
 
     const [loading, setLoading] = useState(false)
     const [userId, setUserId] = useState(null)
-    const [filterApplied, setFilterApplied] = useState(false)
-
+    const [mapViewing, setMapViewing] = useState(true)
     useEffect(()=>{
         
         console.log("USEFFECT")
        
         //This loads the property in the flatlist 
         loadProperty()
-        getUserId()
+       
         retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom, filterAvailableTo )
         setPropertyPreviewCard(false)
         setSelectedPin([])
@@ -126,12 +125,6 @@ export default function DiscoverScreen({navigation, route}){
        
         
     },[currentLocation])
-
-    //Retrieve the user id from SecureStorage with name userId
-    const getUserId = async () =>{
-        const id = await SecureStorage.getItem('userId')
-        setUserId(id); 
-    }
 
     //Open The search bar container to displya all autocomplete results according to if searching is true 
     function openHeader(){
@@ -396,31 +389,35 @@ export default function DiscoverScreen({navigation, route}){
     //setSearching to false so to shrink the header
     //Dismiss keyboard
     function selectCurrentLocation(locationQueryName){
-        // console.log("The locationQueryName is :")
-        // console.log(locationQueryName)
-        setautocompleteLocation("")
-        setlocationQuery(locationQueryName)
-        setSearching(false)
-        Keyboard.dismiss()
-        let spacelessLocation = locationQueryName.replaceAll(" ", "+");
-        var config = {
-            method: 'get',
-            url: `https://maps.googleapis.com/maps/api/geocode/json?address=${spacelessLocation}&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`,
-        };
-        axios(config)
-        .then(async (response)=> {           
-            // console.log(data)
-            let lat = response.data.results[0].geometry.location.lat;
-            let long = response.data.results[0].geometry.location.lng
-            setCurrentLocation([lat,long])
-            moveMap(lat - 0.015, long)
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-       
-       
-
+        console.log("The locationQueryName is :")
+        console.log(locationQueryName)
+        if (locationQueryName != "" && autocompleteLocation.length != 0){
+            console.log("The locationQueryName is :")
+            console.log(locationQueryName)
+            setautocompleteLocation([])
+            setlocationQuery(locationQueryName)
+            setSearching(false)
+            Keyboard.dismiss()
+            let spacelessLocation = locationQueryName.replaceAll(" ", "+");
+            var config = {
+                method: 'get',
+                url: `https://maps.googleapis.com/maps/api/geocode/json?address=${spacelessLocation}&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`,
+            };
+            axios(config)
+            .then(async (response)=> {           
+                // console.log(response)
+                let lat = response.data.results[0].geometry.location.lat;
+                let long = response.data.results[0].geometry.location.lng
+                setCurrentLocation([lat,long])
+                moveMap(lat - 0.015, long)
+            })
+            .catch(function (error) {
+                
+                console.log(error);
+            });
+        
+        
+        }
     }
 
     async function onMarkerClick(item){
@@ -469,15 +466,15 @@ export default function DiscoverScreen({navigation, route}){
         <View style={{width:WIDTH,height:HEIGHT,position:'absolute', top:0,}}>
 
             <MapView
-            
                 onRegionChange={(Region)=> setMapCenterLocation([Region.latitude,Region.longitude])}
+                scrollEnabled={mapViewing}
                 ref={mapRef}
                 style={{flex:1, position:'relative'}}
                 initialRegion={{
                 latitude: 37.78825, 
                 longitude: -122.4324,
-                latitudeDelta: 0.0001,
-                longitudeDelta: 0,
+                latitudeDelta: 0.02,
+                longitudeDelta: 0.02,
                 }}
             >
                 <Marker
@@ -521,7 +518,7 @@ export default function DiscoverScreen({navigation, route}){
             })}}>
                 
                 {selectedPin != undefined && selectedPin != "" &&
-                <Pressable disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: userId})}}>
+                <Pressable disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID})}}>
                     <PreviewTopContainer>
                         <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
                         borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
@@ -560,8 +557,8 @@ export default function DiscoverScreen({navigation, route}){
                         </SeachIconContainer>
                         {/* This is the actual search input when user press on search bar  */}
                         <PlaceholderLogoTextContainer placeholderTextColor={TEXTINPUTBORDERCOLOR} placeholderTextWeight='500'
-                        placeholder="Search location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={()=>{setautocompleteLocation([]), setlocationQuery("")}}
-                        onEndEditing={()=>{closeHeader(), setSearching(false), setautocompleteLocation([]), Keyboard.dismiss()}} onFocus={()=> {openHeader(),setSearching(true), setPropertyPreviewCard(false)}}/>
+                        placeholder="Search location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
+                        onEndEditing={()=>{closeHeader(), setSearching(false), Keyboard.dismiss()}} onFocus={()=> {openHeader(),setSearching(true), setPropertyPreviewCard(false)}}/>
                         <DeleteIconContainer onPress={()=>setlocationQuery("")} style={{ display: searching ? 'flex' : 'none',}}>
                             <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />
                         </DeleteIconContainer>
@@ -581,7 +578,7 @@ export default function DiscoverScreen({navigation, route}){
                     {autocompleteLocation.length != 0 &&
                             
                         autocompleteLocation.map((value, index)=>(
-                            <AutocompleteLocationContainer key={"autocomplete" + value.description + index} onPress={()=>{selectCurrentLocation(value.description), setFilteredProperties([])}}>
+                            <AutocompleteLocationContainer searching={searching} key={"autocomplete" + value.description + index} onPress={()=>{selectCurrentLocation(value.description), setFilteredProperties([])}}>
                                 <Ionicons name="navigate-circle-outline" size={23} color= {PRIMARYCOLOR} style={{width: WIDTH*0.07}}/>
                                 <View>
                                 <LocationMainText key={value.structured_formatting.main_text}>{value.structured_formatting.main_text}</LocationMainText>
@@ -615,7 +612,7 @@ export default function DiscoverScreen({navigation, route}){
         setfilterAmenities={setfilterAmenities} filterPreviewValue={filterPreviewValue} setfilterPreviewValue={setfilterPreviewValue}
         filterPreviewDistanceValue={filterPreviewDistanceValue} setfilterPreviewDistanceValue={setfilterPreviewDistanceValue}
         filterAvailableFrom={filterAvailableFrom} setfilterAvailableFrom={setfilterAvailableFrom}
-        filterAvailableTo={filterAvailableTo} setfilterAvailableTo={setfilterAvailableTo}
+        filterAvailableTo={filterAvailableTo} setfilterAvailableTo={setfilterAvailableTo} openMapViewing={()=> setMapViewing(true)} closeMapViewing={()=> setMapViewing(false)}
         />
         
         </GestureHandlerRootView>

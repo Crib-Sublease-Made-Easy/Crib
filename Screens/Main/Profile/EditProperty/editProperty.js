@@ -11,7 +11,6 @@ import {
   Modal,
   Alert
 } from 'react-native';
-import { User } from 'realm';
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
@@ -25,7 +24,6 @@ FontAwesome.loadFont()
 import ImagePicker from 'react-native-image-crop-picker';
 
 
-import PropTypesScreen from './EditPropTypeModal/propertyTypeModal';
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     HeaderImageContainer, PropertyPhotoContainer, PhotoContainer, RowContainer, RowName, CategoryName,
     DatePriceText, DeleteContainer,DeleteText } from './editPropertyStyle';
@@ -41,20 +39,17 @@ export default function EditPropertyScreen({navigation, route}){
         });
         return unsubscribe; 
     },[navigation, ])
-   
-    // console.log(propData)
 
     const [propAPIData, setPropAPIData] = useState('')
-    const [propID, setPropID] = useState('')
-    const [propType, setPropType] = useState('')
-    const [propLocation, setPropLocation] = useState('')
-    const [propPrice, setPropPrice] = useState('')
-    const [propDateFrom, setPropDateFrom] = useState('')
-    const [propDateTo, setPropDateTo] = useState('')
-    const [propDescription, setPropDescription] = useState('')
+    const [propID, setPropID] = useState(route.params.propertyData._id)
+    const [propType, setPropType] = useState(route.params.propertyData.type)
+    const [propLocation, setPropLocation] = useState(route.params.propertyData.loc.streetAddr + " , " + route.params.propertyData.loc.secondaryTxt)
+    const [propPrice, setPropPrice] = useState(route.params.propertyData.price)
+    const [propDateFrom, setPropDateFrom] = useState(route.params.propertyData.availableFrom)
+    const [propDateTo, setPropDateTo] = useState(route.params.propertyData.availableTo)
+    const [propDescription, setPropDescription] = useState(route.params.propertyData.description)
     const [propImg, setPropImg] = useState(route.params.propertyData.imgList)
-    const [propAmen, setPropAmen] = useState('')
-    const [headerImage, setHeaderImage] = useState(null)
+    const [propAmen, setPropAmen] = useState(route.params.propertyData.amenities)
 
     const [propFloorplanImage, setPropFloorplanImage] = useState(null)
 
@@ -74,19 +69,65 @@ export default function EditPropertyScreen({navigation, route}){
         }
         }) 
         .then(res => res.json()).then(async propData =>{
-            // console.log(propData)
             setPropAPIData(propData) 
 
             //Set the default varaibles 
-            setPropLocation(propData.propertyInfo.loc.streetAddr + " , " + propData.propertyInfo.loc.secondaryTxt)
-            setPropType(propData.propertyInfo.type)
-            setPropPrice(propData.propertyInfo.price)
-            setPropDateFrom(propData.propertyInfo.availableFrom)
-            setPropDateTo(propData.propertyInfo.availableTo)
-            setPropDescription(propData.propertyInfo.description)
-            setPropAmen(propData.propertyInfo.amenities)
-            setPropID(propData.propertyInfo._id)
-            setPropImg(propData.propertyInfo.imgList)
+            if(propType != propData.propertyInfo.type){
+                console.log("UPDATE --- API --- propType")
+                setPropType(propData.propertyInfo.type)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propType")
+            }
+            if( propPrice != propData.propertyInfo.price){
+                console.log("UPDATE --- API --- propPrice")
+                setPropType(propData.propertyInfo.type)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propPrice")
+            }
+            if(propDateFrom != propData.propertyInfo.availableFrom){
+                console.log("UPDATE --- API --- propavailFrom")
+                setPropDateFrom(propData.propertyInfo.availableFrom)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propavailableFrom")
+            }
+            if(propDateTo != propData.propertyInfo.availableTo){
+                console.log("UPDATE --- API --- propavailTo")
+                setPropDateTo(propData.propertyInfo.availableTo)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propavailableTo")
+            }
+            if( propDescription != propData.propertyInfo.description){
+                console.log("UPDATE --- API --- propDescription")
+                setPropDescription(propData.propertyInfo.description)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propDescription")
+            }
+            if( propID != propData.propertyInfo._id){
+                console.log("UPDATE --- API --- propID")
+                setPropID(propData.propertyInfo._id)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propID")
+            }
+            if( new Object(propAmen).toLocaleString() != new Object(propData.propertyInfo.amenities).toLocaleString()){
+                console.log("UPDATE --- API --- propAmen")
+                setPropAmen(propData.propertyInfo.amenities)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propAmen")
+            }
+            if( new Object(propImg).toLocaleString() != new Object(propData.propertyInfo.imgList).toLocaleString()){
+                console.log("UPDATE --- API --- propImg")
+                setPropImg(propData.propertyInfo.imgList)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propImg")
+            }
             //console.log(propData.propertyInfo.imgList)
 
         })
@@ -130,11 +171,11 @@ export default function EditPropertyScreen({navigation, route}){
                 console.log(data)
             })
             .catch((error) => {
-                if (error.code === 'E_PICKER_CANCELLED') { // here the solution
-                  return false;
-                }
+                console.log(error)
             });
-          });
+        }).catch(e=>{
+            console.log("Canceled")
+        })
         
         
     }   

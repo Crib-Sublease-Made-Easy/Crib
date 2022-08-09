@@ -22,18 +22,16 @@ export const PropertyDescription = styled.View`
 `
 
 export const CardTitle = styled.Text`
-    font-family: ${FONTFAMILY}
     max-height: ${HEIGHT*0.075}px
     font-size: ${HEIGHT*0.03}px;
     margin-top: ${HEIGHT*0.025}px
     font-weight: 500;
     width: ${WIDTH*0.9}px;
    
-    
 `
 export const CardSectionOne = styled.View`
    
-    padding-vertical: ${HEIGHT*0.025}px
+    padding-vertical: ${HEIGHT*0.02}px
     width:${WIDTH*0.9}px
     align-self:center
 `
@@ -45,7 +43,7 @@ export const LocationDistanceContainer = styled.View`
    
 `
 export const LocationText = styled.Text`
-    font-family: ${FONTFAMILY}
+   
     font-size: ${HEIGHT*0.0175}px;
     font-weight: 400;
     color: black
@@ -58,12 +56,14 @@ export const AmenitiesText = styled.Text`
     margin-left: ${WIDTH*0.025}px
 `
 export const BedAndBathContainer = styled.View`
-   
+    margin-top: ${HEIGHT*0.025}px
     padding-vertical: ${HEIGHT*0.015}px
     width: ${WIDTH*0.9}px;
     flex-direction: row
     align-items: center;
     justify-content: space-between;
+    background-color: ${EXTRALIGHT}
+    border-radius:40px
 `
 
 export const BedBathLogo = styled.View`
@@ -87,24 +87,25 @@ export const Divider = styled.View`
 `
 export const CardSectionTwo = styled.View`
     padding-vertical: ${HEIGHT*0.02}px
-    align-items:center
+    width: ${WIDTH*0.9}px
+    align-self: center
 `
 export const InfoContainer = styled.View`
-    padding-vertical: ${HEIGHT*0.015}px
-   
+    height: ${HEIGHT*0.075}px 
     width: ${WIDTH*0.9}px;
-    justify-content: center
-`
-export const InfoHeaderText = styled.Text`
-    font-size: ${HEIGHT*0.02}px;
-    font-weight: 500;
-    width: ${WIDTH*0.9}px;
-    align-self: center
+    justify-content: space-between
     
 `
-export const BothInfoContainer = styled.View`
-    justify-content: space-around
+export const InfoHeaderText = styled.Text`
+    
+    height: ${HEIGHT*0.06}px
+   
+    font-size: ${HEIGHT*0.0225}px;
+    font-weight: 500;
+    width: ${WIDTH*0.5}px;
+    text-align: left
 `
+
 export const InfoText = styled.Text`
     font-size: ${HEIGHT*0.0175}px;
     font-weight: 400;
@@ -158,9 +159,15 @@ export const TenantInfoContainer = styled.View`
     width: ${WIDTH*0.9}px;
     justify-content: space-between;
     align-items: center;
-    margin-top: ${HEIGHT*0.02}px;
-   
 `
+
+export const TenantNameText = styled.Text`
+font-size: ${HEIGHT*0.0225}px;
+font-weight: 500;
+width: ${WIDTH*0.9}px;
+align-self: center
+`
+
 export const TenantInfo = styled.View`
     
     
@@ -170,8 +177,7 @@ export const TenantInfo = styled.View`
 `
 
 export const ProfileImageContainer = styled.View`
-    width: ${WIDTH*0.3}px;
-    height: ${HEIGHT*0.15}px;
+    
     justify-content: center
 `
 
@@ -192,9 +198,8 @@ export const RowContainer = styled.View`
 `
 
 export const DateContainer = styled.View`
-    margin-top: ${HEIGHT*0.005}px
+   
     width: ${WIDTH*0.8}px;
-    justify-content: space-between;
     align-items: center
     flex-direction: row
 `
@@ -204,14 +209,13 @@ export const DateText = styled.Text`
     color: ${PRIMARYGREY}
 `
 
-export const DescriptionContainer = styled.View`
+export const DescriptionContainer = styled.Text`
     margin-top: ${HEIGHT*0.01}px
     width: ${WIDTH*0.9}px;
-    background-color: ${EXTRALIGHT};
-    height: ${HEIGHT*0.15}px
+    color: ${DARKGREY}
     align-self: center
     border-radius: 10px
-    padding-vertical: ${HEIGHT*0.01}px;
+    padding-vertical: ${HEIGHT*0.005}px;
     padding-horizontal: ${WIDTH*0.02}px
 `
 
@@ -223,4 +227,37 @@ export const TypeText = styled.Text`
     text-align: left
     font-weight: 600
     color: #3500a8
+`
+
+export const BedContainer = styled.View`
+    height: 100%
+    width: 33%
+`
+
+export const BedTopContainer = styled.View`
+    flex-direction: row;
+    width: 100%
+    align-items: center
+    justify-content: center
+
+`
+
+export const BedNumberText = styled.Text`
+    font-family: ${FONTFAMILY}
+    font-size: ${HEIGHT*0.03}px;
+    margin-left: ${WIDTH*0.01}px
+`
+
+export const BedroomNameText = styled.Text`
+    font-family: ${FONTFAMILY}
+    font-size: ${HEIGHT*0.015}px;
+    justify-content: center;
+    align-items: center
+    align-self: center
+`
+
+export const InfoHeaderTextAndCenter = styled.View`
+    width: ${WIDTH*0.9}px
+    flex-direction: row;
+    justify-content: space-between
 `

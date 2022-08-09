@@ -47,7 +47,7 @@ export default function EditOccupationScreen({navigation, route}){
             
             console.log(data)
 
-            navigation.navigate('ProfileEdit')
+            navigation.navigate('ProfileEdit', {userData:data})
         })
         .catch(e => {
             console.log(e)

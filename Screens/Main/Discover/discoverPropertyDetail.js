@@ -13,13 +13,16 @@ import {
     TextInput,
     Image,
     Pressable,
+    RefreshControl,
+    Vibration
   } from 'react-native';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import MapView , { Marker }from 'react-native-maps';
+
 import {UserContext} from '../../../UserContext'
-import { SharedElement } from 'react-navigation-shared-element';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
@@ -27,9 +30,11 @@ import { Container, PropertyDescription, ImageStyle, CardSectionOne, CardTitle, 
         LocationText, BedAndBathContainer, BedBathLogo, Divider, CardSectionTwo, InfoHeaderText,
             InfoContainer, BothInfoContainer, InfoText, DescriptionText, AmenitiesItem, Footer,
             PricePerMonth, ContactTanentButton, TenantInfoContainer, TenantInfo, ProfileImageContainer,
-           DateContainer, DateText, DescriptionContainer, AmenitiesText, TypeText} from './discoverPDStyle'
+           DateContainer, DateText, DescriptionContainer, AmenitiesText, TypeText, BedContainer,
+           BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, DARKGREY} from '../../../sharedUtils';
+import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, DARKGREY, FONTFAMILY} from '../../../sharedUtils';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -42,20 +47,14 @@ export default function PropertyDetailScreen({navigation, route}){
     
     useEffect(()=>{
       fetchProperties()
-     
+      getTokens()
     }, [])
 
     const flatListRef = useRef(null)
-    const propertyAmenities = (["Furnished", "Pets Allowed", "Able to renew", "On-site waher and dryer"]);
     const [propData, setPropData] = useState(route.params.data.propertyInfo);
     const postedUserData = route.params.data.userInfo;
-    const viewabilityConfigCallbackPairs = useRef([
-        { onViewableItemsChanged: testFuction },
-    ]);
     const {sb, USERID} = useContext(UserContext);
-    const [flatingScrolling, setFlatlistScrolling] = useState(false)
     const [flatlistIndex, setFlatlistIndex] = useState(0)
-    const [propAPIData, setPropAPIData] = useState()
     const [liked, setLiked]  = useState()
     const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == route.params.uid)
     const createConversation = async () =>{
@@ -75,6 +74,30 @@ export default function PropertyDetailScreen({navigation, route}){
         });
 
         
+    }
+
+    async function getTokens(){
+        const accessToken = await SecureStorage.getItem("refreshToken");
+
+        fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
+        method: 'GET',
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken,
+        }
+        }) 
+        .then(res => res.json()).then(async userData =>{
+            if(userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) == -1){
+                setLiked(false)
+            }
+            else{
+                setLiked(true)
+            }
+        })
+        .catch(e=>{
+            alert(e)
+        })
     }
 
     async function fetchProperties(){
@@ -102,34 +125,18 @@ export default function PropertyDetailScreen({navigation, route}){
                             propertyId: route.params.data.propertyInfo._id,
                         })
                         }) 
-                        .then(res => res.json()).then(message =>{
-                            setLiked(!liked)
-                        
-                        })
                         .catch(e=>{
                             alert(e)
                     })
                     alert("Property is deleted.")
                     navigation.goBack()
                 }
-                if(route.params.data == undefined){
-                    setPropData(propertyData.propertyInfo)
-                }
-                setPropAPIData(propertyData)
-                //console.log(propertyData)
-               
-               
             })
             .catch(e=>{
                 alert(e)
         })
     }
 
-    const testFuction = ({
-        viewableItems,
-    }) => {
-        //console.log(viewableItems)
-    };
 
     const onScroll = useCallback((event) => {
     const slideSize = event.nativeEvent.layoutMeasurement.width;
@@ -139,9 +146,9 @@ export default function PropertyDetailScreen({navigation, route}){
     }, []);
 
     async function likeProperty(){
-       
+        console.log("Liking")
         const accessToken = await SecureStorage.getItem("refreshToken");
-      
+        
         await fetch('https://sublease-app.herokuapp.com/properties/favorite', {
             method: 'POST',
             headers: {
@@ -153,21 +160,35 @@ export default function PropertyDetailScreen({navigation, route}){
                 propertyId: route.params.data.propertyInfo._id,
             })
             }) 
-            .then(res => res.json()).then(message =>{
+            .then(res => res.json()).then(async message =>{
                 setLiked(!liked)
-
             })
             .catch(e=>{
                 alert(e)
         })
     }
 
+    function isCloseToTop({layoutMeasurement, contentOffset, contentSize}){
+       
+        return contentOffset.y < -HEIGHT*0.2;
+     }
+
     return(
        
         <Container>             
             <PropertyDescription>
     
-                <ScrollView showsVerticalScrollIndicator={false} onRefresh={()=>console.log("hi")} >
+                <ScrollView showsVerticalScrollIndicator={false} onRefresh={()=>console.log("hi")} 
+               
+                bouncesZoom={1}
+                scrollEventThrottle={5}
+                onScroll={({nativeEvent}) => {
+                    if(isCloseToTop(nativeEvent)){
+                       navigation.navigate("Discover")
+                    }
+                }}
+                >
+                
                     <View style={{height:HEIGHT*0.35, width:WIDTH}}>
                         <FlatList 
                         onScroll={onScroll}
@@ -220,61 +241,110 @@ export default function PropertyDetailScreen({navigation, route}){
                             <LocationText>{propData.loc.secondaryTxt}</LocationText>
                             {/* <LocationText>3 miles away</LocationText> */}
                         </LocationDistanceContainer>
+                        <DescriptionContainer>
+                          
+                                {propData.description}
+                           
+                        </DescriptionContainer>
                         <BedAndBathContainer>
-                            <BedBathLogo>
+                            <BedContainer>
+                                <BedTopContainer>
+                                {propData.bed != "Studio" &&
+                                    <Ionicons name='bed' size={30} />
+                                }
+                                    <BedNumberText>{propData.bed}</BedNumberText>
+                                </BedTopContainer>
+                                <BedroomNameText>Bedroom</BedroomNameText>
+                            </BedContainer>
+                            <BedContainer>
+                                <BedTopContainer>
+                                    <Ionicons name='water' size={30} />
+                                    <BedNumberText>{propData.bath}</BedNumberText>
+                                </BedTopContainer>
+                                <BedroomNameText>Bathroom</BedroomNameText>
+                            </BedContainer>
+                            <BedContainer>
+                                <BedTopContainer>
+                                    <Ionicons name='car' size={30} />
+                                    <BedNumberText>{propData.bed}</BedNumberText>
+                                </BedTopContainer>
+                                <BedroomNameText>Garage</BedroomNameText>
+                            </BedContainer>
+                            {/* <BedBathLogo>
                                 <Ionicons name="bed-outline" size={25} color={PRIMARYGREY}></Ionicons>
                                 <LocationText>{propData.bed} bedroom</LocationText>
                             </BedBathLogo>
                             <BedBathLogo>
                                 <Ionicons name="water-outline" size={25} color={PRIMARYGREY}></Ionicons>
                                 <LocationText>{propData.bath} bathroom</LocationText>
-                            </BedBathLogo>
+                            </BedBathLogo> */}
                         </BedAndBathContainer>
                     </CardSectionOne>   
-                    <Divider></Divider>
+                  
                     <CardSectionTwo>
-                        <BothInfoContainer>
-                            <InfoContainer> 
-                                <InfoHeaderText>Property Type:</InfoHeaderText>
-                                <InfoText>{propData.type}</InfoText>
-                            </InfoContainer>
-                            <InfoContainer> 
-                                <InfoHeaderText>Availability:</InfoHeaderText>
-                                <DateContainer>
-                                    <DateText>{new Date(propData.availableFrom).toDateString()}</DateText>
-                                    <Ionicons name="arrow-forward-outline" size={25} />
-                                    <DateText>{new Date(propData.availableTo).toDateString()}</DateText>
-                                </DateContainer>
-                            </InfoContainer>
-                        </BothInfoContainer>
+                     
+                        <InfoHeaderText>Availability</InfoHeaderText>
+                        <InfoContainer> 
+                            
+                            <DateContainer>
+                                <Ionicons name='calendar' size={20} />
+                                <DateText style={{color:'black', fontFamily: FONTFAMILY}}> From    </DateText>
+                                <DateText>{new Date(propData.availableFrom).toDateString()}</DateText>
+                            </DateContainer>
+                            <DateContainer>
+                                <Ionicons name='calendar' size={20} />
+                                <DateText style={{color:'black',  fontFamily: FONTFAMILY}}> To    </DateText>
+                                <DateText>{new Date(propData.availableTo).toDateString()}</DateText>
+                            </DateContainer>
+                            
+                                
+                        </InfoContainer>
+                       
                     </CardSectionTwo>
-                    <Divider></Divider>
+
                     <CardSectionTwo>
-                        <InfoHeaderText>Descriptions:</InfoHeaderText>
-                        <DescriptionContainer>
-                            <Text>
-                                {propData.description}
-                            </Text>
-                        </DescriptionContainer>
+                        <InfoHeaderTextAndCenter>
+                            <InfoHeaderText>Location</InfoHeaderText>
+                            {/* <View style={{flexDirection:'row', alignItems:'flex-start', justifyContent:'center'}}>
+                                <Ionicons name="locate" size={20} />
+                                <Text>Center</Text>
+                            </View> */}
+                        </InfoHeaderTextAndCenter>
+                        <View style={{width: WIDTH*0.9, height: HEIGHT*0.2, borderRadius:25,}}>
+                        <MapView
+                            scrollEnabled={false}
+                            style={{flex:1, position:'relative', borderRadius:10}}
+                            initialRegion={{
+                            latitude: propData.loc.coordinates[1], 
+                            longitude: propData.loc.coordinates[0],
+                            latitudeDelta: 0.01,
+                            longitudeDelta: 0.01,
+                            }}
+                        >
+                            <Marker
+                            coordinate={{latitude: propData.loc.coordinates[1], longitude: propData.loc.coordinates[0]}}
+                            ></Marker>
+                        </MapView>
+                        </View>
                     </CardSectionTwo>
-                    <Divider></Divider>
+                    
                     
                     <CardSectionTwo>
-                        <InfoHeaderText>Tenant Information:</InfoHeaderText>
+                        <InfoHeaderText>Tenant Information</InfoHeaderText>
                         <TenantInfoContainer>
                             <ProfileImageContainer>
-                                <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.125, width:HEIGHT*0.125, borderRadius:HEIGHT*0.125/2, backgroundColor:LIGHTGREY}}/>
+                                <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.1, width:HEIGHT*0.1, borderRadius:HEIGHT*0.05, backgroundColor:LIGHTGREY}}/>
                             </ProfileImageContainer>
                             <TenantInfo>
-                                <InfoHeaderText style={{width: WIDTH*0.6}}>{postedUserData.firstName} {postedUserData.lastName}</InfoHeaderText>
-                                <InfoText>{postedUserData.school}</InfoText>
-                                <InfoText>{postedUserData.occupation}</InfoText>
+                                <TenantNameText style={{width: WIDTH*0.6}}>{postedUserData.firstName} {postedUserData.lastName}</TenantNameText>
+                                <InfoText>School:  {postedUserData.school}</InfoText>
+                                <InfoText>Occupation:  {postedUserData.occupation}</InfoText>
                             </TenantInfo>
                         </TenantInfoContainer>
                     </CardSectionTwo>
-                    <Divider></Divider>
+                  
                     <CardSectionOne>
-                        <InfoHeaderText>Amenities:</InfoHeaderText>
+                        <InfoHeaderText>Amenities</InfoHeaderText>
                         {propData.amenities.map((value)=>(
                             <AmenitiesItem key={value + "detailamen"}>
                                 <Ionicons name={GetAmenitiesIcon(value)} size={25} color={DARKGREY}></Ionicons>

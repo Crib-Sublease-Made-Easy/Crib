@@ -13,7 +13,6 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   TouchableOpacity,
-
   Pressable
 } from 'react-native';
 
@@ -142,7 +141,7 @@ export const PressableContainer = styled.Pressable`
  
 `
 
-export const AutocompleteLocationContainer = styled.Pressable`
+export const AutocompleteLocationContainer = styled(Pressable)`
   width: ${WIDTH*0.8}px;
   height: ${HEIGHT*0.075}px;
   border-top-width: 1px;
@@ -152,6 +151,7 @@ export const AutocompleteLocationContainer = styled.Pressable`
   padding-left: ${WIDTH*0.025}px;
   align-self: center
   overflow: hidden
+  display: ${props=>(props.searching ? 'flex' : 'none')}
 
 `
 

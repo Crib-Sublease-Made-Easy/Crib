@@ -224,16 +224,15 @@ export default function App() {
             />
             <Stack.Screen name="PropertyDetail"
               component={PropertyDetailScreen}
-              options={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS, }}
-              sharedElements={(route, otherRoute, showing) => {
-                return ["0", "view"];
-              }}
+              options={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS, gestureEnabled: false }}
+              
             />
             <Stack.Screen name="PropertyPosting"
               component={PropertyPostingScreen}
               options={{
                 headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS
+                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+                gestureEnabled: false 
               }}
             />
 

@@ -53,6 +53,7 @@ export const FlatlistRight = styled.View`
     justify-content: space-around
 `
 export const LocationText = styled.Text`
+    max-width: ${WIDTH*0.6}px
     font-size: ${HEIGHT*0.017}px;
     font-weight: 600
    
@@ -68,4 +69,6 @@ export const LastMessageTime = styled(Text)`
     font-size: ${HEIGHT*0.015}px;
     color: ${DARKGREY};
     font-weight: ${props=>(props.unreadCount == 0 ? '500' : '700')};
+    max-width: ${WIDTH*0.45}px
+    max-height: ${HEIGHT*0.02}px
 `

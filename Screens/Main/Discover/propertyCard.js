@@ -36,17 +36,7 @@ const PRIMARYCOLOR = '#4050B5'
 const TEXTGREY = '#969696'
 
 import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
-import { ease } from 'react-native/Libraries/Animated/Easing';
 
-
-// const CardContainer = styled.Pressable`
-//     width: ${WIDTH*0.9}px;
-//     height: ${HEIGHT*0.375}px;
-//     align-self: center;
-//     border-radius: 15px;
-//     padding-top: ${HEIGHT*0.01}px;
-//     padding-bottom: ${HEIGHT*0.01}px;
-// `
 const CardContainer = {width: WIDTH*0.9,  alignSelf: 'center', borderRadius: 15, paddingVertical: HEIGHT*0.01 ,  };
 
 const PropertyInfoContainer = styled.View`
@@ -138,16 +128,14 @@ const PropertiesLength = styled.Text`
 `
 
 export default function PropertyCard({navigation, setSelectedPin, loadMoreProperties,
-    filteredPropertiesData, markerClickIndex, flatlistRefreshing, currentLocation,
-    onMarkerClick, length, moveMap, openPreviewCard, userId
+    filteredPropertiesData, flatlistRefreshing, length, moveMap, openPreviewCard, userId,
 }){
     // console.log("hi")
     // console.log(filteredPropertiesData)
     const flatlistRef = useRef(0);
     const [previewing, setPreviewing] = useState(false)
     // const [propertiesData, setPropertiesData] = useState([]);
-    const [propertyPage, setPropertyPage] = useState(0);
-    const ImageOpacity = useRef(new Animated.Value(1)).current;
+
     useEffect(()=>{
        console.log("UseEffect Refreshing...")
     //    loadProperty()
@@ -159,11 +147,6 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     // Swipable Bottom Sheet
     const translateY = useSharedValue(0)
     const velocityY = useSharedValue(0)
-
-    function enableFlatlistScroll(arg){
-        setPreviewing(arg);
-    }
-
 
     const context = useSharedValue({y:0})
 
@@ -184,10 +167,13 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
       if(Math.abs(velocityY.value) > 1750){
         console.log("1")
         translateY.value = withSpring(HEIGHT/1.4, {stiffness: 70, mass: 0.3, damping:10})
+       
+       
       }
       else{
         console.log("2")
         translateY.value = withSpring(HEIGHT/40, {stiffness: 50, mass: 0.3, damping:15})
+
       }       
     }
     else{
@@ -198,6 +184,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
       else{
         console.log("4")
         translateY.value = withSpring(HEIGHT/1.4, {stiffness: 70, mass: 0.3, damping:15})
+       
       }
     }
   //   else if(translateY.value  < HEIGHT/1.59 && Math.abs(velocityY.value) >1500){

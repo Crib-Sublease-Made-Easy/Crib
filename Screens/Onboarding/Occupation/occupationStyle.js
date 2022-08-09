@@ -59,3 +59,4 @@ export const GeneralTextInput = styled.TextInput`
 export const TextInputContainer = styled.View`
     padding-top: ${HEIGHT*0.025}px
 `
+
