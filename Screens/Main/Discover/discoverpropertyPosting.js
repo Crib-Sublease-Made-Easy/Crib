@@ -203,7 +203,7 @@ export default function PropertyPostingScreen({ navigation }) {
             setautocompleteLocation([]);
         }
         setpropertyLocation(query);
-        if (query != "") {
+        if (query != "" && query.length % 2 == 0) {
             var config = {
                 method: 'get',
                 url: `https://sublease-app.herokuapp.com/autocomplete/places/${query}`,
@@ -471,7 +471,7 @@ export default function PropertyPostingScreen({ navigation }) {
                     <PostingSection >
                         <Heading>Property Type</Heading>
                         <InfoText>
-                            Please select one of the options.
+                            Please select one of the options
                         </InfoText>
 
                         <View style={{ marginTop: HEIGHT * 0.015 }}>
@@ -492,7 +492,7 @@ export default function PropertyPostingScreen({ navigation }) {
                         }}>
                             <Heading >Address of sublease </Heading>
                             <InfoText>
-                                Enter your property address.
+                                Enter your property address
                             </InfoText>
                         </Animated.View>
                         <SearchContainer>
