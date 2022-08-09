@@ -38,8 +38,9 @@ export default function MessageScreen({navigation, route}){
         const unsubscribe = navigation.addListener('focus', () => {
                     console.log("FOCUSSSSSS")
             fetchConvos()
+            sb.addChannelHandler('channels', channelHandler);
         });
-        sb.addChannelHandler('channels', channelHandler);
+        
 
     }, [])
 

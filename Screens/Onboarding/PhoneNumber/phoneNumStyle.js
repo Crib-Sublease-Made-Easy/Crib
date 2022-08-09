@@ -37,7 +37,7 @@ export const TitleText = styled.Text`
     font-weight: 500;
     width: ${WIDTH*0.9}px
     padding-left: ${WIDTH*0.1}px
-    font-family: ${FONTFAMILY}
+    //font-family: ${FONTFAMILY}
 `
 
 export const SubtitleText = styled.Text`
@@ -45,7 +45,7 @@ export const SubtitleText = styled.Text`
     margin-top: ${HEIGHT*0.025}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
-    font-family: ${FONTFAMILY}
+    //font-family: ${FONTFAMILY}
 `
 export const GeneralTextInput = styled.TextInput`
     width: ${WIDTH*0.8}px;
@@ -55,7 +55,7 @@ export const GeneralTextInput = styled.TextInput`
     padding-left: ${WIDTH*0.025}px
     border-color: ${TEXTINPUTBORDERCOLOR}
     align-self: center   
-    font-family: ${FONTFAMILY}
+    //font-family: ${FONTFAMILY}
 `
 export const TextInputContainer = styled.View`
     padding-top: ${HEIGHT*0.025}px

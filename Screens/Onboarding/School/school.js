@@ -65,12 +65,12 @@ export default function SchoolScreen({navigation, route}){
                     <GeneralTextInput  value={school} onChangeText={(value)=> setSchool(value)} placeholder="Ex: University of Wisconsin - Madison"  />
                 </TextInputContainer>
 
-                <FollowUpContainer>
+                {/* <FollowUpContainer>
                     <Pressable onPress={() => setShowPicker(!showPicker)}>
                         <Ionicons size={20} name={showPicker ? 'checkbox' : 'checkbox-outline'} color={DARKGREY} style={{ paddingVertical: HEIGHT * 0.01 }} />
                     </Pressable>
                     <FollowUpText>Show selection</FollowUpText>
-                </FollowUpContainer>
+                </FollowUpContainer> */}
 
 
                 { showPicker ? 

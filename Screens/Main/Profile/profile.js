@@ -363,3 +363,15 @@ export default function ProfileScreen({navigation}){
         </SafeAreaView>
     )
 }
+
+
+onesignal.createNotification({  
+app_id: '440ad232-b229-4ea1-963b-5037d3ac9413',
+include_player_ids: [user.oneSignalUserId],
+    contents: {
+    en: req.body.message,
+    },
+    name: 'CRIB_CHAT'
+})
+.then(res => console.log(res))
+.catch(err => console.error(err));

@@ -39,7 +39,7 @@ export const TitleText = styled.Text`
     font-weight: 500;
     width: ${WIDTH*0.9}px
     padding-left: ${WIDTH*0.1}px
-    font-family: ${FONTFAMILY}
+    //font-family: ${FONTFAMILY}
 `
 
 export const SubtitleText = styled.Text`
@@ -47,7 +47,7 @@ export const SubtitleText = styled.Text`
     margin-top: ${HEIGHT*0.025}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
-    font-family: ${FONTFAMILY}
+    //font-family: ${FONTFAMILY}
 `
 
 export const ProfilePicContainer = styled.Pressable`
