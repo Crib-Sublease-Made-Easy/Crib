@@ -61,17 +61,19 @@ export default function PropertyDetailScreen({navigation, route}){
     const createConversation = async () =>{
         var userIds = [USERID, propData.postedBy]
         
-        sb.GroupChannel.createChannelWithUserIds(userIds, false, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
+        sb.GroupChannel.createChannelWithUserIds(userIds, true, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
             if (error) {
                 // Handle error.
                 console.log("Failed To Create Channel")
                 console.log(error)
+                alert("You are currently engaged in a conversation with this user")
+            } else {
+                console.log("Channel Created Successfully")
+                //console.log(groupChannel)
+                // A group channel with additional information is successfully created.
+                var channelUrl = groupChannel.url;
+                navigation.navigate("Chat", {url:channelUrl, id: USERID, postedBy:postedUserData.firstName})
             }
-            console.log("Channel Created Successfully")
-            //console.log(groupChannel)
-            // A group channel with additional information is successfully created.
-            var channelUrl = groupChannel.url;
-            navigation.navigate("Chat", {url:channelUrl, id: USERID, postedBy:postedUserData.firstName})
         });
 
         
