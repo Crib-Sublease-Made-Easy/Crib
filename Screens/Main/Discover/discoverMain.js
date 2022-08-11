@@ -13,7 +13,7 @@ import {
 
 import { createBottomTabNavigator,  } from '@react-navigation/bottom-tabs';
 
-
+import { PRIMARYCOLOR } from '../../../sharedUtils';
 import DiscoverScreen from './discover';
 import MessageScreen from '../Message/message.js'
 import ProfileScreen from '../Profile/profile';
@@ -24,7 +24,6 @@ Ionicons.loadFont()
 
 const Tab = createBottomTabNavigator();
 
-const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
 
 const HEIGHT = Dimensions.get('screen').height;

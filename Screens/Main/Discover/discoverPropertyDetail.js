@@ -26,6 +26,8 @@ import {UserContext} from '../../../UserContext'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
+
+
 import { Container, PropertyDescription, ImageStyle, CardSectionOne, CardTitle, LocationDistanceContainer,
         LocationText, BedAndBathContainer, BedBathLogo, Divider, CardSectionTwo, InfoHeaderText,
             InfoContainer, BothInfoContainer, InfoText, DescriptionText, AmenitiesItem, Footer,
@@ -34,8 +36,6 @@ import { Container, PropertyDescription, ImageStyle, CardSectionOne, CardTitle, 
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
 import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, DARKGREY, } from '../../../sharedUtils';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { set } from 'react-native-reanimated';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -71,7 +71,7 @@ export default function PropertyDetailScreen({navigation, route}){
             //console.log(groupChannel)
             // A group channel with additional information is successfully created.
             var channelUrl = groupChannel.url;
-            navigation.navigate("Chat", {url:channelUrl, id: USERID})
+            navigation.navigate("Chat", {url:channelUrl, id: USERID, postedBy:postedUserData.firstName})
         });
 
         
@@ -290,10 +290,17 @@ export default function PropertyDetailScreen({navigation, route}){
                             </BedContainer>
                             <BedContainer>
                                 <BedTopContainer>
-                                    <Ionicons name='car' size={30} />
-                                    <BedNumberText>{propData.bed}</BedNumberText>
+                                    <Ionicons name='flame' size={30} />
+                                    <BedNumberText>
+                                    {
+                                    propData.numberOfViews < 1000 ?
+                                    propData.numberOfViews 
+                                    :
+                                    propData.numberOfViews/1000 + "K"
+                                    }
+                                    </BedNumberText>
                                 </BedTopContainer>
-                                <BedroomNameText>Garage</BedroomNameText>
+                                <BedroomNameText>Views</BedroomNameText>
                             </BedContainer>
                             {/* <BedBathLogo>
                                 <Ionicons name="bed-outline" size={25} color={PRIMARYGREY}></Ionicons>

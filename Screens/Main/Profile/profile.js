@@ -19,9 +19,8 @@ import { UserContext } from '../../../UserContext';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { PRIMARYCOLOR } from '../../../sharedUtils';
 
-
-const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
 
 const HEIGHT = Dimensions.get('screen').height;
@@ -117,7 +116,6 @@ export default function ProfileScreen({navigation}){
             }
             let cachedFavoriteProperties = await AsyncStorage.getItem("favoriteProperties")
             let cachedFavoritePropertiesId = await AsyncStorage.getItem("favoritePropertiesId")
-            console.log("cachedFavoriteProperties", cachedFavoriteProperties)
             let compare = new Object(JSON.parse(cachedFavoritePropertiesId)).toString() == userData.favoriteProperties;
             
             if(cachedFavoriteProperties == null || !compare){
@@ -125,7 +123,6 @@ export default function ProfileScreen({navigation}){
                 setFavoriteProperties([])
                 await AsyncStorage.removeItem('favoriteProperties')
                 await AsyncStorage.removeItem('favoritePropertiesId')
-                console.log("FAVS", userData.favoriteProperties)
                 userData.favoriteProperties.forEach(async propID => {
                     await fetch('https://sublease-app.herokuapp.com/properties/' + propID, {
                         method: 'GET',
@@ -136,9 +133,7 @@ export default function ProfileScreen({navigation}){
                         }
                         }) 
                         .then( async res => await res.json()).then(propertyData =>{
-            
-                            console.log("pushing propertyData")
-                    
+                                
                             tempFavProp.push(propertyData)
                             setFavoriteProperties(prev=>[...prev, propertyData])
 
@@ -149,7 +144,6 @@ export default function ProfileScreen({navigation}){
                             alert(e)
                     })
                 });
-                console.log("temp", tempFavProp)
                 
                 await AsyncStorage.setItem('favoriteProperties', JSON.stringify(tempFavProp))
                 await AsyncStorage.setItem('favoritePropertiesId', JSON.stringify(userData.favoriteProperties))
@@ -157,7 +151,6 @@ export default function ProfileScreen({navigation}){
             }
             else{
                 console.log("UPDATE --- CACHE --- favoriteProperties")
-                console.log("cachedFavoriteProperties", JSON.parse(cachedFavoriteProperties))
                 setFavoriteProperties(JSON.parse(cachedFavoriteProperties))
             }
 
@@ -184,25 +177,19 @@ export default function ProfileScreen({navigation}){
             }) 
             .then(res => res.json()).then(async propertyData =>{
                 if(propertyData.propertiesFound != "No Property found" ){
-                               
+                    
                         const tempPropData = await AsyncStorage.getItem('postedProperty')
+                        let compare = (new Object(tempPropData).toLocaleString() == propertyData)
 
-                        let compare = (new Object(JSON.parse(tempPropData)).toString() == propertyData)
-                        await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
                         if(!compare || tempPropData == null) {
                             console.log("UPDATE --- API --- POSTED PROPERTY")
-                            
                             await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
                             setPostedProperties(propertyData)
-                        
-                            console.log("SETTING ASYNCSTORAGE ERRER IN FETCH POSTED PROPERTY")
-                            
                         }
                         else{
                             console.log("UPDATE --- CACHE --- POSTED PROPERTY")
                             setPostedProperties(JSON.parse((tempPropData)))
-                        }
-                       
+                        }           
                     
                 }
                 else{

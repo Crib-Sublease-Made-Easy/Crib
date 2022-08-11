@@ -12,7 +12,8 @@ import {
   FlatList,
   Dimensions,
   Image,
-  Pressable
+  Pressable,
+  ActivityIndicator
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
@@ -35,6 +36,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
 import { ChatImageSettingContainer } from './chatStyle';
+import typescript from 'react-native-encrypted-storage';
 
 export default function ChatScreen({navigation, route}){
     const {sb} = useContext(UserContext);
@@ -55,6 +57,9 @@ export default function ChatScreen({navigation, route}){
       sb.addChannelHandler('channels', channelHandler);
       getGroupChannel()
       console.log("USE EFFECYT")
+      setTimeout(()=>{
+        setLoading(false)
+      },1000)
     }, [channel])
 
     const channelHandler = new sb.ChannelHandler();
@@ -67,7 +72,9 @@ export default function ChatScreen({navigation, route}){
         m.user = {}
         m.user._id = m._sender.userId
         m.user.avatar = m._sender.plainProfileUrl
+        
         setMessages(previousMessages => GiftedChat.append(previousMessages, [m]))
+       
       }
     }
 
@@ -245,19 +252,12 @@ export default function ChatScreen({navigation, route}){
                   <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
               </Pressable>
           </BackButtonContainer>
-          {channel != null ? 
-            channel.members[0].userId == id ?
-              <NameContainer>
-                  <Header>{channel.members[1].nickname}</Header>
-              </NameContainer>
-              :
-              <NameContainer>
-              <Header>{channel.members[0].nickname}</Header>
-               </NameContainer>
-          :
-          null
-          }
-          {channel != null ?
+         
+          <NameContainer>
+              <Header>{route.params.postedBy}</Header>
+          </NameContainer>
+             
+         
           <ChatImageSettingContainer>
               {/* <Pressable disabled={loading} style={{alignItems:'center'}} >
                 <Image source={{uri:channel.coverUrl}} style={{height:HEIGHT*0.035, width:HEIGHT*0.035, borderRadius:HEIGHT*0.025/2, backgroundColor:'grey'}}/>
@@ -266,42 +266,44 @@ export default function ChatScreen({navigation, route}){
                 <Ionicons name="ellipsis-horizontal" size={25} />
               </Pressable>
           </ChatImageSettingContainer>
-          : null}
-          
       </HeaderContainer>
-    
-    <GiftedChat
-      
-      ref={GiftedChatRef}
-      bottomOffset={getBottomSpace()}
-     
-      
-     
 
-      renderInputToolbar={(props)=>(
-        <MessageContainer>
-            <MessageInput multiline value={typingText} onChangeText={(value)=> setTypingText(value)} placeholder="Enter a message ..." />
-           
-            <TouchableOpacity onPress={()=> typingText != "" && props.onSend({text: typingText} )}>
-              <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
-            </TouchableOpacity>
-            
-        </MessageContainer>
-      )}
+    {loading ?
+      <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />
+    :
+      <GiftedChat
+        
+        ref={GiftedChatRef}
+        bottomOffset={getBottomSpace()}
       
         
-      onInputTextChanged={()=>{console.log("hello")}}
       
-      messages={messages}
-      onSend={messages => onSend(messages)}
-      loadEarlier = {true}
-      infiniteScroll={true}
-      onLoadEarlier = {() => loadMore(query)}
-      renderLoadEarlier = {() => <View></View>}
-      user={{
-        _id: id
-      }}
-    />
+
+        renderInputToolbar={(props)=>(
+          <MessageContainer>
+              <MessageInput multiline value={typingText} onChangeText={(value)=> setTypingText(value)} placeholder="Enter a message ..." />
+            
+              <TouchableOpacity onPress={()=> typingText != "" && props.onSend({text: typingText} )}>
+                <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
+              </TouchableOpacity>
+              
+          </MessageContainer>
+        )}
+        
+          
+        onInputTextChanged={()=>{console.log("hello")}}
+        
+        messages={messages}
+        onSend={messages => onSend(messages)}
+        loadEarlier = {true}
+        infiniteScroll={true}
+        onLoadEarlier = {() => loadMore(query)}
+        renderLoadEarlier = {() => <View></View>}
+        user={{
+          _id: id
+        }}
+      />  
+    }
     <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} leaveChat={()=> leaveChat()} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
     </SafeAreaView>
     )

@@ -21,7 +21,6 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLO
 
 const TEXTGREY = '#969696'
 
-const PriceRanges = ["500", "1000", "1500", "2000", "2500", "3000","3500", "4000", "4000+" ]
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
@@ -51,8 +50,8 @@ import { UserContext } from '../../../UserContext';
 var axios = require('axios');
 
 export default function DiscoverScreen({navigation, route}){
-
-    const {USERID} = useContext(UserContext);
+  
+    const {USERID, userInitialLocation,} = useContext(UserContext);
   
     //Reference to the MapView
     const mapRef = useRef(null)
@@ -61,9 +60,9 @@ export default function DiscoverScreen({navigation, route}){
     const widthtranslation = useRef(new Animated.Value(WIDTH*0.9)).current;
     const opacityTranslation = useRef(new Animated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
-    const [currentLocation, setCurrentLocation] = useState([37.78825,-122.4324])
+    const [currentLocation, setCurrentLocation] = useState(userInitialLocation)
     //The location of the user input in string
-    const [locationQuery, setlocationQuery] = useState('')
+    const [locationQuery, setlocationQuery] = useState("")
     //The data of the pins to acess a field its pinsData.item.field
     const [pinsData, setPinsData] = useState([])
     //Toggle to retrieve more properties
@@ -89,7 +88,7 @@ export default function DiscoverScreen({navigation, route}){
 
     const [flatlistRefreshing, setFlatlistRefreshing] = useState(false)
 
-    const [mapCenterLocation, setMapCenterLocation] = useState([37.78825,-122.4324])
+    const [mapCenterLocation, setMapCenterLocation] = useState(userInitialLocation)
 
     const [filterType, setfilterType] = useState('')
     const [filterSort, setfilterSort] = useState('')
@@ -111,6 +110,7 @@ export default function DiscoverScreen({navigation, route}){
     useEffect(()=>{
         
         console.log("USEFFECT")
+        
        
         //This loads the property in the flatlist 
         loadProperty()
@@ -446,7 +446,6 @@ export default function DiscoverScreen({navigation, route}){
     }
 
 
-
     const updateQueryString = () => {
         var config = {
             method: 'get',
@@ -471,8 +470,8 @@ export default function DiscoverScreen({navigation, route}){
                 ref={mapRef}
                 style={{flex:1, position:'relative'}}
                 initialRegion={{
-                latitude: 37.78825, 
-                longitude: -122.4324,
+                latitude: userInitialLocation[0], 
+                longitude: userInitialLocation[1],
                 latitudeDelta: 0.02,
                 longitudeDelta: 0.02,
                 }}
@@ -560,7 +559,7 @@ export default function DiscoverScreen({navigation, route}){
                         </SeachIconContainer>
                         {/* This is the actual search input when user press on search bar  */}
                         <PlaceholderLogoTextContainer placeholderTextColor={TEXTINPUTBORDERCOLOR} placeholderTextWeight='500'
-                        placeholder="Search location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
+                        placeholder="Current location ..." value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
                         onEndEditing={()=>{closeHeader(), setSearching(false), Keyboard.dismiss()}} onFocus={()=> {openHeader(),setSearching(true), setPropertyPreviewCard(false)}}/>
                         <DeleteIconContainer onPress={()=>setlocationQuery("")} style={{ display: searching ? 'flex' : 'none',}}>
                             <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />

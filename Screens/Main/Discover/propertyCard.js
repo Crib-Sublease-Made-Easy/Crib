@@ -32,6 +32,9 @@ import Animated, {useAnimatedStyle, useSharedValue, withSpring, runOnJS, FadeIn,
 
 import { FlatList, Gesture, GestureDetector, TouchableOpacity,  } from 'react-native-gesture-handler';
 
+import Lottie from 'lottie-react-native';
+
+
 const PRIMARYCOLOR = '#4050B5'
 const TEXTGREY = '#969696'
 
@@ -125,6 +128,13 @@ const PropertiesLength = styled.Text`
   font-size: ${HEIGHT*0.015}px;
   font-weight: 500
   padding-vertical: ${HEIGHT*0.015}px
+`
+const DefaultPostFavText = styled.Text`
+    color: ${DARKGREY};
+    font-weight: 700
+    font-size: ${HEIGHT*0.015}px;
+    width: ${WIDTH*0.6}px
+    text-align: center
 `
 
 export default function PropertyCard({navigation, setSelectedPin, loadMoreProperties,
@@ -282,6 +292,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         {flatlistRefreshing ?
         <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />
         :
+        length != 0 ?
         <FlatList
         onEndReachedThreshold = {0.4}
        
@@ -301,6 +312,11 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         keyExtractor={(item, index) => String(index)}
         renderItem={(item, index)=>renderCards(item, index)}
         />
+        :
+        <View style={{justifyContent:'center', alignItems:'center', marginTop: HEIGHT*0.1}}>
+          <Lottie source={require('../../../noProperties.json')} autoPlay loop={false} style={{width:WIDTH*0.6, height: WIDTH*0.4, }}/>
+          <DefaultPostFavText>No properties found. Please select a new area or adjust filter options</ DefaultPostFavText>
+        </View>
         }   
         </Animated.View>
     

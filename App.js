@@ -12,9 +12,9 @@ import {
 } from 'react-native';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
-const PRIMARYGREY = '#5e5d5d'
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
+import Geolocation from '@react-native-community/geolocation';
+
+var axios = require('axios');
 
 //User Context
 import { UserContext } from './UserContext.js';
@@ -91,6 +91,7 @@ import OneSignal from 'react-native-onesignal';
 const PRIMARYCOLOR = '#4050B5'
 
 export default function App() {
+  const [userInitialLocation, setUserInitialLocation] = useState(null)
   const [sendBirdConnected, setSendbirdConnection] = useState(false)
 
   const [testUserId, setTestUserId] = useState('')
@@ -108,17 +109,17 @@ OneSignal.setAppId("440ad232-b229-4ea1-963b-5037d3ac9413");
 OneSignal.promptForPushNotificationsWithUserResponse(async response => {
   const deviceState = await OneSignal.getDeviceState();
   await SecureStorage.setItem("oneSignalUserID", deviceState.userId);
-  console.log("DEVICE STATE", deviceState)
-  console.log("Prompt response:", response);
+  // console.log("DEVICE STATE", deviceState)
+  // console.log("Prompt response:", response);
 });
 
 //Method for handling notifications received while app in foreground
 OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
-  console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
+  // console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
   let notification = notificationReceivedEvent.getNotification();
-  console.log("notification: ", notification);
+  // console.log("notification: ", notification);
   const data = notification.additionalData
-  console.log("additionalData: ", data);
+  // console.log("additionalData: ", data);
   // Complete with null means don't show a notification.
   notificationReceivedEvent.complete(notification);
 });
@@ -130,9 +131,10 @@ OneSignal.setNotificationOpenedHandler(notification => {
 
 
   useEffect(async () => {
-    
+    await getLocation()
     console.log("NEW APP REFRESH")
     refreshAccessToken()
+    
 
   }, [])
   const connectSendbird = async () => {
@@ -140,7 +142,7 @@ OneSignal.setNotificationOpenedHandler(notification => {
     if (UID != undefined) {
       try {
         console.log("connecting to sendbird")
-        console.log()
+     
         sb.connect(UID, function (user, error) {
           if (error) {
             // Handle error.
@@ -149,7 +151,7 @@ OneSignal.setNotificationOpenedHandler(notification => {
           }
           else {
             console.log("sendbird connected")
-            console.log(user)
+           
           }
           // The user is connected to Sendbird server.
         });
@@ -165,6 +167,7 @@ OneSignal.setNotificationOpenedHandler(notification => {
       
     const rt = await SecureStorage.getItem("refreshToken");
     const id = await SecureStorage.getItem("userId");
+
     if (rt != undefined) {
       setUser(id)
       fetch('https://sublease-app.herokuapp.com/tokens/accessRefresh', {
@@ -175,7 +178,6 @@ OneSignal.setNotificationOpenedHandler(notification => {
           'Authorization': 'Bearer ' + rt
         }
       }).then(async e => e.json()).then(async (response) => {
-        console.log("RESOPONSE", response)
         try {
           await SecureStorage.setItem("accessToken", response.accessToken)
         } catch (err) {
@@ -194,7 +196,6 @@ OneSignal.setNotificationOpenedHandler(notification => {
           'Authorization': 'Bearer ' + at
         }
       }).then(async e => e.json()).then(async (response) => {
-        console.log("FETCH USER", response)
         try {
           await SecureStorage.setItem("firstName", response.firstName)
           await SecureStorage.setItem("lastName", response.lastName)
@@ -208,7 +209,15 @@ OneSignal.setNotificationOpenedHandler(notification => {
     }
   }
 
-
+  async function getLocation(){
+    Geolocation.getCurrentPosition(info => 
+     
+      setUserInitialLocation([info.coords.latitude,info.coords.longitude])
+      
+      
+   );
+  }
+  
 
   const [user, setUser] = useState(null)
 
@@ -230,7 +239,7 @@ OneSignal.setNotificationOpenedHandler(notification => {
   return (
 
     <NavigationContainer>
-      <UserContext.Provider value={{ user, login, logout, sb, USERID: user}}>
+      <UserContext.Provider value={{ user, login, logout, sb, USERID: user, userInitialLocation: userInitialLocation,}}>
 
         {user != null ?
 
