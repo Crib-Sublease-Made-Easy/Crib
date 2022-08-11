@@ -525,8 +525,11 @@ export default function DiscoverScreen({navigation, route}){
                     </PreviewTopContainer>
 
                     <PreviewBottomContainer >
-                        <PreviewLocationText>{selectedPin.propertyInfo.loc.streetAddr}</PreviewLocationText>
-                        <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).toDateString()} - {new Date(selectedPin.propertyInfo.availableTo).toDateString()}</PreviewPriceText>
+                        <PreviewLocationText>{selectedPin.propertyInfo.loc.secondaryTxt}</PreviewLocationText>
+                        <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).getDate() + " " +
+                                  new Date(selectedPin.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
+                                  }  -  {new Date(selectedPin.propertyInfo.availableTo).getDate() + " " +
+                                  new Date(selectedPin.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}</PreviewPriceText>
                         
                         <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
 

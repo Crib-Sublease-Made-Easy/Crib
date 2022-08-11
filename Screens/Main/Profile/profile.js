@@ -56,6 +56,8 @@ export default function ProfileScreen({navigation}){
     const [userData, setUserData] = useState('')
 
     const [profilePic, setProfilePic] = useState(null)
+
+    var tempFavProp = []
  
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
@@ -115,21 +117,47 @@ export default function ProfileScreen({navigation}){
             }
             let cachedFavoriteProperties = await AsyncStorage.getItem("favoriteProperties")
             let cachedFavoritePropertiesId = await AsyncStorage.getItem("favoritePropertiesId")
-
+            console.log("cachedFavoriteProperties", cachedFavoriteProperties)
             let compare = new Object(JSON.parse(cachedFavoritePropertiesId)).toString() == userData.favoriteProperties;
             
-            if(cachedFavoriteProperties == null || !compare ){
+            if(cachedFavoriteProperties == null || !compare){
                 console.log("UPDATE --- API --- favoriteProperties")
                 setFavoriteProperties([])
-                userData.favoriteProperties.forEach(propID => {
-                    fetchFavoriteProperties(propID, accessToken)
+                await AsyncStorage.removeItem('favoriteProperties')
+                await AsyncStorage.removeItem('favoritePropertiesId')
+                console.log("FAVS", userData.favoriteProperties)
+                userData.favoriteProperties.forEach(async propID => {
+                    await fetch('https://sublease-app.herokuapp.com/properties/' + propID, {
+                        method: 'GET',
+                        headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + accessToken,
+                        }
+                        }) 
+                        .then( async res => await res.json()).then(propertyData =>{
+            
+                            console.log("pushing propertyData")
+                    
+                            tempFavProp.push(propertyData)
+                            setFavoriteProperties(prev=>[...prev, propertyData])
+
+                            //testing 
+                            
+                        })
+                        .catch(e=>{
+                            alert(e)
+                    })
                 });
-                await AsyncStorage.setItem('favoriteProperties', JSON.stringify(favoriteProperties))
+                console.log("temp", tempFavProp)
+                
+                await AsyncStorage.setItem('favoriteProperties', JSON.stringify(tempFavProp))
                 await AsyncStorage.setItem('favoritePropertiesId', JSON.stringify(userData.favoriteProperties))
                 
             }
             else{
                 console.log("UPDATE --- CACHE --- favoriteProperties")
+                console.log("cachedFavoriteProperties", JSON.parse(cachedFavoriteProperties))
                 setFavoriteProperties(JSON.parse(cachedFavoriteProperties))
             }
 
@@ -212,6 +240,15 @@ export default function ProfileScreen({navigation}){
         })
     }, [])
 
+    function toPostProperty(){
+        if(userData.postedProperties.length != 0){
+            alert("As a regular member, you can only post one property.")
+        }
+        else{
+            navigation.navigate('PropertyPosting')
+        }
+    }
+
 
     function PressPosted(){
         Animated.spring(translation,{
@@ -255,7 +292,7 @@ export default function ProfileScreen({navigation}){
                             <Ionicons name="create"  size={25} color={GOOGLEBLUE}/>
                         </IconContainer>
                         {/* <IconContainer onPress={()=> navigation.reset({index: 0 , routes: [{ name: 'PropertyPosting'}]} )}> */}
-                        <IconContainer onPress={()=> navigation.navigate('PropertyPosting')}>
+                        <IconContainer onPress={()=> toPostProperty()}>
 
                             <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
                         </IconContainer>
@@ -293,15 +330,15 @@ export default function ProfileScreen({navigation}){
                             <PostedPropertyInfoContainer>
                                 <PropertyName>{postedProperties.propertyInfo.loc.streetAddr} { "," } {postedProperties.propertyInfo.loc.secondaryTxt}</PropertyName>
                                 <DatePriceText>
-                                    {new Date(postedProperties.propertyInfo.availableFrom).getUTCMonth()}- 
+                                    {new Date(postedProperties.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' })} {""}
                                     {new Date(postedProperties.propertyInfo.availableFrom).getFullYear()}
-                                    {" "} to {" "}
-                                    {new Date(postedProperties.propertyInfo.availableTo).getUTCMonth()}- 
+                                    {" "} - {" "}
+                                    {new Date(postedProperties.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })} {""}
                                     {new Date(postedProperties.propertyInfo.availableTo).getFullYear()}
                                 </DatePriceText>
                                 <PriceEditContainer>
                                     <PropertyName style={{color:'black'}}>${postedProperties.propertyInfo.price}</PropertyName>
-                                    <EditPropertyPressable onPress={()=>navigation.navigate("EditProperty", {propertyData: postedProperties.propertyInfo})}>
+                                    <EditPropertyPressable onPress={()=>navigation.navigate("EditProperty", {propertyData: postedProperties.propertyInfo, propId: postedProperties.propertyInfo._id})}>
                                         <EditText>Edit</EditText>
                                     </EditPropertyPressable>
                                 </PriceEditContainer>
@@ -309,22 +346,22 @@ export default function ProfileScreen({navigation}){
                         </PostedPropertyCard>
                     :
                         <Pressable style={{width:WIDTH, height:'100%', alignItems:'center', justifyContent:'center'}}
-                            onPress={()=>navigation.reset(index=0, route=[{name: 'PropertyPosting'}] )}>
+                            onPress={toPostProperty}>
                             <Image source={require('../../../assets/PostedHome.jpg')} style={{width:WIDTH*0.7, height:HEIGHT*0.2}} />
                             {/* <Pressable style={{width:WIDTH*0.5, height:HEIGHT*0.06, borderRadius:30,
                             backgroundColor: PRIMARYCOLOR, justifyContent:'center', alignItems:'center'}}>
                                 <Text style={{color:'white', fontSize:HEIGHT*0.0175, fontWeight:'500'}}>Start Sublease</Text>
                             </Pressable> */}
-                            <Text>{postedProperties != null}</Text>
+                            <DefaultPostFavText>Sublease in just a few steps</ DefaultPostFavText>
                         </Pressable>
                     }
                 </View>
                 <View style={{width:WIDTH, height:HEIGHT*0.45, }}>
                     {favoriteProperties.length == 0 ?
-                        <View style={{width:WIDTH, height:'100%',alignItems:'center',justifyContent:'center'}}>
+                        <Pressable style={{width:WIDTH, height:'100%',alignItems:'center',justifyContent:'center'}} onPress={()=> navigation.navigate("Discover")}>
                             <Image source={require('../../../assets/FavHome.jpg')} style={{width:WIDTH*0.7, height:HEIGHT*0.2}} />
-                            <DefaultPostFavText>You haven't liked any properties yet...</ DefaultPostFavText>
-                        </View>
+                            <DefaultPostFavText>Start discovering...</ DefaultPostFavText>
+                        </Pressable>
                         :
                         <ScrollView contentContainerStyle={{alignSelf:'center'}}
                         style={{alignSelf:'center', width: WIDTH, paddingTop: HEIGHT*0.01}} showsVerticalScrollIndicator={false}>
@@ -365,13 +402,3 @@ export default function ProfileScreen({navigation}){
 }
 
 
-onesignal.createNotification({  
-app_id: '440ad232-b229-4ea1-963b-5037d3ac9413',
-include_player_ids: [user.oneSignalUserId],
-    contents: {
-    en: req.body.message,
-    },
-    name: 'CRIB_CHAT'
-})
-.then(res => console.log(res))
-.catch(err => console.error(err));

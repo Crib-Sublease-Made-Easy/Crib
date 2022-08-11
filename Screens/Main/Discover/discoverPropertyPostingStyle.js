@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Dimensions, Pressable} from 'react-native';
 
 import styled from 'styled-components/native';
-import { DARKGREY, LIGHTGREY, MEDIUMGREY, HEIGHT, WIDTH, PRIMARYCOLOR, FONTFAMILY, EXTRALIGHT } from '../../../sharedUtils';
+import { DARKGREY, LIGHTGREY, MEDIUMGREY, HEIGHT, WIDTH, PRIMARYCOLOR,  EXTRALIGHT } from '../../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -33,7 +33,7 @@ export const CribText = styled.Text`
     text-align: left;
     width: ${WIDTH*0.9}px;
     color: white
-    //font-family: ${FONTFAMILY}
+    
 `
 export const ReviewHeading = styled.Text`
     font-size: ${HEIGHT*0.025}px;

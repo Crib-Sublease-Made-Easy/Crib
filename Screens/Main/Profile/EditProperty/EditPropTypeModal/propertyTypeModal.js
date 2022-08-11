@@ -25,10 +25,10 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
 const flatListTypes =
-[{ name: "Room", image: require('../../../../../assets/room.jpeg'), description: "Shared public space" },
-{ name: "House", image: require('../../../../../assets/house.jpeg'), description: "Entire House" },
-{ name: "Apartment", image: require('../../../../../assets/apartment.jpeg'), description: "2+ Bedroom Apartment" },
-{ name: "Studio", image: require('../../../../../assets/studio.jpeg'), description: "Open-styled apartment" }
+[{ name: "Room", image: require('../../../../../assets/room.jpg'), description: "Shared public space" },
+{ name: "House", image: require('../../../../../assets/house.jpg'), description: "Entire House" },
+{ name: "Apartment", image: require('../../../../../assets/apartment.jpg'), description: "2+ Bedroom Apartment" },
+{ name: "Studio", image: require('../../../../../assets/room.jpg'), description: "Open-styled apartment" }
 ]
 
 import { HeaderContainer, BackButtonContainer, NameContainer, ResetButtonContainer , Header} from './propTypeModalStyle';
@@ -36,11 +36,13 @@ import { Updates } from 'expo';
 
 export default function PropTypesScreen({navigation, route}){
     const [propertyTypes, setPropertyTypes] = useState(route.params.type)
-
+    console.log(route.params.propertyData)
     async function update(){
         console.log(propertyTypes)
-        console.log(route.params.propID)
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        console.log(route.params.uid)
+       
+        const accessToken = await SecureStorage.getItem("accessToken");
+        
         fetch('https://sublease-app.herokuapp.com/properties/' + route.params.uid, {
             method: 'PUT',
             headers: {
@@ -55,7 +57,7 @@ export default function PropTypesScreen({navigation, route}){
             .then((response) => response.json()).then(data => {
                 console.log("Update type reponse")
                 console.log(data)
-                navigation.navigate('EditProperty',{refresh: true})
+                navigation.navigate('EditProperty',{propertyData: route.params.propertyData})
             })
             .catch(e => {
                 console.log(e)
@@ -83,7 +85,7 @@ export default function PropTypesScreen({navigation, route}){
        <SafeAreaView style={{flex: 1, backgroundColor:'white'}}>
             <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
+                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.navigate("EditProperty",{propertyData: route.params.propertyData})}>
                         <Ionicons name='close-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>

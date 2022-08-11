@@ -18,7 +18,7 @@ const TEXTINPUTBORDERCOLOR = '#989898'
 
 import styled from 'styled-components/native';
 
-import { FONTFAMILY, HEIGHT, WIDTH, PRIMARYCOLOR } from '../../../sharedUtils';
+import {  HEIGHT, WIDTH, PRIMARYCOLOR } from '../../../sharedUtils';
 
 export const Header = styled.View`
   width: ${WIDTH*0.9}px
@@ -37,7 +37,7 @@ export const TitleText = styled.Text`
     font-weight: 500;
     width: ${WIDTH*0.9}px
     padding-left: ${WIDTH*0.1}px
-    //font-family: ${FONTFAMILY}
+    
 `
 
 export const SubtitleText = styled.Text`
@@ -45,7 +45,7 @@ export const SubtitleText = styled.Text`
     margin-top: ${HEIGHT*0.025}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
-    //font-family: ${FONTFAMILY}
+    
 `
 
 export const GenderInputContainer = styled.View`
@@ -66,6 +66,6 @@ export const GenderRowContainer = styled.Pressable`
 export const GenderName = styled.Text`
     font-size: ${HEIGHT*0.02}px
     margin-left: ${WIDTH*0.025}px
-    //font-family: ${FONTFAMILY}
+    
 `
 

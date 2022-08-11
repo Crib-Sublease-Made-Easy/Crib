@@ -57,10 +57,10 @@ export default function EditPropertyScreen({navigation, route}){
 
     async function getTokens(){
         console.log("refresh")
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        const accessToken = await SecureStorage.getItem("accessToken");
         const UID = await SecureStorage.getItem("userId");
 
-        fetch('https://sublease-app.herokuapp.com/properties/' + route.params.propertyData._id, {
+        fetch('https://sublease-app.herokuapp.com/properties/' + route.params.propId, {
         method: 'GET',
         headers: {
         Accept: 'application/json',
@@ -72,56 +72,56 @@ export default function EditPropertyScreen({navigation, route}){
             setPropAPIData(propData) 
 
             //Set the default varaibles 
-            if(propType != propData.propertyInfo.type){
+            if(route.params.propertyData.type == undefined || propType != propData.propertyInfo.type){
                 console.log("UPDATE --- API --- propType")
                 setPropType(propData.propertyInfo.type)
             }
             else{
                 console.log("UPDATE --- PARAMS --- propType")
             }
-            if( propPrice != propData.propertyInfo.price){
+            if(route.params.propertyData.price == undefined || propPrice != propData.propertyInfo.price){
                 console.log("UPDATE --- API --- propPrice")
-                setPropType(propData.propertyInfo.type)
+                setPropPrice(propData.propertyInfo.price)
             }
             else{
                 console.log("UPDATE --- PARAMS --- propPrice")
             }
-            if(propDateFrom != propData.propertyInfo.availableFrom){
+            if(route.params.propertyData.propDateFrom == undefined || propDateFrom != propData.propertyInfo.availableFrom){
                 console.log("UPDATE --- API --- propavailFrom")
                 setPropDateFrom(propData.propertyInfo.availableFrom)
             }
             else{
                 console.log("UPDATE --- PARAMS --- propavailableFrom")
             }
-            if(propDateTo != propData.propertyInfo.availableTo){
+            if(route.params.propertyData.propDateTo == undefined != propData.propertyInfo.availableTo){
                 console.log("UPDATE --- API --- propavailTo")
                 setPropDateTo(propData.propertyInfo.availableTo)
             }
             else{
                 console.log("UPDATE --- PARAMS --- propavailableTo")
             }
-            if( propDescription != propData.propertyInfo.description){
+            if(route.params.propertyData.description == undefined || propDescription != propData.propertyInfo.description){
                 console.log("UPDATE --- API --- propDescription")
                 setPropDescription(propData.propertyInfo.description)
             }
             else{
                 console.log("UPDATE --- PARAMS --- propDescription")
             }
-            if( propID != propData.propertyInfo._id){
+            if(route.params.propertyData._id == undefined ||  propID != propData.propertyInfo._id){
                 console.log("UPDATE --- API --- propID")
                 setPropID(propData.propertyInfo._id)
             }
             else{
                 console.log("UPDATE --- PARAMS --- propID")
             }
-            if( new Object(propAmen).toLocaleString() != new Object(propData.propertyInfo.amenities).toLocaleString()){
+            if(route.params.propertyData.amenities == undefined || new Object(propAmen).toLocaleString() != new Object(propData.propertyInfo.amenities).toLocaleString()){
                 console.log("UPDATE --- API --- propAmen")
                 setPropAmen(propData.propertyInfo.amenities)
             }
             else{
                 console.log("UPDATE --- PARAMS --- propAmen")
             }
-            if( new Object(propImg).toLocaleString() != new Object(propData.propertyInfo.imgList).toLocaleString()){
+            if(route.params.propertyData.imgList == undefined || new Object(propImg).toLocaleString() != new Object(propData.propertyInfo.imgList).toLocaleString()){
                 console.log("UPDATE --- API --- propImg")
                 setPropImg(propData.propertyInfo.imgList)
             }
@@ -138,7 +138,7 @@ export default function EditPropertyScreen({navigation, route}){
 
     async function SelectPropPic(index){
        
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        const accessToken = await SecureStorage.getItem("accessToken");
         ImagePicker.openPicker({
             width: 300,
             height: 300,
@@ -195,7 +195,7 @@ export default function EditPropertyScreen({navigation, route}){
           );
     }
     async function deletePropertyRequest(){
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        const accessToken = await SecureStorage.getItem("accessToken");
         fetch('https://sublease-app.herokuapp.com/properties/' + propID, {
             method: 'DELETE',
             headers: {
@@ -296,17 +296,17 @@ export default function EditPropertyScreen({navigation, route}){
                 {/* <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/> */}
             </RowContainer>
             <CategoryName>Type</CategoryName>
-            <RowContainer onPress={()=>navigation.navigate("EditPropertyType", {type: propPrice, uid: propID })}>
+            <RowContainer onPress={()=>navigation.navigate("EditPropertyType", {type: propPrice, uid: propID, propertyData: route.params.propertyData })}>
                 <RowName>{propType}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Price</CategoryName>
-            <RowContainer onPress={()=>navigation.navigate("EditPropertyPrice", {price: propPrice, uid: propID})}>
+            <RowContainer onPress={()=>navigation.navigate("EditPropertyPrice", {price: propPrice, uid: propID, propertyData: route.params.propertyData})}>
                 <RowName>$ {propPrice}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Availability</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditPropertyAvail",{from: propDateFrom, to: propDateTo, uid: propID})}>
+            <RowContainer onPress={()=> navigation.navigate("EditPropertyAvail",{from: propDateFrom, to: propDateTo, uid: propID, propertyData: route.params.propertyData})}>
                 <DatePriceText>
                     {new Date(propDateFrom).getUTCMonth()% 12 + 1}- 
                     {new Date(propDateFrom).getFullYear()}
@@ -317,12 +317,12 @@ export default function EditPropertyScreen({navigation, route}){
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Description</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditPropertyDescription",{description: propDescription, uid:propID})}>
+            <RowContainer onPress={()=> navigation.navigate("EditPropertyDescription",{description: propDescription, uid:propID, propertyData: route.params.propertyData})}>
                 <RowName>{propDescription}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Amenities</CategoryName>
-            <RowContainer  onPress={()=> navigation.navigate("EditPropertyAmenities",{amenities: propAmen, uid: propID})}>
+            <RowContainer  onPress={()=> navigation.navigate("EditPropertyAmenities",{amenities: propAmen, uid: propID, propertyData: route.params.propertyData})}>
                 <RowName>
                     Select Amenities
                 </RowName>

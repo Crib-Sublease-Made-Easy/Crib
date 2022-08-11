@@ -29,7 +29,7 @@ export const GOOGLEBLUE = '#4c8bf5'
 export const HEIGHT = Dimensions.get('screen').height;
 export const WIDTH = Dimensions.get('screen').width;
 
-export const FONTFAMILY = 'NotoSerif'
+// export const  = 'NotoSerif'
 //Progress Bar
 export const TESTFONT = 'Merriweather'
 
@@ -182,7 +182,7 @@ export const ProgressText = styled.Text`
     width: ${WIDTH*0.9}px;
     text-align: center;
     align-self: center
-    //font-family: ${FONTFAMILY}
+    
 `
 
 //Continue Button used in sign up 
@@ -206,5 +206,5 @@ export const ContinueText = styled.Text`
     font-size: ${ HEIGHT*0.025}px;
     font-weight: 400
     color: white
-    //font-family: ${FONTFAMILY}
+    
 `

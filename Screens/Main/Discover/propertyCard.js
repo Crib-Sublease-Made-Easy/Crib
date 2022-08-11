@@ -245,8 +245,12 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                 {/* </SharedElement> */}
                 <PropertyInfoContainer>
                    
-                        <LocationFont>{data.item.propertyInfo.loc.streetAddr}</LocationFont>
-                        <DateFont>{new Date(data.item.propertyInfo.availableFrom).toDateString()} - { new Date(data.item.propertyInfo.availableTo).toDateString()}</DateFont>
+                        <LocationFont>{data.item.propertyInfo.loc.secondaryTxt}</LocationFont>
+                        <DateFont>{new Date(data.item.propertyInfo.availableFrom).getDate() + " " +
+                                  new Date(data.item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
+                                  }  -  {new Date(data.item.propertyInfo.availableTo).getDate() + " " +
+                                  new Date(data.item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}
+                                  </DateFont>
                        
                    
                    

@@ -18,6 +18,9 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY, amenities
 
 import { RowContainer, CategoryName, AmenitiesContainer } from './editPropertyAmenStyle';
 
+import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -36,6 +39,33 @@ export default function EditPropertyAmenitiesScreen({navigation, route}){
             setpropertyAmenities(prev => [...prev, name]);
         }
     }
+
+    async function update(){
+       
+       
+        const accessToken = await SecureStorage.getItem("accessToken");
+        fetch('https://sublease-app.herokuapp.com/properties/' + route.params.uid, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
+            },
+            body: JSON.stringify({
+                amenities: propertyAmenities
+               
+            })
+        })
+            .then((response) => response.json()).then(data => {
+                console.log("Update type reponse")
+                console.log(data)
+                navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }
+
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:'white'}}>
             <HeaderContainer>
@@ -47,11 +77,11 @@ export default function EditPropertyAmenitiesScreen({navigation, route}){
                 <NameContainer>
                     <Header>Edit Amenities</Header>
                 </NameContainer>
-                {/* <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} >
+                <ResetButtonContainer>
+                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update} >
                         <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
                     </Pressable>
-                </ResetButtonContainer> */}
+                </ResetButtonContainer>
             </HeaderContainer>
             <RowContainer>
                 <CategoryName>Property Amenities</CategoryName>

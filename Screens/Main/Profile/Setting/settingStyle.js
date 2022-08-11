@@ -58,7 +58,7 @@ export const CategoryName = styled.Text`
     font-weight: 500
 `
 
-export const RowContainer = styled.View`
+export const RowContainer = styled.Pressable`
     padding-vertical: ${HEIGHT*0.015}px;
     padding-horizontal: ${WIDTH*0.05}px;
     align-items: center;

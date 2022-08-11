@@ -33,8 +33,9 @@ import { Container, PropertyDescription, ImageStyle, CardSectionOne, CardTitle, 
            DateContainer, DateText, DescriptionContainer, AmenitiesText, TypeText, BedContainer,
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, DARKGREY, FONTFAMILY} from '../../../sharedUtils';
+import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, DARKGREY, } from '../../../sharedUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { set } from 'react-native-reanimated';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -77,7 +78,7 @@ export default function PropertyDetailScreen({navigation, route}){
     }
 
     async function getTokens(){
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        const accessToken = await SecureStorage.getItem("accessToken");
 
         fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
         method: 'GET',
@@ -101,7 +102,7 @@ export default function PropertyDetailScreen({navigation, route}){
     }
 
     async function fetchProperties(){
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        const accessToken = await SecureStorage.getItem("accessToken");
         console.log("FETCH PROPERTYDETAIL")
         await fetch('https://sublease-app.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
             method: 'GET',
@@ -113,7 +114,6 @@ export default function PropertyDetailScreen({navigation, route}){
             }) 
             .then(res => res.json()).then( async propertyData =>{
                 if(propertyData.propertyInfo.deleted){
-                    const accessToken = await SecureStorage.getItem("refreshToken");
                     await fetch('https://sublease-app.herokuapp.com/properties/favorite', {
                         method: 'POST',
                         headers: {
@@ -147,7 +147,7 @@ export default function PropertyDetailScreen({navigation, route}){
 
     async function likeProperty(){
         console.log("Liking")
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        const accessToken = await SecureStorage.getItem("accessToken");
         
         await fetch('https://sublease-app.herokuapp.com/properties/favorite', {
             method: 'POST',
@@ -161,6 +161,31 @@ export default function PropertyDetailScreen({navigation, route}){
             })
             }) 
             .then(res => res.json()).then(async message =>{
+                console.log(message)
+                
+                    await AsyncStorage.removeItem("favoritePropertiesId")
+                
+                    // const tempFavProp = await AsyncStorage.getItem("favoritePropertiesId")
+                    // if(tempFavProp != null){
+                    //     const JSONtempFavProp = JSON.parse(tempFavProp)
+                    //     let temp = [];
+                        
+                    //     JSONtempFavProp.forEach(element => {
+                    //         temp.push(element)
+                    //     });
+                    //     temp.push(route.params.data.propertyInfo._id)
+                        
+                    //     await AsyncStorage.setItem("favoritePropertiesId", JSON.stringify(temp))
+                    // }
+                    // else{
+                    //     let temp = [];
+                    //     temp.push(route.params.data.propertyInfo._id)
+                    //     await AsyncStorage.setItem("favoritePropertiesId",  JSON.stringify(temp))
+                    // }
+                    
+
+                await AsyncStorage.removeItem("favoritePropertiesId")
+               
                 setLiked(!liked)
             })
             .catch(e=>{
@@ -288,12 +313,12 @@ export default function PropertyDetailScreen({navigation, route}){
                             
                             <DateContainer>
                                 <Ionicons name='calendar' size={20} />
-                                <DateText style={{color:'black', fontFamily: FONTFAMILY}}> From    </DateText>
+                                <DateText style={{color:'black', }}> From    </DateText>
                                 <DateText>{new Date(propData.availableFrom).toDateString()}</DateText>
                             </DateContainer>
                             <DateContainer>
                                 <Ionicons name='calendar' size={20} />
-                                <DateText style={{color:'black',  fontFamily: FONTFAMILY}}> To    </DateText>
+                                <DateText style={{color:'black',  }}> To    </DateText>
                                 <DateText>{new Date(propData.availableTo).toDateString()}</DateText>
                             </DateContainer>
                             

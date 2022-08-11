@@ -1,4 +1,4 @@
-import { WIDTH, HEIGHT, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR, MEDIUMGREY, FONTFAMILY } from '../../../sharedUtils';
+import { WIDTH, HEIGHT, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR, MEDIUMGREY,  } from '../../../sharedUtils';
 import styled from 'styled-components/native';
 
 import {
@@ -26,7 +26,7 @@ export const TitleText = styled.Text`
     font-weight: 400;
     width: ${WIDTH*0.7}px
     padding-left: ${WIDTH*0.1}px
-    //font-family: ${FONTFAMILY}
+    
 `
 
 export const TextInputContainer = styled.View`
@@ -40,7 +40,7 @@ export const GeneralTextInput = styled.TextInput`
     padding-left: ${WIDTH*0.025}px
     border-color: ${TEXTINPUTBORDERCOLOR}
     align-self: center   
-    //font-family: ${FONTFAMILY}
+    
     font-size: ${HEIGHT*0.02}px
 `
 

@@ -30,7 +30,7 @@ import {HeaderContainer, Header, BackButtonContainer, NameContainer, ResetButton
         TextInputPressable, ChangeProfilePicText, AgeText, NameText} from './profileEditStyle';
 
 export default function ProfileEditScreen({navigation, route}){
-
+    
     const {USERID} = useContext(UserContext);
     const [userAPIData, setUserAPIData] = useState(route.params.userData)
     const [profilePic, setProfilePic] = useState(route.params.userData == undefined ? null : route.params.userData.profilePic)
@@ -39,6 +39,7 @@ export default function ProfileEditScreen({navigation, route}){
     //const userAge = Math.floor(route.params.userData.dob/(1000*60*60*24*365))
    
     useEffect(()=>{
+        console.log(route.params.userData)
         const unsubscribe = navigation.addListener('focus', () => {
             getTokens()
         });
@@ -46,8 +47,8 @@ export default function ProfileEditScreen({navigation, route}){
     },[navigation])
     
     async function getTokens(){
-        const accessToken = await SecureStorage.getItem("refreshToken");
-
+        const accessToken = await SecureStorage.getItem("accessToken");
+        console.log(accessToken)
         fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
         method: 'GET',
         headers: {
@@ -62,6 +63,7 @@ export default function ProfileEditScreen({navigation, route}){
             const cachedProfilePic = await AsyncStorage.getItem("profilePic")
             if(school == null || userData.school != school){
                 console.log("UPDATE --- API --- school")
+                console.log(userData.school)
                 setSchool(userData.school)
             }
             else{
@@ -96,7 +98,7 @@ export default function ProfileEditScreen({navigation, route}){
 
     async function SelectProfilePic(){
         try{
-            const accessToken = await SecureStorage.getItem("refreshToken");
+            const accessToken = await SecureStorage.getItem("accessToken");
             ImagePicker.openPicker({
                 width: 300,
                 height: 300,

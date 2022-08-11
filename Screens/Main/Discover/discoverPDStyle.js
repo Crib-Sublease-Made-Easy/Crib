@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Dimensions, Pressable} from 'react-native';
 
 import styled from 'styled-components/native';
-import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR, HEIGHT, WIDTH, FONTFAMILY, TESTFONT } from '../../../sharedUtils';
+import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR, HEIGHT, WIDTH,  TESTFONT } from '../../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -220,7 +220,7 @@ export const DescriptionContainer = styled.Text`
 `
 
 export const TypeText = styled.Text`
-    //font-family: ${FONTFAMILY}
+    
     font-size: ${HEIGHT*0.02}px;
     width: ${WIDTH*0.9}px
     align-self: center;
@@ -243,13 +243,13 @@ export const BedTopContainer = styled.View`
 `
 
 export const BedNumberText = styled.Text`
-    //font-family: ${FONTFAMILY}
+    
     font-size: ${HEIGHT*0.03}px;
     margin-left: ${WIDTH*0.01}px
 `
 
 export const BedroomNameText = styled.Text`
-    //font-family: ${FONTFAMILY}
+    
     font-size: ${HEIGHT*0.015}px;
     justify-content: center;
     align-items: center

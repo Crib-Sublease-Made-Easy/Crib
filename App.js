@@ -57,6 +57,8 @@ import EditAboutMeScreen from './Screens/Main/Profile/EditProfile/EditAboutMe/ed
 import EditPropertyScreen from './Screens/Main/Profile/EditProperty/editProperty.js';
 import OTPEditScreen from './Screens/Main/Profile/Setting/OTPNumber/otpEdit.js';
 
+import ContactUsScreen from './Screens/Main/Profile/Setting/ContactUs/contactUs.js';
+
 //Property Edit Screens
 import PropTypesScreen from './Screens/Main/Profile/EditProperty/EditPropTypeModal/propertyTypeModal.js';
 import EditPropertyPriceScreen from './Screens/Main/Profile/EditProperty/EditPropertyPrice/editPropertyPrice.js';
@@ -128,7 +130,7 @@ OneSignal.setNotificationOpenedHandler(notification => {
 
 
   useEffect(async () => {
-    let userID
+    
     console.log("NEW APP REFRESH")
     refreshAccessToken()
 
@@ -177,7 +179,7 @@ OneSignal.setNotificationOpenedHandler(notification => {
         try {
           await SecureStorage.setItem("accessToken", response.accessToken)
         } catch (err) {
-          console.log(err)
+          alert(err)
         }
       })
 
@@ -388,6 +390,13 @@ OneSignal.setNotificationOpenedHandler(notification => {
             />
             <Stack.Screen name="EditPropertyAmenities"
               component={EditPropertyAmenitiesScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="ContactUs"
+              component={ContactUsScreen}
               options={{
                 headerShown: false,
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

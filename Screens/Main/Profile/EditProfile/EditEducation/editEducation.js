@@ -27,7 +27,7 @@ export default function EditEducationScreen({navigation, route}){
     const [education, setEducation] = useState('')
     
     async function update(){
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        const accessToken = await SecureStorage.getItem("accessToken");
         console.log("UID" , route.params.uid)
         fetch('https://sublease-app.herokuapp.com/users/' + route.params.uid, {
             method: 'PUT',
