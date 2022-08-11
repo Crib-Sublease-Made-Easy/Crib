@@ -27,10 +27,10 @@ import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from '
 
 
 const flatListTypes =
-[{ name: "Room", image: require('../../../../../assets/room.jpeg'), description: "Shared public space" },
-{ name: "House", image: require('../../../../../assets/house.jpeg'), description: "Entire House" },
-{ name: "Apartment", image: require('../../../../../assets/apartment.jpeg'), description: "2+ Bedroom Apartment" },
-{ name: "Studio", image: require('../../../../../assets/studio.jpeg'), description: "Open-styled apartment" }
+[{ name: "Room", image: require('../../../../../assets/room.jpg'), description: "Shared public space" },
+{ name: "House", image: require('../../../../../assets/house.jpg'), description: "Entire House" },
+{ name: "Apartment", image: require('../../../../../assets/apartment.jpg'), description: "2+ Bedroom Apartment" },
+{ name: "Studio", image: require('../../../../../assets/room.jpg'), description: "Open-styled apartment" }
 ]
 
 import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header,} from '../../../../../sharedUtils'
@@ -40,11 +40,11 @@ export default function EditPropertyPriceScreen({navigation, route}){
     const [propertyPrice, setPropertyPrice] = useState(route.params.price.toString())
     const [propertyPriceNego,setPropertyPriceNego ] = useState(false)
 
-
+    console.log(route.params.propertyData)
     async function update(){
        
         console.log(route.params.propID)
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        const accessToken = await SecureStorage.getItem("accessToken");
         fetch('https://sublease-app.herokuapp.com/properties/' + route.params.uid, {
             method: 'PUT',
             headers: {
@@ -59,7 +59,7 @@ export default function EditPropertyPriceScreen({navigation, route}){
             .then((response) => response.json()).then(data => {
                 console.log("Update type reponse")
                 console.log(data)
-                navigation.navigate('EditProperty')
+                navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
             })
             .catch(e => {
                 console.log(e)

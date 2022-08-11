@@ -26,7 +26,7 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
             <Modal backdropTransitionInTiming={300} animationOutTiming={700} 
             backdropTransitionOutTiming={0} hideModalContentWhileAnimating
             isVisible={visible} style={{padding:0, margin: 0, justifyContent:'flex-end', }}>
-                <View style={{width: WIDTH, height: 300, backgroundColor:'white', borderTopLeftRadius: 15, borderTopRightRadius: 15}}>
+                <View style={{width: WIDTH, height: HEIGHT*0.3, backgroundColor:'white', borderTopLeftRadius: 15, borderTopRightRadius: 15}}>
                 <HeaderContainer>
                     <BackButtonContainer>
                         <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> close()}>
@@ -42,11 +42,11 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                     <Ionicons name='home' size={25}  style={{paddingLeft: WIDTH*0.05}} color={PRIMARYCOLOR}/>
                     <RowName>View Property</RowName>
                 </RowContainer>
-                <RowContainer>
+                {/* <RowContainer>
                     <Ionicons name='hand-left' size={25}  style={{paddingLeft: WIDTH*0.05}} color={DARKGREY}/>
                     <RowName>Report Property</RowName>
                    
-                </RowContainer>
+                </RowContainer> */}
                 <RowContainer onPress={()=> leaveChat()}>
                     <Ionicons name='close' size={25}  style={{paddingLeft: WIDTH*0.05}} color='red'/>
                     <RowName>Delete Conversation</RowName>

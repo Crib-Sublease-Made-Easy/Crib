@@ -73,3 +73,11 @@ export const LastMessageTime = styled(Text)`
     max-width: ${WIDTH*0.45}px
     max-height: ${HEIGHT*0.02}px
 `
+export const DefaultPostFavText = styled.Text`
+    color: ${DARKGREY};
+    font-weight: 700
+    font-size: ${HEIGHT*0.015}px;
+    width: ${WIDTH*0.6}px
+    text-align: center
+    align-self: center
+`

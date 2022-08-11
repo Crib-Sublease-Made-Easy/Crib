@@ -46,7 +46,7 @@ export default function SchoolScreen({navigation, route}){
 
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
-           
+           <KeyboardAvoidingView behavior='padding' style={{flex: 1}}>
             <Header>
                 <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
@@ -59,18 +59,19 @@ export default function SchoolScreen({navigation, route}){
             </ProgressBarContainer>
            
             <ScrollView scrollEnabled={false}>
+            
                 <TitleText>School (Optional)</TitleText>
                 <SubtitleText>Choose your latest education</SubtitleText>
                 <TextInputContainer >
                     <GeneralTextInput  value={school} onChangeText={(value)=> setSchool(value)} placeholder="Ex: University of Wisconsin - Madison"  />
                 </TextInputContainer>
 
-                <FollowUpContainer>
+                {/* <FollowUpContainer>
                     <Pressable onPress={() => setShowPicker(!showPicker)}>
                         <Ionicons size={20} name={showPicker ? 'checkbox' : 'checkbox-outline'} color={DARKGREY} style={{ paddingVertical: HEIGHT * 0.01 }} />
                     </Pressable>
                     <FollowUpText>Show selection</FollowUpText>
-                </FollowUpContainer>
+                </FollowUpContainer> */}
 
 
                 { showPicker ? 
@@ -89,13 +90,14 @@ export default function SchoolScreen({navigation, route}){
                 :
                 null
                 }
+            
             </ScrollView>
           
 
             <ContinueButton onPress={()=> checkInput()}>
                 <ContinueText>Continue</ContinueText>
             </ContinueButton>
-                        
+        </KeyboardAvoidingView> 
         </SafeAreaView>
     )
 }

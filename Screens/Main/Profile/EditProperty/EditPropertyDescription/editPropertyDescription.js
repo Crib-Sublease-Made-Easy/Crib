@@ -35,9 +35,8 @@ export default function EditPropertyDescriptionScreen({navigation, route}){
     const [description, setDescription] = useState(route.params.description);
 
     async function update(){
-       
-        console.log(route.params.propID)
-        const accessToken = await SecureStorage.getItem("refreshToken");
+    
+        const accessToken = await SecureStorage.getItem("accessToken");
         fetch('https://sublease-app.herokuapp.com/properties/' + route.params.uid, {
             method: 'PUT',
             headers: {
@@ -52,7 +51,7 @@ export default function EditPropertyDescriptionScreen({navigation, route}){
             .then((response) => response.json()).then(data => {
                 console.log("Update type reponse")
                 console.log(data)
-                navigation.navigate('EditProperty')
+                navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
             })
             .catch(e => {
                 console.log(e)

@@ -13,7 +13,7 @@ import {
     Animated
 } from 'react-native';
   
-import { WIDTH, HEIGHT, PRIMARYCOLOR, FONTFAMILY , DARKGREY} from '../../../sharedUtils';
+import { WIDTH, HEIGHT, PRIMARYCOLOR,  DARKGREY} from '../../../sharedUtils';
 
 const TEXTINPUTBORDERCOLOR = '#989898'
 
@@ -37,7 +37,11 @@ export const TitleText = styled.Text`
     font-weight: 500;
     width: ${WIDTH*0.9}px
     padding-left: ${WIDTH*0.1}px
+<<<<<<< HEAD
     //font-family: ${FONTFAMILY}
+=======
+    
+>>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
 `
 
 export const SubtitleText = styled.Text`
@@ -45,7 +49,11 @@ export const SubtitleText = styled.Text`
     margin-top: ${HEIGHT*0.025}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
+<<<<<<< HEAD
     //font-family: ${FONTFAMILY}
+=======
+    
+>>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
    
 `
 export const GeneralTextInput = styled.TextInput`
@@ -55,7 +63,11 @@ export const GeneralTextInput = styled.TextInput`
     padding-left: ${WIDTH*0.025}px
     border-color: ${TEXTINPUTBORDERCOLOR}
     align-self: center   
+<<<<<<< HEAD
     //font-family: ${FONTFAMILY}
+=======
+    
+>>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
     font-size: ${ HEIGHT*0.02}px;
 `
 export const TextInputContainer = styled.View`

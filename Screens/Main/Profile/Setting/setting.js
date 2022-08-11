@@ -23,7 +23,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
 
-export default function SettingScreen({navigation}){
+export default function SettingScreen({navigation, route}){
     const [messageNotification, setMessageNotification] = useState(true)
     const [newPropNotification, setNewPropNotification] = useState(true)
     const [userData, setUserData] = useState("")
@@ -49,7 +49,7 @@ export default function SettingScreen({navigation}){
     }
 
     async function getTokens(){
-      const accessToken = await SecureStorage.getItem("refreshToken");
+      const accessToken = await SecureStorage.getItem("accessToken");
      //console.log("Access Token " + accessToken)
 
       const UID = await SecureStorage.getItem("userId");
@@ -122,7 +122,7 @@ export default function SettingScreen({navigation}){
               <CategoryName>Notifications</CategoryName>
             </CategoryContainer>
             <RowContainer>
-              <RowName>Messages</RowName>
+              <RowName>All Notifications</RowName>
               <Switch
                 trackColor={{ false: "#767577", true: PRIMARYCOLOR }}
                 thumbColor={ messageNotification ? 'white': "#f4f3f4"}
@@ -131,7 +131,7 @@ export default function SettingScreen({navigation}){
                 value={messageNotification}
               />
             </RowContainer>
-            <RowContainer>
+            {/* <RowContainer>
               <RowName>New Properties</RowName>
               <Switch
                 trackColor={{ false: "#767577", true: PRIMARYCOLOR }}
@@ -140,40 +140,35 @@ export default function SettingScreen({navigation}){
                 onValueChange={()=> setNewPropNotification(!newPropNotification)}
                 value={newPropNotification}
               />
-            </RowContainer>
+            </RowContainer> */}
 
             <CategoryContainer>
               <CategoryName>General</CategoryName>
             </CategoryContainer>
-            <RowContainer>
+            {/* <RowContainer>
               <RowName>Help</RowName>
               <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
-            </RowContainer>
-            <RowContainer>
-              <RowName>Contact Us</RowName>
-              <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
-            </RowContainer>
-            <RowContainer>
-              <RowName>Career</RowName>
-              <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
-            </RowContainer>
+            </RowContainer> */}
             <RowContainer>
               <RowName>Privacy</RowName>
               <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
+            <RowContainer onPress={()=> navigation.navigate("ContactUs", {email: userData.email})}>
+              <RowName>Contact Us</RowName>
+              <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+            </RowContainer>
+            {/* <RowContainer>
+              <RowName>Career</RowName>
+              <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+            </RowContainer> */}
+            
             <CategoryContainer>
               <TouchableOpacity onPress={() => logout()}>
-              <CategoryName style={{color:DARKGREY}}>Logout</CategoryName>
+              <CategoryName style={{color:'red'}}>Logout</CategoryName>
               </TouchableOpacity>
             </CategoryContainer>
-            <CategoryContainer>
-              <CategoryName style={{color:'red'}}>Delete Account</CategoryName>
-            </CategoryContainer>
+           
             
-
-            
-
-
         </SafeAreaView>
     )
 }

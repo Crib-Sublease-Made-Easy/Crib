@@ -48,7 +48,7 @@ export default function ChangeEmailScreen({navigation, route}){
         }
         else{
             console.log(route.params.propID)
-            const accessToken = await SecureStorage.getItem("refreshToken");
+            const accessToken = await SecureStorage.getItem("accessToken");
             fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
                 method: 'PUT',
                 headers: {

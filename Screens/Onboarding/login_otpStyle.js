@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import React, {useRef, useState} from 'react'
 
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, FONTFAMILY, MEDIUMGREY, LIGHTGREY } from '../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, MEDIUMGREY, LIGHTGREY } from '../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -28,7 +28,11 @@ export const Heading = styled.Text`
     fontWeight: 500
     fontSize: ${HEIGHT*0.04}px;
     
+<<<<<<< HEAD
     //font-family: ${FONTFAMILY}
+=======
+    
+>>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
     width: ${WIDTH*0.8}px
     align-self: center
  
@@ -58,7 +62,11 @@ export const SubtitleText = styled.Text`
     margin-top: ${HEIGHT*0.01}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
+<<<<<<< HEAD
     //font-family: ${FONTFAMILY}
+=======
+    
+>>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
 `
 
 
@@ -75,7 +83,11 @@ export const ModalHeaderText = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     padding-left:${WIDTH*0.05}px;
     padding-left: ${WIDTH*0.05}px
+<<<<<<< HEAD
     //font-family: ${FONTFAMILY}
+=======
+    
+>>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
 `
 
 export const UserNumberText = styled.Text`
@@ -85,7 +97,11 @@ export const UserNumberText = styled.Text`
     font-size: ${HEIGHT*0.025}px;
     padding-left:${WIDTH*0.05}px;
     padding-left: ${WIDTH*0.05}px
+<<<<<<< HEAD
     //font-family: ${FONTFAMILY}
+=======
+    
+>>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
 `
 export const ModalOptionContainer = styled.View`
     flex-direction: row;

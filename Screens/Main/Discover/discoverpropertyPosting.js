@@ -74,10 +74,10 @@ import { SubHeadingText } from '../../Onboarding/Landing/landingStyle';
 export default function PropertyPostingScreen({ navigation }) {
 
     const flatListdata =
-        [{ name: "Room", image: require('../../../assets/room.jpeg'), description: "Shared public space" },
-        { name: "House", image: require('../../../assets/house.jpeg'), description: "Entire House" },
-        { name: "Apartment", image: require('../../../assets/apartment.jpeg'), description: "2+ Bedroom Apartment" },
-        { name: "Studio", image: require('../../../assets/studio.jpeg'), description: "Open-styled apartment" }
+        [{ name: "Room", image: require('../../../assets/room.jpg'), description: "Shared public space" },
+        { name: "House", image: require('../../../assets/house.jpg'), description: "Entire House" },
+        { name: "Apartment", image: require('../../../assets/apartment.jpg'), description: "2+ Bedroom Apartment" },
+        { name: "Studio", image: require('../../../assets/studio.jpg'), description: "Open-styled apartment" }
     ]
 
     //Posting data information 
@@ -249,7 +249,7 @@ export default function PropertyPostingScreen({ navigation }) {
     async function postproperty() {
         setLoading(true)
         console.log("Posting")
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        const accessToken = await SecureStorage.getItem("accessToken");
         console.log(propertyphotoGallery);
         const postingData = new FormData();
 
@@ -412,7 +412,7 @@ export default function PropertyPostingScreen({ navigation }) {
     }
 
     async function LocationToLatLong(name){
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        const accessToken = await SecureStorage.getItem("accessToken");
         await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${name}&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`, {
             method: 'GET',
             headers: {
@@ -761,7 +761,7 @@ export default function PropertyPostingScreen({ navigation }) {
                             Please review your property information before posting.
                         </InfoText>
                         <ImageContainer>
-                            <Image source={require('../../../assets/room.jpeg')} style={{ height: HEIGHT * 0.25, width: WIDTH * 0.9, marginTop: HEIGHT * 0.1, borderRadius: 20 }} />
+                            <Image source={require('../../../assets/room.jpg')} style={{ height: HEIGHT * 0.25, width: WIDTH * 0.9, marginTop: HEIGHT * 0.1, borderRadius: 20 }} />
                         </ImageContainer>
                     </PostingSection>
 

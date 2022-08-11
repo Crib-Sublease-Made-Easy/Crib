@@ -31,7 +31,7 @@ export default function EditOccupationScreen({navigation, route}){
     
 
     async function update(){
-        const accessToken = await SecureStorage.getItem("refreshToken");
+        const accessToken = await SecureStorage.getItem("accessToken");
         fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
             method: 'PUT',
             headers: {

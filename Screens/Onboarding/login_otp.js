@@ -22,7 +22,7 @@ import { Container, Heading, HeadingImageContainer, SubtitleText,
     ModalView, ModalHeaderText, UserNumberText, ModalOptionContainer, ModalOption,
     InputFollowUpContainer} from './login_otpStyle';
 
-import { ContinueButton , ContinueText, FONTFAMILY} from '../../sharedUtils';
+import { ContinueButton , ContinueText, } from '../../sharedUtils';
 
 import OTPInputField from  './login_otpStyle'
 import { UserContext } from '../../UserContext';
@@ -80,8 +80,6 @@ export default function Login_OTP({navigation, route}){
         })
         .then( res => {
             if(res.status == 200){          
-                alert("SET VARIABLES")
-
                 success =true
             } else{
                 alert("Incorrect code.")
@@ -193,10 +191,10 @@ export default function Login_OTP({navigation, route}){
                     </UserNumberText>
                     <ModalOptionContainer>
                         <ModalOption onPress={()=> {setSMSErrorModal(false),  backToLogin()}}>
-                            <Text style={{fontFamily: FONTFAMILY}}>No</Text>
+                            <Text style={{}}>No</Text>
                         </ModalOption>
                         <ModalOption onPress={resendSMS}>
-                            <Text style={{fontFamily: FONTFAMILY, color: PRIMARYCOLOR}}>Resend code</Text>
+                            <Text style={{color: PRIMARYCOLOR}}>Resend code</Text>
                         </ModalOption>
                     </ModalOptionContainer>
                 </ModalView>

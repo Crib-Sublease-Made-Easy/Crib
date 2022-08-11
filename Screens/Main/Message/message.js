@@ -16,13 +16,14 @@ import {
 import {UserContext} from '../../../UserContext';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
-const PRIMARYCOLOR = '#4050B5'
-const PRIMARYGREY = '#5e5d5d'
+import Lottie from 'lottie-react-native';
+
 
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-import { InboxTitle, FlatlistItemContainer, FlatlistUnread, FlatlistLeft, FlatlistRight, LocationText,TextAndTime, LastMessageTime } from './messageStyle';
+import { InboxTitle, FlatlistItemContainer, FlatlistUnread, FlatlistLeft, FlatlistRight, 
+    LocationText,TextAndTime, LastMessageTime, DefaultPostFavText } from './messageStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MessageScreen({navigation, route}){
@@ -39,6 +40,7 @@ export default function MessageScreen({navigation, route}){
             sb.addChannelHandler('channels', channelHandler);
                     console.log("FOCUSSSSSS")
             fetchConvos()
+            sb.addChannelHandler('channels', channelHandler);
         });
         
 
@@ -79,13 +81,20 @@ export default function MessageScreen({navigation, route}){
                 // A list of group channels is successfully retrieved.
                 // console.log(groupChannels)
                 // console.log("new console list")
-                groupChannels.forEach(channel => {
-                    // console.log(channel)
-                    // console.log("===============")
-                    // console.log(channel.memberMap.
-                   
-                  
-                });
+                try{
+                    groupChannels.forEach(channel => {
+                        // console.log(channel)
+                        // console.log("===============")
+                        // console.log(channel.memberMap.
+                    
+                    
+                    })
+                }
+                catch{e=>{
+                    console.log(e)
+                }}
+                    
+                
                 // console.log("After")
         
             });
@@ -100,6 +109,8 @@ export default function MessageScreen({navigation, route}){
     return(
         <SafeAreaView style={{backgroundColor:'white', flex: 1}}>
             <InboxTitle>Messages</InboxTitle>
+            
+            {convoList.length != 0 ?
             <FlatList
                 style={{marginTop:HEIGHT*0.015}}
                 data={convoList}
@@ -140,6 +151,13 @@ export default function MessageScreen({navigation, route}){
                 </FlatlistItemContainer>
                 )}
             />
+            :
+            <View style={{paddingTop:HEIGHT*0.1}}>
+                <Lottie source={require('../../../noMessage.json')} autoPlay loop={false} style={{width:WIDTH*0.3, height: WIDTH*0.3, alignSelf:'center'}}/>
+                <DefaultPostFavText>No messages yet</ DefaultPostFavText>
+
+            </View>
+            }
             <TouchableOpacity >
 
                 </TouchableOpacity>
