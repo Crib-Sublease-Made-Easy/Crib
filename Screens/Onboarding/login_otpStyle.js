@@ -28,7 +28,7 @@ export const Heading = styled.Text`
     fontWeight: 500
     fontSize: ${HEIGHT*0.04}px;
     
-    font-family: ${FONTFAMILY}
+    //font-family: ${FONTFAMILY}
     width: ${WIDTH*0.8}px
     align-self: center
  
@@ -58,7 +58,7 @@ export const SubtitleText = styled.Text`
     margin-top: ${HEIGHT*0.01}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
-    font-family: ${FONTFAMILY}
+    //font-family: ${FONTFAMILY}
 `
 
 
@@ -75,7 +75,7 @@ export const ModalHeaderText = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     padding-left:${WIDTH*0.05}px;
     padding-left: ${WIDTH*0.05}px
-    font-family: ${FONTFAMILY}
+    //font-family: ${FONTFAMILY}
 `
 
 export const UserNumberText = styled.Text`
@@ -85,7 +85,7 @@ export const UserNumberText = styled.Text`
     font-size: ${HEIGHT*0.025}px;
     padding-left:${WIDTH*0.05}px;
     padding-left: ${WIDTH*0.05}px
-    font-family: ${FONTFAMILY}
+    //font-family: ${FONTFAMILY}
 `
 export const ModalOptionContainer = styled.View`
     flex-direction: row;

@@ -36,6 +36,18 @@ Ionicons.loadFont()
 
 import { ChatImageSettingContainer } from './chatStyle';
 
+import OneSignal from 'react-native-onesignal';
+
+//Method for handling notifications received while app in foreground
+OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
+  console.log("Notification in chat screen");
+
+  // Complete with null means don't show a notification.
+  notificationReceivedEvent.complete(null);
+});
+
+
+
 export default function ChatScreen({navigation, route}){
     const {sb} = useContext(UserContext);
     const { url, id } = route.params;
@@ -72,7 +84,9 @@ export default function ChatScreen({navigation, route}){
     }
 
 
-    const onSend = useCallback((messages = []) => {
+    const onSend = useCallback(async (messages = []) => {
+      const accessToken = await SecureStorage.getItem("refreshToken");
+
       const params = new sb.UserMessageParams();
       params.message = messages[0].text;
       console.log(params.message)
@@ -90,22 +104,25 @@ export default function ChatScreen({navigation, route}){
             // The message is successfully sent to the channel.
             // The current user can receive messages from other users through the onMessageReceived() method of an event handler.
               console.log("Message was successfully sent")
+              console.log("IDDDD", id)
               fetch('https://sublease-app.herokuapp.com/notifications/sendMessage', {
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                  'Authorization': 'bearer ' + accessToken,
+
                 },
                 body: JSON.stringify({
-                    participant1: channel.member[0]._id,
-                    participant2: channel.member[1]._id,
+                    participant1: groupChannel.members[0].userId,
+                    participant2: groupChannel.members[1].userId,
                     senderId: id,
                     message: messages[0].text
                 })
             })
             .then( res => res.json())
             .then( res => {
-              
+              console.log("RESSS", res)
             })
 
             

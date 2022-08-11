@@ -33,7 +33,7 @@ export const CribText = styled.Text`
     text-align: left;
     width: ${WIDTH*0.9}px;
     color: white
-    font-family: ${FONTFAMILY}
+    //font-family: ${FONTFAMILY}
 `
 export const ReviewHeading = styled.Text`
     font-size: ${HEIGHT*0.025}px;

@@ -68,19 +68,19 @@ import EditPropertyAmenitiesScreen from './Screens/Main/Profile/EditProperty/Edi
 import MessageTab from './Screens/Main/Message/message.js';
 
 //Navigation between tabs
-import { NavigationContainer, getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { NavigationContainer, getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { CardStyleInterpolators } from '@react-navigation/stack';
+
+
 import SendBird from 'sendbird'
 
 const Stack = createSharedElementStackNavigator();
 
 const appId = '14BD0602-4159-48D7-9292-66136C479B46';
-
 import OneSignal from 'react-native-onesignal';
-
 
 
 
@@ -110,6 +110,14 @@ OneSignal.promptForPushNotificationsWithUserResponse(async response => {
   console.log("Prompt response:", response);
 });
 
+
+
+//Method for handling notifications opened
+OneSignal.setNotificationOpenedHandler(notification => {
+  console.log("OneSignal: notification opened:", notification);
+  navigateToMess()
+});
+
 //Method for handling notifications received while app in foreground
 OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
   console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
@@ -121,12 +129,11 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   notificationReceivedEvent.complete(notification);
 });
 
-//Method for handling notifications opened
-OneSignal.setNotificationOpenedHandler(notification => {
-  console.log("OneSignal: notification opened:", notification);
-});
 
-
+const navigateToMess = () => {
+  const nav = useNavigation()
+  nav.navigate('MessageTabs')
+}
   useEffect(async () => {
     let userID
     console.log("NEW APP REFRESH")
