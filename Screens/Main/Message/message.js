@@ -36,11 +36,12 @@ export default function MessageScreen({navigation, route}){
 
     useEffect(()=>{
         console.log("MESSAGEEE")
-        const unsubscribe = navigation.addListener('focus', () => {
-                    console.log("FOCUSSSSSS")
-            fetchConvos()
-            sb.addChannelHandler('channels', channelHandler);
+        navigation.addListener('focus', async () => {
+            console.log("FOCUSSSSSS")
+            await fetchConvos()
         });
+        sb.addChannelHandler('channels', channelHandler);
+
         
 
     }, [])
@@ -98,6 +99,7 @@ export default function MessageScreen({navigation, route}){
         
             });
         }
+        return;
     },[])
 
     //navigation.navigate("PAGENAME",{userData: userData})
