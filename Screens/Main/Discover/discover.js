@@ -60,7 +60,7 @@ export default function DiscoverScreen({navigation, route}){
     const widthtranslation = useRef(new Animated.Value(WIDTH*0.9)).current;
     const opacityTranslation = useRef(new Animated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
-    const [currentLocation, setCurrentLocation] = useState(userInitialLocation == null ? [37.6, 128.2] : userInitialLocation)
+    const [currentLocation, setCurrentLocation] = useState(userInitialLocation == null ? [37.6, -128.2] : userInitialLocation)
     //The location of the user input in string
     const [locationQuery, setlocationQuery] = useState("")
     //The data of the pins to acess a field its pinsData.item.field
