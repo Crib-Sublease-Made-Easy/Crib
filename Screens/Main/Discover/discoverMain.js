@@ -20,10 +20,8 @@ import ProfileScreen from '../Profile/profile';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
-import OneSignal from 'react-native-onesignal';
 
 
-import OneSignal from 'react-native-onesignal';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,16 +33,7 @@ const WIDTH = Dimensions.get('screen').width;
 
 export default function DiscoverTab(){
 
-  //Method for handling notifications received while app in foreground
-OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
-  // console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
-  let notification = notificationReceivedEvent.getNotification();
-  // console.log("notification: ", notification);
-  const data = notification.additionalData
-  // console.log("additionalData: ", data);
-  // Complete with null means don't show a notification.
-  notificationReceivedEvent.complete(notification);
-});
+
 
 
     return(
