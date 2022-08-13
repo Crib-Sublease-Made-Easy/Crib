@@ -419,7 +419,8 @@ export default function PropertyPostingScreen({ navigation }) {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + accessToken,
-            }
+            },
+            
             }) 
             .then(res => res.json()).then(locInfo=>{
                 console.log("lat and long")

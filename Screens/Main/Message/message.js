@@ -109,7 +109,7 @@ export default function MessageScreen({navigation, route}){
         <SafeAreaView style={{backgroundColor:'white', flex: 1}}>
             <InboxTitle>Messages</InboxTitle>
             
-            {convoList.length != 0 ?
+            {convoList != null ?
             <FlatList
                 style={{marginTop:HEIGHT*0.015}}
                 data={convoList}

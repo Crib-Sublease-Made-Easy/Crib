@@ -26,6 +26,8 @@ import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContai
 import { RowContainer, CategoryName, DateContainer } from './editPropertyAvailStyle';
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function EditPropertyAvailScreen({navigation, route}){
     const [availFrom, setAvailFrom] = useState( new Date(route.params.from))
@@ -50,9 +52,10 @@ export default function EditPropertyAvailScreen({navigation, route}){
                 availableTo: availTo
             })
         })
-            .then((response) => response.json()).then(data => {
+            .then((response) => response.json()).then(async data => {
                 console.log("Update type reponse")
                 console.log(data)
+                await AsyncStorage.removeItem('postedProperty')
                 navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
             })
             .catch(e => {
