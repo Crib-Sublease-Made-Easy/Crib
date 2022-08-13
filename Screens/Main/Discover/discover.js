@@ -88,7 +88,7 @@ export default function DiscoverScreen({navigation, route}){
 
     const [flatlistRefreshing, setFlatlistRefreshing] = useState(false)
 
-    const [mapCenterLocation, setMapCenterLocation] = useState(userInitialLocation)
+    const [mapCenterLocation, setMapCenterLocation] = useState(currentLocation)
 
     const [filterType, setfilterType] = useState('')
     const [filterSort, setfilterSort] = useState('')
@@ -470,8 +470,8 @@ export default function DiscoverScreen({navigation, route}){
                 ref={mapRef}
                 style={{flex:1, position:'relative'}}
                 initialRegion={{
-                latitude: userInitialLocation == null ? 37.012 : userInitialLocation[0], 
-                longitude: userInitialLocation == null  ? -122.872 : userInitialLocation[1],
+                latitude: currentLocation[0],
+                longitude: currentLocation[1],
                 latitudeDelta: 0.02,
                 longitudeDelta: 0.02,
                 }}
