@@ -23,7 +23,6 @@ Ionicons.loadFont()
 import OneSignal from 'react-native-onesignal';
 
 
-import OneSignal from 'react-native-onesignal';
 
 const Tab = createBottomTabNavigator();
 

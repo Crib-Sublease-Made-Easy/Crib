@@ -23,6 +23,39 @@ export default function ContactUsScreen({navigation, route}){
     const [title, setTitle ] = useState("")
     const [email, setEmail] = useState(route.params.email)
     const [description, setDescription] = useState("")
+
+    async function send(){
+        const accessToken = await SecureStorage.getItem("accessToken");
+        console.log(accessToken)
+        await fetch('https://sublease-app.herokuapp.com/contact', {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'bearer ' + accessToken,
+            },
+            
+            body: JSON.stringify({
+                email: email,
+                title: title,
+                description: description
+            })
+        }) 
+        .then(res => {
+            if (res.status == 200){
+                alert("Message successfully sent!")
+                navigation.goBack();
+            }
+            else{
+                alert("An error has occured, please try again later!")
+                navigation.goBack();
+            }
+        })
+        .catch(e=>{
+            console.log(e)
+        })
+    }
+
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
             <HeaderContainer>
@@ -35,7 +68,7 @@ export default function ContactUsScreen({navigation, route}){
                     <Header>Contact Us</Header>
                 </NameContainer>
                 <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} >
+                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={send}>
                         <Ionicons name='checkmark' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </ResetButtonContainer>
