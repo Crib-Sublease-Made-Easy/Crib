@@ -470,8 +470,8 @@ export default function DiscoverScreen({navigation, route}){
                 ref={mapRef}
                 style={{flex:1, position:'relative'}}
                 initialRegion={{
-                latitude: userInitialLocation[0], 
-                longitude: userInitialLocation[1],
+                latitude: userInitialLocation == null ? 37.012 : userInitialLocation[0], 
+                longitude: userInitialLocation == null  ? -122.872 : userInitialLocation[1],
                 latitudeDelta: 0.02,
                 longitudeDelta: 0.02,
                 }}
