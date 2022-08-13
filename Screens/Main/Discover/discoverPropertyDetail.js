@@ -165,7 +165,7 @@ export default function PropertyDetailScreen({navigation, route}){
             .then(res => res.json()).then(async message =>{
                 console.log(message)
                 
-                    await AsyncStorage.removeItem("favoritePropertiesId")
+                    
                 
                     // const tempFavProp = await AsyncStorage.getItem("favoritePropertiesId")
                     // if(tempFavProp != null){
@@ -186,7 +186,7 @@ export default function PropertyDetailScreen({navigation, route}){
                     // }
                     
 
-                await AsyncStorage.removeItem("favoritePropertiesId")
+                await AsyncStorage.removeItem("favoriteProperties");
                
                 setLiked(!liked)
             })

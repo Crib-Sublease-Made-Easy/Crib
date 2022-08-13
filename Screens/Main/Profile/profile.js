@@ -89,9 +89,11 @@ export default function ProfileScreen({navigation}){
 
 
     async function getTokens(){
-        const accessToken = await SecureStorage.getItem("accessToken");
-       
 
+        
+        const accessToken = await SecureStorage.getItem("accessToken");
+
+        fetchFavoriteProperties(accessToken)
         fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
         method: 'GET',
         headers: {
@@ -115,45 +117,45 @@ export default function ProfileScreen({navigation}){
                     await AsyncStorage.setItem("profilePic", userData.profilePic);
                 }
             }
-            let cachedFavoriteProperties = await AsyncStorage.getItem("favoriteProperties")
-            let cachedFavoritePropertiesId = await AsyncStorage.getItem("favoritePropertiesId")
-            let compare = new Object(JSON.parse(cachedFavoritePropertiesId)).toString() == userData.favoriteProperties;
+            // let cachedFavoriteProperties = await AsyncStorage.getItem("favoriteProperties")
+            // let cachedFavoritePropertiesId = await AsyncStorage.getItem("favoritePropertiesId")
+            // let compare = new Object(JSON.parse(cachedFavoritePropertiesId)).toString() == userData.favoriteProperties;
             
-            if(cachedFavoriteProperties == null || !compare){
-                console.log("UPDATE --- API --- favoriteProperties")
-                setFavoriteProperties([])
-                await AsyncStorage.removeItem('favoriteProperties')
-                await AsyncStorage.removeItem('favoritePropertiesId')
-                userData.favoriteProperties.forEach(async propID => {
-                    await fetch('https://sublease-app.herokuapp.com/properties/' + propID, {
-                        method: 'GET',
-                        headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + accessToken,
-                        }
-                        }) 
-                        .then( async res => await res.json()).then(propertyData =>{
+            // if(cachedFavoriteProperties == null || !compare){
+            //     console.log("UPDATE --- API --- favoriteProperties")
+            //     setFavoriteProperties([])
+            //     await AsyncStorage.removeItem('favoriteProperties')
+            //     await AsyncStorage.removeItem('favoritePropertiesId')
+            //     userData.favoriteProperties.forEach(async propID => {
+            //         await fetch('https://sublease-app.herokuapp.com/properties/' + propID, {
+            //             method: 'GET',
+            //             headers: {
+            //             Accept: 'application/json',
+            //             'Content-Type': 'application/json',
+            //             'Authorization': 'Bearer ' + accessToken,
+            //             }
+            //             }) 
+            //             .then( async res => await res.json()).then(propertyData =>{
                                 
-                            tempFavProp.push(propertyData)
-                            setFavoriteProperties(prev=>[...prev, propertyData])
+            //                 tempFavProp.push(propertyData)
+            //                 setFavoriteProperties(prev=>[...prev, propertyData])
 
-                            //testing 
+            //                 //testing 
                             
-                        })
-                        .catch(e=>{
-                            alert(e)
-                    })
-                });
+            //             })
+            //             .catch(e=>{
+            //                 alert(e)
+            //         })
+            //     });
                 
-                await AsyncStorage.setItem('favoriteProperties', JSON.stringify(tempFavProp))
-                await AsyncStorage.setItem('favoritePropertiesId', JSON.stringify(userData.favoriteProperties))
+            //     await AsyncStorage.setItem('favoriteProperties', JSON.stringify(tempFavProp))
+            //     await AsyncStorage.setItem('favoritePropertiesId', JSON.stringify(userData.favoriteProperties))
                 
-            }
-            else{
-                console.log("UPDATE --- CACHE --- favoriteProperties")
-                setFavoriteProperties(JSON.parse(cachedFavoriteProperties))
-            }
+            // }
+            // else{
+            //     console.log("UPDATE --- CACHE --- favoriteProperties")
+            //     setFavoriteProperties(JSON.parse(cachedFavoriteProperties))
+            // }
 
             if(userData.postedProperties != undefined){
                 fetchPostedProperties(userData.postedProperties[0], accessToken)
@@ -218,26 +220,45 @@ export default function ProfileScreen({navigation}){
                 alert(e)
         })
     }
-    const fetchFavoriteProperties = useCallback(async (id, token) => {
-       
-        await fetch('https://sublease-app.herokuapp.com/properties/' + id, {
+    function fetchFavoriteProperties (token){
+        fetch('https://sublease-app.herokuapp.com/users/favorites/all', {
             method: 'GET',
             headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token,
             }
-            }) 
-            .then(res => res.json()).then(propertyData =>{
+        }).then(res => res.json()).then(async data =>{
+            //data.properties get the list of all properties
+            // console.log("DATA", JSON.stringify(data))
+            const tempFavProp = await AsyncStorage.getItem("favoriteProperties");
+            // console.log("TEMPDATA", tempFavProp)
 
-                // console.log("propertyData")
-                
-                setFavoriteProperties(prev => [...prev, propertyData]) 
-            })
-            .catch(e=>{
-                alert(e)
+            const compare = tempFavProp === JSON.stringify(data)
+            // console.log(compare)
+
+            //If the api data is different from the AyncStorage data
+            if(!compare){
+                //This is that favproperties is not empty so no error later on
+                if(data.length != 0){
+                    console.log("UPDATE --- API --- FAV PROPERTY")
+                    console.log(data)
+                    setFavoriteProperties(data);
+                    await AsyncStorage.setItem("favoriteProperties", JSON.stringify(data) )
+                }
+                else{
+                    setFavoriteProperties([])
+                }
+            }
+            else{ // The api and cache data is the same
+                console.log("UPDATE --- CACHE --- FAV PROPERTY")
+                console.log(tempFavProp)
+                setFavoriteProperties(JSON.parse(tempFavProp))
+            }
+
         })
-    }, [])
+
+    }
 
     function toPostProperty(){
         if(userData.postedProperties.length != 0){

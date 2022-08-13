@@ -150,6 +150,10 @@ export default function SettingScreen({navigation, route}){
               <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer> */}
             <RowContainer>
+              <RowName>Terms of services</RowName>
+              <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+            </RowContainer>
+            <RowContainer>
               <RowName>Privacy</RowName>
               <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
