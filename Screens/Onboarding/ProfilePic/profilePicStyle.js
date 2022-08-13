@@ -39,11 +39,7 @@ export const TitleText = styled.Text`
     font-weight: 500;
     width: ${WIDTH*0.9}px
     padding-left: ${WIDTH*0.1}px
-<<<<<<< HEAD
-    //font-family: ${FONTFAMILY}
-=======
     
->>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
 `
 
 export const SubtitleText = styled.Text`
@@ -51,11 +47,7 @@ export const SubtitleText = styled.Text`
     margin-top: ${HEIGHT*0.025}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
-<<<<<<< HEAD
-    //font-family: ${FONTFAMILY}
-=======
     
->>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
 `
 
 export const ProfilePicContainer = styled.Pressable`

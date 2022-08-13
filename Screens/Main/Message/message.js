@@ -36,12 +36,20 @@ export default function MessageScreen({navigation, route}){
 
     useEffect(()=>{
         console.log("MESSAGEEE")
+<<<<<<< HEAD
         const unsubscribe = navigation.addListener('focus', () => {
             sb.addChannelHandler('channels', channelHandler);
                     console.log("FOCUSSSSSS")
             fetchConvos()
             sb.addChannelHandler('channels', channelHandler);
+=======
+        navigation.addListener('focus', async () => {
+            console.log("FOCUSSSSSS")
+            await fetchConvos()
+>>>>>>> a16248d75559bcac1d05ea8de3d1578f9b1ae3bb
         });
+        sb.addChannelHandler('channels', channelHandler);
+
         
 
     }, [])
@@ -99,6 +107,7 @@ export default function MessageScreen({navigation, route}){
         
             });
         }
+        return;
     },[])
 
     //navigation.navigate("PAGENAME",{userData: userData})
@@ -110,7 +119,7 @@ export default function MessageScreen({navigation, route}){
         <SafeAreaView style={{backgroundColor:'white', flex: 1}}>
             <InboxTitle>Messages</InboxTitle>
             
-            {convoList.length != 0 ?
+            {convoList != null ?
             <FlatList
                 style={{marginTop:HEIGHT*0.015}}
                 data={convoList}

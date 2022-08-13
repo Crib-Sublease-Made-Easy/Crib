@@ -92,11 +92,7 @@ export default function ChatScreen({navigation, route}){
 
 
     const onSend = useCallback(async (messages = []) => {
-<<<<<<< HEAD
-      const accessToken = await SecureStorage.getItem("refreshToken");
-=======
       const accessToken = await SecureStorage.getItem("accessToken");
->>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
 
       const params = new sb.UserMessageParams();
       params.message = messages[0].text;

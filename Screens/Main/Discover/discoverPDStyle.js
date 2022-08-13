@@ -220,11 +220,7 @@ export const DescriptionContainer = styled.Text`
 `
 
 export const TypeText = styled.Text`
-<<<<<<< HEAD
-    //font-family: ${FONTFAMILY}
-=======
     
->>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
     font-size: ${HEIGHT*0.02}px;
     width: ${WIDTH*0.9}px
     align-self: center;
@@ -247,21 +243,13 @@ export const BedTopContainer = styled.View`
 `
 
 export const BedNumberText = styled.Text`
-<<<<<<< HEAD
-    //font-family: ${FONTFAMILY}
-=======
     
->>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
     font-size: ${HEIGHT*0.03}px;
     margin-left: ${WIDTH*0.01}px
 `
 
 export const BedroomNameText = styled.Text`
-<<<<<<< HEAD
-    //font-family: ${FONTFAMILY}
-=======
     
->>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
     font-size: ${HEIGHT*0.015}px;
     justify-content: center;
     align-items: center

@@ -13,7 +13,7 @@ import {
 
 import { createBottomTabNavigator,  } from '@react-navigation/bottom-tabs';
 
-import { PRIMARYCOLOR } from '../../../sharedUtils';
+
 import DiscoverScreen from './discover';
 import MessageScreen from '../Message/message.js'
 import ProfileScreen from '../Profile/profile';
@@ -22,20 +22,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 import OneSignal from 'react-native-onesignal';
 
-//Method for handling notifications received while app in foreground
-OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
-  console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
-  let notification = notificationReceivedEvent.getNotification();
-  console.log("notification: ", notification);
-  const data = notification.additionalData
-  console.log("additionalData: ", data);
-  // Complete with null means don't show a notification.
-  notificationReceivedEvent.complete(notification);
-});
 
 
 const Tab = createBottomTabNavigator();
 
+const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
 
 const HEIGHT = Dimensions.get('screen').height;

@@ -182,11 +182,7 @@ export const ProgressText = styled.Text`
     width: ${WIDTH*0.9}px;
     text-align: center;
     align-self: center
-<<<<<<< HEAD
-    //font-family: ${FONTFAMILY}
-=======
     
->>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
 `
 
 //Continue Button used in sign up 
@@ -210,9 +206,5 @@ export const ContinueText = styled.Text`
     font-size: ${ HEIGHT*0.025}px;
     font-weight: 400
     color: white
-<<<<<<< HEAD
-    //font-family: ${FONTFAMILY}
-=======
     
->>>>>>> f8e198cdc361109d6e42b5cc31e879271b653fad
 `
