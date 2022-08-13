@@ -113,16 +113,6 @@ OneSignal.promptForPushNotificationsWithUserResponse(async response => {
   // console.log("Prompt response:", response);
 });
 
-//Method for handling notifications received while app in foreground
-OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
-  // console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
-  let notification = notificationReceivedEvent.getNotification();
-  // console.log("notification: ", notification);
-  const data = notification.additionalData
-  // console.log("additionalData: ", data);
-  // Complete with null means don't show a notification.
-  notificationReceivedEvent.complete(notification);
-});
 
 //Method for handling notifications opened
 OneSignal.setNotificationOpenedHandler(notification => {
@@ -169,6 +159,7 @@ OneSignal.setNotificationOpenedHandler(notification => {
     const id = await SecureStorage.getItem("userId");
 
     if (rt != undefined) {
+      console.log("REFRESH TOKEN", rt)
       setUser(id)
       fetch('https://sublease-app.herokuapp.com/tokens/accessRefresh', {
         method: 'POST',

@@ -154,7 +154,9 @@ export default function ProfileScreen({navigation}){
                 setFavoriteProperties(JSON.parse(cachedFavoriteProperties))
             }
 
-            fetchPostedProperties(userData.postedProperties[0], accessToken)
+            if(userData.postedProperties[0] != undefined){
+                fetchPostedProperties(userData.postedProperties[0], accessToken)
+            }
 
            
         })
@@ -275,17 +277,26 @@ export default function ProfileScreen({navigation}){
                     <NameText>{userData.firstName} {""} {userData.lastName}</NameText>
 
                     <IconsContainer>
+                        <View style={{justifyContent:"center", alignItems:"center"}}>
                         <IconContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
                             <Ionicons name="create"  size={25} color={GOOGLEBLUE}/>
                         </IconContainer>
+                        <Text style={{ padding:5}}>Edit Profile</Text>
+                        </View>
                         {/* <IconContainer onPress={()=> navigation.reset({index: 0 , routes: [{ name: 'PropertyPosting'}]} )}> */}
+                        <View style={{justifyContent:"center", alignItems:"center"}}>
                         <IconContainer onPress={()=> toPostProperty()}>
 
                             <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
                         </IconContainer>
+                        <Text style={{padding:5}}>List Property</Text>
+                        </View>
+                        <View style={{justifyContent:"center", alignItems:"center"}}>
                         <IconContainer onPress={()=> onShare()}>
                             <Ionicons name="share"  size={25} color={DARKGREY}/>
                         </IconContainer>
+                        <Text style={{padding: 5}}>Share Crîb</Text>
+                        </View>
                     </IconsContainer>
                 </InformationContainer>
                 </View>

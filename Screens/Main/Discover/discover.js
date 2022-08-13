@@ -60,7 +60,7 @@ export default function DiscoverScreen({navigation, route}){
     const widthtranslation = useRef(new Animated.Value(WIDTH*0.9)).current;
     const opacityTranslation = useRef(new Animated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
-    const [currentLocation, setCurrentLocation] = useState(userInitialLocation)
+    const [currentLocation, setCurrentLocation] = useState((userInitialLocation == null? [37.7749,-122.4194] :  userInitialLocation) )
     //The location of the user input in string
     const [locationQuery, setlocationQuery] = useState("")
     //The data of the pins to acess a field its pinsData.item.field
@@ -88,7 +88,7 @@ export default function DiscoverScreen({navigation, route}){
 
     const [flatlistRefreshing, setFlatlistRefreshing] = useState(false)
 
-    const [mapCenterLocation, setMapCenterLocation] = useState(userInitialLocation)
+    const [mapCenterLocation, setMapCenterLocation] = useState(currentLocation)
 
     const [filterType, setfilterType] = useState('')
     const [filterSort, setfilterSort] = useState('')
@@ -470,8 +470,8 @@ export default function DiscoverScreen({navigation, route}){
                 ref={mapRef}
                 style={{flex:1, position:'relative'}}
                 initialRegion={{
-                latitude: userInitialLocation[0], 
-                longitude: userInitialLocation[1],
+                latitude: currentLocation[0], 
+                longitude: currentLocation[1],
                 latitudeDelta: 0.02,
                 longitudeDelta: 0.02,
                 }}
