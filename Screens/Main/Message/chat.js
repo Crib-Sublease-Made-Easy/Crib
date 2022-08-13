@@ -139,6 +139,9 @@ export default function ChatScreen({navigation, route}){
             // Handle error.
             console.log("ERROR CHANNEL")
         }else{
+          if(groupChannel.members.length < 2){
+            deletedChat(groupChannel)
+          } else{
           await groupChannel.markAsRead()
 
           await setChannel(groupChannel)
@@ -147,8 +150,16 @@ export default function ChatScreen({navigation, route}){
           var listQuery = groupChannel.createPreviousMessageListQuery();
           await setQuery(listQuery)
           fetchConvos(listQuery)
+          }
         }
       })
+    }
+
+    deletedChat = (groupChannel) => {
+      onChat= false
+      groupChannel.leave()
+      navigation.goBack()
+      alert("The other user has left the chat.")
     }
 
     const getPropertyInfo = async (propId) =>{
@@ -244,10 +255,10 @@ export default function ChatScreen({navigation, route}){
     //route.params.userData 
 
     leaveChat = () => {
-      alert("You have successfully left this chat.")
+      onChat= false
       channel.leave()
       navigation.goBack()
-      onChat= false
+      alert("You have successfully left this chat.")
     }
     return(
     <SafeAreaView style={{backgroundColor:'white', flex:1}}>
