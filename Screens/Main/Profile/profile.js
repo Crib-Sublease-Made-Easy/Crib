@@ -189,14 +189,12 @@ export default function ProfileScreen({navigation}){
             }).then(async propertyData =>{
                 if(propertyData != undefined){
                    
-                    
-                    
                     //Returns no prop found when theres nothing 
                     const tempPropData = await AsyncStorage.getItem('postedProperty')
                     
                     let compare = (tempPropData === JSON.stringify(propertyData))
-                    console.log(JSON.stringify(propertyData))
-                    console.log(tempPropData)
+                    // console.log(JSON.stringify(propertyData))
+                    // console.log(tempPropData)
                     // console.log(propertyData)
                     // console.log("COMPARE", compare)
                     if(!compare || tempPropData == null) {
