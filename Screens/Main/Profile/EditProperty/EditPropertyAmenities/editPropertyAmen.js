@@ -19,6 +19,7 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY, amenities
 import { RowContainer, CategoryName, AmenitiesContainer } from './editPropertyAmenStyle';
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -56,9 +57,10 @@ export default function EditPropertyAmenitiesScreen({navigation, route}){
                
             })
         })
-            .then((response) => response.json()).then(data => {
+            .then((response) => response.json()).then(async data => {
                 console.log("Update type reponse")
                 console.log(data)
+                await AsyncStorage.removeItem('postedProperty')
                 navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
             })
             .catch(e => {

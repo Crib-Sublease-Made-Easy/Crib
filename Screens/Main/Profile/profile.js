@@ -181,7 +181,11 @@ export default function ProfileScreen({navigation}){
                 if(propertyData.propertiesFound != "No Property found" ){
                     
                         const tempPropData = await AsyncStorage.getItem('postedProperty')
-                        let compare = (new Object(tempPropData).toLocaleString() == propertyData)
+                        
+                        console.log(JSON.parse(tempPropData))
+                        console.log(propertyData)
+                        let compare = (new Object(JSON.parse(tempPropData)).toString() == propertyData)
+                        console.log(compare)
 
                         if(!compare || tempPropData == null) {
                             console.log("UPDATE --- API --- POSTED PROPERTY")

@@ -32,7 +32,7 @@ const flatListTypes =
 ]
 
 import { HeaderContainer, BackButtonContainer, NameContainer, ResetButtonContainer , Header} from './propTypeModalStyle';
-import { Updates } from 'expo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function PropTypesScreen({navigation, route}){
     const [propertyTypes, setPropertyTypes] = useState(route.params.type)
@@ -54,9 +54,10 @@ export default function PropTypesScreen({navigation, route}){
                 type: propertyTypes
             })
         })
-            .then((response) => response.json()).then(data => {
+            .then((response) => response.json()).then(async data => {
                 console.log("Update type reponse")
                 console.log(data)
+                await AsyncStorage.removeItem('postedProperty')
                 navigation.navigate('EditProperty',{propertyData: route.params.propertyData})
             })
             .catch(e => {
