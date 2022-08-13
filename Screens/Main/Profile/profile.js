@@ -90,6 +90,7 @@ export default function ProfileScreen({navigation}){
 
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("accessToken");
+       
 
         fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
         method: 'GET',
@@ -154,7 +155,7 @@ export default function ProfileScreen({navigation}){
                 setFavoriteProperties(JSON.parse(cachedFavoriteProperties))
             }
 
-            if(userData.postedProperties[0] != undefined){
+            if(userData.postedProperties != undefined){
                 fetchPostedProperties(userData.postedProperties[0], accessToken)
             }
 
@@ -176,34 +177,41 @@ export default function ProfileScreen({navigation}){
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token,
             }
-            }) 
-            .then(res => res.json()).then(async propertyData =>{
-                if(propertyData.propertiesFound != "No Property found" ){
-                    
-                        const tempPropData = await AsyncStorage.getItem('postedProperty')
-                        
-                        console.log(JSON.parse(tempPropData))
-                        console.log(propertyData)
-                        let compare = (new Object(JSON.parse(tempPropData)).toString() == propertyData)
-                        console.log(compare)
-
-                        if(!compare || tempPropData == null) {
-                            console.log("UPDATE --- API --- POSTED PROPERTY")
-                            await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
-                            setPostedProperties(propertyData)
-                        }
-                        else{
-                            console.log("UPDATE --- CACHE --- POSTED PROPERTY")
-                            setPostedProperties(JSON.parse((tempPropData)))
-                        }           
-                    
-                }
-                else{
-                    console.log("REMOVE--- CACHE --- POSTED PROPERTY")
-                    await AsyncStorage.removeItem('postedProperty')
+            })
+            .then(res => {
+                
+                if(res.status == 404){
                     setPostedProperties(null)
                 }
-
+                else{
+                    return res.json()
+                }
+            }).then(async propertyData =>{
+                if(propertyData != undefined){
+                   
+                    
+                    
+                    //Returns no prop found when theres nothing 
+                    const tempPropData = await AsyncStorage.getItem('postedProperty')
+                    
+                    let compare = (tempPropData === JSON.stringify(propertyData))
+                    console.log(JSON.stringify(propertyData))
+                    console.log(tempPropData)
+                    // console.log(propertyData)
+                    // console.log("COMPARE", compare)
+                    if(!compare || tempPropData == null) {
+                        console.log("UPDATE --- API --- POSTED PROPERTY")
+                        await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
+                        if(JSON.stringify(propertyData) != {"Error": "No Property found"}){
+                            setPostedProperties(propertyData)
+                        }
+                    }
+                    else{
+                        console.log("UPDATE --- CACHE --- POSTED PROPERTY")
+                        setPostedProperties(JSON.parse((tempPropData)))
+                    }           
+                }
+               
                 
                 
             })
@@ -328,7 +336,7 @@ export default function ProfileScreen({navigation}){
                     {postedProperties != null ?
                         <PostedPropertyCard onPress={()=>navigation.navigate("PropertyDetail", {data: postedProperties, uid: userData._id})}>
                             <Image key={"defaultPropPic"}
-                            source={{uri: postedProperties == [] ? null : postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
+                            source={{uri: postedProperties == null ? null : postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
                             <PostedPropertyInfoContainer>
                                 <PropertyName>{postedProperties.propertyInfo.loc.streetAddr} { "," } {postedProperties.propertyInfo.loc.secondaryTxt}</PropertyName>
                                 <DatePriceText>
@@ -367,8 +375,8 @@ export default function ProfileScreen({navigation}){
                         :
                         <ScrollView contentContainerStyle={{alignSelf:'center'}}
                         style={{alignSelf:'center', width: WIDTH, paddingTop: HEIGHT*0.01}} showsVerticalScrollIndicator={false}>
-                            {favoriteProperties.map((item)=>(
-                            <FavPropertyCard key={item.propertyInfo._id}>
+                            {favoriteProperties.map((item, index)=>(
+                            <FavPropertyCard key={item.propertyInfo._id + index}>
                                 <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
                                 <Image source={{uri: item.propertyInfo.imgList[0]}} 
                                 style={{width:'100%', height:'100%', borderTopLeftRadius:10, borderBottomLeftRadius:10}}/>

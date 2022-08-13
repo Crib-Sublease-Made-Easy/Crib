@@ -326,7 +326,7 @@ export default function PropertyPostingScreen({ navigation }) {
         })
             .then((response) => response.json()).then( async data => {
                 console.log("RESPONSE", data)
-                await SecureStorage.setItem("postedProperty", "new")
+                await SecureStorage.removeItem("postedProperty")
                 setTimeout(()=>{
                     navigation.goBack()
                     setLoading(false)
