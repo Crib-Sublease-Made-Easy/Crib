@@ -13,7 +13,7 @@ import {
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
 import Geolocation from '@react-native-community/geolocation';
-
+import './onChat'
 var axios = require('axios');
 
 //User Context
@@ -91,6 +91,7 @@ import OneSignal from 'react-native-onesignal';
 const PRIMARYCOLOR = '#4050B5'
 
 export default function App() {
+
   const [userInitialLocation, setUserInitialLocation] = useState(null)
   const [sendBirdConnected, setSendbirdConnection] = useState(false)
 
@@ -118,13 +119,6 @@ OneSignal.promptForPushNotificationsWithUserResponse(async response => {
 //Method for handling notifications opened
 OneSignal.setNotificationOpenedHandler(notification => {
   console.log("OneSignal: notification opened:", notification);
-  navigateToMess()
-});
-
-OneSignal.setNotificationOpenedHandler(notification => {
-  console.log("OneSignal: notification opened:", notification);
-      // navigation.navigate("Message")
-  
 });
 
 //Method for handling notifications received while app in foreground
@@ -135,19 +129,19 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   const data = notification.additionalData
   // console.log("additionalData: ", data);
   // Complete with null means don't show a notification.
-  notificationReceivedEvent.complete(notification);
+  if(!onChat){
+    notificationReceivedEvent.complete(notification);
+  } else{
+    notificationReceivedEvent.complete(null);
+  }
+
 });
 
-
-const navigateToMess = () => {
-  const nav = useNavigation()
-  nav.navigate('Message')
-}
   useEffect(async () => {
     await getLocation()
     console.log("NEW APP REFRESH")
     refreshAccessToken()
-    
+    setOnChat(false)
 
   }, [])
   const connectSendbird = async () => {
@@ -241,6 +235,7 @@ const navigateToMess = () => {
 
   const logout = () => {
     setUser(null);
+
   };
 
 
@@ -253,7 +248,7 @@ const navigateToMess = () => {
   return (
 
     <NavigationContainer>
-      <UserContext.Provider value={{ user, login, logout, sb, USERID: user, userInitialLocation: userInitialLocation,}}>
+      <UserContext.Provider value={{ user, login, logout, sb, USERID: user, userInitialLocation: userInitialLocation}}>
 
         {user != null ?
 

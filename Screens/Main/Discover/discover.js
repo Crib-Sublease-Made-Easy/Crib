@@ -52,12 +52,15 @@ var axios = require('axios');
 
 export default function DiscoverScreen({navigation, route}){
 
-      
+    const {onChat} = useContext(UserContext);
+
     const {USERID, userInitialLocation,} = useContext(UserContext);
       //Method for handling notifications received while app in foreground
       OneSignal.setNotificationOpenedHandler(notification => {
         console.log("OneSignal: notification opened:", notification);
+        if(!onChat){
             navigation.navigate("Message")
+        }
         
       });
     //Reference to the MapView

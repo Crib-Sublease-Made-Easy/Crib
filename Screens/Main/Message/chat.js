@@ -42,6 +42,7 @@ import typescript from 'react-native-encrypted-storage';
 
 export default function ChatScreen({navigation, route}){
     const {sb} = useContext(UserContext);
+
     const { url, id } = route.params;
 
     const GiftedChatRef = useRef();
@@ -55,7 +56,7 @@ export default function ChatScreen({navigation, route}){
 
     const [channel, setChannel] = useState(null)
     useEffect(()=>{
-      
+      onChat = true
       sb.addChannelHandler('channels', channelHandler);
       getGroupChannel()
       console.log("USE EFFECYT")
@@ -167,6 +168,7 @@ export default function ChatScreen({navigation, route}){
             alert("This property is unavailable.")
             channel.leave()
             navigation.goBack()
+            onChat = false
             setLoading(false)
 
           } else {
@@ -245,12 +247,13 @@ export default function ChatScreen({navigation, route}){
       alert("You have successfully left this chat.")
       channel.leave()
       navigation.goBack()
+      onChat= false
     }
     return(
     <SafeAreaView style={{backgroundColor:'white', flex:1}}>
     <HeaderContainer>
           <BackButtonContainer>
-              <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
+              <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> { onChat=false, navigation.goBack()}}>
                   <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
               </Pressable>
           </BackButtonContainer>
