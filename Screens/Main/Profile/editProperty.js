@@ -195,7 +195,7 @@ export default function EditPropertyScreen({navigation, route}){
           );
     }
     async function deletePropertyRequest(){
-        const accessToken = await SecureStorage.getItem("studio.jpg");
+        const accessToken = await SecureStorage.getItem("accessToken");
         fetch('https://sublease-app.herokuapp.com/properties/' + propID, {
             method: 'DELETE',
             headers: {
@@ -203,9 +203,11 @@ export default function EditPropertyScreen({navigation, route}){
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + accessToken,
             }
-        }).then(res => {
+        }).then(async res => {
+            console.log(res)
             if(res.status == 200){
-
+                console.log(res)
+                    await AsyncStorage.removeItem("postedProperty")
                     navigation.goBack()
                 }
                 else{
@@ -214,7 +216,7 @@ export default function EditPropertyScreen({navigation, route}){
             
         })
         .catch((error) => {
-
+            console.log(error)
         });
     }   
     

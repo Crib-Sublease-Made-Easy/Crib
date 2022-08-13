@@ -257,10 +257,18 @@ export default function ChatScreen({navigation, route}){
                   <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
               </Pressable>
           </BackButtonContainer>
-         
-          <NameContainer>
-              <Header>{route.params.postedBy}</Header>
-          </NameContainer>
+          {channel != null ? 
+            channel.members[0].userId == id ?
+              <NameContainer>
+                  <Header>{channel.members[1].nickname}</Header>
+              </NameContainer>
+              :
+              <NameContainer>
+              <Header>{channel.members[0].nickname}</Header>
+               </NameContainer>
+          :
+          null
+          }
              
          
           <ChatImageSettingContainer>
