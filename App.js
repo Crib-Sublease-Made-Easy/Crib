@@ -121,6 +121,12 @@ OneSignal.setNotificationOpenedHandler(notification => {
   navigateToMess()
 });
 
+OneSignal.setNotificationOpenedHandler(notification => {
+  console.log("OneSignal: notification opened:", notification);
+      // navigation.navigate("Message")
+  
+});
+
 //Method for handling notifications received while app in foreground
 OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
   // console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
@@ -135,7 +141,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
 const navigateToMess = () => {
   const nav = useNavigation()
-  nav.navigate('MessageTabs')
+  nav.navigate('Message')
 }
   useEffect(async () => {
     await getLocation()

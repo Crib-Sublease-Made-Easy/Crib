@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLOR, DARKGREY } from '../../../sharedUtils';
+import OneSignal from 'react-native-onesignal';
 
 const TEXTGREY = '#969696'
 
@@ -50,9 +51,15 @@ import { UserContext } from '../../../UserContext';
 var axios = require('axios');
 
 export default function DiscoverScreen({navigation, route}){
-  
+
+      
     const {USERID, userInitialLocation,} = useContext(UserContext);
-  
+      //Method for handling notifications received while app in foreground
+      OneSignal.setNotificationOpenedHandler(notification => {
+        console.log("OneSignal: notification opened:", notification);
+            navigation.navigate("Message")
+        
+      });
     //Reference to the MapView
     const mapRef = useRef(null)
     //This is to control the height of the input view container
