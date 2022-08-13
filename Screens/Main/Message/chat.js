@@ -38,6 +38,18 @@ Ionicons.loadFont()
 import { ChatImageSettingContainer } from './chatStyle';
 import typescript from 'react-native-encrypted-storage';
 
+import OneSignal from 'react-native-onesignal';
+
+//Method for handling notifications received while app in foreground
+OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
+  console.log("Notification in chat screen");
+
+  // Complete with null means don't show a notification.
+  notificationReceivedEvent.complete(null);
+});
+
+
+
 export default function ChatScreen({navigation, route}){
     const {sb} = useContext(UserContext);
     const { url, id } = route.params;
