@@ -19,18 +19,21 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, ContinueText, ProgressText } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, ContinueText, ProgressText, DARKGREY, MEDIUMGREY, GOOGLEBLUE } from '../../../sharedUtils';
 
 import Lottie from 'lottie-react-native';
 
 
 import {Header, ProgressBarContainer, SubtitleText, TitleText, 
-    GeneralTextInput, TextInputContainer} from './phoneNumStyle';
+    GeneralTextInput, TextInputContainer, FollowUpContainer, FollowUpText} from './phoneNumStyle';
 
 export default function PhoneNumberScreen({navigation, route}){
     const [phoneNumber, setPhoneNumber] = useState("")
     const [passedPhoneNumber, setPassedPhoneNumber]= useState("")
     const [loading, setLoading] = useState(false)
+    const [agreement, setAgreement] = useState(false)
+    const [privacyagreement, setPrivacyAgreement] = useState(false)
+    
     console.log(passedPhoneNumber)
     async function signupStep1(){
         console.log("Stepping 1")
@@ -101,10 +104,20 @@ export default function PhoneNumberScreen({navigation, route}){
     }
 
     async function signup(){
-        setLoading(true)
-
         console.log("Tryin to sign up.")
-        if(passedPhoneNumber.length == 10){
+        if(!agreement || !privacyagreement){
+            if(!agreement){
+                alert("You have to agree to Crib Terms and Services to proceed.")
+            }
+            else if(!privacyagreement){
+                alert("You have to agree to Crib Privacy Policy to proceed.")
+            }
+        }
+        else if (passedPhoneNumber.length != 10){
+            alert("Incorrect phone number.")
+        }
+        else{
+            setLoading(true)
             console.log("Inside Signup")
             const res =  await fetch('https://sublease-app.herokuapp.com/users/check', {
                 method: 'POST',
@@ -128,9 +141,7 @@ export default function PhoneNumberScreen({navigation, route}){
                 console.log(e)
             )
         }
-        else{
-            alert("Invalid phone number. Please try again.")
-        }
+       
         setTimeout(()=>{
             setLoading(false)
         },2000)
@@ -205,6 +216,18 @@ export default function PhoneNumberScreen({navigation, route}){
                         
                     
                 </TextInputContainer>
+                <FollowUpContainer>
+                    <Pressable onPress={()=> setAgreement(!agreement)}>
+                        <Ionicons size={25} name={'checkbox'} color={agreement ? PRIMARYCOLOR : MEDIUMGREY} />
+                    </Pressable>
+                    <FollowUpText>I agree to Crib <Text onPress={()=>alert("hello")} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Terms and Services</Text>.</FollowUpText>
+                </FollowUpContainer>
+                <FollowUpContainer>
+                    <Pressable onPress={()=> setPrivacyAgreement(!privacyagreement)}>
+                        <Ionicons size={25} name={'checkbox'} color={privacyagreement ? PRIMARYCOLOR : MEDIUMGREY} />
+                    </Pressable>
+                    <FollowUpText>I agree to Crib <Text onPress={()=>alert("hello")} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Privacy Policy</Text>.</FollowUpText>
+                </FollowUpContainer>
             </ScrollView>
           
 

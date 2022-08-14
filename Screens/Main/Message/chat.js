@@ -158,7 +158,7 @@ export default function ChatScreen({navigation, route}){
     deletedChat = (groupChannel) => {
       onChat= false
       groupChannel.leave()
-      navigation.goBack()
+      navigation.navigate("Message")
       alert("The other user has left the chat.")
     }
 

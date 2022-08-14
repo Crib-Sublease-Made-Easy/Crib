@@ -13,7 +13,7 @@ import {
     Animated
 } from 'react-native';
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, MEDIUMGREY } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, MEDIUMGREY, DARKGREY } from '../../../sharedUtils';
 
 const TEXTINPUTBORDERCOLOR = '#989898'
 
@@ -75,4 +75,17 @@ export const ContinueButton = styled.Pressable`
     justify-content: center
     align-items: center
     margin-bottom: ${HEIGHT*0.025}px;
+`
+export const FollowUpContainer = styled.View`
+    margin-top: ${HEIGHT*0.02}px
+    width: ${WIDTH*0.8}px;
+    align-items: center
+    flex-direction: row
+    align-self: center
+    
+`
+export const FollowUpText = styled.Text`
+    font-size: ${HEIGHT*0.0175}px;
+    margin-left: ${WIDTH*0.05}px
+    color: black
 `

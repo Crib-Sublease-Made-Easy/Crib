@@ -39,7 +39,7 @@ export default function ProfileEditScreen({navigation, route}){
     //const userAge = Math.floor(route.params.userData.dob/(1000*60*60*24*365))
    
     useEffect(()=>{
-        console.log(route.params.userData)
+      
         const unsubscribe = navigation.addListener('focus', () => {
             getTokens()
         });
@@ -48,7 +48,7 @@ export default function ProfileEditScreen({navigation, route}){
     
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("accessToken");
-        console.log(accessToken)
+       
         fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
         method: 'GET',
         headers: {
@@ -63,7 +63,7 @@ export default function ProfileEditScreen({navigation, route}){
             const cachedProfilePic = await AsyncStorage.getItem("profilePic")
             if(school == null || userData.school != school){
                 console.log("UPDATE --- API --- school")
-                console.log(userData.school)
+                
                 setSchool(userData.school)
             }
             else{
@@ -138,7 +138,9 @@ export default function ProfileEditScreen({navigation, route}){
                     return false;
                     }
                 });
-            });
+            }).catch(e=>{
+                console.log(e)
+            })
         }
         catch{
             if (error.code === 'E_PICKER_CANCELLED') { // here the solution

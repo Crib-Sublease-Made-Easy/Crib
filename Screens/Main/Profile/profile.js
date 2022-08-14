@@ -243,7 +243,7 @@ export default function ProfileScreen({navigation}){
                 //This is that favproperties is not empty so no error later on
                 if(data.length != 0){
                     console.log("UPDATE --- API --- FAV PROPERTY")
-                    console.log(data)
+                    
                     setFavoriteProperties(data);
                     await AsyncStorage.setItem("favoriteProperties", JSON.stringify(data) )
                 }

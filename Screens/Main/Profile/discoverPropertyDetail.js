@@ -212,7 +212,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 scrollEventThrottle={5}
                 onScroll={({nativeEvent}) => {
                     if(isCloseToTop(nativeEvent)){
-                       navigation.navigate("Discover")
+                       navigation.goBack()
                     }
                 }}
                 >
