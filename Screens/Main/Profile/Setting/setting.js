@@ -13,7 +13,7 @@ import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from '
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../sharedUtils';
 
-
+import OneSignal from 'react-native-onesignal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
@@ -22,20 +22,32 @@ import { HeaderContainer, BackButtonContainer, NameContainer, Header,ResetButton
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
+OneSignal.setAppId("440ad232-b229-4ea1-963b-5037d3ac9413");
 
 export default function SettingScreen({navigation, route}){
-    const [messageNotification, setMessageNotification] = useState(true)
-    const [newPropNotification, setNewPropNotification] = useState(true)
+    const [notificationsEnabled, setNotificationsEnabled] = useState(true)
     const [userData, setUserData] = useState("")
     const {user, login} = useContext(UserContext);
 
-    useEffect(()=>{
+    useEffect( ()=>{
+      getNotificationStatus()
       const unsubscribe = navigation.addListener('focus', () => {
         getTokens()
     
         });
     return unsubscribe; 
     },[navigation])
+
+    const getNotificationStatus = async() => {
+      const deviceState = await OneSignal.getDeviceState();
+      if(deviceState.notificationPermissionStatus == 1 ||deviceState.isSubscribed == false){
+        setNotificationsEnabled(false)
+      } else {
+        setNotificationsEnabled(true)
+      }
+      // setNotificationsEnabled(!notificationsEnabled)
+      console.log("DEVICE STATE", deviceState)
+    }
 
     const logout =  async() => {
       await SecureStorage.removeItem("refreshToken");
@@ -48,6 +60,26 @@ export default function SettingScreen({navigation, route}){
       login(null)
     }
 
+    const toggleNotification = async () => {
+
+      //Prompt for push on iOS
+      if(!notificationsEnabled){
+        OneSignal.disablePush(false);
+        const deviceState = await OneSignal.getDeviceState();
+        if(deviceState.notificationPermissionStatus == 1){
+          alert("Unable to turn on notifications. Please go to settings and enable Notifications.")
+        } else if(deviceState.notificationPermissionStatus == 2 || deviceState.isSubscribed == true){
+          setNotificationsEnabled(true)
+        }
+
+      } else{
+        OneSignal.disablePush(true);
+        const deviceState = await OneSignal.getDeviceState();
+        if(deviceState.notificationPermissionStatus == 1 || deviceState.isSubscribed == false){
+          setNotificationsEnabled(false)
+        }
+    }
+  }
     async function getTokens(){
       const accessToken = await SecureStorage.getItem("accessToken");
      //console.log("Access Token " + accessToken)
@@ -125,10 +157,10 @@ export default function SettingScreen({navigation, route}){
               <RowName>All Notifications</RowName>
               <Switch
                 trackColor={{ false: "#767577", true: PRIMARYCOLOR }}
-                thumbColor={ messageNotification ? 'white': "#f4f3f4"}
+                thumbColor={ notificationsEnabled ? 'white': "#f4f3f4"}
                 ios_backgroundColor="#3e3e3e"
-                onValueChange={()=> setMessageNotification(!messageNotification)}
-                value={messageNotification}
+                onValueChange={()=> toggleNotification()}
+                value={notificationsEnabled}
               />
             </RowContainer>
             {/* <RowContainer>

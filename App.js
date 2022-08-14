@@ -110,8 +110,6 @@ OneSignal.setAppId("440ad232-b229-4ea1-963b-5037d3ac9413");
 OneSignal.promptForPushNotificationsWithUserResponse(async response => {
   const deviceState = await OneSignal.getDeviceState();
   await SecureStorage.setItem("oneSignalUserID", deviceState.userId);
-  // console.log("DEVICE STATE", deviceState)
-  // console.log("Prompt response:", response);
 });
 
 
