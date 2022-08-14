@@ -61,7 +61,7 @@ export default function EditPropertyScreen({navigation, route}){
         const UID = await SecureStorage.getItem("userId");
 
         fetch('https://sublease-app.herokuapp.com/properties/' + route.params.propId, {
-        method: 'GET',
+        method: 'POST',
         headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

@@ -105,11 +105,14 @@ export default function PropertyDetailScreen({navigation, route}){
         const accessToken = await SecureStorage.getItem("accessToken");
         console.log("FETCH PROPERTYDETAIL")
         await fetch('https://sublease-app.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
-            method: 'GET',
+            method: 'POST',
             headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + accessToken,
+            },
+            body:{
+                viewCount: true
             }
             }) 
             .then(res => res.json()).then( async propertyData =>{

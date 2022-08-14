@@ -431,11 +431,14 @@ export default function DiscoverScreen({navigation, route}){
         setLoading(true)
        
         await fetch('https://sublease-app.herokuapp.com/properties/' + item._id, {
-        method: 'GET',
+        method: 'POST',
         headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({
+            viewCount: "true"
+        })
         }) 
         .then(res => res.json()).then(property =>{
             console.log("PROPERTY", property.propertyInfo._id)

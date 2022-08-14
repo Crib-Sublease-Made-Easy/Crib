@@ -166,7 +166,7 @@ export default function ChatScreen({navigation, route}){
       console.log("RENDEREDDDDDDDDD")
       
       await fetch('https://sublease-app.herokuapp.com/properties/' + propId, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',

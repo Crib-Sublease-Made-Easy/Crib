@@ -29,6 +29,7 @@ export const Header = styled.View`
   justify-content: center
   align-items: flex-end
   align-self:center
+  background-color: pink
 `
 
 export const Container = styled.View`
@@ -133,6 +134,7 @@ export const InformationContainer = styled.View`
   align-items: center
   max-height: ${HEIGHT*0.15}px
   margin-top:${HEIGHT*0.015}px
+  background-color: red
 
 `
 
@@ -229,4 +231,27 @@ export const FavPropertyCardDateContainer = styled.View`
   align-items: center
   flex-direction: row
 `
+export const HeaderIndividualContainer = styled.View`
+  width: 33.3%
+  justify-content: center
+  align-items: center
+  padding-horizontal: 10%
+  flex-direction: row
+`
 
+export const RowContainer = styled.Pressable`
+  flex-direction: row;
+  width: ${WIDTH*0.8}px
+  align-self: center
+  justify-content: flex-start
+  align-items: center
+  padding-vertical: ${HEIGHT*0.015}px
+  border-bottom-width: 0.5px
+  border-color: ${MEDIUMGREY}
+`
+
+export const RowItemName = styled.Text`
+  margin-left: ${WIDTH*0.05}px
+  font-size: ${HEIGHT*0.0175}px
+  font-weight: 500
+`

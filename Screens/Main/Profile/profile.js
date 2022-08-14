@@ -19,7 +19,7 @@ import { UserContext } from '../../../UserContext';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { PRIMARYCOLOR } from '../../../sharedUtils';
+import { PRIMARYCOLOR, Header, HeaderContainer,BackButtonContainer, NameContainer, ResetButtonContainer  } from '../../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -35,11 +35,12 @@ Ionicons.loadFont()
 
 
 
-import { Header,Container, NameText, OccupationText,EditProfilePressable,SlidingContainer,
+import {Container, NameText, OccupationText,EditProfilePressable,SlidingContainer,
     PostContainer, FavContainer, PostedText, FavText,  DefaultPostFavText, PostedPropertyInfoContainer,
     PropertyName, DatePriceText, InformationContainer, IconContainer, IconsContainer,PriceEditContainer,
     EditPropertyPressable, EditText, FavPropertyCard, FavPropertyCardName, FavPropertyCardContent,
-    FavPropertyCardDateText, FavPropertyCardDateContainer, PostedPropertyCard
+    FavPropertyCardDateText, FavPropertyCardDateContainer, PostedPropertyCard, HeaderIndividualContainer,
+    RowContainer, RowItemName
  } from './profileStyle';
 import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, MEDIUMGREY, DARKGREY } from '../../../sharedUtils';
 export default function ProfileScreen({navigation}){
@@ -173,7 +174,7 @@ export default function ProfileScreen({navigation}){
     async function fetchPostedProperties(id, token){
        
         await fetch('https://sublease-app.herokuapp.com/properties/' + id, {
-            method: 'GET',
+            method: 'POST',
             headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
@@ -292,29 +293,59 @@ export default function ProfileScreen({navigation}){
     }
     return(
         <SafeAreaView style={{backgroundColor:'white'}}>
-            <Header>
+            <HeaderContainer style={{borderBottomWidth: 0}}>
+                <HeaderIndividualContainer style={{justifyContent:'flex-start'}}>
+                    <Image source={{uri: profilePic}} 
+                    style={{width:WIDTH*0.1, height: WIDTH*0.1, borderRadius: WIDTH*0.05, alignSelf:'center', backgroundColor:EXTRALIGHT}} />
+                </HeaderIndividualContainer> 
+                    
+                <HeaderIndividualContainer>
+                    <Header>{userData.firstName}</Header>
+                </HeaderIndividualContainer>
+
+                <HeaderIndividualContainer style={{justifyContent:'flex-end'}}>
+                    <Pressable onPress={()=>navigation.navigate('Setting')}>
+                        <Ionicons name='cog-outline' size={30} />
+                    </Pressable>
+                </HeaderIndividualContainer>
+               
+            </HeaderContainer>
+            {/* <Header>
                 <Pressable onPress={()=>navigation.navigate('Setting')}>
                     <Ionicons name='cog-outline' size={30} />
                 </Pressable>
-            </Header>
+            </Header> */}
+            <View style={{marginTop: HEIGHT*0.05}}>
+                <RowContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>    
+                    <Ionicons name="create"  size={30} color={GOOGLEBLUE}/>
+                    <RowItemName>Edit Profile</RowItemName>
+                </RowContainer>
+                <RowContainer onPress={()=> toPostProperty()}>    
+                    <Ionicons name="home"  size={30} color={PRIMARYCOLOR}/>
+                    <RowItemName>Post a property</RowItemName>
+                </RowContainer>
+                <RowContainer onPress={()=> onShare()}>    
+                    <Ionicons name="share"  size={30} color={DARKGREY}/>
+                    <RowItemName>Share Crib</RowItemName>
+                </RowContainer>
+            </View>
             <Container>
-                <View style={{ height: HEIGHT*0.275,}}>
-                <View style={{width:WIDTH*0.9, height: WIDTH*0.30, borderRadius: WIDTH*0.175,}}>
+                
+                {/* <View style={{width:WIDTH*0.9, height: WIDTH*0.30, borderRadius: WIDTH*0.175,}}>
                     <Image source={{uri: profilePic}} 
                     style={{width:WIDTH*0.3, height: WIDTH*0.3, borderRadius: WIDTH*0.15, alignSelf:'center', backgroundColor:EXTRALIGHT}} />
-                </View>
-                <InformationContainer>
-                   
-                    <NameText>{userData.firstName} {""} {userData.lastName}</NameText>
+                </View> */}
+                
+                    
+                    {/* <NameText>{userData.firstName} {""} {userData.lastName}</NameText> */}
 
-                    <IconsContainer>
+                     {/* <IconsContainer>
                         <View style={{justifyContent:"center", alignItems:"center"}}>
                         <IconContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
                             <Ionicons name="create"  size={25} color={GOOGLEBLUE}/>
                         </IconContainer>
                         <Text style={{ padding:5}}>Edit Profile</Text>
                         </View>
-                        {/* <IconContainer onPress={()=> navigation.reset({index: 0 , routes: [{ name: 'PropertyPosting'}]} )}> */}
                         <View style={{justifyContent:"center", alignItems:"center"}}>
                         <IconContainer onPress={()=> toPostProperty()}>
 
@@ -328,9 +359,9 @@ export default function ProfileScreen({navigation}){
                         </IconContainer>
                         <Text style={{padding: 5}}>Share Crîb</Text>
                         </View>
-                    </IconsContainer>
-                </InformationContainer>
-                </View>
+                    </IconsContainer>  */}
+               
+                
                
 
                 {/* <EditProfilePressable onPress={()=>navigation.navigate("ProfileEdit")}>
