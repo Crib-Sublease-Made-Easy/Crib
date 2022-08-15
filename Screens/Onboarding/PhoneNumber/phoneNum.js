@@ -220,7 +220,7 @@ export default function PhoneNumberScreen({navigation, route}){
                     <Pressable onPress={()=> setAgreement(!agreement)}>
                         <Ionicons size={25} name={'checkbox'} color={agreement ? PRIMARYCOLOR : MEDIUMGREY} />
                     </Pressable>
-                    <FollowUpText>I agree to Crib <Text onPress={()=>alert("hello")} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Terms and Services</Text>.</FollowUpText>
+                    <FollowUpText>I agree to Crib <Text onPress={()=>navigation.navigate('TermsAndService')} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Terms and Services</Text>.</FollowUpText>
                 </FollowUpContainer>
                 <FollowUpContainer>
                     <Pressable onPress={()=> setPrivacyAgreement(!privacyagreement)}>
