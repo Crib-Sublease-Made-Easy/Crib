@@ -26,6 +26,7 @@ import Login_OTP from './Screens/Onboarding/login_otp.js';
 
 import SignupScreen from './Screens/Onboarding/signup.js';
 import TermsAndService from './Screens/Onboarding/termsAndService';
+import Privacy from './Screens/Onboarding/privacy';
 import FirstLastNameScreen from './Screens/Onboarding/FirstLastName/firstLastName.js';
 import AgeScreen from './Screens/Onboarding/Age/age.js';
 import GenderScreen from './Screens/Onboarding/Gender/gender.js';
@@ -311,6 +312,13 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             />
             <Stack.Screen name="TermsAndService"
               component={TermsAndService}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
+            <Stack.Screen name="Privacy"
+              component={Privacy}
               options={{
                 headerShown: false,
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS

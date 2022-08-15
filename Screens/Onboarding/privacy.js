@@ -6,8 +6,6 @@ import {
   Animated,
   View
 } from 'react-native';
-import { User } from 'realm';
-
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../sharedUtils'
 
@@ -20,7 +18,7 @@ import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButto
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
-export default function TermsAndService({navigation, route}){
+export default function Privacy({navigation, route}){
 
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
@@ -39,19 +37,19 @@ export default function TermsAndService({navigation, route}){
             <RowContainer>
                 <BodyContainer>
                     <Text>
-                    1. Crib is a mobile application that is developed to assist in the process of subleases. We bridge the gap between people who are looking for subleases and people who are subleasing their apartment. Our vision is to provide an easy-to-use, centralized and friendly platform to achieve that goal.  
+                    1. We collect personally identifiable information, such as your name, email address, phone number, gender, school and occupation, and other information you directly give us on our App. Any of the information that you provide us may be publicly displayed on our platform.
                     </Text>
                     <Text>
                     2. Users are expected to interact mannerly and politely while using the application, violators will be subjected to further investigation and may result to account deletion if their behavior does not improve.
                     </Text> 
                     <Text>
-                    3. All contents posted by users will be subject to inspection by Crib developers. Any content that violates our vision guidelines will be terminated and users will be warned. If situation does not improve, the user’s account will be permanently deleted.
+                    3. You can contribute to Crib in several different ways, including uploading photos, engaging in chats, posting properties, creating a public profile, and viewing other posted properties. We may store these contributions on our server and display them to other users. Note that if you include Personal Information in your profile, it can be used and viewed by other users of Crib. We are not responsible for the information you choose to include in your public profile.
                     </Text>
                     <Text>
-                    4. We are not liable for any loses or damages inflected to you while using the application. Please be aware of your actions and do not give out sensitive informations to other users. Our company maintain the right to change or amend  our terms and services as needed.
+                    4. You may not disclose to us the personal information of another person by directly creating an account for them or indirectly disclosing their information in some other way.
                     </Text>
                     <Text>
-                    5. Crib may make changes to their service or discontinue any part of the service at any time without notice. Crib makes no commitment to maintaining or updating any service
+                    5. We allow property owners/management firms that list their properties on our app access to your personal information by only for the purpose of and to the extent necessary to connect users with property listings.
                     </Text>
                 </BodyContainer>
             </RowContainer>

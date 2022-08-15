@@ -181,11 +181,11 @@ export default function SettingScreen({navigation, route}){
               <RowName>Help</RowName>
               <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer> */}
-            <RowContainer>
+            <RowContainer  onPress={() => navigation.navigate('TermsAndService')}>
               <RowName>Terms of services</RowName>
               <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
-            <RowContainer>
+            <RowContainer onPress={() => navigation.navigate('Privacy')}>
               <RowName>Privacy</RowName>
               <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
