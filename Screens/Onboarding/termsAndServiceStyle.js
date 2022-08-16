@@ -45,6 +45,9 @@ export const RowContainer = styled.View`
     padding-vertical: ${HEIGHT*0.01}px
     width: ${WIDTH*0.9}px;
     align-self: center
+    background-color: ${EXTRALIGHT}
+    padding-left: ${WIDTH*0.025}px
+    border-radius: 10px
 `
 
 export const CategoryName = styled.Text`
@@ -53,11 +56,10 @@ export const CategoryName = styled.Text`
     font-weight: 500
 `
 
-export const BodyContainer = styled.TextInput`
-    width: ${WIDTH*0.9}px;
-    background-color: ${EXTRALIGHT}
-    padding-left: ${WIDTH*0.025}px
-    border-radius: 10px
+export const Terms = styled.Text`
+font-size: ${HEIGHT*0.018}px
+padding-vertical: ${HEIGHT*0.01}px
+font-weight: 300
 `
 
 export const HelpText = styled.Text`

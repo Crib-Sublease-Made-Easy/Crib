@@ -253,7 +253,20 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
         {user != null ?
 
           <Stack.Navigator>
-
+          <Stack.Screen name="TermsAndService"
+              component={TermsAndService}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
+            <Stack.Screen name="Privacy"
+              component={Privacy}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
             <Stack.Screen
               name="DiscoverTabs"
               component={DiscoverTab}
@@ -310,20 +323,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
               }}
             />
-            <Stack.Screen name="TermsAndService"
-              component={TermsAndService}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
-            />
-            <Stack.Screen name="Privacy"
-              component={Privacy}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
-            />
+
 
             <Stack.Screen name="Chat"
               component={ChatScreen}
@@ -475,7 +475,20 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               }}
             />
 
-
+<Stack.Screen name="TermsAndService"
+              component={TermsAndService}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
+            <Stack.Screen name="Privacy"
+              component={Privacy}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
             <Stack.Screen name="EmailPassword" component={EmailPasswordScreen} options={{ headerShown: false }} />
             <Stack.Screen name="otp" component={OTPScreen} options={{ headerShown: false }} />
 
