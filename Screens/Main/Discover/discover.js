@@ -352,6 +352,7 @@ export default function DiscoverScreen({navigation, route}){
         }
         }) 
         .then(res => res.json()).then( pins =>{
+            console.log(pins)
            
             if(pins.length == 0){
                 console.log("PINS DATA IS EMPTY")

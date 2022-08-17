@@ -17,6 +17,7 @@ import {
     Vibration
   } from 'react-native';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import MapView , { Marker }from 'react-native-maps';

@@ -2,10 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>logo.png</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>lighthouse</string>
+	<string>Crib</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -56,8 +60,8 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UIUserInterfaceStyle</key>
-		<string>Light</string>
+	<string>Light</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>To identify user location so application can search nearby results</string>
+	<string>To identify user location so application can search nearby results</string>
 </dict>
 </plist>
