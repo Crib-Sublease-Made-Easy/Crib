@@ -22,11 +22,11 @@ import {
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 //Icons
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Ionicons} from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import EvilIcons from 'react-native-vector-icons/FontAwesome';
 
 import DatePicker from 'react-native-date-picker'
 
@@ -743,7 +743,12 @@ export default function PropertyPostingScreen({ navigation }) {
                                             borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
                                         }}>
                                             <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                                <Ionicons name={GetAmenitiesIcon(value.name)} size={15} />
+                                                {/* <Ionicons name={value.icon} size={15} /> */}
+                                                {value.library == 'EvilIcons' ? 
+                                                <EvilIcons name="user" size={22}/>:
+                                                null
+                                                }       
+
                                                 {"   "}{value.name.replace("_"," ")}
                                             </Text>
                                         </Pressable>

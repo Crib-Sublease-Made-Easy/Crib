@@ -58,8 +58,8 @@ export function ContainsSpace(str){
     return /\s/.test(str);
 }
 export const amenitiesList =
-    [{ name: 'Pet_Friendly', color: '#57b2f7', icon: "bed-outline" },
-    { name: "Garages", color: '#fa4b4b', icon: 'bed-outline' },
+    [{ name: 'Pet_Friendly', library: 'EvilIcons', color: '#57b2f7', icon: "pets" },
+    { name: "Garages", color: '#fa4b4b', icon: 'car-outline' },
     { name: 'Swimming_Pool', color: '#f79c40', icon: 'car-outline' },
     { name: 'Wifi', color: '#00d14d', icon: 'barbell-outline' },
     { name: 'Gym', color: '#f79c40', icon: 'water-outline' },

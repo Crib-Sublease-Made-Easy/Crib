@@ -253,20 +253,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
         {user != null ?
 
           <Stack.Navigator>
-          <Stack.Screen name="TermsAndService"
-              component={TermsAndService}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
-            />
-            <Stack.Screen name="Privacy"
-              component={Privacy}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
-            />
+
             <Stack.Screen
               name="DiscoverTabs"
               component={DiscoverTab}
@@ -324,7 +311,20 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               }}
             />
 
-
+            <Stack.Screen name="TermsAndService"
+              component={TermsAndService}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
+            <Stack.Screen name="Privacy"
+              component={Privacy}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+              }}
+            />
             <Stack.Screen name="Chat"
               component={ChatScreen}
               options={{
