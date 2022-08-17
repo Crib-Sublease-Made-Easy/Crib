@@ -18,7 +18,6 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import {Picker} from '@react-native-picker/picker';
 
 import { HEIGHT, WIDTH, DARKGREY, ContinueButton, ContinueText, ProgressText } from '../../../sharedUtils';
 
@@ -27,21 +26,24 @@ import {Header, ProgressBarContainer, SubtitleText, TitleText,
 
 export default function OccupationScreen({navigation, route}){
     const [occupation, setOccupation] = useState("")
-    const [showPicker, setShowPicker] = useState('')
-
 
     function checkInput(){
-        
-        navigation.navigate("Email",
-        {
-            firstName: route.params.firstName, 
-            lastName: route.params.lastName,
-            age: route.params.age,
-            gender: route.params.gender,
-            profilePic: route.params.profilePic,
-            school: route.params.school,
-            occupation: occupation
-        })
+
+        if(occupation.length > 30){
+            alert("Job title cannot be greater than 30 character.")
+        }
+        else{
+            navigation.navigate("Email",
+            {
+                firstName: route.params.firstName, 
+                lastName: route.params.lastName,
+                age: route.params.age,
+                gender: route.params.gender,
+                profilePic: route.params.profilePic,
+                school: route.params.school,
+                occupation: occupation.trim()
+            })
+        }
     }
 
     return(

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Dimensions, Pressable} from 'react-native';
+import {Dimensions, Pressable, Text} from 'react-native';
 
 import styled from 'styled-components/native';
 import { DARKGREY, LIGHTGREY, MEDIUMGREY, HEIGHT, WIDTH, PRIMARYCOLOR,  EXTRALIGHT } from '../../../sharedUtils';
@@ -394,11 +394,12 @@ export const ImageContainer = styled.Pressable`
     align-items: center
 `
 
-export const MaxText = styled.Text`
+export const MaxText = styled(Text)`
     width: ${WIDTH*0.9}px;
     align-self: center
     margin-top: ${HEIGHT*0.01}px
-    color: white
+    color: ${props=>(props.length == 700 ? 'red'  : 'white')}
+    text-align: right
 `
 //Continue Button Text used in sign up 
 export const ContinueText = styled.Text`

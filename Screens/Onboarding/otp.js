@@ -140,7 +140,7 @@ export default function OTPScreen({navigation, route}){
                 await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
                 await SecureStorage.setItem("userId", data.createdUser._id)
                 await SecureStorage.setItem("firstName", data.createdUser.firstName)
-                await SecureStorage.setItem("firstName", data.createdUser.lastName)
+                await SecureStorage.setItem("lastName", data.createdUser.lastName)
                 await SecureStorage.setItem("refreshToken", data.token.refreshToken)
                 console.log("got")
                 setTimeout(()=>{setLoading(false)},2000)

@@ -22,26 +22,28 @@ Ionicons.loadFont()
   
 import { HEIGHT, WIDTH , LIGHTGREY, DARKGREY, ContinueButton, ContinueText, ProgressText} from '../../../sharedUtils';
 
-import {Picker} from '@react-native-picker/picker';
-
 import {Header, ProgressBarContainer, SubtitleText, TitleText,  FollowUpContainer, FollowUpText,
     GeneralTextInput, TextInputContainer} from './schoolStyle';
 
 
 export default function SchoolScreen({navigation, route}){
     const [school, setSchool] = useState("")
-    const [showPicker, setShowPicker] = useState('')
 
     function checkInput(){
-        navigation.navigate("Occupation",
-        {
-            firstName: route.params.firstName, 
-            lastName: route.params.lastName,
-            age: route.params.age,
-            gender: route.params.gender,
-            profilePic: route.params.profilePic,
-            school: school.trim(),
-        })
+        if(school.length > 50){
+            alert("Name of school cannot be greater than 50 character.")
+        }
+        else{        
+            navigation.navigate("Occupation",
+            {
+                firstName: route.params.firstName, 
+                lastName: route.params.lastName,
+                age: route.params.age,
+                gender: route.params.gender,
+                profilePic: route.params.profilePic,
+                school: school.trim(),
+            })
+        }
     }
 
     return(
@@ -72,24 +74,6 @@ export default function SchoolScreen({navigation, route}){
                     </Pressable>
                     <FollowUpText>Show selection</FollowUpText>
                 </FollowUpContainer> */}
-
-
-                { showPicker ? 
-
-                    <Picker
-                    style={{flex:1}}
-                    itemStyle={{fontSize: HEIGHT*0.0175}}
-                    selectedValue={school}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setSchool(itemValue)
-                    }>
-                        {uniList.map((item)=>(
-                            <Picker.Item key={item.name} label={item.name} value={item.name} />
-                        ))}
-                    </Picker>
-                :
-                null
-                }
             
             </ScrollView>
           
