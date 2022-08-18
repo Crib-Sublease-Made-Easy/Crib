@@ -44,7 +44,7 @@ const CardContainer = {width: WIDTH*0.9,  alignSelf: 'center', borderRadius: 15,
 
 const PropertyInfoContainer = styled.View`
   width: ${WIDTH*0.875}px;
-  height: ${HEIGHT*0.09}px
+  height: ${HEIGHT*0.08}px
   justify-content:space-around
   align-self: center
   padding-top: ${HEIGHT*0.01}px;
@@ -59,7 +59,7 @@ const LocationAndPrice = styled.View`
 `
 
 const LocationFont = styled.Text`
-  font-size: ${HEIGHT*0.02}px;
+  font-size: ${HEIGHT*0.017}px;
   font-weight: 600;
   
 `
@@ -74,7 +74,7 @@ const PropertyInfoContainerRight = styled.View`
 `
 const DateFont = styled.Text`
     margin-top: ${HEIGHT*0.001}px;
-    font-size: ${HEIGHT*0.019}px;
+    font-size: ${HEIGHT*0.017}px;
     font-weight: 400;
     color: grey
    
