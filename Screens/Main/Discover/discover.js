@@ -207,6 +207,7 @@ export default function DiscoverScreen({navigation, route}){
         };
         axios(config)
         .then(response => {
+            console.log(response)
             setautocompleteLocation([]);           
             for( let name of response.data){
                 setautocompleteLocation(prevArray => [...prevArray,name])   
@@ -246,8 +247,7 @@ export default function DiscoverScreen({navigation, route}){
 
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
-        s = s +`&availableFrom=${filterAvailableFrom}`
-        s = s +`&availableTo=${filterAvailableTo}`
+
        
     
         fetch('https://sublease-app.herokuapp.com/properties/query?page=0' + s, {
@@ -295,10 +295,10 @@ export default function DiscoverScreen({navigation, route}){
         s = s + `&longitude=${currentLocation[1]}`
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
-        s = s +`&availableFrom=${filterAvailableFrom}`
-        s = s +`&availableTo=${filterAvailableTo}`
+        // s = s +`&availableFrom=${filterAvailableFrom}`
+        // s = s +`&availableTo=${filterAvailableTo}`
 
-        
+
         if(propertyPage != 0){
             await fetch('https://sublease-app.herokuapp.com/properties/query?page=' + propertyPage + s, {
             method: 'GET',
