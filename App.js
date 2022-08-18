@@ -141,7 +141,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     await getLocation()
     console.log("NEW APP REFRESH")
     refreshAccessToken()
-   
+    
 
   }, [])
   const connectSendbird = async () => {

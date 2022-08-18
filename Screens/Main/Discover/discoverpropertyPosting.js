@@ -73,7 +73,7 @@ import {
     ContinueText, MaxText
 } from './discoverPropertyPostingStyle';
 import Easing from 'react-native/Libraries/Animated/Easing';
-import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton} from '../../../sharedUtils';
+import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, GetFAIcons} from '../../../sharedUtils';
 import { SubHeadingText } from '../../Onboarding/Landing/landingStyle';
 import { set } from 'react-native-reanimated';
 
@@ -754,6 +754,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
                     <PostingSection>
                         <Heading>More Details</Heading>
+                        {/* <FontAwesomeIcon icon=blogger color='white' /> */}
                         <InfoText>
                             Select all of the amenitie that are available
                             at this sublease property. Not all may apply
@@ -772,20 +773,8 @@ export default function PropertyPostingScreen({ navigation }) {
                                             borderWidth: 3, borderColor: propertyAmenities.indexOf(value.name) == -1 ? value.color : '#0085FF', height: HEIGHT * 0.045,
                                             borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
                                         }}>
+                                            {GetFAIcons(value.name)}
                                             <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                                {value.library == 'FontAwesome' ? 
-                                                <FontAwesome name={value.icon} size={15} />
-                                                :   
-                                                null}
-                                                {(value.library == 'MaterialCommunityIcons') ?
-                                                    <MaterialCommunityIcons name={value.icon} size={20} />
-                                                :   
-                                                null}    
-                                                {(value.library == 'Ionicon') ?  
-                                                    <Ionicons name={value.icon} size={15} />
-                                                    : 
-                                                    null
-                                                }
                                                 {"   "}{value.name.replace("_"," ")}
                                             </Text>
                                         </Pressable>
