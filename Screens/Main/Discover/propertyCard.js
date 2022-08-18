@@ -203,7 +203,25 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
 
     })
     
+    function getDistanceFromLatLonInMiles(lat1,lon1,lat2,lon2) {
+      var R = 6371; // Radius of the earth in km
+      var dLat = deg2rad(lat2-lat1);  // deg2rad below
+      var dLon = deg2rad(lon2-lon1); 
+      var a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2)
+        ; 
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+      var d = R * c; // Distance in km
+      return d * 0.621371; //km to miles
+    }
     
+    function deg2rad(deg) {
+      return deg * (Math.PI/180)
+    }
+
+
     const bottomSheetStyle = useAnimatedStyle(()=>{
         return{
             transform:[{translateY: translateY.value}]
@@ -246,7 +264,8 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                                   }  -  {new Date(data.item.propertyInfo.availableTo).getDate() + " " +
                                   new Date(data.item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}
                                   </DateFont>
-                        <DateFont>Apartment</DateFont>
+                                
+                        <DateFont>{Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0]))} miles away</DateFont>
                        
                    
                    
