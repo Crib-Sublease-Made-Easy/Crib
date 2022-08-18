@@ -40,7 +40,13 @@ const TEXTGREY = '#969696'
 
 import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
 
-const CardContainer = {width: WIDTH*0.9,  alignSelf: 'center', borderRadius: 15, paddingVertical: HEIGHT*0.01 ,  };
+const CardContainer = styled(Pressable)`
+  width: ${WIDTH*0.9}px
+  align-self: center;
+  border-radius: 15px;
+  padding-vertical: ${HEIGHT*0.01}px
+`
+
 
 const PropertyInfoContainer = styled.View`
   width: ${WIDTH*0.875}px;
@@ -236,13 +242,15 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
     }
 
-    const renderCards = useCallback((data) =>{
+    const renderCards = (data, index) =>{
 
         return(
-            <Pressable 
-            style={CardContainer}  onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId})} >
+            <CardContainer 
+            onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId})} >
                 {/* <SharedElement id="0"> */}
-                    <PropertyImageContainer>
+                <Text>{index}</Text>
+                    <PropertyImageContainer >
+                        
                         <Animated.Image  
                         style={{width:WIDTH*0.9, height:WIDTH*0.6, borderRadius:15, backgroundColor:LIGHTGREY,
                         opacity: 1
@@ -275,9 +283,9 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                 <SharedElement id="view">
                     <View style={{backgroundColor:'white'}}></View>
                 </SharedElement>
-            </Pressable>
+            </CardContainer>
         )
-    })
+    }
 
     
     return(
@@ -300,7 +308,15 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         length != 0 ?
         <FlatList
         onEndReachedThreshold = {0.4}
-       
+        ItemSeparatorComponent={() => {
+          return (
+            <View style={{width: WIDTH*0.9, height: HEIGHT*0.03}}>
+
+            </View>
+          )
+        }
+          
+        }
         onEndReached={()=>{
             console.log("loading more data")
             loadMoreProperties()
