@@ -32,6 +32,12 @@ FontAwesome.loadFont()
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faSquareCheck, faSwimmer, faDog, faD } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faSquareCheck, faSwimmer, faDog)
 
 
 
@@ -362,7 +368,7 @@ export default function ProfileScreen({navigation}){
                     </IconsContainer>  */}
                
                 
-               
+               <FontAwesomeIcon icon={faSwimmer} />
 
                 {/* <EditProfilePressable onPress={()=>navigation.navigate("ProfileEdit")}>
                     <Text style={{color:'white',}}>Edit Profile</Text>

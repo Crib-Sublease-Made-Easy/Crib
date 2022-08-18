@@ -2,10 +2,14 @@ import {
     Dimensions,
     Pressable
 } from 'react-native';
-
+import * as React from 'react';
 import styled from 'styled-components/native';
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faSquareCheck, faSwimmer, faDog, faWifi, faDumbbell, faHandsWash, faToriiGate, faTrain, faThermometer, faBowlFood, faTv, faIceCream, faCouch, faBed, faKitchenSet, faCoffee, faCow, faPlateWheat, faParking, faWindowClose } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
+library.add(faSquareCheck, faSwimmer, faDog)
 //Color 
 export const PRIMARYCOLOR = '#8559E3'
 export const OPACITYPRIMARYCOLOR = 'rgba(133, 89, 227, 1)'
@@ -56,6 +60,15 @@ export function OnlyLetters(str) {
 
 export function ContainsSpace(str){
     return /\s/.test(str);
+}
+
+export default function getFAAmenities (name){
+    if(name == 'Pet_Friendly'){
+        return <FontAwesomeIcon icon={faDog} />
+    }
+    if(name == 'Garages'){
+        return <FontAwesomeIcon icon={faParking} />
+    }
 }
 export const amenitiesList =
     [{ name: 'Pet_Friendly', library: 'EvilIcons', color: '#57b2f7', icon: "pets" },

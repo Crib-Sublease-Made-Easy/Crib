@@ -275,8 +275,6 @@ export default function EditPropertyScreen({navigation, route}){
                     {/* <Text>{propertyphotoGallery[index]}</Text> */}
                 </PhotoContainer>
             </TouchableOpacity>
-            
-            
 
             <TouchableOpacity key={"imgList" + "floorplan"} onPress={() => SelectPropPic(4)}>
                 <PhotoContainer >
