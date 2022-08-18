@@ -44,19 +44,23 @@ const CardContainer = {width: WIDTH*0.9,  alignSelf: 'center', borderRadius: 15,
 
 const PropertyInfoContainer = styled.View`
   width: ${WIDTH*0.875}px;
-  height: ${HEIGHT*0.1}px
+  height: ${HEIGHT*0.09}px
   justify-content:space-around
   align-self: center
   padding-top: ${HEIGHT*0.01}px;
-  padding-left: ${WIDTH*0.025}px
-  
+  padding-left: ${WIDTH*0.001}px
   
 `
 
+const LocationAndPrice = styled.View`
+  flexDirection: row;
+  width: 100%;
+  justifyContent: space-between
+`
+
 const LocationFont = styled.Text`
-  font-size: ${HEIGHT*0.015}px;
-  font-weight: 500;
-  width: 100%
+  font-size: ${HEIGHT*0.02}px;
+  font-weight: 600;
   
 `
 const PropertyInfoContainerLeft = styled.View`
@@ -69,15 +73,15 @@ const PropertyInfoContainerRight = styled.View`
     justify-content: flex-end;
 `
 const DateFont = styled.Text`
-    margin-top: ${HEIGHT*0.0025}px;
-    font-size: ${HEIGHT*0.015}px;
+    margin-top: ${HEIGHT*0.001}px;
+    font-size: ${HEIGHT*0.019}px;
     font-weight: 400;
-    color: black
+    color: grey
    
 `
 const PriceFont = styled.Text`
   justify-content: center;
-  font-size: ${HEIGHT*0.0175}px;
+  font-size: ${HEIGHT*0.019}px;
   color: black
   font-weight: 400;
 `
@@ -139,7 +143,7 @@ const DefaultPostFavText = styled.Text`
 
 export default function PropertyCard({navigation, setSelectedPin, loadMoreProperties,
     filteredPropertiesData, flatlistRefreshing, length, moveMap, openPreviewCard, userId,
-    searching
+    searching, currentLocation
    
 }){
     // console.log("hi")
@@ -150,6 +154,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
 
     useEffect(()=>{
       console.log("UseEffect Refreshing...")
+      console.log(currentLocation)
       if(searching){
         translateY.value = withSpring(HEIGHT/1.4, {stiffness: 70, mass: 0.3, damping:10})
       }
@@ -235,16 +240,17 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                 {/* </SharedElement> */}
                 <PropertyInfoContainer>
                    
-                        <LocationFont>{data.item.propertyInfo.loc.secondaryTxt}</LocationFont>
+                        <LocationAndPrice><LocationFont>{data.item.propertyInfo.loc.secondaryTxt}</LocationFont><PriceFont><Text style={{fontWeight:'700'}}>${data.item.propertyInfo.price}</Text>/month</PriceFont></LocationAndPrice>
                         <DateFont>{new Date(data.item.propertyInfo.availableFrom).getDate() + " " +
                                   new Date(data.item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
                                   }  -  {new Date(data.item.propertyInfo.availableTo).getDate() + " " +
                                   new Date(data.item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}
                                   </DateFont>
+                        <DateFont>Apartment</DateFont>
                        
                    
                    
-                        <PriceFont><Text style={{fontWeight:'700'}}>${data.item.propertyInfo.price}</Text>/month</PriceFont>
+                        
                     
                 </PropertyInfoContainer>   
                 <SharedElement id="view">
