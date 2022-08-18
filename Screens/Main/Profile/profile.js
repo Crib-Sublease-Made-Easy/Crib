@@ -388,7 +388,8 @@ export default function ProfileScreen({navigation}){
                             <Image key={"defaultPropPic"}
                             source={{uri: postedProperties == null ? null : postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
                             <PostedPropertyInfoContainer>
-                                <PropertyName>{postedProperties.propertyInfo.loc.streetAddr} { "," } {postedProperties.propertyInfo.loc.secondaryTxt}</PropertyName>
+                                <PropertyName>{postedProperties.propertyInfo.loc.streetAddr}</PropertyName>
+                                <DatePriceText>{postedProperties.propertyInfo.loc.secondaryTxt}</DatePriceText>
                                 <DatePriceText>
                                     {new Date(postedProperties.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' })} {""}
                                     {new Date(postedProperties.propertyInfo.availableFrom).getFullYear()}
@@ -397,7 +398,7 @@ export default function ProfileScreen({navigation}){
                                     {new Date(postedProperties.propertyInfo.availableTo).getFullYear()}
                                 </DatePriceText>
                                 <PriceEditContainer>
-                                    <PropertyName style={{color:'black'}}>${postedProperties.propertyInfo.price}</PropertyName>
+                                    <PropertyName style={{color:'black'}}>${postedProperties.propertyInfo.price} / month</PropertyName>
                                     <EditPropertyPressable onPress={()=>navigation.navigate("EditProperty", {propertyData: postedProperties.propertyInfo, propId: postedProperties.propertyInfo._id})}>
                                         <EditText>Edit</EditText>
                                     </EditPropertyPressable>

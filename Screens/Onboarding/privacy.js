@@ -5,7 +5,8 @@ import {
   Pressable,
   Animated,
   View,
-  Text
+  Text,
+  ScrollView
 } from 'react-native';
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../sharedUtils'
@@ -34,18 +35,20 @@ export default function Privacy({navigation, route}){
                 </NameContainer>
             </HeaderContainer>
 
-            <View style={{width:WIDTH, height: HEIGHT*0.03}}/>
+            <ScrollView style={{flex:1, paddingTop: HEIGHT*0.025}}>
             <RowContainer>
-                    <Terms>
-                    By using Crib, you signify your acceptance of this Privacy Policy. If you do not agree to the terms of this privacy policy, please do not use Crib.
+                    <Terms style={{fontWeight: '500'}}>
+                    By using Crib, you signify your acceptance of this Privacy Policy. If you do not agree to Crib's privacy policy, please do not use Crib.
                     </Terms>
+                    <CategoryName>User Data</CategoryName>
                     <Terms>
                     1. We collect personally identifiable information, such as your name, email address, phone number, gender, school and occupation, and other information you directly give us on our App. Any of the information that you provide us may be publicly displayed on our platform.{"\n"}
                     </Terms>
                     <Terms>
-                    2. We do automatically log usage data and client information, such as time visited, tokens used, pages you viewed, how long you spent on a page, access times, internet protocol address, actions your perform, and other information about your use of and actions on our platform.
+                    2. We automatically log usage data and client information, such as time visited, tokens used, pages you viewed, how long you spent on a page, access times, internet protocol address, actions your perform, and other information about your use of and actions on our platform.
 {"\n"}
                     </Terms> 
+                    <CategoryName>In App Awareness</CategoryName>
                     <Terms>
                     3. You can contribute to Crib in several different ways, including uploading photos, engaging in chats, posting properties, creating a public profile, and viewing other posted properties. We may store these contributions on our server and display them to other users. Note that if you include Personal Information in your profile, it can be used and viewed by other users of Crib. We are not responsible for the information you choose to include in your public profile.{"\n"}
                     </Terms>
@@ -55,7 +58,9 @@ export default function Privacy({navigation, route}){
                     <Terms>
                     5. We allow property owners/management firms that list their properties on our app access to your personal information by only for the purpose of and to the extent necessary to connect users with property listings.{"\n"}
                     </Terms>
+                    
             </RowContainer>
+            </ScrollView>
            
            
         </SafeAreaView>

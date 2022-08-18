@@ -17,6 +17,7 @@ import {
     Vibration
   } from 'react-native';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import MapView , { Marker }from 'react-native-maps';
@@ -371,22 +372,30 @@ export default function PropertyDetailScreen({navigation, route}){
                             </ProfileImageContainer>
                             <TenantInfo>
                                 <TenantNameText style={{width: WIDTH*0.6}}>{postedUserData.firstName} {postedUserData.lastName}</TenantNameText>
-                                <InfoText>School:  {postedUserData.school}</InfoText>
-                                <InfoText>Occupation:  {postedUserData.occupation}</InfoText>
+                                {postedUserData.school != "" && 
+                                    <InfoText>School:  {postedUserData.school}</InfoText>
+                                }
+                                {postedUserData.occupation != "" && 
+                                    <InfoText>Occupation:  {postedUserData.occupation}</InfoText>
+                                }
                             </TenantInfo>
                         </TenantInfoContainer>
                     </CardSectionTwo>
                   
                     <CardSectionOne>
                         <InfoHeaderText>Amenities</InfoHeaderText>
-                        {propData.amenities.map((value)=>(
+                        {propData.amenities.length != 0 ? propData.amenities.map((value)=>(
                             <AmenitiesItem key={value + "detailamen"}>
                                 <Ionicons name={GetAmenitiesIcon(value)} size={25} color={DARKGREY}></Ionicons>
                                 <AmenitiesText>{value.replace("_"," ")}</AmenitiesText>
                                
                             </AmenitiesItem>
 
-                        ))}
+                        ))
+                        :
+                        <InfoText>No amenities listed ...</InfoText>
+                    
+                    }
                     </CardSectionOne>
                     
                 </ScrollView>

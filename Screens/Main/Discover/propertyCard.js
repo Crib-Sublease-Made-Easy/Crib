@@ -139,6 +139,8 @@ const DefaultPostFavText = styled.Text`
 
 export default function PropertyCard({navigation, setSelectedPin, loadMoreProperties,
     filteredPropertiesData, flatlistRefreshing, length, moveMap, openPreviewCard, userId,
+    searching
+   
 }){
     // console.log("hi")
     // console.log(filteredPropertiesData)
@@ -147,12 +149,15 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     // const [propertiesData, setPropertiesData] = useState([]);
 
     useEffect(()=>{
-       console.log("UseEffect Refreshing...")
-    //    loadProperty()
-        // console.log(propertiesData)
+      console.log("UseEffect Refreshing...")
+      if(searching){
+        translateY.value = withSpring(HEIGHT/1.4, {stiffness: 70, mass: 0.3, damping:10})
+      }
+      if(flatlistRefreshing){
         translateY.value = withSpring(HEIGHT/40, {stiffness: 50, mass: 0.3, damping:15})
+      }
 
-    }, [])
+    }, [flatlistRefreshing, searching ])
 
     // Swipable Bottom Sheet
     const translateY = useSharedValue(0)
@@ -175,44 +180,21 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     //console.log(velocityY.value)
     if(translateY.value  < HEIGHT*0.35){
       if(Math.abs(velocityY.value) > 1750){
-        console.log("1")
         translateY.value = withSpring(HEIGHT/1.4, {stiffness: 70, mass: 0.3, damping:10})
-       
-       
       }
       else{
-        console.log("2")
         translateY.value = withSpring(HEIGHT/40, {stiffness: 50, mass: 0.3, damping:15})
-
       }       
     }
     else{
       if(Math.abs(velocityY.value) > 1750){
-        console.log("3")
         translateY.value = withSpring(HEIGHT/40, {stiffness: 70, mass: 0.3, damping:10})
       }
       else{
-        console.log("4")
         translateY.value = withSpring(HEIGHT/1.4, {stiffness: 70, mass: 0.3, damping:15})
-       
       }
     }
-  //   else if(translateY.value  < HEIGHT/1.59 && Math.abs(velocityY.value) >1500){
-  //     console.log("2")
-  //       translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
-       
-  //   }
 
-  //   else if (translateY.value  > HEIGHT/6.69 && Math.abs(velocityY.value) <1500){
-  //     console.log("3")
-  //       translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
-      
-  //   }
-  //   else if (translateY.value  > HEIGHT/6.69 && Math.abs(velocityY.value) > 1500){
-  //     console.log("4")
-  //     translateY.value = withSpring(HEIGHT/40, {stiffness: 50, mass: 0.3, damping:15})
-    
-  // }
 
     })
     
@@ -231,9 +213,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
     }
 
-    const renderCards = useCallback((data, index) =>{
-        // console.log("HELLO")
-        // console.log("DATA ITEM", data.item)
+    const renderCards = useCallback((data) =>{
 
         return(
             <Pressable 

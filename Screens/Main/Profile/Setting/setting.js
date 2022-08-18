@@ -4,7 +4,8 @@ import {
   Switch,
   Pressable,
   Animated,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from 'react-native';
 import { User } from 'realm';
 import { UserContext } from '../../../../UserContext';
@@ -80,7 +81,7 @@ export default function SettingScreen({navigation, route}){
         }
     }
   }
-    async function getTokens(){
+  async function getTokens(){
       const accessToken = await SecureStorage.getItem("accessToken");
      //console.log("Access Token " + accessToken)
 
@@ -108,6 +109,19 @@ export default function SettingScreen({navigation, route}){
           alert(e)
       })
   }
+  async function logoutAlert(){
+    Alert.alert(
+        'Are you sure?',
+        'Your account will be put on pause.',
+        [
+          {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+          {text: 'Yes', onPress: () => logout(), style: 'destructive'},
+        ],
+        { 
+          cancelable: true 
+        }
+      );
+}
 
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
@@ -199,7 +213,7 @@ export default function SettingScreen({navigation, route}){
             </RowContainer> */}
             
             <CategoryContainer>
-              <TouchableOpacity onPress={() => logout()}>
+              <TouchableOpacity onPress={logoutAlert}>
               <CategoryName style={{color:'red'}}>Logout</CategoryName>
               </TouchableOpacity>
             </CategoryContainer>

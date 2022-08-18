@@ -357,6 +357,7 @@ export default function DiscoverScreen({navigation, route}){
         }
         }) 
         .then(res => res.json()).then( pins =>{
+            console.log(pins)
            
             if(pins.length == 0){
                 console.log("PINS DATA IS EMPTY")
@@ -573,8 +574,9 @@ export default function DiscoverScreen({navigation, route}){
                             <Ionicons name='search-outline' size={25}  color={TEXTINPUTBORDERCOLOR} />
                         </SeachIconContainer>
                         {/* This is the actual search input when user press on search bar  */}
-                        <PlaceholderLogoTextContainer placeholderTextColor={TEXTINPUTBORDERCOLOR} placeholderTextWeight='500'
-                        placeholder="Current location ..." value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
+                        <PlaceholderLogoTextContainer 
+                        placeholderTextColor={TEXTINPUTBORDERCOLOR}
+                        placeholder="Search Location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
                         onEndEditing={()=>{closeHeader(), setSearching(false), Keyboard.dismiss()}} onFocus={()=> {openHeader(),setSearching(true), setPropertyPreviewCard(false)}}/>
                         <DeleteIconContainer onPress={()=>setlocationQuery("")} style={{ display: searching ? 'flex' : 'none',}}>
                             <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />
@@ -618,7 +620,7 @@ export default function DiscoverScreen({navigation, route}){
         <PropertyCard index={0} navigation={navigation} length={pinsData.length} userId={userId}
         propertiesData={propertiesData} loadMoreProperties={loadMoreProperties} filteredPropertiesData={filteredProperties} markerClickIndex={markerClickIndex}
         flatlistRefreshing={flatlistRefreshing} mapRef={mapRef} onMarkerClick={onMarkerClick} currentLocation={currentLocation} moveMap={moveMap}
-        setSelectedPin={setSelectedPin} openPreviewCard={openPreviewCard} />
+        setSelectedPin={setSelectedPin} openPreviewCard={openPreviewCard} locationQuery={locationQuery} searching={searching}/>
 
         <DiscoverFilterScreen open={filterModal} close={()=>setFilterModal(false)} retrieveAllPins={retrieveAllPins}
         currentLocation={currentLocation} setFilteredProperties={setFilteredProperties} setPropertyPage={setPropertyPage} setRetrieveMore={setRetrieveMore}

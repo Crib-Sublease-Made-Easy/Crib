@@ -8,15 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* lighthouseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* lighthouseTests.m */; };
+		0174776EA6E9EE843698D9FF /* libPods-lighthouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7429576465BD08A4CBE976BA /* libPods-lighthouse.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		5D58486D28ACAE8100F9443A /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D58486C28ACAE8100F9443A /* logo.png */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		98BFE8EE42A8EAE72EE24423 /* libPods-lighthouse-lighthouseTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D294CC9A1B114B3D5811AE6A /* libPods-lighthouse-lighthouseTests.a */; };
+		9FE0758CA7733FEA7D2422DE /* libPods-lighthouse-lighthouseTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 098F0D867BEA8FCA39E74094 /* libPods-lighthouse-lighthouseTests.a */; };
 		B1C384E1289C497B00B4D85F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C384E0289C497B00B4D85F /* NotificationService.swift */; };
 		B1C384E5289C497B00B4D85F /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B1C384DE289C497A00B4D85F /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		F3C3C9821A12D08277573410 /* libPods-lighthouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E94C71CB30E44EB29B9C063A /* libPods-lighthouse.a */; };
-		FFD8EFC1E9C7B331EF2711C4 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9869C396CF4FDE0EBB3CDCF6 /* libPods-OneSignalNotificationServiceExtension.a */; };
+		D8779147368EEE7EA3B9278F /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F25A033AE37052E5741C49D /* libPods-OneSignalNotificationServiceExtension.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,28 +55,29 @@
 		00E356EE1AD99517003FC87E /* lighthouseTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lighthouseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* lighthouseTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = lighthouseTests.m; sourceTree = "<group>"; };
-		06C366FE81EA103C86358536 /* Pods-lighthouse-lighthouseTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse-lighthouseTests.debug.xcconfig"; path = "Target Support Files/Pods-lighthouse-lighthouseTests/Pods-lighthouse-lighthouseTests.debug.xcconfig"; sourceTree = "<group>"; };
+		098F0D867BEA8FCA39E74094 /* libPods-lighthouse-lighthouseTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lighthouse-lighthouseTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* lighthouse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lighthouse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = lighthouse/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = lighthouse/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = lighthouse/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = lighthouse/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = lighthouse/main.m; sourceTree = "<group>"; };
+		3F25A033AE37052E5741C49D /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		534FF6E75AD8254B91B7070B /* Pods-lighthouse.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse.debug.xcconfig"; path = "Target Support Files/Pods-lighthouse/Pods-lighthouse.debug.xcconfig"; sourceTree = "<group>"; };
+		5D58486C28ACAE8100F9443A /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		7429576465BD08A4CBE976BA /* libPods-lighthouse.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lighthouse.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = lighthouse/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		87E9DB9D7E6D01C19CF19898 /* Pods-lighthouse.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse.debug.xcconfig"; path = "Target Support Files/Pods-lighthouse/Pods-lighthouse.debug.xcconfig"; sourceTree = "<group>"; };
-		9869C396CF4FDE0EBB3CDCF6 /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9E252406F4A042184B10C9A8 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
+		968A787AA8AAA667C020D6AE /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
+		9F29CF98E2479729E2B335CB /* Pods-lighthouse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse.release.xcconfig"; path = "Target Support Files/Pods-lighthouse/Pods-lighthouse.release.xcconfig"; sourceTree = "<group>"; };
 		B1C384D7289C488200B4D85F /* lighthouse.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = lighthouse.entitlements; path = lighthouse/lighthouse.entitlements; sourceTree = "<group>"; };
 		B1C384DE289C497A00B4D85F /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1C384E0289C497B00B4D85F /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		B1C384E2289C497B00B4D85F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1C3853A289C4C9300B4D85F /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
-		C5A57D16E2F12ABE2292D2F2 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
-		D294CC9A1B114B3D5811AE6A /* libPods-lighthouse-lighthouseTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lighthouse-lighthouseTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D7C8A5A16BE2BDDCE4223568 /* Pods-lighthouse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse.release.xcconfig"; path = "Target Support Files/Pods-lighthouse/Pods-lighthouse.release.xcconfig"; sourceTree = "<group>"; };
-		E62EE8B0A1820B06F682DC6B /* Pods-lighthouse-lighthouseTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse-lighthouseTests.release.xcconfig"; path = "Target Support Files/Pods-lighthouse-lighthouseTests/Pods-lighthouse-lighthouseTests.release.xcconfig"; sourceTree = "<group>"; };
-		E94C71CB30E44EB29B9C063A /* libPods-lighthouse.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lighthouse.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC998005AF96DE312DDEE643 /* Pods-lighthouse-lighthouseTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse-lighthouseTests.release.xcconfig"; path = "Target Support Files/Pods-lighthouse-lighthouseTests/Pods-lighthouse-lighthouseTests.release.xcconfig"; sourceTree = "<group>"; };
+		BCAE0F5CC6ED7166A07923F1 /* Pods-lighthouse-lighthouseTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse-lighthouseTests.debug.xcconfig"; path = "Target Support Files/Pods-lighthouse-lighthouseTests/Pods-lighthouse-lighthouseTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F07D585154C52E6AD376BCBB /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				98BFE8EE42A8EAE72EE24423 /* libPods-lighthouse-lighthouseTests.a in Frameworks */,
+				9FE0758CA7733FEA7D2422DE /* libPods-lighthouse-lighthouseTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,7 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F3C3C9821A12D08277573410 /* libPods-lighthouse.a in Frameworks */,
+				0174776EA6E9EE843698D9FF /* libPods-lighthouse.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,7 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFD8EFC1E9C7B331EF2711C4 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
+				D8779147368EEE7EA3B9278F /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +133,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
+				5D58486C28ACAE8100F9443A /* logo.png */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
@@ -141,9 +144,9 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				E94C71CB30E44EB29B9C063A /* libPods-lighthouse.a */,
-				D294CC9A1B114B3D5811AE6A /* libPods-lighthouse-lighthouseTests.a */,
-				9869C396CF4FDE0EBB3CDCF6 /* libPods-OneSignalNotificationServiceExtension.a */,
+				3F25A033AE37052E5741C49D /* libPods-OneSignalNotificationServiceExtension.a */,
+				7429576465BD08A4CBE976BA /* libPods-lighthouse.a */,
+				098F0D867BEA8FCA39E74094 /* libPods-lighthouse-lighthouseTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -202,12 +205,12 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				87E9DB9D7E6D01C19CF19898 /* Pods-lighthouse.debug.xcconfig */,
-				D7C8A5A16BE2BDDCE4223568 /* Pods-lighthouse.release.xcconfig */,
-				06C366FE81EA103C86358536 /* Pods-lighthouse-lighthouseTests.debug.xcconfig */,
-				E62EE8B0A1820B06F682DC6B /* Pods-lighthouse-lighthouseTests.release.xcconfig */,
-				C5A57D16E2F12ABE2292D2F2 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
-				9E252406F4A042184B10C9A8 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
+				968A787AA8AAA667C020D6AE /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
+				F07D585154C52E6AD376BCBB /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
+				534FF6E75AD8254B91B7070B /* Pods-lighthouse.debug.xcconfig */,
+				9F29CF98E2479729E2B335CB /* Pods-lighthouse.release.xcconfig */,
+				BCAE0F5CC6ED7166A07923F1 /* Pods-lighthouse-lighthouseTests.debug.xcconfig */,
+				BC998005AF96DE312DDEE643 /* Pods-lighthouse-lighthouseTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -219,12 +222,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "lighthouseTests" */;
 			buildPhases = (
-				08A0ADF0778A3DCCDBB3EB9F /* [CP] Check Pods Manifest.lock */,
+				011FC406CA4B8531BE655DEA /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				37102D40C91B4DF2AC42A79C /* [CP] Copy Pods Resources */,
-				5B01AA3A9F4876D340133D1A /* [CP] Embed Pods Frameworks */,
+				2CACE29B465C89B6202D38F5 /* [CP] Embed Pods Frameworks */,
+				270F5FF8847DA5FD32F91663 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -240,15 +243,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "lighthouse" */;
 			buildPhases = (
-				8C2EFCAFFF75D4E7ECF01910 /* [CP] Check Pods Manifest.lock */,
+				DA591CBFAF2B6BBB1FD83D65 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				6FE99928C6FE2F95909201F6 /* [CP] Copy Pods Resources */,
-				04FFE92958FABA83F0EE70B5 /* [CP] Embed Pods Frameworks */,
 				B1C384E9289C497B00B4D85F /* Embed App Extensions */,
+				FAA1CBFF824DC7B53CA9C150 /* [CP] Embed Pods Frameworks */,
+				230D3435C4A602C17D2715DB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -264,7 +267,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B1C384E6289C497B00B4D85F /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
 			buildPhases = (
-				6DA246DAB78931B03AD9A334 /* [CP] Check Pods Manifest.lock */,
+				82178137A35145AD91F8CD16 /* [CP] Check Pods Manifest.lock */,
 				B1C384DA289C497A00B4D85F /* Sources */,
 				B1C384DB289C497A00B4D85F /* Frameworks */,
 				B1C384DC289C497A00B4D85F /* Resources */,
@@ -333,6 +336,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				5D58486D28ACAE8100F9443A /* logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,24 +364,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		04FFE92958FABA83F0EE70B5 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		08A0ADF0778A3DCCDBB3EB9F /* [CP] Check Pods Manifest.lock */ = {
+		011FC406CA4B8531BE655DEA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -399,7 +386,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		37102D40C91B4DF2AC42A79C /* [CP] Copy Pods Resources */ = {
+		230D3435C4A602C17D2715DB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		270F5FF8847DA5FD32F91663 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -416,7 +420,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lighthouse-lighthouseTests/Pods-lighthouse-lighthouseTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5B01AA3A9F4876D340133D1A /* [CP] Embed Pods Frameworks */ = {
+		2CACE29B465C89B6202D38F5 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -433,7 +437,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lighthouse-lighthouseTests/Pods-lighthouse-lighthouseTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6DA246DAB78931B03AD9A334 /* [CP] Check Pods Manifest.lock */ = {
+		82178137A35145AD91F8CD16 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -455,24 +459,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6FE99928C6FE2F95909201F6 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8C2EFCAFFF75D4E7ECF01910 /* [CP] Check Pods Manifest.lock */ = {
+		DA591CBFAF2B6BBB1FD83D65 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -492,6 +479,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FAA1CBFF824DC7B53CA9C150 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lighthouse/Pods-lighthouse-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -559,7 +563,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 06C366FE81EA103C86358536 /* Pods-lighthouse-lighthouseTests.debug.xcconfig */;
+			baseConfigurationReference = BCAE0F5CC6ED7166A07923F1 /* Pods-lighthouse-lighthouseTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
@@ -588,7 +592,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E62EE8B0A1820B06F682DC6B /* Pods-lighthouse-lighthouseTests.release.xcconfig */;
+			baseConfigurationReference = BC998005AF96DE312DDEE643 /* Pods-lighthouse-lighthouseTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
@@ -614,7 +618,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 87E9DB9D7E6D01C19CF19898 /* Pods-lighthouse.debug.xcconfig */;
+			baseConfigurationReference = 534FF6E75AD8254B91B7070B /* Pods-lighthouse.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -643,7 +647,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D7C8A5A16BE2BDDCE4223568 /* Pods-lighthouse.release.xcconfig */;
+			baseConfigurationReference = 9F29CF98E2479729E2B335CB /* Pods-lighthouse.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -805,7 +809,7 @@
 		};
 		B1C384E7289C497B00B4D85F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C5A57D16E2F12ABE2292D2F2 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
+			baseConfigurationReference = 968A787AA8AAA667C020D6AE /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -839,7 +843,7 @@
 		};
 		B1C384E8289C497B00B4D85F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9E252406F4A042184B10C9A8 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
+			baseConfigurationReference = F07D585154C52E6AD376BCBB /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
