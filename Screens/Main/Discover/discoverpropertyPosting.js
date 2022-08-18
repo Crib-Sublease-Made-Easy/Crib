@@ -893,8 +893,8 @@ export default function PropertyPostingScreen({ navigation }) {
                                 <ReviewHeading>Amenities</ReviewHeading>
                                 {propertyAmenities.map((value) => (
                                     <ReviewLocationContainer key={"amenities" + value}>
-                                        <Ionicons name={GetAmenitiesIcon(value)} size={20} color='white' />
-                                        <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{value}</ReviewInfoText>
+                                        {GetFAIcons(value)}
+                                        <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{value.replace("_", " ")}</ReviewInfoText>
                                     </ReviewLocationContainer>
                                 ))}
                             </ReviewSectionContainer>
