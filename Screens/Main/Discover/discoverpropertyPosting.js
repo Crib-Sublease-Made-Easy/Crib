@@ -29,6 +29,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+
 import DatePicker from 'react-native-date-picker'
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
@@ -769,7 +774,19 @@ export default function PropertyPostingScreen({ navigation }) {
                                             borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
                                         }}>
                                             <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                                <Ionicons name={GetAmenitiesIcon(value.name)} size={15} />
+                                                {value.library == 'FontAwesome' ? 
+                                                <FontAwesome name={value.icon} size={15} />
+                                                :   
+                                                null}
+                                                {(value.library == 'MaterialCommunityIcons') ?
+                                                    <MaterialCommunityIcons name={value.icon} size={20} />
+                                                :   
+                                                null}    
+                                                {(value.library == 'Ionicon') ?  
+                                                    <Ionicons name={value.icon} size={15} />
+                                                    : 
+                                                    null
+                                                }
                                                 {"   "}{value.name.replace("_"," ")}
                                             </Text>
                                         </Pressable>
