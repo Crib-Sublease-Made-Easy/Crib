@@ -7,11 +7,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components/native';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { fab, faBottleDroplet, faBottleWater, faBowlFood, faBreadSlice, faBus, faCar, faCaretUp, faCircleNodes, faClosedCaptioning, faCoffee, faCookieBite, faCouch, faDog, faDoorClosed, faDumbbell, faFire, faGripHorizontal, faGripLinesVertical, faHandsWash, faIceCream, faMattressPillow, faParking, faPowerOff, faStreetView, faSwimmingPool, faTv, faWater, faWifi, faWind, faWindowClose} from '@fortawesome/free-solid-svg-icons'
+import { fab, faBoltLightning, faBottleDroplet, faBottleWater, faBowlFood, faBreadSlice, faBus, faCar, faCaretUp, faCircleNodes, faClosedCaptioning, faCoffee, faCookieBite, faCouch, faDog, faDoorClosed, faDumbbell, faFire, faGripHorizontal, faGripLinesVertical, faHandsWash, faIceCream, faKitchenSet, faMattressPillow, faParking, faPowerOff, faShirt, faSpaghettiMonsterFlying, faStreetView, faSwimmingPool, faTv, faWater, faWifi, faWind, faWindowClose} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faFaceGrinWide } from '@fortawesome/free-regular-svg-icons';
 
-library.add(faDog)
+
 
 
 //Color 
@@ -154,13 +154,13 @@ export const GetFAIcons = (name) =>{
         return <FontAwesomeIcon icon={faBottleDroplet} color='white'/>
     }
     else if(name=="Pots_Pans"){
-        return <FontAwesomeIcon icon={faHandsWash} color='white'/>
+        return <FontAwesomeIcon icon={faKitchenSet} color='white'/>
     }
     else if(name=="Utilities_Included"){
-        return <FontAwesomeIcon icon={faPowerOff} color='white'/>
+        return <FontAwesomeIcon icon={faBoltLightning} color='white'/>
     }
     else if(name=="Walkin_Closet"){
-        return <FontAwesomeIcon icon={faClosedCaptioning} color='white'/>
+        return <FontAwesomeIcon icon={faDoorClosed} color='white'/>
     }
     else if(name=="Iron"){
         return <FontAwesomeIcon icon={faCircleNodes} color='white'/>
@@ -181,6 +181,94 @@ export const GetFAIcons = (name) =>{
         return <FontAwesomeIcon icon={faDog} />
     }
 }
+
+export const GetFAIconsInBlack = (name) =>{
+    if(name=="Pet_Friendly"){
+        return <FontAwesomeIcon icon={faDog} color='black'/>
+    }
+    else if(name=="Garages"){
+        return <FontAwesomeIcon icon={faCar} color='black'/>
+    }
+    else if(name=="Swimming_Pool"){
+        return <FontAwesomeIcon icon={faSwimmingPool} color='black'/>
+    }
+    else if(name=="Wifi"){
+        return <FontAwesomeIcon icon={faWifi} color='black'/>
+    }
+    else if(name=="Gym"){
+        return <FontAwesomeIcon icon={faDumbbell} color='black'/>
+    }
+    else if(name=="Washer_Dryer"){
+        return <FontAwesomeIcon icon={faWater} color='black'/>
+    }
+    else if(name=="Gated_Access"){
+        return <FontAwesomeIcon icon={faDoorClosed} color='black'/>
+    }
+    else if(name=="Public_Transportation"){
+        return <FontAwesomeIcon icon={faBus} color='black'/>
+    }
+    else if(name=="Heating_Cooling"){
+        return <FontAwesomeIcon icon={faFire} color='black'/>
+    }
+    else if(name=="Microwave"){
+        return <FontAwesomeIcon icon={faBowlFood} color='black'/>
+    }
+    else if(name=="Grill"){
+        return <FontAwesomeIcon icon={faGripHorizontal} color='black'/>
+    }
+    else if(name=="TV"){
+        return <FontAwesomeIcon icon={faTv} color='black'/>
+    }
+    else if(name=="Fridge"){
+        return <FontAwesomeIcon icon={faBottleWater} color='black'/>
+    }
+    else if(name=="Couch"){
+        return <FontAwesomeIcon icon={faCouch} color='black'/>
+    }
+    else if(name=="Mattress"){
+        return <FontAwesomeIcon icon={faMattressPillow} color='black'/>
+    }
+    else if(name=="Oven"){
+        return <FontAwesomeIcon icon={faCookieBite} color='black'/>
+    }
+    else if(name=="Coffee_Maker"){
+        return <FontAwesomeIcon icon={faCoffee} color='black'/>
+    }
+    else if(name=="Toaster"){
+        return <FontAwesomeIcon icon={faBreadSlice} color='black'/>
+    }
+    else if(name=="Dishes"){
+        return <FontAwesomeIcon icon={faBottleDroplet} color='black'/>
+    }
+    else if(name=="Pots_Pans"){
+        
+    }
+    else if(name=="Utilities_Included"){
+        return <FontAwesomeIcon icon={faPowerOff} color='black'/>
+    }
+    else if(name=="Walkin_Closet"){
+        return <FontAwesomeIcon icon={faClosedCaptioning} color='black'/>
+    }
+    else if(name=="Iron"){
+        return <FontAwesomeIcon icon={faCircleNodes} color='black'/>
+    }
+    else if(name=="Freezer"){
+        return <FontAwesomeIcon icon={faIceCream} color='black'/>
+    }
+    else if(name=="Street_Parking"){
+        return <FontAwesomeIcon icon={faStreetView} color='black'/>
+    }
+    else if(name=="Parking_on_Premesis"){
+        return <FontAwesomeIcon icon={faParking} color='black'/>
+    }
+    else if(name=="Balcony"){
+        return <FontAwesomeIcon icon={faWind} color='black'/>
+    }
+    else{
+        return <FontAwesomeIcon icon={faDog} />
+    }
+}
+
 
 export const GetAmenitiesIcon = (name) =>{
     if(name=="Pet_Friendly"){

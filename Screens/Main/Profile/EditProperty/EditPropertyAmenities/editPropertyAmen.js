@@ -12,7 +12,7 @@ import {
   ScrollView
 } from 'react-native';
 
-import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header,} from '../../../../../sharedUtils'
+import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header, GetFAIcons,} from '../../../../../sharedUtils'
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY, amenitiesList,GetAmenitiesIcon} from '../../../../../sharedUtils'
 
@@ -99,7 +99,7 @@ export default function EditPropertyAmenitiesScreen({navigation, route}){
                             borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
                         }}>
                             <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                <Ionicons name={GetAmenitiesIcon(value.name)} size={15} />
+                                {GetFAIcons(value.name)}
                                 {"   "}{value.name.replace("_"," ")}
                             </Text>
                         </Pressable>
