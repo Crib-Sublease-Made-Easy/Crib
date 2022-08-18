@@ -2,14 +2,18 @@ import {
     Dimensions,
     Pressable
 } from 'react-native';
-import * as React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
 import styled from 'styled-components/native';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSquareCheck, faSwimmer, faDog, faWifi, faDumbbell, faHandsWash, faToriiGate, faTrain, faThermometer, faBowlFood, faTv, faIceCream, faCouch, faBed, faKitchenSet, faCoffee, faCow, faPlateWheat, faParking, faWindowClose } from '@fortawesome/free-solid-svg-icons'
+import { fab, faBottleDroplet, faBottleWater, faBowlFood, faBreadSlice, faBus, faCar, faCaretUp, faCircleNodes, faClosedCaptioning, faCoffee, faCookieBite, faCouch, faDog, faDoorClosed, faDumbbell, faFire, faGripHorizontal, faGripLinesVertical, faHandsWash, faIceCream, faMattressPillow, faParking, faPowerOff, faStreetView, faSwimmingPool, faTv, faWater, faWifi, faWind, faWindowClose} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faFaceGrinWide } from '@fortawesome/free-regular-svg-icons';
 
-library.add(faSquareCheck, faSwimmer, faDog)
+library.add(faDog)
+
+
 //Color 
 export const PRIMARYCOLOR = '#8559E3'
 export const OPACITYPRIMARYCOLOR = 'rgba(133, 89, 227, 1)'
@@ -61,15 +65,6 @@ export function OnlyLetters(str) {
 export function ContainsSpace(str){
     return /\s/.test(str);
 }
-
-export default function getFAAmenities (name){
-    if(name == 'Pet_Friendly'){
-        return <FontAwesomeIcon icon={faDog} />
-    }
-    if(name == 'Garages'){
-        return <FontAwesomeIcon icon={faParking} />
-    }
-}
 export const amenitiesList =
     [{ name: 'Pet_Friendly', library: 'FontAwesome', color: '#57b2f7', icon: "paw" },
     { name: "Garages", library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: "garage"},
@@ -83,27 +78,110 @@ export const amenitiesList =
     { name: 'Microwave', library: 'MaterialCommunityIcons', color: '#57b2f7', icon: 'microwave' },
     { name: 'Grill', library: 'FontAwesome', color: '#fa4b4b', icon: 'bars' },
     { name: 'TV', library: 'Ionicon', color: '#fa4b4b', icon: 'tv-sharp' },
-    { name: 'Fridge', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'fridge' },
-    { name: 'Couch', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'sofa-single' },
-    { name: 'Mattress', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'bed' },
+    { name: 'Fridge', library: 'MaterialCommunityIcons', color: '#f79c40', icon: 'fridge' },
+    { name: 'Couch', library: 'MaterialCommunityIcons', color: '#00d14d', icon: 'sofa-single' },
+    { name: 'Mattress', library: 'MaterialCommunityIcons', color: '#57b2f7', icon: 'bed' },
     { name: 'Oven', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'toaster-oven' },
     { name: 'Coffee_Maker', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'coffee' },
-    { name: 'Toaster', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'toaster' },
-    { name: 'Dishes', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'bowl-mix' },
+    { name: 'Toaster', library: 'MaterialCommunityIcons', color: '#57b2f7', icon: 'toaster' },
+    { name: 'Dishes', library: 'MaterialCommunityIcons', color: '#f79c40', icon: 'bowl-mix' },
     { name: 'Pots_Pans', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'pot' },
     { name: 'Utilities_Included', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'power-plug' },
-    { name: 'Walkin_Closet', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'door-open' },
+    { name: 'Walkin_Closet', library: 'MaterialCommunityIcons', color: '#57b2f7', icon: 'door-open' },
     { name: 'Iron', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'iron' },
-    { name: 'Freezer', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'fridge' },
-    { name: 'Street_Parking', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'parking' },
-    { name: 'Parking_on_Premesis', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'parking' },
-    { name: 'Balcony', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'balcony' },
-
-
-
-
-
+    { name: 'Freezer', library: 'MaterialCommunityIcons', color: '#00d14d', icon: 'fridge' },
+    { name: 'Street_Parking', library: 'MaterialCommunityIcons', color: '#f79c40', icon: 'parking' },
+    { name: 'Parking_on_Premesis', library: 'MaterialCommunityIcons', color: '#00d14d', icon: 'parking' },
+    { name: 'Balcony', library: 'MaterialCommunityIcons', color: '#57b2f7', icon: 'balcony' },
 ]
+
+export const GetFAIcons = (name) =>{
+    if(name=="Pet_Friendly"){
+        return <FontAwesomeIcon icon={faDog} color='white'/>
+    }
+    else if(name=="Garages"){
+        return <FontAwesomeIcon icon={faCar} color='white'/>
+    }
+    else if(name=="Swimming_Pool"){
+        return <FontAwesomeIcon icon={faSwimmingPool} color='white'/>
+    }
+    else if(name=="Wifi"){
+        return <FontAwesomeIcon icon={faWifi} color='white'/>
+    }
+    else if(name=="Gym"){
+        return <FontAwesomeIcon icon={faDumbbell} color='white'/>
+    }
+    else if(name=="Washer_Dryer"){
+        return <FontAwesomeIcon icon={faWater} color='white'/>
+    }
+    else if(name=="Gated_Access"){
+        return <FontAwesomeIcon icon={faDoorClosed} color='white'/>
+    }
+    else if(name=="Public_Transportation"){
+        return <FontAwesomeIcon icon={faBus} color='white'/>
+    }
+    else if(name=="Heating_Cooling"){
+        return <FontAwesomeIcon icon={faFire} color='white'/>
+    }
+    else if(name=="Microwave"){
+        return <FontAwesomeIcon icon={faBowlFood} color='white'/>
+    }
+    else if(name=="Grill"){
+        return <FontAwesomeIcon icon={faGripHorizontal} color='white'/>
+    }
+    else if(name=="TV"){
+        return <FontAwesomeIcon icon={faTv} color='white'/>
+    }
+    else if(name=="Fridge"){
+        return <FontAwesomeIcon icon={faBottleWater} color='white'/>
+    }
+    else if(name=="Couch"){
+        return <FontAwesomeIcon icon={faCouch} color='white'/>
+    }
+    else if(name=="Mattress"){
+        return <FontAwesomeIcon icon={faMattressPillow} color='white'/>
+    }
+    else if(name=="Oven"){
+        return <FontAwesomeIcon icon={faCookieBite} color='white'/>
+    }
+    else if(name=="Coffee_Maker"){
+        return <FontAwesomeIcon icon={faCoffee} color='white'/>
+    }
+    else if(name=="Toaster"){
+        return <FontAwesomeIcon icon={faBreadSlice} color='white'/>
+    }
+    else if(name=="Dishes"){
+        return <FontAwesomeIcon icon={faBottleDroplet} color='white'/>
+    }
+    else if(name=="Pots_Pans"){
+        return <FontAwesomeIcon icon={faHandsWash} color='white'/>
+    }
+    else if(name=="Utilities_Included"){
+        return <FontAwesomeIcon icon={faPowerOff} color='white'/>
+    }
+    else if(name=="Walkin_Closet"){
+        return <FontAwesomeIcon icon={faClosedCaptioning} color='white'/>
+    }
+    else if(name=="Iron"){
+        return <FontAwesomeIcon icon={faCircleNodes} color='white'/>
+    }
+    else if(name=="Freezer"){
+        return <FontAwesomeIcon icon={faIceCream} color='white'/>
+    }
+    else if(name=="Street_Parking"){
+        return <FontAwesomeIcon icon={faStreetView} color='white'/>
+    }
+    else if(name=="Parking_on_Premesis"){
+        return <FontAwesomeIcon icon={faParking} color='white'/>
+    }
+    else if(name=="Balcony"){
+        return <FontAwesomeIcon icon={faWind} color='white'/>
+    }
+    else{
+        return <FontAwesomeIcon icon={faDog} />
+    }
+}
+
 export const GetAmenitiesIcon = (name) =>{
     if(name=="Pet_Friendly"){
         return "paw-outline";

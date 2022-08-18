@@ -17,7 +17,8 @@ import {
     Pressable,
     FlatList,
     KeyboardAvoidingView,
-    TouchableOpacity
+    TouchableOpacity,
+    InteractionManager
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -64,11 +65,12 @@ import {
     PricePerMonth, PropertyTypeCard, PriceInputSearchContainer, CategoryName, RowContainer, RowValueContainer, RowName,
     FollowUpContainer, FollowUpText, DateCategoryName, BedroomContaienr, BedroomItemContainer, RowContainerCol,
     ReviewHeading, ReviewLocationContainer, ReviewDateContainer, ImageSelectionContainer, ImageText, CribText,
-    ContinueText
+    ContinueText, MaxText
 } from './discoverPropertyPostingStyle';
 import Easing from 'react-native/Libraries/Animated/Easing';
 import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton} from '../../../sharedUtils';
 import { SubHeadingText } from '../../Onboarding/Landing/landingStyle';
+import { set } from 'react-native-reanimated';
 
 
 export default function PropertyPostingScreen({ navigation }) {
@@ -121,6 +123,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
     function moveScrollView(val) {
         console.log(val)
+        console.log(propertyPrice)
         Keyboard.dismiss()
         if (val < 0) {
             navigation.goBack();
@@ -146,8 +149,13 @@ export default function PropertyPostingScreen({ navigation }) {
                     alert("Must select Livingroom Image.")
                 }
         }
-        else if(val == 5 && propertyPrice == ""){
-            alert("Must enter property price.")
+        else if(val == 5 && (propertyPrice == "" || parseInt(propertyPrice.split("$")[1]) > 10000)){
+            if(propertyPrice == ""){
+                alert("Must enter property price.")
+            }
+            else{
+                alert("Property price must be less than $10000 / month.")
+            }
         }
        
         else {
@@ -326,7 +334,7 @@ export default function PropertyPostingScreen({ navigation }) {
         })
             .then((response) => response.json()).then( async data => {
                 console.log("RESPONSE", data)
-                await SecureStorage.setItem("postedProperty", "new")
+                await SecureStorage.removeItem("postedProperty")
                 setTimeout(()=>{
                     navigation.goBack()
                     setLoading(false)
@@ -394,12 +402,19 @@ export default function PropertyPostingScreen({ navigation }) {
     }
 
     function moveOn(value) {
-        console.log(value)
+        console.log("II", value)
         Keyboard.dismiss()
-        setpropertyLocation(value.description)
-        setpropertyMainAddr(value.structured_formatting.main_text)
-        setpropertySecondaryAddr(value.structured_formatting.secondary_text)
-        LocationToLatLong(value.description)
+        // if(value.results == undefined){
+        //     setpropertyLocation("")
+        //     alert("Invalid Address")
+        // }
+        // else{
+            setpropertyLocation(value.description)
+            setpropertyMainAddr(value.structured_formatting.main_text)
+            setpropertySecondaryAddr(value.structured_formatting.secondary_text)
+            LocationToLatLong(value.description)
+        // }
+        
        
     }
 
@@ -419,12 +434,17 @@ export default function PropertyPostingScreen({ navigation }) {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + accessToken,
-            }
+            },
+            
             }) 
             .then(res => res.json()).then(locInfo=>{
-                console.log("lat and long")
-                console.log(locInfo.results[0].geometry.location)
-                setLatLong([locInfo.results[0].geometry.location.lat, locInfo.results[0].geometry.location.lng])
+                console.log("KK", locInfo)
+                if(locInfo.status == "ZERO_RESULTS"){
+                    alert("Invalid address.")
+                }
+                else{
+                    setLatLong([locInfo.results[0].geometry.location.lat, locInfo.results[0].geometry.location.lng])
+                }
             })
         
             .catch(e=>{
@@ -520,6 +540,11 @@ export default function PropertyPostingScreen({ navigation }) {
                         </Animated.View>
 
                     </PostingSection>
+                    {/* <PostingSection >
+                        <Heading>Location details</Heading>
+                        <InfoText>Please enter address details</InfoText>
+
+                    </PostingSection> */}
 
                     {/* Select Photo Gallery */}
                     <PostingSection>
@@ -577,9 +602,10 @@ export default function PropertyPostingScreen({ navigation }) {
 
                         <PropertyDescriptionInput placeholder="Enter some basic details of your property. (Optional)"
                             value={propertyDescription} onChangeText={(value) => setpropertyDescription(value)} multiline={true}
-                            placeholderTextColor={MEDIUMGREY} />
-                        {/* <MaxText>Maximum 100 words</MaxText> */}
+                            placeholderTextColor={MEDIUMGREY} maxLength={700} />
+                        <MaxText length={propertyDescription.length}>{propertyDescription.length} / 700</MaxText>
                     </PostingSection>
+
 
                     <PostingSection>
                         <Heading>Availability</Heading>
@@ -737,15 +763,15 @@ export default function PropertyPostingScreen({ navigation }) {
                                         minWidth: WIDTH * 0.35, width: value.name.length * 0.03 * WIDTH, height: HEIGHT * 0.055, justifyContent: 'center',
                                         paddingRight: WIDTH * 0.03
                                     }}>
-                                        <Pressable key={value.name + 'pressable'} onPress={() => updateAmenities(value.name)} style={{
+                                        {/* <Pressable key={value.name + 'pressable'x} onPress={() => updateAmenities(value.name)} style={{
                                             borderWidth: 3, borderColor: propertyAmenities.indexOf(value.name) == -1 ? value.color : '#0085FF', height: HEIGHT * 0.045,
                                             borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
                                         }}>
-                                            <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                                <Ionicons name={GetAmenitiesIcon(value.name)} size={15} />
-                                                {"   "}{value.name.replace("_"," ")}
-                                            </Text>
-                                        </Pressable>
+                                            <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}/>
+                                                
+                                                
+                                           
+                                        </Pressable> */}
 
                                     </View>
                                 ))}
@@ -862,6 +888,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                 {propertyAmenities.map((value) => (
                                     <ReviewLocationContainer key={"amenities" + value}>
                                         <Ionicons name={GetAmenitiesIcon(value)} size={20} color='white' />
+                                       
                                         <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{value}</ReviewInfoText>
                                     </ReviewLocationContainer>
                                 ))}
