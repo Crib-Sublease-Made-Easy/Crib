@@ -37,9 +37,7 @@ export const Container = styled.Pressable`
 `
 
 export const Header = styled.View`
-  
-  width: ${WIDTH*1.1}px;
-  margin-top: ${HEIGHT*0.06}px;
+  width: ${WIDTH}px;
   flex-direction: row
 `
 export const ModalContainer = styled.View`

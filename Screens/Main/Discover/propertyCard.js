@@ -162,13 +162,14 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
       console.log("UseEffect Refreshing...")
       console.log(currentLocation)
       if(searching){
-        translateY.value = withSpring(HEIGHT/1.4, {stiffness: 70, mass: 0.3, damping:10})
+        translateY.value = withSpring(HEIGHT*0.66, {stiffness: 70, mass: 0.3, damping:15})
       }
       if(flatlistRefreshing){
-        translateY.value = withSpring(HEIGHT/40, {stiffness: 50, mass: 0.3, damping:15})
+        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
       }
+      
 
-    }, [flatlistRefreshing, searching ])
+    }, [searching, flatlistRefreshing])
 
     // Swipable Bottom Sheet
     const translateY = useSharedValue(0)
@@ -182,7 +183,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     }).onUpdate((event)=>{
     translateY.value = event.translationY + context.value.y
     
-    translateY.value = Math.max(translateY.value, HEIGHT/40);
+    translateY.value = Math.max(translateY.value, -HEIGHT*0.005);
 
     velocityY.value = event.velocityY;
 
@@ -191,18 +192,18 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     //console.log(velocityY.value)
     if(translateY.value  < HEIGHT*0.35){
       if(Math.abs(velocityY.value) > 1750){
-        translateY.value = withSpring(HEIGHT/1.4, {stiffness: 70, mass: 0.3, damping:10})
+        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:10})
       }
       else{
-        translateY.value = withSpring(HEIGHT/40, {stiffness: 50, mass: 0.3, damping:15})
+        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
       }       
     }
     else{
       if(Math.abs(velocityY.value) > 1750){
-        translateY.value = withSpring(HEIGHT/40, {stiffness: 70, mass: 0.3, damping:10})
+        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 70, mass: 0.3, damping:10})
       }
       else{
-        translateY.value = withSpring(HEIGHT/1.4, {stiffness: 70, mass: 0.3, damping:15})
+        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:15})
       }
     }
 
@@ -239,7 +240,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         setSelectedPin(pinInfo)
         openPreviewCard()
         moveMap(pinInfo.propertyInfo.loc.coordinates[1] - 0.015,pinInfo.propertyInfo.loc.coordinates[0])
-        translateY.value = withSpring(HEIGHT/1.4, {stiffness: 50, mass: 0.3, damping:15})
+        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 50, mass: 0.3, damping:15})
     }
 
     const renderCards = (data, index) =>{
@@ -294,7 +295,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     <GestureDetector  gesture={gesture}>
     
       <Animated.View
-        style={[bottomSheetStyle,{width: WIDTH, height: HEIGHT*0.76, alignItems:'center', borderTopLeftRadius:25, 
+        style={[bottomSheetStyle,{width: WIDTH, height: HEIGHT*0.75, alignItems:'center', borderTopLeftRadius:25, 
         borderTopRightRadius:25,backgroundColor: 'white',
         shadowColor: 'black', shadowRadius: 15,shadowOffset: {width: 0, height: 0},  shadowOpacity: 0.2, elevation: 5,
       }]}>
@@ -322,6 +323,11 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
             loadMoreProperties()
         }
         }
+        ListFooterComponent={()=>{
+          return(
+            <View style={{height:HEIGHT*0.05}}></View>
+          )
+        }}
         bounces = {true}
         style={{paddingBottom: HEIGHT*0.1}}
         scrollEnabled={!previewing}

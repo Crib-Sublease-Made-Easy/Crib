@@ -249,7 +249,7 @@ export default function DiscoverScreen({navigation, route}){
         s = s +`&availableFrom=${filterAvailableFrom}`
         s = s +`&availableTo=${filterAvailableTo}`
        
-    
+        console.log(s)
         fetch('https://sublease-app.herokuapp.com/properties/query?page=0' + s, {
             method: 'GET',
             headers: {
@@ -477,144 +477,141 @@ export default function DiscoverScreen({navigation, route}){
     }
 
     return(
-        <GestureHandlerRootView style={{display:'flex'}}>
-        <View style={{width:WIDTH,height:HEIGHT,position:'absolute', top:0,}}>
-
-            <MapView
-                onRegionChange={(Region)=> setMapCenterLocation([Region.latitude,Region.longitude])}
-                scrollEnabled={mapViewing}
-                ref={mapRef}
-                style={{flex:1, position:'relative'}}
-                initialRegion={{
-                latitude: currentLocation[0], 
-                longitude: currentLocation[1],
-                latitudeDelta: 0.02,
-                longitudeDelta: 0.02,
-                }}
-            >
-                <Marker
-                    key={"currentlocationmarker"}
-                    coordinate={{ latitude:currentLocation[0], longitude:currentLocation[1] }}
-                    style={{zIndex:3}}
-                ></Marker>
-                
+        <GestureHandlerRootView style={{flex: 1}}>
             
-                {pinsData.length != 0 && pinsData.map((value,index)=>(
+            
+        <SafeAreaView>
+        <View style={{width:WIDTH,height:HEIGHT,position:'absolute', top:0, flex: 1}}>
+                <MapView
+                    onRegionChange={(Region)=> setMapCenterLocation([Region.latitude,Region.longitude])}
+                    scrollEnabled={mapViewing}
+                    ref={mapRef}
+                    style={{flex:1, position:'relative'}}
+                    initialRegion={{
+                    latitude: currentLocation[0], 
+                    longitude: currentLocation[1],
+                    latitudeDelta: 0.02,
+                    longitudeDelta: 0.02,
+                    }}
+                >
                     <Marker
-                    key={value._id}
-                    coordinate={{ latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
-                    onPress={()=>onMarkerClick(value)}
-                    style={{zIndex: value._id == selectedPin._id ? 2 : 1}}
-                   >
-                    <CustomMarker style={{backgroundColor: value._id == selectedPin?._id ? PRIMARYCOLOR : 'green', zIndex: value._id == selectedPin._id ? 2 : 1}}>
-                        <Text style={{color:'white'}}>${value.price}</Text>                       
-                    </CustomMarker>
-                   </Marker>
-                ))} 
-            </MapView>
-            <Animated.View style={{position:'absolute', backgroundColor:'rgba(255,255,255,0.95)', width:WIDTH, height:HEIGHT,top:0,
-            opacity: translation.interpolate({
-                inputRange: [0, HEIGHT*0.5],
-                outputRange: [0, 1]
-            }), display: searching ? 'flex' : 'none' }}/>
+                        key={"currentlocationmarker"}
+                        coordinate={{ latitude:currentLocation[0], longitude:currentLocation[1] }}
+                        style={{zIndex:1}}
+                    ></Marker>
+                    
 
-            < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), updateQueryString(),
-            retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom.getTime(), filterAvailableTo.getTime() )
-            }}>
-                <Ionicons name="search-outline" size={25} />
-            </ SearchHerePressable>
-            <Animated.View 
-            style={{width:WIDTH*0.9, height: HEIGHT*0.275,backgroundColor:'white', borderRadius:25,
-            position:'absolute', bottom: HEIGHT*0.17, alignSelf:'center',shadowColor: 'black', shadowRadius: 5,
-            shadowOpacity: 0.4, elevation: 5, display: propertyPreviewCard ? 'flex' : 'none',
-            opacity: opacityTranslation.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 1]
-            })}}>
-                
-                {selectedPin != undefined && selectedPin != "" &&
-                <Pressable disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID})}}>
-                    <PreviewTopContainer>
-                        <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
-                        borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
-                    </PreviewTopContainer>
+                    {pinsData.length != 0 && pinsData.map((value,index)=>(
+                        <Marker
+                        key={value._id}
+                        coordinate={{ latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
+                        onPress={()=>onMarkerClick(value)}
+                       
+                    >
+                        <CustomMarker style={{backgroundColor: value._id == selectedPin?._id ? PRIMARYCOLOR : 'green', zIndex: value._id == selectedPin._id ? 2 : 1}}>
+                            <Text style={{color:'white'}}>${value.price}</Text>                       
+                        </CustomMarker>
+                    </Marker>
+                    ))} 
+                </MapView>
+                <Animated.View style={{position:'absolute', backgroundColor:'rgba(255,255,255,0.95)', width:WIDTH, height:HEIGHT,top:0,
+                opacity: translation.interpolate({
+                    inputRange: [0, HEIGHT*0.5],
+                    outputRange: [0, 1]
+                }), display: searching ? 'flex' : 'none' }}/>
 
-                    <PreviewBottomContainer >
-                        <PreviewLocationText>{selectedPin.propertyInfo.loc.secondaryTxt}</PreviewLocationText>
-                        <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).getDate() + " " +
-                                  new Date(selectedPin.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
-                                  }  -  {new Date(selectedPin.propertyInfo.availableTo).getDate() + " " +
-                                  new Date(selectedPin.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}</PreviewPriceText>
-                        
-                        <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
+                < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), updateQueryString(),
+                retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom.getTime(), filterAvailableTo.getTime() )
+                }}>
+                    <Ionicons name="search-outline" size={25} />
+                </ SearchHerePressable>
+                <Animated.View 
+                style={{width:WIDTH*0.9, height: HEIGHT*0.275,backgroundColor:'white', borderRadius:25,
+                position:'absolute', bottom: HEIGHT*0.17, alignSelf:'center',shadowColor: 'black', shadowRadius: 5,
+                shadowOpacity: 0.4, elevation: 5, display: propertyPreviewCard ? 'flex' : 'none',
+                opacity: opacityTranslation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 1]
+                })}}>
+                    
+                    {selectedPin != undefined && selectedPin != "" &&
+                    <Pressable disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID})}}>
+                        <PreviewTopContainer>
+                            <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
+                            borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
+                        </PreviewTopContainer>
 
-                        
-                    </ PreviewBottomContainer> 
-                </Pressable>
-                }
+                        <PreviewBottomContainer >
+                            <PreviewLocationText>{selectedPin.propertyInfo.loc.secondaryTxt}</PreviewLocationText>
+                            <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).getDate() + " " +
+                                    new Date(selectedPin.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
+                                    }  -  {new Date(selectedPin.propertyInfo.availableTo).getDate() + " " +
+                                    new Date(selectedPin.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}</PreviewPriceText>
+                            
+                            <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
+
+                            
+                        </ PreviewBottomContainer> 
+                    </Pressable>
+                    }
+
+                    <FontAwesome onPress={()=>closePreviewCard()} name="times-circle" size={30}  color='white' style={{position: 'absolute', right:WIDTH*0.025,
+                    top: HEIGHT*0.015}}/>
+
+                </Animated.View>
+            </View>
             
-                <FontAwesome onPress={()=>closePreviewCard()} name="times-circle" size={30}  color='white' style={{position: 'absolute', right:WIDTH*0.025,
-                top: HEIGHT*0.015}}/>
-           
-            </Animated.View>
+        
+            <Header>
+                {/* This sets the container of the search input */}
+                <Animated.View style={ { height: translation, width: widthtranslation, marginLeft: WIDTH*0.05,
+                shadowColor: 'black', shadowRadius: 13, shadowOpacity: 0.32, backgroundColor:'white',
+                elevation: 7, borderRadius: 25, shadowOffset: {width: 0, height: 0}}}  >
+                        <SearchInputCancelIconContainer>
+
+                            {/* The search icon on the search outlien */}
+                            <SeachIconContainer>
+                                <Ionicons name='search-outline' size={25}  color={TEXTINPUTBORDERCOLOR} />
+                            </SeachIconContainer>
+                            {/* This is the actual search input when user press on search bar  */}
+                            <PlaceholderLogoTextContainer 
+                            placeholderTextColor={TEXTINPUTBORDERCOLOR}
+                            placeholder="Search Location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
+                            onEndEditing={()=>{closeHeader(), setSearching(false), Keyboard.dismiss()}} onFocus={()=> {openHeader(),setSearching(true), setPropertyPreviewCard(false)}}/>
+                            <DeleteIconContainer onPress={()=>setlocationQuery("")} style={{ display: searching ? 'flex' : 'none',}}>
+                                <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />
+                            </DeleteIconContainer>
+                            <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
+                                {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) ?
+                                <View style={{borderWidth:2, padding: 7, borderRadius: 50, borderColor: '#8559E3' }}>
+                                <Ionicons name="options-sharp" size={20} />
+                                </View>
+                                :
+                                <View style={{borderWidth:1, padding: 7, borderRadius: 50, borderColor: '#D3D3D3'}}>
+                                <Ionicons name="options-sharp" size={20} />
+                                </View>                        
+                                }
+                            </DeleteIconContainer> 
+
+                        </SearchInputCancelIconContainer>
+                        {autocompleteLocation.length != 0 &&
+                                
+                            autocompleteLocation.map((value, index)=>(
+                                <AutocompleteLocationContainer searching={searching} key={"autocomplete" + value.description + index} onPress={()=>{selectCurrentLocation(value.description), setFilteredProperties([])}}>
+                                    <Ionicons name="navigate-circle-outline" size={23} color= {PRIMARYCOLOR} style={{width: WIDTH*0.07}}/>
+                                    <View>
+                                    <LocationMainText key={value.structured_formatting.main_text}>{value.structured_formatting.main_text}</LocationMainText>
+                                    <LocationSecondaryText key={value.structured_formatting.secondary_text} >{value.structured_formatting.secondary_text}</LocationSecondaryText>
+                                    </View>
+                                </AutocompleteLocationContainer>
+                            ))
+                        
+                        }
+                </Animated.View>
+            </Header>
+        <View style={{width:WIDTH, height:HEIGHT*0.05, }}>
 
         </View>
-        
-
-        <Header>
-            
-            {/* This sets the container of the search input */}
-            <Animated.View style={ { height: translation, width: widthtranslation, marginLeft: WIDTH*0.05,
-             shadowColor: 'black', shadowRadius: 13, shadowOpacity: 0.32, backgroundColor:'white',
-            elevation: 7, borderRadius: 25, shadowOffset: {width: 0, height: 0}}}  >
-                    <SearchInputCancelIconContainer>
-
-                        {/* The search icon on the search outlien */}
-                        <SeachIconContainer>
-                            <Ionicons name='search-outline' size={25}  color={TEXTINPUTBORDERCOLOR} />
-                        </SeachIconContainer>
-                        {/* This is the actual search input when user press on search bar  */}
-                        <PlaceholderLogoTextContainer 
-                        placeholderTextColor={TEXTINPUTBORDERCOLOR}
-                        placeholder="Search Location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
-                        onEndEditing={()=>{closeHeader(), setSearching(false), Keyboard.dismiss()}} onFocus={()=> {openHeader(),setSearching(true), setPropertyPreviewCard(false)}}/>
-                        <DeleteIconContainer onPress={()=>setlocationQuery("")} style={{ display: searching ? 'flex' : 'none',}}>
-                            <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />
-                        </DeleteIconContainer>
-                        <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
-                            {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) ?
-                            <View style={{borderWidth:2, padding: 7, borderRadius: 50, borderColor: '#8559E3' }}>
-                            <Ionicons name="options-sharp" size={20} />
-                            </View>
-                            :
-                            <View style={{borderWidth:1, padding: 7, borderRadius: 50, borderColor: '#D3D3D3'}}>
-                            <Ionicons name="options-sharp" size={20} />
-                            </View>                        
-                            }
-                        </DeleteIconContainer> 
-
-                    </SearchInputCancelIconContainer>
-                    {autocompleteLocation.length != 0 &&
-                            
-                        autocompleteLocation.map((value, index)=>(
-                            <AutocompleteLocationContainer searching={searching} key={"autocomplete" + value.description + index} onPress={()=>{selectCurrentLocation(value.description), setFilteredProperties([])}}>
-                                <Ionicons name="navigate-circle-outline" size={23} color= {PRIMARYCOLOR} style={{width: WIDTH*0.07}}/>
-                                <View>
-                                <LocationMainText key={value.structured_formatting.main_text}>{value.structured_formatting.main_text}</LocationMainText>
-                                <LocationSecondaryText key={value.structured_formatting.secondary_text} >{value.structured_formatting.secondary_text}</LocationSecondaryText>
-                                </View>
-                            </AutocompleteLocationContainer>
-                        ))
-                    
-                    }
-            </Animated.View>
-            {/* <Pressable onPress={()=> setFilterModal(true)}
-            style={{width: HEIGHT*0.06, height: HEIGHT*0.06, borderRadius: HEIGHT*0.03, backgroundColor:'white', marginLeft: WIDTH*0.05, justifyContent:'center', alignItems:'center',shadowRadius: 13, shadowOpacity: 0.2, 
-            elevation: 5, borderRadius: 25, shadowOffset: {width: 0, height: 0}}}>
-                    <Ionicons name="filter" size={20} color={DARKGREY}/>
-            </Pressable> */}
-        </Header>
-      
         {/* Property Cards and the search bar */}       
         
         <PropertyCard index={0} navigation={navigation} length={pinsData.length} userId={userId}
@@ -634,7 +631,10 @@ export default function DiscoverScreen({navigation, route}){
         filterAvailableTo={filterAvailableTo} setfilterAvailableTo={setfilterAvailableTo} openMapViewing={()=> setMapViewing(true)} closeMapViewing={()=> setMapViewing(false)}
         />
         
-        </GestureHandlerRootView>
+        </SafeAreaView>
         
+
+            
+        </GestureHandlerRootView>
     )
 }
