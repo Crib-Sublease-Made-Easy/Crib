@@ -267,7 +267,12 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                 {/* </SharedElement> */}
                 <PropertyInfoContainer>
                    
-                        <LocationAndPrice><LocationFont>{data.item.propertyInfo.loc.secondaryTxt}</LocationFont><PriceFont><Text style={{fontWeight:'700'}}>${data.item.propertyInfo.price}</Text>/month</PriceFont></LocationAndPrice>
+                        <LocationAndPrice>
+                        
+                          <LocationFont style={{maxWidth: WIDTH*0.58, maxHeight:HEIGHT*0.02}}>{data.item.propertyInfo.loc.secondaryTxt}</LocationFont>
+                          
+                          <PriceFont><Text style={{fontWeight:'700'}}>${data.item.propertyInfo.price}</Text>/month</PriceFont>
+                        </LocationAndPrice>
                         <DateFont>{new Date(data.item.propertyInfo.availableFrom).getDate() + " " +
                                   new Date(data.item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
                                   }  -  {new Date(data.item.propertyInfo.availableTo).getDate() + " " +
