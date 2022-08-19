@@ -125,9 +125,11 @@ export default function DiscoverScreen({navigation, route}){
         retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom, filterAvailableTo )
         setPropertyPreviewCard(false)
         setSelectedPin([])
-        setTimeout(() => {
+        const timeOut = setTimeout(() => {
             setFlatlistRefreshing(false)
         }, 2000);
+
+        return clearTimeout(timeOut)
         
        
         

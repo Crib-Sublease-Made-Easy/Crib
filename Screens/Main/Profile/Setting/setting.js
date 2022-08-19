@@ -53,7 +53,6 @@ export default function SettingScreen({navigation, route}){
 
     const logout =  async() => {
       await SecureStorage.clear()
-
       await AsyncStorage.clear()
       login(null)
     }
