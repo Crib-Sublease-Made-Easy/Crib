@@ -58,7 +58,7 @@ export default function ChatScreen({navigation, route}){
       onChat = true
       sb.addChannelHandler('channels', channelHandler);
       getGroupChannel()
-      console.log("USE EFFECYT")
+      console.log("USEEFFECT Refresh")
       
     }, [channel])
 
@@ -84,7 +84,7 @@ export default function ChatScreen({navigation, route}){
 
       const params = new sb.UserMessageParams();
       params.message = messages[0].text;
-      console.log(params.message)
+      // console.log(params.message)
       setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
       sb.GroupChannel.getChannel(url, async function(groupChannel, error) {
         if (error) {
@@ -99,7 +99,7 @@ export default function ChatScreen({navigation, route}){
             // The message is successfully sent to the channel.
             // The current user can receive messages from other users through the onMessageReceived() method of an event handler.
               console.log("Message was successfully sent")
-              console.log("IDDDD", id)
+              // console.log("IDDDD", id)
               fetch('https://sublease-app.herokuapp.com/notifications/sendMessage', {
                 method: 'POST',
                 headers: {
@@ -117,7 +117,7 @@ export default function ChatScreen({navigation, route}){
             })
             .then( res => res.json())
             .then( res => {
-              console.log("RESSS", res)
+              // console.log("RESSS", res)
             })
 
             
@@ -172,7 +172,7 @@ export default function ChatScreen({navigation, route}){
           'Content-Type': 'application/json',
         }
       }).then(async e => e.json()).then(async (response) => {
-        console.log(response.propertyInfo.deleted)
+        // console.log(response.propertyInfo.deleted)
         
         if(response.propertyInfo.deleted == true){
           if(loading == true){
@@ -238,12 +238,12 @@ export default function ChatScreen({navigation, route}){
           m.user.avatar = m._sender.plainProfileUrl
         })
         setMessages(messages)
-        console.log(messages)
+        // console.log(messages)
         }
         
 
     });
-      console.log(listQuery)
+      // console.log(listQuery)
     //   fetch('https://api-14BD0602-4159-48D7-9292-66136C479B46.sendbird.com/v3/group_channels/'+'205308348_48a354561b8903d19eaa9d4c91b23fdb3cd98264'+'/messages')
     //   .then(response => response.json())
     //   .then(data => console.log(data));
@@ -268,18 +268,16 @@ export default function ChatScreen({navigation, route}){
                   <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
               </Pressable>
           </BackButtonContainer>
+          <NameContainer>
           {channel != null ? 
             channel.members[0].userId == id ?
-              <NameContainer>
-                  <Header>{channel.members[1].nickname}</Header>
-              </NameContainer>
+              <Header>{channel.members[1].nickname}</Header>
               :
-              <NameContainer>
               <Header>{channel.members[0].nickname}</Header>
-               </NameContainer>
           :
           null
           }
+          </NameContainer>
              
          
           <ChatImageSettingContainer>
@@ -315,7 +313,6 @@ export default function ChatScreen({navigation, route}){
         )}
         
           
-        onInputTextChanged={()=>{console.log("hello")}}
         
         messages={messages}
         onSend={messages => onSend(messages)}

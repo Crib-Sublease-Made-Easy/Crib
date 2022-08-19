@@ -56,7 +56,7 @@ export default function DiscoverScreen({navigation, route}){
     const {USERID, userInitialLocation,} = useContext(UserContext);
       //Method for handling notifications received while app in foreground
       OneSignal.setNotificationOpenedHandler(notification => {
-        console.log("OneSignal: notification opened:", notification);
+        // console.log("OneSignal: notification opened:", notification);
             navigation.navigate("Message")
         
       });
@@ -115,7 +115,7 @@ export default function DiscoverScreen({navigation, route}){
     const [userId, setUserId] = useState(null)
     const [mapViewing, setMapViewing] = useState(true)
     useEffect(()=>{
-        
+        setFlatlistRefreshing(true)
         console.log("USEFFECT")
         
        
@@ -125,6 +125,15 @@ export default function DiscoverScreen({navigation, route}){
         retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom, filterAvailableTo )
         setPropertyPreviewCard(false)
         setSelectedPin([])
+       
+            let timer1 = setTimeout(() => setFlatlistRefreshing(false), 2000);
+      
+            // this will clear Timeout
+            // when component unmount like in willComponentUnmount
+            // and show will not change to true
+            return () => {
+              clearTimeout(timer1);
+            };
         
         
         
@@ -204,7 +213,6 @@ export default function DiscoverScreen({navigation, route}){
         };
         axios(config)
         .then(response => {
-            console.log(response)
             setautocompleteLocation([]);           
             for( let name of response.data){
                 setautocompleteLocation(prevArray => [...prevArray,name])   
@@ -245,9 +253,7 @@ export default function DiscoverScreen({navigation, route}){
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
 
-       
-        console.log(s)
-        fetch('https://sublease-app.herokuapp.com/properties/query?page=0' + s, {
+            fetch('https://sublease-app.herokuapp.com/properties/query?page=0' + s, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -257,7 +263,7 @@ export default function DiscoverScreen({navigation, route}){
             .then(res => res.json()).then(properties =>{
                 
                 setFilteredProperties(properties)
-                setFlatlistRefreshing(true)
+                
                 
             })
             .catch(e=>{
@@ -354,7 +360,6 @@ export default function DiscoverScreen({navigation, route}){
         }
         }) 
         .then(res => res.json()).then( pins =>{
-            console.log(pins)
            
             if(pins.length == 0){
                 console.log("PINS DATA IS EMPTY")
@@ -369,9 +374,7 @@ export default function DiscoverScreen({navigation, route}){
         .catch(e=>{
             alert(e)
         })
-        setTimeout(() => {
-            setFlatlistRefreshing(false)
-        }, 2000)
+        
     }
 
 
@@ -402,11 +405,7 @@ export default function DiscoverScreen({navigation, route}){
     //setSearching to false so to shrink the header
     //Dismiss keyboard
     function selectCurrentLocation(locationQueryName){
-        console.log("The locationQueryName is :")
-        console.log(locationQueryName)
         if (locationQueryName != "" && autocompleteLocation.length != 0){
-            console.log("The locationQueryName is :")
-            console.log(locationQueryName)
             setautocompleteLocation([])
             setlocationQuery(locationQueryName)
             setSearching(false)
@@ -629,6 +628,7 @@ export default function DiscoverScreen({navigation, route}){
         filterPreviewDistanceValue={filterPreviewDistanceValue} setfilterPreviewDistanceValue={setfilterPreviewDistanceValue}
         filterAvailableFrom={filterAvailableFrom} setfilterAvailableFrom={setfilterAvailableFrom}
         filterAvailableTo={filterAvailableTo} setfilterAvailableTo={setfilterAvailableTo} openMapViewing={()=> setMapViewing(true)} closeMapViewing={()=> setMapViewing(false)}
+        loadProperty={loadProperty}
         />
         
         </SafeAreaView>
