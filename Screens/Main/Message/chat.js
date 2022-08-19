@@ -48,7 +48,7 @@ export default function ChatScreen({navigation, route}){
     const GiftedChatRef = useRef();
     const [query, setQuery] = useState('')
     const [propertyInfo, setPropertyInfo] = useState(null)
-    const [messages, setMessages] = useState('')
+    const [messages, setMessages] = useState([])
     const [typingText, setTypingText] = useState('')
     const [loading, setLoading] = useState(true)
 
