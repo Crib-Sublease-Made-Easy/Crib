@@ -137,8 +137,8 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
 });
 
-  useEffect(async () => {
-    await getLocation()
+  useEffect(() => {
+    getLocation()
     console.log("NEW APP REFRESH")
     refreshAccessToken()
     
