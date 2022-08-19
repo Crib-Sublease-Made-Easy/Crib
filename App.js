@@ -99,7 +99,7 @@ export default function App() {
 
   const [testUserId, setTestUserId] = useState('')
 
-  const sb = new SendBird({ appId: appId, localCacheEnabled: true });   // The `localCacheEnabled` is optional. The default is false.
+  const sb = new SendBird({ appId: appId});   // The `localCacheEnabled` is optional. The default is false.
 
 
 
