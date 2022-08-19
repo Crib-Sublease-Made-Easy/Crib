@@ -284,7 +284,7 @@ export default function ProfileScreen({navigation}){
     }
 
     function toPostProperty(){
-        if(userData.postedProperties.length != 0){
+        if(userData.postedProperties.length == 0){
             alert("As a regular member, you can only post one property.")
         }
         else{
@@ -453,14 +453,16 @@ export default function ProfileScreen({navigation}){
                                 style={{width:'100%', height:'100%', borderTopLeftRadius:10, borderBottomLeftRadius:10}}/>
                                 </Pressable>
                                 <FavPropertyCardContent onPress={()=> navigation.navigate("PropertyDetail", {data: item, uid: userData._id})}>
-                                    <FavPropertyCardName>{item.propertyInfo.loc.streetAddr}</FavPropertyCardName>
+                                    <FavPropertyCardName>{item.propertyInfo.loc.secondaryTxt}</FavPropertyCardName>
                                     <FavPropertyCardDateContainer>
                                         <FavPropertyCardDateText>
-                                            {new Date(item.propertyInfo.availableFrom).toLocaleDateString()}
+                                            {new Date(item.propertyInfo.availableFrom).getDate() + " " +
+                                            new Date(item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) }
                                         </FavPropertyCardDateText>
-                                        <Ionicons name="arrow-forward-outline" size={15} />
+                                        <Ionicons name="arrow-forward-outline" size={15} color={DARKGREY}/>
                                         <FavPropertyCardDateText>
-                                            {new Date(item.propertyInfo.availableTo).toLocaleDateString()}
+                                        {new Date(item.propertyInfo.availableTo).getDate() + " " +
+                                            new Date(item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' }) }
                                         </FavPropertyCardDateText>
                                     </FavPropertyCardDateContainer>
                                     <FavPropertyCardName>$ {item.propertyInfo.price}</FavPropertyCardName>
