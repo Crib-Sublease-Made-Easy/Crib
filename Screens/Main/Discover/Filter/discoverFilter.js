@@ -35,7 +35,7 @@ const PROPERTIESTYPES =
   {type:"Studio", icon :'user'}
 ];
 
-const BEDROOMTYPES = ["Studio", "2", "3", "4", "4+"];
+const BEDROOMTYPES = ["Studio","1" ,"2", "3", "4", "4+"];
 const BATHROOMTYPES = ["1", "2", "3", "4", "5+"];
 
 

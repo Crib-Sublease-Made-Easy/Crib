@@ -93,7 +93,7 @@ export const InputOptionContainer = styled.View`
 `
 
 export const BedroomOptions = styled(Pressable)`
-    padding-horizontal: ${WIDTH*0.045}px
+    padding-horizontal: ${WIDTH*0.03}px
     padding-vertical: ${HEIGHT*0.007}px
     background-color: ${props=>(props.value == props.inputValue ? PRIMARYCOLOR : LIGHTGREY)}
     margin-left: ${WIDTH*0.02}px;
