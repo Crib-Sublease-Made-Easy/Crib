@@ -36,7 +36,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
 import { ChatImageSettingContainer } from './chatStyle';
-import typescript from 'react-native-encrypted-storage';
 
 
 
@@ -60,9 +59,7 @@ export default function ChatScreen({navigation, route}){
       sb.addChannelHandler('channels', channelHandler);
       getGroupChannel()
       console.log("USE EFFECYT")
-      setTimeout(()=>{
-        setLoading(false)
-      },1000)
+      
     }, [channel])
 
     const channelHandler = new sb.ChannelHandler();
@@ -153,6 +150,9 @@ export default function ChatScreen({navigation, route}){
           }
         }
       })
+      setTimeout(()=>{
+        setLoading(false)
+      },1000)
     }
 
     deletedChat = (groupChannel) => {
