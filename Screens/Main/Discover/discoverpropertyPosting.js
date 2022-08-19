@@ -93,8 +93,8 @@ export default function PropertyPostingScreen({ navigation }) {
     const [propertyphotoGallery, setpropertyphotoGallery] = useState([])
     const [propertyMainAddr, setpropertyMainAddr] = useState('')
     const [propertySecondaryAddr, setpropertySecondaryAddr] = useState('')
-    const [propertydateFrom, setpropertydateFrom] = useState(new Date())
-    const [propertydateTo, setpropertydateTo] = useState(new Date(1759176355615))
+    const [propertydateFrom, setpropertydateFrom] = useState(null)
+    const [propertydateTo, setpropertydateTo] = useState(null)
     const [propertyNumBed, setpropertyNumBed] = useState('');
     const [propertyNumBath, setpropertyNumBath] = useState('');
     const [propertyPrice, setpropertyPrice] = useState('');
@@ -162,7 +162,12 @@ export default function PropertyPostingScreen({ navigation }) {
                 alert("Property price must be less than $10000 / month.")
             }
         }
-       
+        else if(val == 7 && propertydateFrom == null){
+            alert("Must enter property availability start date.")
+        }
+        else if(val == 7 && propertydateTo == null){
+            alert("Must enter property availability end date.")
+        }
         else {
             setscrollviewIndex(val)
             
@@ -626,7 +631,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                     <RowValueContainer onPress={() => setOpenFrom(true)} >
                                         <DateSelectPressable onPress={() => setOpenFrom(true)}>
                                         {
-                                            propertydateFrom.getTime() < new Date().getTime() + 10000000 ?
+                                            propertydateFrom == null ?
                                                 <Text style={{color:'white'}}> Select Date</Text>
                                             :
                                             <Text style={{ alignSelf: 'center', color: 'white' }}>{propertydateFrom.getMonth()%12 + 1}-{propertydateFrom.getDate()}-{propertydateFrom.getFullYear()}</Text>
@@ -641,7 +646,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                     <RowValueContainer onPress={() => setOpenTo(true)}>
                                         <DateSelectPressable onPress={() => setOpenTo(true)}>
                                             {
-                                            propertydateTo.getTime() == 1759176355615 ?
+                                            propertydateTo == null ?
                                                 <Text style={{color: 'white'}}>Select Date</Text>
                                             :
                                                 <Text style={{ alignSelf: 'center', color: 'white' }}>{propertydateTo.getMonth()%12 +1}-{propertydateTo.getDate()}-{propertydateTo.getFullYear()}</Text>
@@ -668,7 +673,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                 modal
                                 mode='date'
                                 open={openFrom}
-                                date={propertydateFrom}
+                                date={propertydateFrom == null ? new Date() : propertydateFrom}
                                 onConfirm={(date) => {
                                     if(date.getTime() < new Date().getTime()){
                                         alert("Please enter a date later than current date.")
@@ -676,9 +681,10 @@ export default function PropertyPostingScreen({ navigation }) {
                                     else if(date.getTime() > 1759176355615){
                                         alert("Date selected is too far ahead.")
                                     }
-                                    else if(date.getTime() > propertydateTo.getTime()){
+                                    else if(propertydateTo != null && date.getTime() > propertydateTo.getTime()){
                                         alert("Available from cannot be after available to.")
                                     }
+                                    
                                     else{
                                         setpropertydateFrom(date)
                                     }
@@ -694,7 +700,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                 modal
                                 mode='date'
                                 open={openTo}
-                                date={propertydateTo}
+                                date={propertydateTo == null ? new Date () : propertydateTo}
                                 onConfirm={(date) => {
                                     if(date.getTime() < propertydateFrom.getTime()){
                                         alert("Available to date cannot be before available from date")
@@ -703,7 +709,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                         console.log(propertydateTo)
                                         alert("Cannot schdeul too far in advance.")
                                     }
-                                    else if(date.getTime() < propertydateFrom.getTime()+50000000){
+                                    else if(propertydateFrom != null && date.getTime() < propertydateFrom.getTime()+50000000){
 
                                         alert("Available from and available to cannot be on the same date.")
                                     }
@@ -884,9 +890,13 @@ export default function PropertyPostingScreen({ navigation }) {
                             <ReviewSectionContainer>
                                 <ReviewHeading>Availability</ReviewHeading>
                                 <ReviewDateContainer>
-                                    <ReviewInfoText>From {propertydateFrom.getMonth()}-{propertydateFrom.getDate()}-{propertydateFrom.getFullYear()}</ReviewInfoText>
+                                    {propertydateFrom != null &&
+                                        <ReviewInfoText>From {propertydateFrom.getMonth()}-{propertydateFrom.getDate()}-{propertydateFrom.getFullYear()}</ReviewInfoText>
+                                    }
                                     <Ionicons name='shuffle-outline' size={20} color='white' />
-                                    <ReviewInfoText>To {propertydateTo.getMonth()}-{propertydateTo.getDate()}-{propertydateTo.getFullYear()}</ReviewInfoText>
+                                    {propertydateTo != null &&
+                                        <ReviewInfoText>To {propertydateTo.getMonth()}-{propertydateTo.getDate()}-{propertydateTo.getFullYear()}</ReviewInfoText>
+                                    }
                                 </ReviewDateContainer>
                             </ReviewSectionContainer>
                             <ReviewSectionContainer>

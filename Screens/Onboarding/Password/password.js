@@ -123,8 +123,14 @@ export default function PasswordScreen({navigation,route}){
                 } catch (err) {
                     // Handle error.
                 }
-                await SecureStorage.setItem("userId", data.createdUser._id)
-                await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
+                try{
+                    await SecureStorage.setItem("userId", data.createdUser._id)
+                    await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
+                }
+                catch{e=>{
+                    console.log(e)
+                }}
+                
                 //Create sendbird user here with userid
                 //store user info in
 

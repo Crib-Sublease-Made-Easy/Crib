@@ -608,7 +608,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
 
                     <PostingSection>
-                        <Heading>Availability</Heading>
+                        <Heading>Availabilityss</Heading>
                         <InfoText>
                             Please select the availability of your property.
                             </InfoText>
@@ -921,6 +921,7 @@ export default function PropertyPostingScreen({ navigation }) {
                 </NextContainer>
             </ModalView>
         </SafeAreaView>
+        
     )
 
 }

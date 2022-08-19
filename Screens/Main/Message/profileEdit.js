@@ -128,7 +128,15 @@ export default function ProfileEditScreen({navigation, route}){
                     else{
                         console.log("SET --- CACHE --- profilePic")
                         setProfilePic(data.profilePic)
-                        await AsyncStorage.setItem("profilePic", data.profilePic)
+                        try{
+                            await AsyncStorage.setItem("profilePic", data.profilePic)
+                        }
+                        catch{
+                            e=>{
+                                console.log(e)
+                            }
+                        }
+                        
                     }
                 })
                 .catch((error) => {

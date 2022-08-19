@@ -81,7 +81,14 @@ export default function ProfileEditScreen({navigation, route}){
             if(cachedProfilePic == null && (userData.profilePic != route.params.userData.profilePic)){
                 console.log("UPDATE --- API --- profilePic")
                 setProfilePic(userData.profilePic)
-                await AsyncStorage.setItem("profilePic", userData.profilePic)
+                try{
+                    await AsyncStorage.setItem("profilePic", userData.profilePic)
+                }
+                catch{
+                    e=>{
+                        console.log(e)
+                    }
+                }
             }
             else if(profilePic == null){
                 console.log("UPDATE --- CACHE --- profilePic")
@@ -130,7 +137,13 @@ export default function ProfileEditScreen({navigation, route}){
                     else{
                         console.log("SET --- CACHE --- profilePic")
                         setProfilePic(data.profilePic)
-                        await AsyncStorage.setItem("profilePic", data.profilePic)
+                        try{
+                            await AsyncStorage.setItem("profilePic", data.profilePic)
+                        }
+                        catch{e=>{
+                            console.log(e)
+                        }}
+                        
                     }
                 })
                 .catch((error) => {

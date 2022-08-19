@@ -58,7 +58,9 @@ export default function Login_OTP({navigation, route}){
     },[code])
 
     async function userLogin(){ 
+        
         let oneSignalUserId = await SecureStorage.getItem('oneSignalUserID');
+       
         setLoading(true)
         console.log("TOKEN")
         console.log(code);
@@ -91,30 +93,27 @@ export default function Login_OTP({navigation, route}){
         }).then( async data =>{
             console.log(success)
             if(success){
-                console.log(data)
-                await SecureStorage.setItem("accessToken", data.token.accessToken)
-                await SecureStorage.setItem("profilePic", data.loggedIn.profilePic)
-                await SecureStorage.setItem("userId", data.loggedIn._id)
-                await SecureStorage.setItem("firstName", data.loggedIn.firstName)
-                await SecureStorage.setItem("lastName", data.loggedIn.lastName)
-                await SecureStorage.setItem("refreshToken", data.token.refreshToken)
+                try{
+                    await SecureStorage.setItem("accessToken", data.token.accessToken)
+                    await SecureStorage.setItem("profilePic", data.loggedIn.profilePic)
+                    await SecureStorage.setItem("userId", data.loggedIn._id)
+                    await SecureStorage.setItem("firstName", data.loggedIn.firstName)
+                    await SecureStorage.setItem("lastName", data.loggedIn.lastName)
+                    await SecureStorage.setItem("refreshToken", data.token.refreshToken)
 
-                await AsyncStorage.setItem("userId", data.loggedIn._id)
-                await AsyncStorage.setItem("firstName", data.loggedIn.firstName)
-                await AsyncStorage.setItem("lastName", data.loggedIn.lastName)
-                await AsyncStorage.setItem("profilePic", data.loggedIn.profilePic)
-                await AsyncStorage.setItem("userId", data.loggedIn._id)
-
-                
-                
-
-                const access_token = await SecureStorage.getItem("accessToken")
-                
-
-                console.log("ACCESS_TOKEN", access_token)
+                    await AsyncStorage.setItem("userId", data.loggedIn._id)
+                    await AsyncStorage.setItem("firstName", data.loggedIn.firstName)
+                    await AsyncStorage.setItem("lastName", data.loggedIn.lastName)
+                    await AsyncStorage.setItem("profilePic", data.loggedIn.profilePic)
+                    await AsyncStorage.setItem("userId", data.loggedIn._id)
+                }
+                catch{e=>{
+                    console.log(e)
+                }}
 
                 setTimeout(()=>{setLoading(false)},2000)
                 login(data.loggedIn._id);
+                
             }
 
         })

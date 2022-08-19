@@ -131,18 +131,23 @@ export default function OTPScreen({navigation, route}){
                 } catch (err) {
                     // Handle error.
                 }
-                await SecureStorage.setItem("userId", data.createdUser._id)
-                await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
-                //Create sendbird user here with userid
-                //store user info in
+                try{
+                    await SecureStorage.setItem("userId", data.createdUser._id)
+                    await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
+                    //Create sendbird user here with userid
+                    //store user info in
 
-                await SecureStorage.setItem("accessToken", data.token.accessToken)
-                await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
-                await SecureStorage.setItem("userId", data.createdUser._id)
-                await SecureStorage.setItem("firstName", data.createdUser.firstName)
-                await SecureStorage.setItem("lastName", data.createdUser.lastName)
-                await SecureStorage.setItem("refreshToken", data.token.refreshToken)
-                console.log("got")
+                    await SecureStorage.setItem("accessToken", data.token.accessToken)
+                    await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
+                    await SecureStorage.setItem("userId", data.createdUser._id)
+                    await SecureStorage.setItem("firstName", data.createdUser.firstName)
+                    await SecureStorage.setItem("lastName", data.createdUser.lastName)
+                    await SecureStorage.setItem("refreshToken", data.token.refreshToken)
+                }
+                catch{e=>{
+                    console.log(e)
+                }}
+                
                 setTimeout(()=>{setLoading(false)},2000)
                 login(data.createdUser._id);
             }

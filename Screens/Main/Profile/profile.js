@@ -208,7 +208,15 @@ export default function ProfileScreen({navigation}){
                     // console.log("COMPARE", compare)
                     if(!compare || tempPropData == null) {
                         console.log("UPDATE --- API --- POSTED PROPERTY")
-                        await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
+                        try{
+                            await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
+                        }
+                        catch{
+                            e=>{
+                                console.log(e)
+                            }
+                        }
+                        
                         if(JSON.stringify(propertyData) != {"Error": "No Property found"}){
                             setPostedProperties(propertyData)
                         }
@@ -251,7 +259,15 @@ export default function ProfileScreen({navigation}){
                     console.log("UPDATE --- API --- FAV PROPERTY")
                     
                     setFavoriteProperties(data);
-                    await AsyncStorage.setItem("favoriteProperties", JSON.stringify(data) )
+                    try{
+                        await AsyncStorage.setItem("favoriteProperties", JSON.stringify(data) )
+                    }
+                    catch{
+                        e=>{
+                            console.log(e)
+                        }
+                    }
+                    
                 }
                 else{
                     setFavoriteProperties([])
