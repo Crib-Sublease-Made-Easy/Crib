@@ -21,6 +21,7 @@ Ionicons.loadFont()
 import { HeaderContainer, BackButtonContainer, NameContainer, Header,ResetButtonContainer, CategoryContainer, CategoryName,
       RowContainer, RowName, RowValueContainer, RowValueText } from './settingStyle';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 FontAwesome.loadFont()
 
 OneSignal.setAppId("440ad232-b229-4ea1-963b-5037d3ac9413");
@@ -51,13 +52,9 @@ export default function SettingScreen({navigation, route}){
     }
 
     const logout =  async() => {
-      await SecureStorage.removeItem("refreshToken");
-      await SecureStorage.removeItem("accessToken");
-      await SecureStorage.removeItem("firstName");
-      await SecureStorage.removeItem("lastName");
-      await SecureStorage.removeItem("email");
-      await SecureStorage.removeItem("userId");
-      await SecureStorage.removeItem("profilePic");
+      await SecureStorage.clear()
+
+      await AsyncStorage.clear()
       login(null)
     }
 

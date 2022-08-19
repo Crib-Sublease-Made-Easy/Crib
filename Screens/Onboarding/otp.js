@@ -131,6 +131,7 @@ export default function OTPScreen({navigation, route}){
                 } catch (err) {
                     // Handle error.
                 }
+                console.log("OTP",data.createdUser.firstName)
                 try{
                     await SecureStorage.setItem("userId", data.createdUser._id)
                     await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
