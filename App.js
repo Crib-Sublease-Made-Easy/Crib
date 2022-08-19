@@ -204,6 +204,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
           'Authorization': 'Bearer ' + at
         }
       }).then(async e => e.json()).then(async (response) => {
+        console.log("APP", response.firstName)
         try {
           await SecureStorage.setItem("firstName", response.firstName)
           await SecureStorage.setItem("lastName", response.lastName)
