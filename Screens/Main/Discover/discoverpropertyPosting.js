@@ -55,7 +55,7 @@ const ImageName = [
 ]
 
 
-const bedroomList = ["Studio", "2", "3", "4+"]
+const bedroomList = ["Studio", "1" , "2", "3", "4+"]
 const bathroomList = ["1", "2", "3", "4+"]
 
 

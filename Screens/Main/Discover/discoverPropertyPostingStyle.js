@@ -176,7 +176,7 @@ export const BedroomContaienr = styled.View`
 `
 
 export const BedroomItemContainer = styled.Pressable`
-    width: ${WIDTH*0.2}px;
+    width: ${WIDTH*0.15}px;
     border-radius: 10px;
     height: ${HEIGHT*0.035}px;
     border-width: 1px;

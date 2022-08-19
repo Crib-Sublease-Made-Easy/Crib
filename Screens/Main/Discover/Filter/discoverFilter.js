@@ -42,7 +42,7 @@ const BATHROOMTYPES = ["1", "2", "3", "4", "5+"];
 const PRIMARYGREY = '#5e5d5d'
 const PRIMARYCOLOR = '#4050B5'
 
-import { MEDIUMGREY,HEIGHT, WIDTH, DARKGREY, amenitiesList, GetAmenitiesIcon } from '../../../../sharedUtils';
+import { MEDIUMGREY,HEIGHT, WIDTH, DARKGREY, amenitiesList, GetAmenitiesIcon, GetFAIcons, GetFAIconsInBlack } from '../../../../sharedUtils';
 
 import Modal from "react-native-modal";
 
@@ -432,7 +432,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                               
                                 <TypeOption key={value.name + "amenitiesfilter"} >
                                     <NameIcon onPress={()=>updateAmenities(value.name)}>
-                                        <Ionicons key={value.icon} name={GetAmenitiesIcon(value.name)} size={20} />
+                                        {GetFAIconsInBlack(value.name)}
                                         <PropertyTypeName>{value.name.replace("_", " ")}</PropertyTypeName>
                                     </NameIcon>
                                     <Pressable onPress={()=>updateAmenities(value.name)}>
