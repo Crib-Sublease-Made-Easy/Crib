@@ -4,19 +4,22 @@ import { WIDTH, HEIGHT, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR , OnlyLetters,  } fro
 
 
 export const TopContainer = styled.View`
-    height: ${HEIGHT*0.4}px
+    
     width: ${WIDTH}px;
+    padding-horizontal: ${WIDTH*0.1}px
 `
 
 export const BottomContainer = styled.View`
-   
-    align-items: center
+    margin-top: ${HEIGHT*0.1}px
+    width: ${WIDTH}px;  
+    padding-horizontal: ${WIDTH*0.1}px
+    
 `
 
 export const HeadingText = styled.Text`
     width: ${WIDTH*0.8}px
     font-size: ${HEIGHT*0.06}px;
-    font-weight: 500
+    font-weight: 600
     color: white
     
    
@@ -24,7 +27,7 @@ export const HeadingText = styled.Text`
 export const SubHeadingText = styled.Text`
     width: ${WIDTH*0.8}px
     font-size: ${HEIGHT*0.02}px;
-    font-weight: 400
+    font-weight: 500
     color: white
     margin-top: ${HEIGHT*0.01}px
     
@@ -32,21 +35,20 @@ export const SubHeadingText = styled.Text`
 
 export const JoinButton = styled.Pressable`
     width: ${WIDTH*0.8}px;
-    height: ${HEIGHT*0.075}px;
-    background-color: white
-    border-radius: 15px
-    justify-content: center 
-    align-items: center
-    margin-top: ${HEIGHT*0.05}px
-    shadow-offset: 0 0
-    shadow-color: black;
-    shadow-radius: 10px;
-    shadow-opacity: 0.3;
-    elevation: 5
+    padding-vertical: ${HEIGHT*0.0135}px
+    border-width:1.5px
+    border-color: white
+    border-radius: 30px
+    margin-top: ${HEIGHT*0.015}px
+    flex-direction: row
+    align-items:center
+    justify-content: center
 `
 export const JoinText = styled.Text`
-    font-size: ${HEIGHT*0.03}px;
+    margin-left: ${WIDTH*0.025}px
+    font-size: ${HEIGHT*0.02}px
     font-weight: 500
+    color: white
     
 `
 
@@ -60,4 +62,10 @@ export const LoginText = styled.Text`
     margin-top: ${HEIGHT*0.05}px
     text-align:center
     
+`
+
+export const TopLeftText = styled.Text`
+    font-size: ${HEIGHT*0.07}px
+    font-weight: 600
+    color: white
 `

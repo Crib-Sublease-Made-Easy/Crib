@@ -52,7 +52,8 @@ export default function SettingScreen({navigation, route}){
     }
 
     const logout =  async() => {
-      await SecureStorage.clear()
+      await SecureStorage.removeItem("accessToken")
+      await SecureStorage.removeItem("refreshToken")
       await AsyncStorage.clear()
       login(null)
     }

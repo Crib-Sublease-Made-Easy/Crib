@@ -16,6 +16,8 @@ import Geolocation from '@react-native-community/geolocation';
 import './onChat'
 var axios = require('axios');
 
+import {PRIMARYCOLOR} from './sharedUtils'
+
 //User Context
 import { UserContext } from './UserContext.js';
 
@@ -86,11 +88,6 @@ const Stack = createSharedElementStackNavigator();
 const appId = '14BD0602-4159-48D7-9292-66136C479B46';
 import OneSignal from 'react-native-onesignal';
 
-
-
-
-
-const PRIMARYCOLOR = '#4050B5'
 
 export default function App() {
 
@@ -206,8 +203,6 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       }).then(async e => e.json()).then(async (response) => {
         console.log("APP", response.firstName)
         try {
-          await SecureStorage.setItem("firstName", response.firstName)
-          await SecureStorage.setItem("lastName", response.lastName)
           await SecureStorage.setItem("profilePic", response.profilePic)
           login(id);
         } catch (err) {
@@ -451,7 +446,9 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
           <Stack.Navigator initialRouteName='Landing'>
 
 
-            <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Landing" component={LandingScreen} options={{ 
+              headerStyle:{backgroundColor: PRIMARYCOLOR}, headerShadowVisible: false, headerTitle:"" }} 
+              />
             <Stack.Screen
               name="Login"
               component={LoginScreen}
@@ -472,7 +469,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               component={Login_OTP}
               options={{
                 headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+                cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter
               }}
             />
 

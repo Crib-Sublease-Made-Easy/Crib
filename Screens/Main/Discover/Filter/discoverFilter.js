@@ -35,14 +35,14 @@ const PROPERTIESTYPES =
   {type:"Studio", icon :'user'}
 ];
 
-const BEDROOMTYPES = ["Studio", "2", "3", "4", "4+"];
+const BEDROOMTYPES = ["Studio","1" ,"2", "3", "4", "4+"];
 const BATHROOMTYPES = ["1", "2", "3", "4", "5+"];
 
 
 const PRIMARYGREY = '#5e5d5d'
 const PRIMARYCOLOR = '#4050B5'
 
-import { MEDIUMGREY,HEIGHT, WIDTH, DARKGREY, amenitiesList, GetAmenitiesIcon } from '../../../../sharedUtils';
+import { MEDIUMGREY,HEIGHT, WIDTH, DARKGREY, amenitiesList, GetAmenitiesIcon, GetFAIcons, GetFAIconsInBlack } from '../../../../sharedUtils';
 
 import Modal from "react-native-modal";
 
@@ -71,10 +71,11 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     ,filterType, setfilterType, filterDistance, setfilterDistance, filterBedroom, setfilterBedroom,filterBathroom, setfilterBathroom
     ,filterPriceHigher, setfilterPriceHigher, filterAmenities, setfilterAmenities, propertyAmenities, setpropertyAmenities, setRetrieveMore,
     filterPreviewValue, setfilterPreviewValue, filterPreviewDistanceValue, setfilterPreviewDistanceValue, filterAvailableFrom, setfilterAvailableFrom,
-    filterAvailableTo, setfilterAvailableTo
+    filterAvailableTo, setfilterAvailableTo, loadProperty
 }){
     const [containerModal, setcontainerModal] = useState(false);
     const [scrollEnabled, setscrollEnabled] = useState(true)
+    const [reset, setReset] = useState(false)
 
     
 
@@ -99,6 +100,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     }
 
     function resetFilter(){
+        console.log("resettin")
         setfilterType("")
         setfilterPriceHigher(10000)
         setfilterAvailableFrom(new Date())
@@ -109,7 +111,8 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
         setfilterBathroom("")
         setfilterBedroom("")
         setfilterDistance(150)
-
+        setReset(true)
+        
     }
    
     useEffect(()=>{
@@ -160,13 +163,24 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
             } else{
                 setFilteredProperties([])
             }
-            console.log(properties)
+          
             close()
         })
         .catch(e=>{
             alert(e)
     })
     retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities,new Date(filterAvailableFrom).getTime(), new Date(filterAvailableTo).getTime() )
+    }
+
+    async function checkResetAndBack(){
+        console.log(reset)
+        console.log("closing")
+        if(reset){
+            setReset(false)
+            retrieveAllPins(currentLocation[0], currentLocation[1], 150, 10000, "", "", "", [],new Date().getTime(), 1759176355615)
+            loadProperty()
+        }
+        close()
     }
 
     return(
@@ -176,7 +190,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
             <Animated.View>
             <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=>close()}>
+                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={checkResetAndBack}>
                         <Ionicons name='arrow-back-outline' size={25} />
                     </Pressable>
                 </BackButtonContainer>
@@ -432,7 +446,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                               
                                 <TypeOption key={value.name + "amenitiesfilter"} >
                                     <NameIcon onPress={()=>updateAmenities(value.name)}>
-                                        <Ionicons key={value.icon} name={GetAmenitiesIcon(value.name)} size={20} />
+                                        {GetFAIconsInBlack(value.name)}
                                         <PropertyTypeName>{value.name.replace("_", " ")}</PropertyTypeName>
                                     </NameIcon>
                                     <Pressable onPress={()=>updateAmenities(value.name)}>

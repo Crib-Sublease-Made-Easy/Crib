@@ -275,7 +275,6 @@ export default function ProfileScreen({navigation}){
             }
             else{ // The api and cache data is the same
                 console.log("UPDATE --- CACHE --- FAV PROPERTY")
-                console.log(tempFavProp)
                 setFavoriteProperties(JSON.parse(tempFavProp))
             }
 
