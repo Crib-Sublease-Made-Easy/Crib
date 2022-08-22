@@ -51,7 +51,7 @@ import {Container, NameText, OccupationText,EditProfilePressable,SlidingContaine
 import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, MEDIUMGREY, DARKGREY } from '../../../sharedUtils';
 export default function ProfileScreen({navigation}){
     const scrollviewRef = useRef(null)
-    const {USERID} = useContext(UserContext);
+    const {sb, USERID} = useContext(UserContext);
 
     const [tabPressed, setTabPressed] = useState("Posted")
     const [postedProperties, setPostedProperties] = useState(null)

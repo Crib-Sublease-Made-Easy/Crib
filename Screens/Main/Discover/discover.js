@@ -53,7 +53,7 @@ var axios = require('axios');
 export default function DiscoverScreen({navigation, route}){
 
 
-    const {USERID, userInitialLocation,} = useContext(UserContext);
+    const {sb, USERID, userInitialLocation} = useContext(UserContext);
       //Method for handling notifications received while app in foreground
       OneSignal.setNotificationOpenedHandler(notification => {
         // console.log("OneSignal: notification opened:", notification);
@@ -132,12 +132,15 @@ export default function DiscoverScreen({navigation, route}){
             // when component unmount like in willComponentUnmount
             // and show will not change to true
             return () => {
+            unsubscribe
               clearTimeout(timer1);
             };
         
         
         
     },[currentLocation])
+
+
 
     //Open The search bar container to displya all autocomplete results according to if searching is true 
     function openHeader(){
