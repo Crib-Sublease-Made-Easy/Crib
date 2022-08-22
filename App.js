@@ -469,7 +469,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               component={Login_OTP}
               options={{
                 headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
               }}
             />
 
