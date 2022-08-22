@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 import { WIDTH, HEIGHT, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR , OnlyLetters,  } from '../../../sharedUtils';
 
-const FONTFAMILY = 'EBGaramond'
+const FONTFAMILY = 'EBGaramond-Bold'
 
 export const TopContainer = styled.View`
     
@@ -67,7 +67,7 @@ export const LoginText = styled.Text`
 
 export const TopLeftText = styled.Text`
     font-size: ${HEIGHT*0.07}px
-    font-weight: 400
+    font-weight: 700
     color: white
     font-family: ${FONTFAMILY}
 `
