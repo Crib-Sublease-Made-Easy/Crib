@@ -105,7 +105,7 @@ export default function DiscoverScreen({navigation, route}){
     const [filterPriceLower, setfilterPriceLower] = useState(0);
     const [filterPriceHigher, setfilterPriceHigher] = useState(10000);
     const [filterAvailableFrom, setfilterAvailableFrom] = useState(new Date())
-    const [filterAvailableTo, setfilterAvailableTo] = useState(new Date(1759176355615))
+    const [filterAvailableTo, setfilterAvailableTo] = useState(new Date(1759190400000))
 
     const [filterPreviewValue, setfilterPreviewValue] = useState(10000)
     const [filterPreviewDistanceValue, setfilterPreviewDistanceValue] = useState(150)
@@ -117,7 +117,7 @@ export default function DiscoverScreen({navigation, route}){
     useEffect(()=>{
         setFlatlistRefreshing(true)
         console.log("USEFFECT")
-        
+
         
         //This loads the property in the flatlist 
         loadProperty()
@@ -140,7 +140,18 @@ export default function DiscoverScreen({navigation, route}){
     },[currentLocation])
 
 
-
+    function dateCompare(date1, date2){
+        let d1 = date1
+        let d2 = date2
+        d1.setHours(0, 0, 0, 0);
+        d2.setHours(0, 0, 0, 0);
+        
+        if(d1.valueOf() == d2.valueOf()){ 
+            return true;
+        } else {
+            return false;
+        }
+    }
     //Open The search bar container to displya all autocomplete results according to if searching is true 
     function openHeader(){
         Animated.parallel([
@@ -582,7 +593,7 @@ export default function DiscoverScreen({navigation, route}){
                                 <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />
                             </DeleteIconContainer>
                             <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
-                                {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) ?
+                                {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) || !(dateCompare(new Date(1759190400000), new Date(filterAvailableTo))) || !(dateCompare(new Date(), new Date(filterAvailableFrom)))?
                                 <View style={{borderWidth:2, padding: 7, borderRadius: 50, borderColor: '#8559E3' }}>
                                 <Ionicons name="options-sharp" size={20} />
                                 </View>
