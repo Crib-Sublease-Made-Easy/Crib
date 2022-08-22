@@ -376,7 +376,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                         
                             
                         <BedroomOptions  key={"bedroomOption" + value  + index} onPress={()=> value == filterBedroom ? setfilterBedroom("") : setfilterBedroom(value)} inputValue={filterBedroom} value={value}>   
-                            <BedroomOptionsText value={value} inputValue={filterBedroom}>{value}</BedroomOptionsText>
+                            <BedroomOptionsText value={value} inputValue={filterBedroom}>{value.replace("P","+")}</BedroomOptionsText>
                         </BedroomOptions>
                        
                     ))}
@@ -393,7 +393,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                         
                             
                         <BedroomOptions key={"bathroomOption" + value + index} onPress={()=> value == filterBathroom ? setfilterBathroom("") : setfilterBathroom(value)} inputValue={filterBathroom} value={value}>   
-                            <BedroomOptionsText value={value} inputValue={filterBathroom}>{value}</BedroomOptionsText>
+                            <BedroomOptionsText value={value} inputValue={filterBathroom}>{value.replace("P","+")}</BedroomOptionsText>
                         </BedroomOptions>
                        
                     ))}
