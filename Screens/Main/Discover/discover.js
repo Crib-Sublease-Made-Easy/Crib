@@ -254,7 +254,6 @@ export default function DiscoverScreen({navigation, route}){
 
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
-
             fetch('https://sublease-app.herokuapp.com/properties/query?page=0' + s, {
             method: 'GET',
             headers: {
