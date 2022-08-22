@@ -118,7 +118,7 @@ export default function DiscoverScreen({navigation, route}){
         setFlatlistRefreshing(true)
         console.log("USEFFECT")
         
-       
+        
         //This loads the property in the flatlist 
         loadProperty()
        
@@ -132,7 +132,6 @@ export default function DiscoverScreen({navigation, route}){
             // when component unmount like in willComponentUnmount
             // and show will not change to true
             return () => {
-            unsubscribe
               clearTimeout(timer1);
             };
         
