@@ -20,6 +20,7 @@ Ionicons.loadFont()
 import { HeaderContainer, BackButtonContainer, NameContainer, Header,ResetButtonContainer, CategoryContainer, CategoryName,
       RowContainer, RowName, RowValueContainer, RowValueText } from './settingStyle';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 FontAwesome.loadFont()
 
 
@@ -45,6 +46,7 @@ export default function SettingScreen({navigation, route}){
       await SecureStorage.removeItem("email");
       await SecureStorage.removeItem("userId");
       await SecureStorage.removeItem("profilePic");
+      await AsyncStorage.clear()
       login(null)
     }
 

@@ -325,7 +325,6 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
           
         }
         onEndReached={()=>{
-            console.log("loading more data")
             loadMoreProperties()
         }
         }

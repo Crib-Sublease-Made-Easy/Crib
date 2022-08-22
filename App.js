@@ -459,17 +459,6 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               }}
             />
 
-            {/* Messaging */}
-            {/* <Stack.Screen name="Lobby" component={Lobby} />
-        <Stack.Screen name="Chat" component={Chat} />
-        <Stack.Screen name="Member" component={Member} />
-        <Stack.Screen name="Invite" component={Invite} /> 
-        <Stack.Screen name="Profile" component={Invite} /> */}
-
-
-
-
-
           </Stack.Navigator>
           :
 
@@ -500,7 +489,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               component={Login_OTP}
               options={{
                 headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
               }}
             />
 
