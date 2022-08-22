@@ -46,9 +46,14 @@ export default function FirstLastNameScreen({navigation, route}){
         else{      
             navigation.navigate("Age", {firstName: firstName.trim(), lastName: lastName.trim()})
         }
-      
-       
         
+    }
+
+    function backToLanding(){
+        navigation.reset(
+            {index: 0 , routes: [{ name: 'Landing'}]}
+            
+        )
     }
 
 
@@ -57,7 +62,7 @@ export default function FirstLastNameScreen({navigation, route}){
             <KeyboardAvoidingView behavior={'padding'} style={{flex:1}} >
            
             <Header>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                <Pressable style={{height:'50%', width:'50%'}} onPress={backToLanding}>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
                     <Ionicons name='arrow-back-outline' size={25} />
                 </Pressable>
