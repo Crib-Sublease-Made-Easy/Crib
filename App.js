@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { useState, useContext, useEffect, createContext } from 'react';
+import { useState, useRef, useEffect, createContext } from 'react';
 import {
+  AppState,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -90,6 +91,8 @@ import OneSignal from 'react-native-onesignal';
 
 
 export default function App() {
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const [userInitialLocation, setUserInitialLocation] = useState(null)
   const [sendBirdConnected, setSendbirdConnection] = useState(false)
@@ -138,7 +141,24 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     getLocation()
     console.log("NEW APP REFRESH")
     refreshAccessToken()
-    
+
+    const subscription = AppState.addEventListener("change", nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        console.log("App has come to the foreground!");
+        refreshAccessToken()
+      }
+
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+      console.log("AppState", appState.current);
+    });
+
+    return () => {
+      subscription.remove();
+    };
 
   }, [])
   const connectSendbird = async () => {
@@ -209,6 +229,8 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
           console.log(err)
         }
       })
+      console.log("token regreshed")
+      console.log("ACCESS TOKEN ", at)
       connectSendbird()
     }
   }
