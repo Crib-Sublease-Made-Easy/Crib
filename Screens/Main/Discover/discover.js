@@ -443,7 +443,7 @@ export default function DiscoverScreen({navigation, route}){
         'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            viewCount: "true"
+            viewCount: "false"
         })
         }) 
         .then(res => res.json()).then(property =>{

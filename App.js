@@ -487,7 +487,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               options={{ headerShown: false, animation: 'slide_from_right' }}
             />
             <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="FirstLastName" component={FirstLastNameScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="FirstLastName" component={FirstLastNameScreen} options={{ headerShown: false, }} />
             <Stack.Screen name="Age" component={AgeScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Gender" component={GenderScreen} options={{ headerShown: false }} />
             <Stack.Screen name="ProfilePic" component={ProfilePicScreen} options={{ headerShown: false }} />

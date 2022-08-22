@@ -46,19 +46,18 @@ const WIDTH = Dimensions.get('screen').width;
 
 
 export default function PropertyDetailScreen({navigation, route}){
-    
     useEffect(()=>{
       fetchProperties()
       getTokens()
     }, [])
-
+ 
     const flatListRef = useRef(null)
     const [propData, setPropData] = useState(route.params.data.propertyInfo);
     const postedUserData = route.params.data.userInfo;
     const {sb, USERID} = useContext(UserContext);
     const [flatlistIndex, setFlatlistIndex] = useState(0)
     const [liked, setLiked]  = useState()
-    const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == route.params.uid)
+    const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == USERID)
     const createConversation = async () =>{
         var userIds = [USERID, propData.postedBy]
         
@@ -114,6 +113,10 @@ export default function PropertyDetailScreen({navigation, route}){
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + accessToken,
             },
+            body:JSON.stringify({
+                viewCount: route.params.incrementViewCount ? "true" : "false"
+            })
+            
             
             }) 
             .then(res => res.json()).then( async propertyData =>{
@@ -272,14 +275,14 @@ export default function PropertyDetailScreen({navigation, route}){
                                 {propData.bed != "Studio" &&
                                     <Ionicons name='bed' size={30} />
                                 }
-                                    <BedNumberText>{propData.bed}</BedNumberText>
+                                    <BedNumberText>{propData.bed.replace("P","+")}</BedNumberText>
                                 </BedTopContainer>
                                 <BedroomNameText>Bedroom</BedroomNameText>
                             </BedContainer>
                             <BedContainer>
                                 <BedTopContainer>
                                     <Ionicons name='water' size={30} />
-                                    <BedNumberText>{propData.bath}</BedNumberText>
+                                    <BedNumberText>{propData.bath.replace("P","+")}</BedNumberText>
                                 </BedTopContainer>
                                 <BedroomNameText>Bathroom</BedroomNameText>
                             </BedContainer>
@@ -291,7 +294,7 @@ export default function PropertyDetailScreen({navigation, route}){
                                     propData.numberOfViews < 1000 ?
                                     propData.numberOfViews 
                                     :
-                                    propData.numberOfViews/1000 + "K"
+                                    Math.round(propData.numberOfViews/1000) + "K"
                                     }
                                     </BedNumberText>
                                 </BedTopContainer>

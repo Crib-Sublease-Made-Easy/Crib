@@ -87,17 +87,16 @@ export const InputOptionContainer = styled.View`
     width: ${WIDTH*0.9}px;
     padding-bottom: ${HEIGHT*0.015}px
     flex-direction: row;
-    justify-content: space-between
+    justify-content: space-around
     align-items: center
     align-self: center
 `
 
 export const BedroomOptions = styled(Pressable)`
-    padding-horizontal: ${WIDTH*0.03}px
+    padding-horizontal: ${WIDTH*0.05}px
     padding-vertical: ${HEIGHT*0.007}px
     background-color: ${props=>(props.value == props.inputValue ? PRIMARYCOLOR : LIGHTGREY)}
-    margin-left: ${WIDTH*0.02}px;
-    margin-right: ${WIDTH*0.02}px;
+    
     border-radius: 10px
 `
 

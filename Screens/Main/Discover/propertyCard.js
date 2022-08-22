@@ -246,7 +246,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
 
         return(
             <CardContainer 
-            onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId})} >
+            onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId, incrementViewCount : true})} >
                 {/* <SharedElement id="0"> */}
                 <Text>{index}</Text>
                     <PropertyImageContainer >

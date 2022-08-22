@@ -55,8 +55,8 @@ const ImageName = [
 ]
 
 
-const bedroomList = ["Studio", "1" , "2", "3", "4+"]
-const bathroomList = ["1", "2", "3", "4+"]
+const bedroomList = ["Studio", "1" , "2", "3", "4P"]
+const bathroomList = ["1", "2", "3", "4P"]
 
 
 
@@ -736,7 +736,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                 {bedroomList.map((value) => (
                                     <BedroomItemContainer onPress={() => setpropertyNumBed(value)} userInput={propertyNumBed} value={value}
                                         key={"bedroom" + value}>
-                                        <Text style={{ color: value == propertyNumBed ? 'black' : 'white', fontWeight: '500' }}>{value}</Text>
+                                        <Text style={{ color: value == propertyNumBed ? 'black' : 'white', fontWeight: '500' }}>{value.replace("P","+")}</Text>
                                     </BedroomItemContainer>
                                 ))}
                             </BedroomContaienr>
@@ -749,7 +749,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                 {bathroomList.map((value) => (
                                     <BedroomItemContainer onPress={() => setpropertyNumBath(value)} userInput={propertyNumBath} value={value}
                                         key={"bathroom" + value}>
-                                        <Text style={{ color: value == propertyNumBath ? 'black' : 'white', fontWeight: '500' }}>{value}</Text>
+                                        <Text style={{ color: value == propertyNumBath ? 'black' : 'white', fontWeight: '500' }}>{value.replace("P","+")}</Text>
                                     </BedroomItemContainer>
                                 ))}
                             </BedroomContaienr>
@@ -878,7 +878,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                     </BedBathLogo>
                                     <BedBathLogo>
                                         <Ionicons name="water-outline" size={30} color='white' ></Ionicons>
-                                        <LocationText>{propertyNumBath} bathroom</LocationText>
+                                        <LocationText>{propertyNumBath.replaceAll("P","+")} bathroom</LocationText>
                                     </BedBathLogo>
                                 </BedAndBathContainer>
                             </ReviewSectionContainer>

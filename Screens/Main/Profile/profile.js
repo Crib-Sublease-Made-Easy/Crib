@@ -283,7 +283,7 @@ export default function ProfileScreen({navigation}){
     }
 
     function toPostProperty(){
-        if(userData.postedProperties.length == 0){
+        if(userData.postedProperties.length == 1){
             alert("As a regular member, you can only post one property.")
         }
         else{

@@ -13,21 +13,6 @@ import {
 
 } from 'react-native';
 
-// const amenitiesList =
-//     [{ name: 'Pets Allowed', color: '#57b2f7', icon: "paw-outline" },
-//     { name: 'Mattress', color: '#fa4b4b', icon: 'bed-outline' },
-//     { name: 'Able to renew', color: '#f79c40', icon: 'refresh-outline' },
-//     { name: 'Gym', color: '#00d14d', icon: 'barbell-outline' },
-//     { name: 'On-site Washer and Dryer', color: '#f79c40', icon: 'water-outline' },
-//     { name: 'Wifi', color: '#00d14d', icon: 'wifi-outline' },
-//     { name: 'Furnished', color: '#fa4b4b', icon: 'desktop-outline' },
-//     { name: 'Utilities Included', color: '#57b2f7', icon: 'power-outline' },
-//     { name: 'Pool', color: '#f79c40', icon: 'flask-outline' },
-//     { name: 'Parking', color: '#57b2f7', icon: 'car-outline' },
-//     { name: 'TV', color: '#fa4b4b', icon: 'tv-outline' },
-//     { name: 'Heating and Cooling', color: '#fa4b4b', icon: 'thermometer-outline' },
-//     ]
-
 const PROPERTIESTYPES = 
 [{type: "Room", icon:'bed'},
   {type: "House", icon:'home'}, 
@@ -35,21 +20,19 @@ const PROPERTIESTYPES =
   {type:"Studio", icon :'user'}
 ];
 
-const BEDROOMTYPES = ["Studio","1" ,"2", "3", "4", "4+"];
-const BATHROOMTYPES = ["1", "2", "3", "4", "5+"];
+const BEDROOMTYPES = ["Studio","1" ,"2", "3", "4P"];
+const BATHROOMTYPES = ["1", "2", "3", "4P"];
 
 
 const PRIMARYGREY = '#5e5d5d'
-const PRIMARYCOLOR = '#4050B5'
 
-import { MEDIUMGREY,HEIGHT, WIDTH, DARKGREY, amenitiesList, GetAmenitiesIcon, GetFAIcons, GetFAIconsInBlack } from '../../../../sharedUtils';
+import { MEDIUMGREY,HEIGHT, WIDTH, DARKGREY, amenitiesList, GetAmenitiesIcon, GetFAIcons, GetFAIconsInBlack, PRIMARYCOLOR } from '../../../../sharedUtils';
 
 import Modal from "react-native-modal";
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 import Slider from '@react-native-community/slider';
 
@@ -147,7 +130,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     s = s + `&longitude=${currentLocation[1]}`
     s = s + `&priceHigh=${filterPriceHigher}`
     s = s + '&priceLow=0'
-    console.log(s);
+   
 
     fetch('https://sublease-app.herokuapp.com/properties/query?page=0' + s, {
         method: 'GET',
