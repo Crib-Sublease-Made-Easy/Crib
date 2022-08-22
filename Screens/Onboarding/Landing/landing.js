@@ -38,11 +38,12 @@ export default function LandingScreen({navigation}){
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:PRIMARYCOLOR, height:HEIGHT, width:WIDTH}} >
             <TopContainer>
-                <TopLeftText>Crib ...</TopLeftText>
-                <SubHeadingText>Sublease too easily</SubHeadingText>
+                <TopLeftText>Crib </TopLeftText>
+                <SubHeadingText>Sublease easier and simpler</SubHeadingText>
             </TopContainer>
             <BottomContainer>
-                
+            
+                <SubHeadingText>That's it ...</SubHeadingText>
                 
             </BottomContainer>
             <View style={{position:'absolute', bottom:HEIGHT*0.1, width:WIDTH*0.9, alignItems:'center', alignSelf:'center'}}>
