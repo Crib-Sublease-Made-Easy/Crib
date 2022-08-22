@@ -294,7 +294,7 @@ export default function PropertyDetailScreen({navigation, route}){
                                     propData.numberOfViews < 1000 ?
                                     propData.numberOfViews 
                                     :
-                                    propData.numberOfViews/1000 + "K"
+                                    Math.round(propData.numberOfViews/1000) + "K"
                                     }
                                     </BedNumberText>
                                 </BedTopContainer>
