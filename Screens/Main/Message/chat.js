@@ -78,31 +78,7 @@ export default function ChatScreen({navigation, route}){
       }
     }
 
-    const connectSendbird = async () => {
-      const UID = await SecureStorage.getItem("userId");
-      if (UID != undefined) {
-        try {
-          console.log("connecting to sendbird")
-       
-          sb.connect(UID, function (user, error) {
-            if (error) {
-              // Handle error.
-              console.log("sendbird error")
-              console.log(error)
-            }
-            else {
-              console.log("sendbird connected")
-              getGroupChannel()
-            }
-            // The user is connected to Sendbird server.
-          });
-          // The user is connected to the Sendbird server.
-        } catch (err) {
-          // Handle error.
-          console.log("SENDBIRD ERROR")
-        }
-      }
-    }
+
     
     const onSend = useCallback(async (messages = []) => {
       const accessToken = await SecureStorage.getItem("accessToken");
