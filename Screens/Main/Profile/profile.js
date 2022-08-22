@@ -67,17 +67,12 @@ export default function ProfileScreen({navigation}){
  
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
-            disconnectSendbird()
             console.log("REFRESH --- USEEFFECT")
             getTokens()
         });
         return unsubscribe; 
     }, [navigation])
-    const disconnectSendbird = async () =>{
-        await sb.disconnect()
-        console.log("Sendbird Disconnected")
 
-    }
     const onShare = async () => {
         try {
           const result = await Share.share({

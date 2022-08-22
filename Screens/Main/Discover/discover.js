@@ -115,7 +115,6 @@ export default function DiscoverScreen({navigation, route}){
     const [userId, setUserId] = useState(null)
     const [mapViewing, setMapViewing] = useState(true)
     useEffect(()=>{
-        disconnectSendbird()
         setFlatlistRefreshing(true)
         console.log("USEFFECT")
         
@@ -142,11 +141,6 @@ export default function DiscoverScreen({navigation, route}){
     },[currentLocation])
 
 
-    const disconnectSendbird = async () =>{
-        await sb.disconnect()
-        console.log("Sendbird Disconnected")
-
-    }
 
     //Open The search bar container to displya all autocomplete results according to if searching is true 
     function openHeader(){
