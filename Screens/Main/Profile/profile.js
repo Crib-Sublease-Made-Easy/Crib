@@ -32,6 +32,8 @@ FontAwesome.loadFont()
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
+import Lottie from 'lottie-react-native';
+
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -427,7 +429,7 @@ export default function ProfileScreen({navigation}){
                     :
                         <Pressable style={{width:WIDTH, height:'100%', alignItems:'center', justifyContent:'center'}}
                             onPress={toPostProperty}>
-                            <Image source={require('../../../assets/PostedHome.jpg')} style={{width:WIDTH*0.7, height:HEIGHT*0.2}} />
+                            <Lottie source={require('../../../subleaseProperties.json')} autoPlay loop={20}  style={{width:WIDTH*0.6, height: WIDTH*0.6, }}/>
                             {/* <Pressable style={{width:WIDTH*0.5, height:HEIGHT*0.06, borderRadius:30,
                             backgroundColor: PRIMARYCOLOR, justifyContent:'center', alignItems:'center'}}>
                                 <Text style={{color:'white', fontSize:HEIGHT*0.0175, fontWeight:'500'}}>Start Sublease</Text>
@@ -439,8 +441,8 @@ export default function ProfileScreen({navigation}){
                 <View style={{width:WIDTH, height:HEIGHT*0.45, }}>
                     {favoriteProperties.length == 0 ?
                         <Pressable style={{width:WIDTH, height:'100%',alignItems:'center',justifyContent:'center'}} onPress={()=> navigation.navigate("Discover")}>
-                            <Image source={require('../../../assets/FavHome.jpg')} style={{width:WIDTH*0.7, height:HEIGHT*0.2}} />
-                            <DefaultPostFavText>Start discovering...</ DefaultPostFavText>
+                            <Lottie source={require('../../../likeanimation.json')} autoPlay loop={20}  style={{width:WIDTH*0.4, height: WIDTH*0.4, }}/>
+                            <DefaultPostFavText>No likes yet. Start discovering...</ DefaultPostFavText>
                         </Pressable>
                         :
                         <ScrollView contentContainerStyle={{alignSelf:'center'}}
