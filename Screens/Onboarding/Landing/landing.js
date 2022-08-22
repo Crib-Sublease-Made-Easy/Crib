@@ -43,7 +43,7 @@ export default function LandingScreen({navigation}){
             </TopContainer>
             <BottomContainer>
             
-                <SubHeadingText>That's it ...</SubHeadingText>
+                
                 
             </BottomContainer>
             <View style={{position:'absolute', bottom:HEIGHT*0.1, width:WIDTH*0.9, alignItems:'center', alignSelf:'center'}}>
