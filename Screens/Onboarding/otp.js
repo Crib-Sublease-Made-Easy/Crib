@@ -144,6 +144,8 @@ export default function OTPScreen({navigation, route}){
                     await SecureStorage.setItem("firstName", data.createdUser.firstName)
                     await SecureStorage.setItem("lastName", data.createdUser.lastName)
                     await SecureStorage.setItem("refreshToken", data.token.refreshToken)
+                    connectSendbird()
+
                 }
                 catch{e=>{
                     console.log(e)
@@ -154,7 +156,30 @@ export default function OTPScreen({navigation, route}){
             }
         })
     }
-
+  const connectSendbird = async () => {
+    const UID = await SecureStorage.getItem("userId");
+    if (UID != undefined) {
+      try {
+        console.log("connecting to sendbird")
+     
+        sb.connect(UID, function (user, error) {
+          if (error) {
+            // Handle error.
+            console.log("sendbird error")
+            console.log(error)
+          }
+          else {
+            console.log("sendbird connected")
+          }
+          // The user is connected to Sendbird server.
+        });
+        // The user is connected to the Sendbird server.
+      } catch (err) {
+        // Handle error.
+        console.log("SENDBIRD ERROR")
+      }
+    }
+  }
     function backToPhoneNumber(){
         navigation.reset(
             {index: 0 , routes: [{ name: 'PhoneNumber', 

@@ -141,7 +141,6 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     getLocation()
     console.log("NEW APP REFRESH")
     refreshAccessToken()
-
     const subscription = AppState.addEventListener("change", nextAppState => {
       if (
         appState.current.match(/inactive|background/) &&
@@ -149,6 +148,9 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       ) {
         console.log("App has come to the foreground!");
         refreshAccessToken()
+        connectSendbird()
+      } else{
+        disconnectSendbird()
       }
 
       appState.current = nextAppState;
@@ -161,7 +163,37 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     };
 
   }, [])
-
+  const disconnectSendbird = async () =>{
+    const UID = await SecureStorage.getItem("userId");
+    if (UID != undefined) {
+      await sb.disconnect()
+      console.log("Sendbird Disconnected")
+    }
+  }
+  const connectSendbird = async () => {
+    const UID = await SecureStorage.getItem("userId");
+    if (UID != undefined) {
+      try {
+        console.log("connecting to sendbird")
+     
+        sb.connect(UID, function (user, error) {
+          if (error) {
+            // Handle error.
+            console.log("sendbird error")
+            console.log(error)
+          }
+          else {
+            console.log("sendbird connected")
+          }
+          // The user is connected to Sendbird server.
+        });
+        // The user is connected to the Sendbird server.
+      } catch (err) {
+        // Handle error.
+        console.log("SENDBIRD ERROR")
+      }
+    }
+  }
 
   const refreshAccessToken = async () => {
       
