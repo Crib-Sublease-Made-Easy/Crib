@@ -382,7 +382,7 @@ export default function PropertyDetailScreen({navigation, route}){
                         {propData.amenities.length != 0 ? propData.amenities.map((value)=>(
                             <AmenitiesItem key={value + "detailamen"}>
                                 {GetFAIconsInBlack(value)}
-                                <AmenitiesText>{value.replace("_"," ")}</AmenitiesText>
+                                <AmenitiesText>{value.replaceAll("_"," ")}</AmenitiesText>
                                
                             </AmenitiesItem>
 

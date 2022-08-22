@@ -100,7 +100,7 @@ export default function EditPropertyAmenitiesScreen({navigation, route}){
                         }}>
                             <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
                                 {GetFAIcons(value.name)}
-                                {"   "}{value.name.replace("_"," ")}
+                                {"   "}{value.name.replaceAll("_"," ")}
                             </Text>
                         </Pressable>
 
