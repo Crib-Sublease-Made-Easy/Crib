@@ -31,7 +31,7 @@ Ionicons.loadFont()
 import {LocationMainText, LocationSecondaryText, LogoText, PressableContainer, SearchInputContainerText,
     PlaceholderLogoTextContainer, Header, AutocompleteLocationContainer, PreviewTopContainer, PreviewBottomContainer,
     PreviewTopLeftContaier,PreviewTopRightContaier, PreviewNameText, PreviewPriceText, PreviewLocationText, 
-    SeachIconContainer, DeleteIconContainer, CustomMarker,  SearchHerePressable } from './discoverStyle';
+    SeachIconContainer, DeleteIconContainer, CustomMarker,  SearchHerePressable, SearchHereText } from './discoverStyle';
 
 import { SearchInputCancelIconContainer } from './discoverStyle';
 
@@ -473,14 +473,15 @@ export default function DiscoverScreen({navigation, route}){
     }
 
 
-    const updateQueryString = () => {
+    async function updateQueryString (loc) {
         var config = {
             method: 'get',
-            url: `https://sublease-app.herokuapp.com/autocomplete/reversegeocoding?lat=${currentLocation[0]}&long=${currentLocation[1]}`,
+            url: `https://sublease-app.herokuapp.com/autocomplete/reversegeocoding?lat=${loc[0]}&long=${loc[1]}`,
         };
-        axios(config)
+        await axios(config)
         .then(async (response)=> {           
-            setlocationQuery(response.data.formatted_address)
+            
+           setlocationQuery(response.data.formatted_address)
         })
         .catch(function (error) {
             console.log(error);
@@ -531,10 +532,12 @@ export default function DiscoverScreen({navigation, route}){
                     outputRange: [0, 1]
                 }), display: searching ? 'flex' : 'none' }}/>
 
-                < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), updateQueryString(),
+                < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), updateQueryString(mapCenterLocation),
                 retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom.getTime(), filterAvailableTo.getTime() )
                 }}>
-                    <Ionicons name="search-outline" size={25} />
+                    <SearchHereText>
+                        Search Here
+                    </SearchHereText>
                 </ SearchHerePressable>
                 <Animated.View 
                 style={{width:WIDTH*0.9, height: HEIGHT*0.275,backgroundColor:'white', borderRadius:25,
