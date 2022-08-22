@@ -904,7 +904,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                 {propertyAmenities.map((value) => (
                                     <ReviewLocationContainer key={"amenities" + value}>
                                         {GetFAIcons(value)}
-                                        <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{value.replace("_", " ")}</ReviewInfoText>
+                                        <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{value.replaceAll("_", " ")}</ReviewInfoText>
                                     </ReviewLocationContainer>
                                 ))}
                             </ReviewSectionContainer>
