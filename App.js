@@ -253,7 +253,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             <Stack.Screen
               name="DiscoverTabs"
               component={DiscoverTab}
-              options={{ headerShown: false, cardStyleInterpolator: forFade }}
+              options={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter  }}
             />
 
             <Stack.Screen
@@ -447,7 +447,8 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
 
             <Stack.Screen name="Landing" component={LandingScreen} options={{ 
-              headerStyle:{backgroundColor: PRIMARYCOLOR}, headerShadowVisible: false, headerTitle:"" }} 
+              headerStyle:{backgroundColor: PRIMARYCOLOR}, headerShadowVisible: false, headerTitle:"",
+              cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter}} 
               />
             <Stack.Screen
               name="Login"
@@ -469,7 +470,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               component={Login_OTP}
               options={{
                 headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+                cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter
               }}
             />
 

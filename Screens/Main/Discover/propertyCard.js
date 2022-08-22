@@ -50,7 +50,6 @@ const CardContainer = styled(Pressable)`
 
 const PropertyInfoContainer = styled.View`
   width: ${WIDTH*0.875}px;
-  height: ${HEIGHT*0.08}px
   justify-content:space-around
   align-self: center
   padding-top: ${HEIGHT*0.01}px;
@@ -79,7 +78,7 @@ const PropertyInfoContainerRight = styled.View`
     justify-content: flex-end;
 `
 const DateFont = styled.Text`
-    margin-top: ${HEIGHT*0.001}px;
+    margin-top: ${HEIGHT*0.01}px;
     font-size: ${HEIGHT*0.017}px;
     font-weight: 400;
     color: grey
@@ -269,14 +268,16 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                    
                         <LocationAndPrice>
                         
-                          <LocationFont style={{maxWidth: WIDTH*0.58, maxHeight:HEIGHT*0.02}}>{data.item.propertyInfo.loc.secondaryTxt}</LocationFont>
+                          <LocationFont style={{maxWidth: WIDTH*0.5}}>{data.item.propertyInfo.loc.secondaryTxt}</LocationFont>
                           
                           <PriceFont><Text style={{fontWeight:'700'}}>${data.item.propertyInfo.price}</Text>/month</PriceFont>
                         </LocationAndPrice>
                         <DateFont>{new Date(data.item.propertyInfo.availableFrom).getDate() + " " +
-                                  new Date(data.item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
+                                  new Date(data.item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) + " " + 
+                                  new Date(data.item.propertyInfo.availableFrom).getFullYear()
                                   }  -  {new Date(data.item.propertyInfo.availableTo).getDate() + " " +
-                                  new Date(data.item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}
+                                  new Date(data.item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })+ " " + 
+                                  new Date(data.item.propertyInfo.availableFrom).getFullYear()}
                                   </DateFont>
                                 
                         <DateFont>{Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0]))} miles away</DateFont>

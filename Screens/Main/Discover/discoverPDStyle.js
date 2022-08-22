@@ -261,3 +261,23 @@ export const InfoHeaderTextAndCenter = styled.View`
     flex-direction: row;
     justify-content: space-between
 `
+
+export const StickyHeaderContainer = styled.View`
+    height: ${HEIGHT*0.105}px
+    width: ${WIDTH}px
+    position: absolute
+    align-items: flex-end
+    top:0 
+    flex-direction: row;
+    justify-content: space-between
+    padding-horizontal: ${WIDTH*0.05}px
+`
+
+export const StickyHeaderIcon = styled.Pressable`
+    backgroundColor: rgba(43,43,43,0.8) 
+    justifyContent: center
+    alignItems: center
+    width:${WIDTH*0.1}px 
+    height: ${WIDTH*0.1}px
+    borderRadius: ${WIDTH*0.05 }px
+`

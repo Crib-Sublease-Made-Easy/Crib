@@ -33,7 +33,8 @@ import { Container, PropertyDescription, ImageStyle, CardSectionOne, CardTitle, 
             InfoContainer, BothInfoContainer, InfoText, DescriptionText, AmenitiesItem, Footer,
             PricePerMonth, ContactTanentButton, TenantInfoContainer, TenantInfo, ProfileImageContainer,
            DateContainer, DateText, DescriptionContainer, AmenitiesText, TypeText, BedContainer,
-           BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter} from './discoverPDStyle'
+           BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
+           StickyHeaderContainer,  StickyHeaderIcon} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
 import getFAAmenities, { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, DARKGREY, GetFAIcons, GetFAIconsInBlack } from '../../../sharedUtils';
 
@@ -249,16 +250,7 @@ export default function PropertyDetailScreen({navigation, route}){
                             }
 
                         </View>
-                        <Pressable  style={{backgroundColor:'rgba(43,43,43,0.8)',justifyContent:'center', alignItems:'center',
-                         position:'absolute',top:HEIGHT*0.05, left:WIDTH*0.05, width:WIDTH*0.1, height:WIDTH*0.1, borderRadius: WIDTH*0.05 }} onPress={()=>navigation.goBack()}>
-                            <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
-                        </Pressable>
-                        { !ownProperty &&
-                        <Pressable  style={{backgroundColor:'rgba(43,43,43,0.8)',justifyContent:'center', alignItems:'center',
-                         position:'absolute',top:HEIGHT*0.05, right:WIDTH*0.05, width:WIDTH*0.1, height:WIDTH*0.1, borderRadius: WIDTH*0.05 }} onPress={likeProperty}>
-                            <Ionicons  name="heart" size={25} color={ liked ? '#ee88a6' : 'white'}></Ionicons>
-                        </Pressable>
-                        }
+                        
                     </View>
                     
                     <CardSectionOne>
@@ -399,6 +391,17 @@ export default function PropertyDetailScreen({navigation, route}){
                     </CardSectionOne>
                     
                 </ScrollView>
+                <StickyHeaderContainer>
+                    < StickyHeaderIcon onPress={()=>navigation.goBack()}>
+                        <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
+                    </ StickyHeaderIcon>
+                    { !ownProperty &&
+                    < StickyHeaderIcon  onPress={likeProperty}>
+                        <Ionicons  name="heart" size={25} color={ liked ? '#ee88a6' : 'white'}></Ionicons>
+                    </ StickyHeaderIcon>
+                    }
+                    
+                </StickyHeaderContainer>
             </PropertyDescription>
             <Footer>
                     <PricePerMonth>${propData.price} <Text style={{fontSize: HEIGHT*0.025, fontWeight:'500'}}>/ month</Text></PricePerMonth>
