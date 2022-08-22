@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 
 import styled from 'styled-components/native';
-import { LIGHTGREY, TEXTINPUTBORDERCOLOR , GOOGLEBLUE} from '../../../sharedUtils';
+import { LIGHTGREY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
 
 
 const PRIMARYCOLOR = '#4050B5'
@@ -257,9 +257,9 @@ export const CustomMarker = styled.Pressable`
 export const SearchHerePressable = styled.Pressable`
   position: absolute;
   bottom: ${HEIGHT*0.2}px;
-  align-self: center
-  padding-horizontal: ${WIDTH*0.035}px
-  padding-vertical: ${HEIGHT*0.015}px
+  left: ${WIDTH*0.05}px;
+  width: ${WIDTH*0.15}px
+  height: ${WIDTH*0.15}px
   border-radius: ${WIDTH*0.075}px
   background-color: white
   justify-content: center
@@ -268,10 +268,4 @@ export const SearchHerePressable = styled.Pressable`
   shadow-radius: 10px;
   shadow-offset: 0 0;
   shadow-opacity: 0.3;
-`
-
-export const SearchHereText = styled.Text`
-  font-size: ${HEIGHT*0.0135}px
-  color: ${GOOGLEBLUE}
-  font-weight: 600
 `
