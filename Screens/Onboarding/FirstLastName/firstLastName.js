@@ -50,10 +50,7 @@ export default function FirstLastNameScreen({navigation, route}){
     }
 
     function backToLanding(){
-        navigation.reset(
-            {index: 0 , routes: [{ name: 'Landing'}]}
-            
-        )
+        navigation.goBack()
     }
 
 
