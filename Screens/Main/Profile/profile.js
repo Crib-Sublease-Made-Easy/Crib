@@ -51,7 +51,7 @@ import {Container, NameText, OccupationText,EditProfilePressable,SlidingContaine
 import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, MEDIUMGREY, DARKGREY } from '../../../sharedUtils';
 export default function ProfileScreen({navigation}){
     const scrollviewRef = useRef(null)
-    const {USERID} = useContext(UserContext);
+    const {sb, USERID} = useContext(UserContext);
 
     const [tabPressed, setTabPressed] = useState("Posted")
     const [postedProperties, setPostedProperties] = useState(null)
@@ -67,12 +67,17 @@ export default function ProfileScreen({navigation}){
  
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
+            disconnectSendbird()
             console.log("REFRESH --- USEEFFECT")
             getTokens()
         });
         return unsubscribe; 
     }, [navigation])
+    const disconnectSendbird = async () =>{
+        await sb.disconnect()
+        console.log("Sendbird Disconnected")
 
+    }
     const onShare = async () => {
         try {
           const result = await Share.share({

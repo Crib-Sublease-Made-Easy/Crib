@@ -27,7 +27,7 @@ export const HeadingText = styled.Text`
 `
 export const SubHeadingText = styled.Text`
     width: ${WIDTH*0.8}px
-    font-size: ${HEIGHT*0.02}px;
+    font-size: ${HEIGHT*0.025}px;
     font-weight: 500
     color: white
     margin-top: ${HEIGHT*0.01}px
