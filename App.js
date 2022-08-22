@@ -465,7 +465,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
           </Stack.Navigator>
           :
 
-          <Stack.Navigator initialRouteName='Landing'>
+          <Stack.Navigator >
 
 
             <Stack.Screen name="Landing" component={LandingScreen} options={{ 
