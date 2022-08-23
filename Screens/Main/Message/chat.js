@@ -56,6 +56,7 @@ export default function ChatScreen({navigation, route}){
     const [channel, setChannel] = useState(null)
     useEffect(()=>{
       onChat = true
+      getGroupChannel()
       sb.addChannelHandler('channels', channelHandler);
       console.log("USEEFFECT Refresh")
       

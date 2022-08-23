@@ -47,7 +47,7 @@ import PropertyDetailScreen from './Screens/Main/Discover/discoverPropertyDetail
 import PropertyPostingScreen from './Screens/Main/Discover/discoverpropertyPosting.js';
 import DiscoverTab from './Screens/Main/Discover/discoverMain.js';
 import DiscoverFilterScreen from './Screens/Main/Discover/Filter/discoverFilter.js';
-import DiscoverSearchScreen from './Screens/Main/Discover/discoverSearch.js'
+
 
 import ProfileTab from './Screens/Main/Profile/profileMain.js';
 import ProfileEditScreen from './Screens/Main/Profile/profileEdit.js';
@@ -80,6 +80,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { CardStyleInterpolators } from '@react-navigation/stack';
+
+
 
 
 import SendBird from 'sendbird'
@@ -295,18 +297,10 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             <Stack.Screen
               name="MessageTabs"
               component={MessageTab}
-              options={{ headerShown: false, cardStyleInterpolator: forFade }}
+              options={{cardStyleInterpolator: forFade, headerStyle:{backgroundColor:'red'} }}
             />
 
 
-            <Stack.Screen
-              name="DiscoverSearch"
-              component={DiscoverSearchScreen}
-              options={{ headerShown: false, cardStyleInterpolator: forFade }}
-              sharedElements={(route, otherRoute, showing) => {
-                return ["searchBox"];
-              }}
-            />
             <Stack.Screen name="PropertyDetail"
               component={PropertyDetailScreen}
               options={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS, gestureEnabled: false }}

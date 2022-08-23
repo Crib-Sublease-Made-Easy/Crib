@@ -13,14 +13,18 @@ import {
   Animated,
   Image,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
+  Modal
   
 } from 'react-native';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLOR, DARKGREY } from '../../../sharedUtils';
 import OneSignal from 'react-native-onesignal';
 
+
 const TEXTGREY = '#969696'
+
+import DiscoverSearchScreen from './discoverSearch'
 
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -41,6 +45,8 @@ import DiscoverFilterScreen from './Filter/discoverFilter';
 
 //Components 
 import PropertyCard from './propertyCard';
+
+
 
 //React Native Map
 import MapView , { Marker }from 'react-native-maps';
@@ -114,6 +120,8 @@ export default function DiscoverScreen({navigation, route}){
     const [loading, setLoading] = useState(false)
     const [userId, setUserId] = useState(null)
     const [mapViewing, setMapViewing] = useState(true)
+
+    const [discoverSearchVisible, setDiscoverSearchVisible] = useState(false)
     useEffect(()=>{
         setFlatlistRefreshing(true)
         console.log("USEFFECT")
@@ -163,6 +171,8 @@ export default function DiscoverScreen({navigation, route}){
             }).start()
         }
     }
+
+
 
     //Close The search bar container to displya all autocomplete results according to if searching is true 
     function closeHeader(){
@@ -431,6 +441,24 @@ export default function DiscoverScreen({navigation, route}){
         }
     }
 
+    function getDistanceFromLatLonInMiles(lat1,lon1,lat2,lon2) {
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2-lat1);  // deg2rad below
+        var dLon = deg2rad(lon2-lon1); 
+        var a = 
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+          Math.sin(dLon/2) * Math.sin(dLon/2)
+          ; 
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var d = R * c; // Distance in km
+        return d * 0.621371; //km to miles
+    }
+
+    function deg2rad(deg) {
+        return deg * (Math.PI/180)
+    }
+
     async function onMarkerClick(item){
         setLoading(true)
        
@@ -533,7 +561,7 @@ export default function DiscoverScreen({navigation, route}){
                 })}}>
                     
                     {selectedPin != undefined && selectedPin != "" &&
-                    <Pressable disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID})}}>
+                    <Pressable disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0]))})}}>
                         <PreviewTopContainer>
                             <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
                             borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
@@ -564,7 +592,8 @@ export default function DiscoverScreen({navigation, route}){
                 {/* This sets the container of the search input */}
                 <Animated.View style={ { height: translation, width: widthtranslation, marginLeft: WIDTH*0.05,
                 shadowColor: 'black', shadowRadius: 13, shadowOpacity: 0.32, backgroundColor:'white',
-                elevation: 7, borderRadius: 25, shadowOffset: {width: 0, height: 0}}}  >
+                elevation: 7, borderRadius: 25, shadowOffset: {width: 0, height: 0}}} 
+                >
                         <SearchInputCancelIconContainer>
 
                             {/* The search icon on the search outlien */}
@@ -572,10 +601,14 @@ export default function DiscoverScreen({navigation, route}){
                                 <Ionicons name='search-outline' size={25}  color={TEXTINPUTBORDERCOLOR} />
                             </SeachIconContainer>
                             {/* This is the actual search input when user press on search bar  */}
+                            {/* <PlaceholderLogoTextContainer 
+                            placeholderTextColor={TEXTINPUTBORDERCOLOR}
+                            placeholder="Search Location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
+                            onEndEditing={()=>{closeHeader(), setSearching(false), Keyboard.dismiss()}}  onFocus={()=> {openHeader(), setSearching(true), setPropertyPreviewCard(false)}}/> */}
                             <PlaceholderLogoTextContainer 
                             placeholderTextColor={TEXTINPUTBORDERCOLOR}
                             placeholder="Search Location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
-                            onEndEditing={()=>{closeHeader(), setSearching(false), Keyboard.dismiss()}}  onFocus={()=> {openHeader(), setSearching(true), setPropertyPreviewCard(false)}}/>
+                            onEndEditing={()=>{closeHeader(), setSearching(false), Keyboard.dismiss()}}  onFocus={()=>setDiscoverSearchVisible(true)}/>
                             <DeleteIconContainer onPress={()=>setlocationQuery("")} style={{ display: searching ? 'flex' : 'none',}}>
                                 <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />
                             </DeleteIconContainer>
@@ -629,6 +662,8 @@ export default function DiscoverScreen({navigation, route}){
         filterAvailableTo={filterAvailableTo} setfilterAvailableTo={setfilterAvailableTo} openMapViewing={()=> setMapViewing(true)} closeMapViewing={()=> setMapViewing(false)}
         loadProperty={loadProperty}
         />
+
+        <DiscoverSearchScreen open={discoverSearchVisible} close={()=> setDiscoverSearchVisible(false)}/>
         
         </SafeAreaView>
         
