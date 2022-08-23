@@ -20,8 +20,10 @@ import {
 
 import {TopContainer, CancelContainer, SearchContainer, SearchResultContainer, SearchResultTitle} from './discoverSearchStyle.js'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { DARKGREY, MEDIUMGREY } from '../../../sharedUtils.js';
+import {PRIMARYCOLOR, WIDTH, HEIGHT} from '../../../sharedUtils.js';
 Ionicons.loadFont()
+
+var axios = require('axios');
 
 
 export default function DiscoverSearchScreen({navigation, route, open, close}){
@@ -32,7 +34,7 @@ export default function DiscoverSearchScreen({navigation, route, open, close}){
     if(query == ""){
         setautocompleteLocation([])
     }
-    setlocationQuery(query);
+    setLocationQuery(query);
     
     var config = {
         method: 'get',
@@ -61,7 +63,7 @@ export default function DiscoverSearchScreen({navigation, route, open, close}){
             <Ionicons name='arrow-back-outline' size={25} />
           </Pressable>
         </CancelContainer>
-        <SearchContainer autoFocus placeholder="Search Location..." onChangeText={(value)=>setLocationQuery(value)}>
+        <SearchContainer autoFocus placeholder="Search Location..." onChangeText={(value)=>autocomplete(value)}>
 
         </SearchContainer>
         <CancelContainer  style={{justifyContent: 'flex-end'}}>
@@ -72,19 +74,20 @@ export default function DiscoverSearchScreen({navigation, route, open, close}){
       </TopContainer>
       <SearchResultContainer>
         <SearchResultTitle>Search Result</SearchResultTitle>
-        {/* {autocompleteLocation.length != 0 &&
+        {autocompleteLocation.length != 0 &&
                                 
             autocompleteLocation.map((value, index)=>(
-                <AutocompleteLocationContainer searching={searching} key={"autocomplete" + value.description + index} onPress={()=>{selectCurrentLocation(value.description), setFilteredProperties([])}}>
+                // <View key={"autocomplete" + value.description + index} onPress={()=>{selectCurrentLocation(value.description), setFilteredProperties([])}}>
+                <View key={"autocomplete" + value.description + index} >
                     <Ionicons name="navigate-circle-outline" size={23} color= {PRIMARYCOLOR} style={{width: WIDTH*0.07}}/>
                     <View>
-                    <LocationMainText key={value.structured_formatting.main_text}>{value.structured_formatting.main_text}</LocationMainText>
-                    <LocationSecondaryText key={value.structured_formatting.secondary_text} >{value.structured_formatting.secondary_text}</LocationSecondaryText>
+                    <Text key={value.structured_formatting.main_text}>{value.structured_formatting.main_text}</Text>
+                    <Text key={value.structured_formatting.secondary_text} >{value.structured_formatting.secondary_text}</Text>
                     </View>
-                </AutocompleteLocationContainer>
+                </View>
             ))
         
-        } */}
+        }
       </SearchResultContainer>
 
     
