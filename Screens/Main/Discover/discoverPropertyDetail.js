@@ -37,6 +37,9 @@ import { Container, PropertyDescription, ImageStyle, CardSectionOne, CardTitle, 
            StickyHeaderContainer,  StickyHeaderIcon} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
 import getFAAmenities, { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY } from '../../../sharedUtils';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faBath, faBed, faEye, faFire, faFireFlameCurved, faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
+import { faWatchmanMonitoring } from '@fortawesome/free-brands-svg-icons';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -261,77 +264,75 @@ export default function PropertyDetailScreen({navigation, route}){
                             <TypeText>{propData.type} for rent</TypeText>
                             <View style={{flexDirection:'row'}}>
                                 <Ionicons name="location"  size={20} style={{marginRight:WIDTH*0.01}}/>
-                                <TypeText style={{color:'black', fontWeight: '400',}}>{route.params.distance} miles</TypeText>
+                                <TypeText style={{color:'black', fontWeight: '500',}}>{route.params.distance} miles</TypeText>
                             </View>
                         </View>
                         <CardTitle>{propData.loc.streetAddr}</CardTitle>
                         <LocationDistanceContainer>
                             <LocationText>{propData.loc.secondaryTxt}</LocationText>
-                            {/* <LocationText>3 miles away</LocationText> */}
                         </LocationDistanceContainer>
-                        <DescriptionContainer>
-                          
-                                {propData.description}
-                           
-                        </DescriptionContainer>
+
                         <BedAndBathContainer>
                             <BedContainer>
                                 <BedTopContainer>
                                 {propData.bed != "Studio" &&
-                                    <Ionicons name='bed' size={30} />
+                                    <FontAwesomeIcon icon={faBed} size={30}/>
                                 }
-                                    <BedNumberText>{propData.bed.replace("P","+")}</BedNumberText>
+                                    {/* <BedNumberText>{propData.bed.replace("P","+")}</BedNumberText> */}
                                 </BedTopContainer>
-                                <BedroomNameText>Bedroom</BedroomNameText>
+                                <BedroomNameText>{propData.bed.replace("P","+")} Bedroom</BedroomNameText>
                             </BedContainer>
                             <BedContainer>
                                 <BedTopContainer>
-                                    <Ionicons name='water' size={30} />
-                                    <BedNumberText>{propData.bath.replace("P","+")}</BedNumberText>
+                                    <FontAwesomeIcon icon={faBath} size={30}/>
+                                    {/* <BedNumberText>{propData.bath.replace("P","+")}</BedNumberText> */}
                                 </BedTopContainer>
-                                <BedroomNameText>Bathroom</BedroomNameText>
+                                <BedroomNameText>{propData.bath.replace("P","+")} Bathroom</BedroomNameText>
                             </BedContainer>
                             <BedContainer>
                                 <BedTopContainer>
-                                    <Ionicons name='flame' size={30} />
-                                    <BedNumberText>
+                                <FontAwesomeIcon icon={faFireFlameSimple} size={30}/>
+                                    {/* <BedNumberText>
                                     {
                                     propData.numberOfViews < 1000 ?
                                     propData.numberOfViews 
                                     :
                                     Math.round(propData.numberOfViews/1000) + "K"
                                     }
-                                    </BedNumberText>
+                                    </BedNumberText> */}
                                 </BedTopContainer>
-                                <BedroomNameText>Views</BedroomNameText>
+                                <BedroomNameText>{
+                                    propData.numberOfViews < 1000 ?
+                                    propData.numberOfViews 
+                                    :
+                                    Math.round(propData.numberOfViews/1000) + "K"
+                                    } Views</BedroomNameText>
                             </BedContainer>
-                            {/* <BedBathLogo>
-                                <Ionicons name="bed-outline" size={25} color={PRIMARYGREY}></Ionicons>
-                                <LocationText>{propData.bed} bedroom</LocationText>
-                            </BedBathLogo>
-                            <BedBathLogo>
-                                <Ionicons name="water-outline" size={25} color={PRIMARYGREY}></Ionicons>
-                                <LocationText>{propData.bath} bathroom</LocationText>
-                            </BedBathLogo> */}
+                          
                         </BedAndBathContainer>
                     </CardSectionOne>   
-                  
+                    <CardSectionOne>   
+                    <InfoHeaderText>Description</InfoHeaderText>
+                        <DescriptionContainer>
+                        
+                            {propData.description}
+                        
+                        </DescriptionContainer>
+                    </CardSectionOne>
                     <CardSectionTwo>
                      
                         <InfoHeaderText>Availability</InfoHeaderText>
                         <InfoContainer> 
-                            
                             <DateContainer>
                                 <Ionicons name='calendar' size={20} />
-                                <DateText style={{color:'black', }}> From    </DateText>
+                                <DateText style={{color:'black', marginLeft: WIDTH*0.025, width: WIDTH*0.15 }}>From    </DateText>
                                 <DateText>{new Date(propData.availableFrom).toDateString()}</DateText>
                             </DateContainer>
                             <DateContainer>
                                 <Ionicons name='calendar' size={20} />
-                                <DateText style={{color:'black',  }}> To    </DateText>
+                                <DateText style={{color:'black', marginLeft: WIDTH*0.025,width: WIDTH*0.15 }}>To   </DateText>
                                 <DateText>{new Date(propData.availableTo).toDateString()}</DateText>
                             </DateContainer>
-                            
                                 
                         </InfoContainer>
                        
@@ -345,19 +346,26 @@ export default function PropertyDetailScreen({navigation, route}){
                                 <Text>Center</Text>
                             </View> */}
                         </InfoHeaderTextAndCenter>
-                        <View style={{width: WIDTH*0.9, height: HEIGHT*0.2, borderRadius:25,}}>
+                        <View style={{width: WIDTH*0.9, height: HEIGHT*0.25, borderRadius:25, marginTop: HEIGHT*0.025 }}>
                         <MapView
                             scrollEnabled={false}
+                            zoomEnabled={false}
                             style={{flex:1, position:'relative', borderRadius:10}}
                             initialRegion={{
-                            latitude: propData.loc.coordinates[1], 
-                            longitude: propData.loc.coordinates[0],
-                            latitudeDelta: 0.01,
-                            longitudeDelta: 0.01,
+                            latitude: (propData.loc.coordinates[1] +route.params.currentLocation[0])/2, 
+                            longitude: (propData.loc.coordinates[0]+ route.params.currentLocation[1]) /2,
+                            latitudeDelta: 0.03,
+                            longitudeDelta: 0.03,
                             }}
                         >
                             <Marker
+                            pinColor='green'
+                            title='Destination'
                             coordinate={{latitude: propData.loc.coordinates[1], longitude: propData.loc.coordinates[0]}}
+                            ></Marker>
+                            <Marker
+                            title='Search Location'
+                            coordinate={{latitude: route.params.currentLocation[0], longitude: route.params.currentLocation[1]}}
                             ></Marker>
                         </MapView>
                         </View>
@@ -368,22 +376,25 @@ export default function PropertyDetailScreen({navigation, route}){
                         <InfoHeaderText>Tenant Information</InfoHeaderText>
                         <TenantInfoContainer>
                             <ProfileImageContainer>
-                                <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.1, width:HEIGHT*0.1, borderRadius:HEIGHT*0.05, backgroundColor:LIGHTGREY}}/>
+                                <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.1, width:HEIGHT*0.1, borderRadius:20, backgroundColor:LIGHTGREY}}/>
                             </ProfileImageContainer>
                             <TenantInfo>
                                 <TenantNameText style={{width: WIDTH*0.6}}>{postedUserData.firstName} {postedUserData.lastName}</TenantNameText>
+                                <View>
                                 {postedUserData.school != "" && 
-                                    <InfoText>School:  {postedUserData.school}</InfoText>
+                                    <InfoText>{postedUserData.school}</InfoText>
                                 }
                                 {postedUserData.occupation != "" && 
-                                    <InfoText>Occupation:  {postedUserData.occupation}</InfoText>
+                                    <InfoText>{postedUserData.occupation}</InfoText>
                                 }
+                                </View>
                             </TenantInfo>
                         </TenantInfoContainer>
                     </CardSectionTwo>
                   
                     <CardSectionOne>
                         <InfoHeaderText>Amenities</InfoHeaderText>
+                        <View style={{marginTop: HEIGHT*0.025}}>
                         {propData.amenities.length != 0 ? propData.amenities.map((value)=>(
                             <AmenitiesItem key={value + "detailamen"}>
                                 {GetFAIconsInBlack(value)}
@@ -396,6 +407,7 @@ export default function PropertyDetailScreen({navigation, route}){
                         <InfoText>No amenities listed ...</InfoText>
                     
                     }
+                    </View>
                     </CardSectionOne>
                     
                 </ScrollView>

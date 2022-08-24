@@ -21,7 +21,7 @@ import {
 import {TopContainer, CancelContainer, SearchContainer, SearchResultContainer, SearchResultTitle,AutocompleteResultItems,
   LocationPrimaryText, LocationSecondaryText} from './discoverSearchStyle.js'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {PRIMARYCOLOR, WIDTH, HEIGHT} from '../../../sharedUtils.js';
+import {PRIMARYCOLOR, WIDTH, HEIGHT, IconPressable} from '../../../sharedUtils.js';
 Ionicons.loadFont()
 
 var axios = require('axios');
@@ -72,9 +72,9 @@ async function pressAutocompleteItem(value){
      
       <TopContainer>
         <CancelContainer style={{justifyContent: 'flex-start'}}>
-          <Pressable onPress={leaveDiscoverSearch}>
+          <IconPressable hitSlop={WIDTH*0.025} onPress={leaveDiscoverSearch}>
             <Ionicons name='arrow-back-outline' size={25} />
-          </Pressable>
+          </IconPressable>
         </CancelContainer>
         <SearchContainer value={locationQuery} autoFocus placeholder="Search Location..." onChangeText={(value)=>autocomplete(value)}
         onSubmitEditing={()=>{autocompleteLocation.length != 0 &&  pressAutocompleteItem(autocompleteLocation[0].description) }}
@@ -82,7 +82,7 @@ async function pressAutocompleteItem(value){
 
         </SearchContainer>
         <CancelContainer  style={{justifyContent: 'flex-end'}}>
-        <Pressable onPress={()=>setLocationQuery("")}>
+        <Pressable hitSlop={WIDTH*0.025} onPress={()=>setLocationQuery("")}>
           <Ionicons name='close-circle'  color='black' size={25}/>
         </Pressable>
         </CancelContainer>
