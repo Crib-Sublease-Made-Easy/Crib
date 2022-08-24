@@ -317,16 +317,16 @@ export default function ProfileScreen({navigation}){
     return(
         <SafeAreaView style={{backgroundColor:'white'}}>
             <HeaderContainer style={{borderBottomWidth: 0}}>
-                <HeaderIndividualContainer style={{justifyContent:'flex-start'}}>
+                <HeaderIndividualContainer style={{justifyContent:'flex-start',}}>
                     <Image source={{uri: profilePic}} 
                     style={{width:WIDTH*0.1, height: WIDTH*0.1, borderRadius: WIDTH*0.05, alignSelf:'center', backgroundColor:EXTRALIGHT}} />
                 </HeaderIndividualContainer> 
                     
-                <HeaderIndividualContainer>
+                <HeaderIndividualContainer style={{width: '80%'}}>
                     <Header>{userData.firstName}</Header>
                 </HeaderIndividualContainer>
 
-                <HeaderIndividualContainer style={{justifyContent:'flex-end'}}>
+                <HeaderIndividualContainer style={{ width:'10%'}}>
                     <Pressable onPress={()=>navigation.navigate('Setting')}>
                         <Ionicons name='cog-outline' size={30} />
                     </Pressable>

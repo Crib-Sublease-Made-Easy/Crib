@@ -36,7 +36,7 @@ import { Container, PropertyDescription, ImageStyle, CardSectionOne, CardTitle, 
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
            StickyHeaderContainer,  StickyHeaderIcon} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import getFAAmenities, { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, DARKGREY, GetFAIcons, GetFAIconsInBlack } from '../../../sharedUtils';
+import getFAAmenities, { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY } from '../../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -214,11 +214,11 @@ export default function PropertyDetailScreen({navigation, route}){
                
                 bouncesZoom={1}
                 scrollEventThrottle={5}
-                onScroll={({nativeEvent}) => {
-                    if(isCloseToTop(nativeEvent)){
-                       navigation.navigate("Discover")
-                    }
-                }}
+                // onScroll={({nativeEvent}) => {
+                //     if(isCloseToTop(nativeEvent)){
+                //        navigation.goBack()
+                //     }
+                // }}
                 >
                 
                     <View style={{height:HEIGHT*0.35, width:WIDTH}}>
@@ -257,10 +257,15 @@ export default function PropertyDetailScreen({navigation, route}){
                     </View>
                     
                     <CardSectionOne>
-                        <TypeText>{propData.type} for rent</TypeText>
+                        <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                            <TypeText>{propData.type} for rent</TypeText>
+                            <View style={{flexDirection:'row'}}>
+                                <Ionicons name="location"  size={20} style={{marginRight:WIDTH*0.01}}/>
+                                <TypeText style={{color:'black', fontWeight: '400',}}>{route.params.distance} miles</TypeText>
+                            </View>
+                        </View>
                         <CardTitle>{propData.loc.streetAddr}</CardTitle>
                         <LocationDistanceContainer>
-                            <Ionicons name="location-outline" size={20} />
                             <LocationText>{propData.loc.secondaryTxt}</LocationText>
                             {/* <LocationText>3 miles away</LocationText> */}
                         </LocationDistanceContainer>

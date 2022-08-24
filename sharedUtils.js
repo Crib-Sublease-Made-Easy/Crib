@@ -21,7 +21,7 @@ export const OPACITYPRIMARYCOLOR = 'rgba(133, 89, 227, 1)'
 //Dark Grey
 export const TEXTINPUTBORDERCOLOR = '#989898'
 
-export const DARKGREY = '#989898'
+export const DARKGREY = '#7a7a7a'
 
 //Medium Grey 
 export const MEDIUMGREY = '#D9D9D9'
@@ -39,7 +39,7 @@ export const WIDTH = Dimensions.get('screen').width;
 
 // export const  = 'NotoSerif'
 //Progress Bar
-export const TESTFONT = 'Merriweather'
+export const ROBOTOFONTFAMILY= 'Roboto-Regular'
 
 export const ProgressBarCapacity = styled.View`
     width: ${WIDTH*0.8}px;
@@ -319,7 +319,7 @@ export const GetAmenitiesIcon = (name) =>{
 }
 
 export const HeaderContainer = styled.View`
-    width: ${WIDTH}px;
+    width: ${WIDTH*0.9}px;
     height: ${HEIGHT*0.05}px;
     border-top-right-radius: 20px;
     border-top-left-radius: 20px;

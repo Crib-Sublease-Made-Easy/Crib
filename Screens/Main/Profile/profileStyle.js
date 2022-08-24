@@ -232,10 +232,10 @@ export const FavPropertyCardDateContainer = styled.View`
   flex-direction: row
 `
 export const HeaderIndividualContainer = styled.View`
-  width: 33.3%
+  
   justify-content: center
   align-items: center
-  padding-horizontal: 10%
+  
   flex-direction: row
 `
 

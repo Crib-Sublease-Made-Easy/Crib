@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Dimensions, Pressable} from 'react-native';
 
 import styled from 'styled-components/native';
-import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR, HEIGHT, WIDTH,  TESTFONT } from '../../../sharedUtils';
+import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR, HEIGHT, WIDTH,  TESTFONT, ROBOTOFONTFAMILY } from '../../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -27,6 +27,7 @@ export const CardTitle = styled.Text`
     margin-top: ${HEIGHT*0.025}px
     font-weight: 500;
     width: ${WIDTH*0.9}px;
+    font-family: ${ROBOTOFONTFAMILY}
    
 `
 export const CardSectionOne = styled.View`
@@ -40,13 +41,15 @@ export const LocationDistanceContainer = styled.View`
     width: ${WIDTH*0.9}px;
     flex-direction: row
     align-items: center;
+    font-weight: 500;
+    font-family: ${ROBOTOFONTFAMILY}
    
 `
 export const LocationText = styled.Text`
-   
+    font-family: ${ROBOTOFONTFAMILY}
     font-size: ${HEIGHT*0.0175}px;
     font-weight: 400;
-    color: black
+    color: ${DARKGREY}
 `
 
 export const AmenitiesText = styled.Text`
@@ -220,9 +223,8 @@ export const DescriptionContainer = styled.Text`
 `
 
 export const TypeText = styled.Text`
-    
+    font-family: ${ROBOTOFONTFAMILY}
     font-size: ${HEIGHT*0.02}px;
-    width: ${WIDTH*0.9}px
     align-self: center;
     text-align: left
     font-weight: 600

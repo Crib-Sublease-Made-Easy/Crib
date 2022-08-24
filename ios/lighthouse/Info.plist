@@ -9,6 +9,11 @@
 		<string>EBGaramond-Medium.ttf</string>
 		<string>EBGaramond-Regular.ttf</string>
 		<string>EBGaramond-SemiBold.ttf</string>
+		<string>Roboto-Black.ttf</string>
+		<string>Roboto-Bold.ttf</string>
+		<string>Roboto-Medium.ttf</string>
+		<string>Roboto-Regular.ttf</string>
+		<string>Roboto-Thin.ttf</string>
 	</array>
 	<key>CFBundleIconFiles</key>
 	<array>

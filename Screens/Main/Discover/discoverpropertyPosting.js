@@ -360,9 +360,10 @@ export default function PropertyPostingScreen({ navigation }) {
     async function selectGallery(name) {
         console.log(name)
         ImagePicker.openPicker({
-            width: 300,
-            height: 300,
+            width: 812,
+            height: 812,
             cropping:true,
+            compressImageQuality: 0.8
             
           }).then(image => {
             console.log(image.path)

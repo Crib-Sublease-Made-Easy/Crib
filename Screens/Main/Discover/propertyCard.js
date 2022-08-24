@@ -246,7 +246,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
 
         return(
             <CardContainer 
-            onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId, incrementViewCount : true})} >
+            onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId, incrementViewCount : true, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0])) })} >
                 {/* <SharedElement id="0"> */}
                 <Text>{index}</Text>
                     <PropertyImageContainer >
@@ -270,7 +270,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                         
                           <LocationFont style={{maxWidth: WIDTH*0.5}}>{data.item.propertyInfo.loc.secondaryTxt}</LocationFont>
                           
-                          <PriceFont><Text style={{fontWeight:'700'}}>${data.item.propertyInfo.price}</Text>/month</PriceFont>
+                          <PriceFont><Text style={{fontWeight:'700'}}>${data.item.propertyInfo.price}</Text> / month</PriceFont>
                         </LocationAndPrice>
                         <DateFont>{new Date(data.item.propertyInfo.availableFrom).getDate() + " " +
                                   new Date(data.item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) + " " + 
@@ -307,7 +307,9 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
       }]}>
         <DragGreyLineContainer>
           <DragGreyLine></DragGreyLine>
-          <PropertiesLength>{length} properties found</PropertiesLength>
+          {length != 0 && 
+            <PropertiesLength>{length} properties found</PropertiesLength>
+          }
         </DragGreyLineContainer>
         {flatlistRefreshing ?
         <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />
