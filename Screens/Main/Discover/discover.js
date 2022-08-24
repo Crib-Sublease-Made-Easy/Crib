@@ -75,7 +75,7 @@ export default function DiscoverScreen({navigation, route}){
     //The location in [lat,long] of the user input. It is set as SF in the beginning
     const [currentLocation, setCurrentLocation] = useState((userInitialLocation == null? [37.7749,-122.4194] :  userInitialLocation) )
     //The location of the user input in string
-    const [locationQuery, setlocationQuery] = useState("")
+    const [locationQuery, setlocationQuery] = useState("Search Location ...")
     //The data of the pins to acess a field its pinsData.item.field
     const [pinsData, setPinsData] = useState([])
     //Toggle to retrieve more properties
@@ -414,11 +414,12 @@ export default function DiscoverScreen({navigation, route}){
     //setSearching to false so to shrink the header
     //Dismiss keyboard
     function selectCurrentLocation(locationQueryName){
-        if (locationQueryName != "" && autocompleteLocation.length != 0){
-            setautocompleteLocation([])
+        console.log(locationQueryName)
+        if (locationQueryName != ""){
+            console.log("hello")
+           
             setlocationQuery(locationQueryName)
             setSearching(false)
-            Keyboard.dismiss()
             let spacelessLocation = locationQueryName.replaceAll(" ", "+");
             var config = {
                 method: 'get',
@@ -605,13 +606,13 @@ export default function DiscoverScreen({navigation, route}){
                             placeholderTextColor={TEXTINPUTBORDERCOLOR}
                             placeholder="Search Location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
                             onEndEditing={()=>{closeHeader(), setSearching(false), Keyboard.dismiss()}}  onFocus={()=> {openHeader(), setSearching(true), setPropertyPreviewCard(false)}}/> */}
-                            <PlaceholderLogoTextContainer 
-                            placeholderTextColor={TEXTINPUTBORDERCOLOR}
-                            placeholder="Search Location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
-                            onEndEditing={()=>{closeHeader(), setSearching(false), Keyboard.dismiss()}}  onFocus={()=>setDiscoverSearchVisible(true)}/>
+                            
                             <DeleteIconContainer onPress={()=>setlocationQuery("")} style={{ display: searching ? 'flex' : 'none',}}>
                                 <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />
                             </DeleteIconContainer>
+                            <PlaceholderLogoTextContainer onPress={()=>setDiscoverSearchVisible(true)}>
+                                <Text style={{height: HEIGHT*0.02, width:'100%', alignItems:'center', color: locationQuery == "Search Location ..." ? DARKGREY : 'black'}}>{locationQuery}</Text>
+                            </PlaceholderLogoTextContainer>
                             <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
                                 {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) || !(dateCompare(new Date(1759190400000), new Date(filterAvailableTo))) || !(dateCompare(new Date(), new Date(filterAvailableFrom)))?
                                 <View style={{borderWidth:2, padding: 7, borderRadius: 50, borderColor: '#8559E3' }}>
@@ -623,21 +624,10 @@ export default function DiscoverScreen({navigation, route}){
                                 </View>                        
                                 }
                             </DeleteIconContainer> 
+                            
 
                         </SearchInputCancelIconContainer>
-                        {autocompleteLocation.length != 0 &&
-                                
-                            autocompleteLocation.map((value, index)=>(
-                                <AutocompleteLocationContainer searching={searching} key={"autocomplete" + value.description + index} onPress={()=>{selectCurrentLocation(value.description), setFilteredProperties([])}}>
-                                    <Ionicons name="navigate-circle-outline" size={23} color= {PRIMARYCOLOR} style={{width: WIDTH*0.07}}/>
-                                    <View>
-                                    <LocationMainText key={value.structured_formatting.main_text}>{value.structured_formatting.main_text}</LocationMainText>
-                                    <LocationSecondaryText key={value.structured_formatting.secondary_text} >{value.structured_formatting.secondary_text}</LocationSecondaryText>
-                                    </View>
-                                </AutocompleteLocationContainer>
-                            ))
                         
-                        }
                 </Animated.View>
             </Header>
         <View style={{width:WIDTH, height:HEIGHT*0.05, }}>
@@ -663,7 +653,7 @@ export default function DiscoverScreen({navigation, route}){
         loadProperty={loadProperty}
         />
 
-        <DiscoverSearchScreen open={discoverSearchVisible} close={()=> setDiscoverSearchVisible(false)}/>
+        <DiscoverSearchScreen open={discoverSearchVisible} close={()=> setDiscoverSearchVisible(false)} selectCurrentLocation={selectCurrentLocation}/>
         
         </SafeAreaView>
         
