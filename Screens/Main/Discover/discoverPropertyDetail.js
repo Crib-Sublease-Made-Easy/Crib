@@ -263,8 +263,13 @@ export default function PropertyDetailScreen({navigation, route}){
                         <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                             <TypeText>{propData.type} for rent</TypeText>
                             <View style={{flexDirection:'row'}}>
-                                <Ionicons name="location"  size={20} style={{marginRight:WIDTH*0.01}}/>
-                                <TypeText style={{color:'black', fontWeight: '500',}}>{route.params.distance} miles</TypeText>
+                                {route.params.distance != undefined &&
+                                <View>
+                                    <Ionicons name="location"  size={20} style={{marginRight:WIDTH*0.01}}/>
+                                    
+                                    <TypeText style={{color:'black', fontWeight: '500',}}>{route.params.distance} miles</TypeText>
+                                </View>
+                                }
                             </View>
                         </View>
                         <CardTitle>{propData.loc.streetAddr}</CardTitle>
@@ -352,8 +357,8 @@ export default function PropertyDetailScreen({navigation, route}){
                             zoomEnabled={false}
                             style={{flex:1, position:'relative', borderRadius:10}}
                             initialRegion={{
-                            latitude: (propData.loc.coordinates[1] +route.params.currentLocation[0])/2, 
-                            longitude: (propData.loc.coordinates[0]+ route.params.currentLocation[1]) /2,
+                            latitude: route.params.currentLocation == undefined ? propData.loc.coordinates[1] : (propData.loc.coordinates[1] +route.params.currentLocation[0])/2, 
+                            longitude: route.params.currentLocation == undefined ? propData.loc.coordinates[0] : (propData.loc.coordinates[0]+ route.params.currentLocation[1]) /2,
                             latitudeDelta: 0.03,
                             longitudeDelta: 0.03,
                             }}
@@ -363,10 +368,12 @@ export default function PropertyDetailScreen({navigation, route}){
                             title='Destination'
                             coordinate={{latitude: propData.loc.coordinates[1], longitude: propData.loc.coordinates[0]}}
                             ></Marker>
+                            {route.params.currentLocation != undefined &&
                             <Marker
                             title='Search Location'
                             coordinate={{latitude: route.params.currentLocation[0], longitude: route.params.currentLocation[1]}}
                             ></Marker>
+                            }
                         </MapView>
                         </View>
                     </CardSectionTwo>
@@ -393,7 +400,7 @@ export default function PropertyDetailScreen({navigation, route}){
                     </CardSectionTwo>
                   
                     <CardSectionOne>
-                        <InfoHeaderText>Amenities</InfoHeaderText>
+                        <InfoHeaderText>Amenities ({propData.amenities.length})</InfoHeaderText>
                         <View style={{marginTop: HEIGHT*0.025}}>
                         {propData.amenities.length != 0 ? propData.amenities.map((value)=>(
                             <AmenitiesItem key={value + "detailamen"}>

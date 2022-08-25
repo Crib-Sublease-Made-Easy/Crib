@@ -241,7 +241,7 @@ export const GetFAIconsInBlack = (name) =>{
         return <FontAwesomeIcon icon={faBottleDroplet} color='black'/>
     }
     else if(name=="Pots_Pans"){
-        
+        return <FontAwesomeIcon icon={faKitchenSet} color='black'/>
     }
     else if(name=="Utilities_Included"){
         return <FontAwesomeIcon icon={faPowerOff} color='black'/>

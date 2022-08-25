@@ -10,7 +10,7 @@ import {
   Dimensions,
   Pressable,
   Animated,
-
+  Modal
 } from 'react-native';
 
 const PROPERTIESTYPES = 
@@ -27,8 +27,6 @@ const BATHROOMTYPES = ["1", "2", "3", "4P"];
 const PRIMARYGREY = '#5e5d5d'
 
 import { MEDIUMGREY,HEIGHT, WIDTH, DARKGREY, amenitiesList, GetAmenitiesIcon, GetFAIcons, GetFAIconsInBlack, PRIMARYCOLOR } from '../../../../sharedUtils';
-
-import Modal from "react-native-modal";
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
@@ -168,12 +166,12 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
 
     return(
        
-        <Modal hideModalContentWhileAnimating={true} style={ModalStyle} isVisible={open} animationIn="slideInUp" animationOut='slideOutDown' backdropOpacity={0}>
+        <Modal visible={open} animationType='slide'>
         <SafeAreaView style={{flex: 1}}>
             <Animated.View>
             <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={checkResetAndBack}>
+                    <Pressable hitSlop={WIDTH*0.02} style={{height:'50%', width:'50%', alignItems:'center'}} onPress={checkResetAndBack}>
                         <Ionicons name='arrow-back-outline' size={25} />
                     </Pressable>
                 </BackButtonContainer>
