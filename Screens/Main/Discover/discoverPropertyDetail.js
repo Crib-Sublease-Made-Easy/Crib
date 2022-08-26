@@ -1,22 +1,12 @@
 import React, {useState, useEffect, useRef, useContext, useCallback} from 'react';
 import {
-    SafeAreaView,
     ScrollView,
-    StatusBar,
-    StyleSheet,
     Text,
-    useColorScheme,
     View,
     Dimensions,
-    Button,
-    Keyboard,
-    TextInput,
     Image,
-    Pressable,
-    RefreshControl,
-    Vibration
   } from 'react-native';
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import SecureStorage from 'react-native-secure-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -28,17 +18,15 @@ Ionicons.loadFont()
 
 
 
-import { Container, PropertyDescription, ImageStyle, CardSectionOne, CardTitle, LocationDistanceContainer,
-        LocationText, BedAndBathContainer, BedBathLogo, Divider, CardSectionTwo, InfoHeaderText,
-            InfoContainer, BothInfoContainer, InfoText, DescriptionText, AmenitiesItem, Footer,
+import { Container, PropertyDescription, CardSectionOne, CardTitle, LocationDistanceContainer,
+        LocationText, BedAndBathContainer, CardSectionTwo, InfoHeaderText,
+            InfoContainer, InfoText, AmenitiesItem, Footer,
             PricePerMonth, ContactTanentButton, TenantInfoContainer, TenantInfo, ProfileImageContainer,
            DateContainer, DateText, DescriptionContainer, AmenitiesText, TypeText, BedContainer,
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
            StickyHeaderContainer,  StickyHeaderIcon} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import getFAAmenities, { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY } from '../../../sharedUtils';
-
-const PRIMARYGREY = '#5e5d5d'
+import getFAAmenities, { LIGHTGREY, PRIMARYCOLOR, GetFAIconsInBlack } from '../../../sharedUtils';
 
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
@@ -169,28 +157,6 @@ export default function PropertyDetailScreen({navigation, route}){
             }) 
             .then(res => res.json()).then(async message =>{
                 console.log(message)
-                
-                    
-                
-                    // const tempFavProp = await AsyncStorage.getItem("favoritePropertiesId")
-                    // if(tempFavProp != null){
-                    //     const JSONtempFavProp = JSON.parse(tempFavProp)
-                    //     let temp = [];
-                        
-                    //     JSONtempFavProp.forEach(element => {
-                    //         temp.push(element)
-                    //     });
-                    //     temp.push(route.params.data.propertyInfo._id)
-                        
-                    //     await AsyncStorage.setItem("favoritePropertiesId", JSON.stringify(temp))
-                    // }
-                    // else{
-                    //     let temp = [];
-                    //     temp.push(route.params.data.propertyInfo._id)
-                    //     await AsyncStorage.setItem("favoritePropertiesId",  JSON.stringify(temp))
-                    // }
-                    
-
                 await AsyncStorage.removeItem("favoriteProperties");
                
                 setLiked(!liked)
@@ -214,11 +180,6 @@ export default function PropertyDetailScreen({navigation, route}){
                
                 bouncesZoom={1}
                 scrollEventThrottle={5}
-                // onScroll={({nativeEvent}) => {
-                //     if(isCloseToTop(nativeEvent)){
-                //        navigation.goBack()
-                //     }
-                // }}
                 >
                 
                     <View style={{height:HEIGHT*0.35, width:WIDTH}}>
@@ -305,14 +266,6 @@ export default function PropertyDetailScreen({navigation, route}){
                                 </BedTopContainer>
                                 <BedroomNameText>Views</BedroomNameText>
                             </BedContainer>
-                            {/* <BedBathLogo>
-                                <Ionicons name="bed-outline" size={25} color={PRIMARYGREY}></Ionicons>
-                                <LocationText>{propData.bed} bedroom</LocationText>
-                            </BedBathLogo>
-                            <BedBathLogo>
-                                <Ionicons name="water-outline" size={25} color={PRIMARYGREY}></Ionicons>
-                                <LocationText>{propData.bath} bathroom</LocationText>
-                            </BedBathLogo> */}
                         </BedAndBathContainer>
                     </CardSectionOne>   
                   

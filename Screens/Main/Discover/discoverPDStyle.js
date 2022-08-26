@@ -1,8 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {Dimensions, Pressable} from 'react-native';
-
+import {Pressable} from 'react-native';
 import styled from 'styled-components/native';
-import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR, HEIGHT, WIDTH,  TESTFONT, ROBOTOFONTFAMILY } from '../../../sharedUtils';
+import { DARKGREY, EXTRALIGHT, MEDIUMGREY, PRIMARYCOLOR, HEIGHT, WIDTH,  TESTFONT, ROBOTOFONTFAMILY } from '../../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 

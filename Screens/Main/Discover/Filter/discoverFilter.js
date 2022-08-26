@@ -1,62 +1,43 @@
-import React, {useEffect, useState, useRef}  from 'react';
+import React, {useEffect, useState}  from 'react';
 import {
   SafeAreaView,
   ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
   View,
-  Dimensions,
   Pressable,
   Animated,
-
 } from 'react-native';
+import { MEDIUMGREY,HEIGHT, WIDTH, amenitiesList, GetFAIconsInBlack, PRIMARYCOLOR } from '../../../../sharedUtils';
+import Modal from "react-native-modal";
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Slider from '@react-native-community/slider';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import DatePicker from 'react-native-date-picker'
+import {HeaderContainer, BackButtonContainer,NameContainer, Header, ModalStyle,
+        InputForm,InputSection, InputName,InputNameContainer, InputOptionContainer,
+        InputPriceRangeContainer, PriceRangeText, PriceInputSection,
+        InputSectionCol, TypeOption, TypeContainer, PropertyTypeName, BedroomOptions,
+        BedroomOptionsText, AmenitiesContainer, NameIcon, DateInputPressable, Footer, ResetText, ApplyButton, 
+    ApplyText} from './discoverFilterStyle';
+FontAwesome.loadFont()
+Ionicons.loadFont()
+
 
 const PROPERTIESTYPES = 
-[{type: "Room", icon:'bed'},
-  {type: "House", icon:'home'}, 
-  {type: "Apartment", icon: 'building'}, 
-  {type:"Studio", icon :'user'}
+[
+    {type: "Room", icon:'bed'},
+    {type: "House", icon:'home'}, 
+    {type: "Apartment", icon: 'building'}, 
+    {type:"Studio", icon :'user'}
 ];
 
 const BEDROOMTYPES = ["Studio","1" ,"2", "3", "4P"];
 const BATHROOMTYPES = ["1", "2", "3", "4P"];
-
-
-const PRIMARYGREY = '#5e5d5d'
-
-import { MEDIUMGREY,HEIGHT, WIDTH, DARKGREY, amenitiesList, GetAmenitiesIcon, GetFAIcons, GetFAIconsInBlack, PRIMARYCOLOR } from '../../../../sharedUtils';
-
-import Modal from "react-native-modal";
-
-import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
-
-
-import Slider from '@react-native-community/slider';
-
-
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
-
-import DatePicker from 'react-native-date-picker'
-
-
-import { Container, HeaderContainer, BackButtonContainer,NameContainer, ResetButtonContainer, Header, ModalStyle,
-        InputForm,InputSection, InputName,InputNameContainer, InputOptionContainer, InputPressableContainer,
-        InputPriceRangeContainer, PriceRangeText, PriceInputSection, AmenitiesInputSection, AmenitiesList,
-        InputSectionCol, BedBathNumberText, TypeOption, TypeContainer, PropertyTypeName, BedroomOptions,
-        BedroomOptionsText, AmenitiesContainer, NameIcon, DateInputPressable, Footer, ResetText, ApplyButton, 
-    ApplyText} from './discoverFilterStyle';
-
 export default function DiscoverFilterScreen({navigation, currentLocation, open, close, setFilteredProperties, setPropertyPage, setrieverieveMore,retrieveAllPins
     ,filterType, setfilterType, filterDistance, setfilterDistance, filterBedroom, setfilterBedroom,filterBathroom, setfilterBathroom
     ,filterPriceHigher, setfilterPriceHigher, filterAmenities, setfilterAmenities, propertyAmenities, setpropertyAmenities, setRetrieveMore,
     filterPreviewValue, setfilterPreviewValue, filterPreviewDistanceValue, setfilterPreviewDistanceValue, filterAvailableFrom, setfilterAvailableFrom,
     filterAvailableTo, setfilterAvailableTo, loadProperty
 }){
-    const [containerModal, setcontainerModal] = useState(false);
     const [scrollEnabled, setscrollEnabled] = useState(true)
     const [reset, setReset] = useState(false)
 
@@ -99,7 +80,6 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     }
    
     useEffect(()=>{
-       setcontainerModal(true)
     },[])
 
     function filter(){
@@ -109,9 +89,6 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     if(filterType != ""){
         s = s + "&type=" + filterType;
     }
-    // if(filterSort != ""){
-    //     s = s + "&type=" + filterSort;
-    // }
     if(filterDistance != ""){
         s = s + "&maxDistance=" + parseInt(filterDistance);
     }
@@ -180,11 +157,6 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                 <NameContainer>
                     <Header>Filter</Header>
                 </NameContainer>
-                {/* <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={filter}>
-                        <Ionicons name='checkmark-outline' size={25} />
-                    </Pressable>
-                </ResetButtonContainer> */}
             </HeaderContainer>
             <ScrollView style={{height:HEIGHT*0.75}}showsVerticalScrollIndicator={false} scrollEnabled={scrollEnabled}>
             <InputForm>
@@ -219,29 +191,6 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                         </InputPriceRangeContainer>
                     </InputSection>
                     <View style={{alignItems:'center'}}>
-                    {/* <MultiSlider
-                    isMarkersSeparated={true}
-                    enabledTwo={false}
-                    values={[filterPriceHigher]}
-                    onValueChangeStart={()=> setscrollEnabled(false)}
-                    onValueChangeFinish={()=> setscrollEnabled(true)}
-                    onValueChange={(value)=> setfilterPriceHigher(value)}
-                    min={0}
-                    max={10000}
-                    
-                    step={10}
-                    
-                    
-                    selectedStyle={{
-                        backgroundColor: PRIMARYCOLOR
-                    }}
-                    containerStyle={{
-                        width:WIDTH,
-                        alignItems:'center'
-                    }}
-                    sliderLength={WIDTH*0.8}
-                
-                    /> */}
                     <Slider
                         style={{width: WIDTH*0.8, height: HEIGHT*0.1}}
                         value={filterPriceHigher}
@@ -329,29 +278,6 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                         </InputPriceRangeContainer>
                     </InputSection>
                     <View style={{alignItems:'center'}}>
-                    {/* <MultiSlider
-                    isMarkersSeparated={true}
-                    enabledTwo={false}
-                    values={[filterDistance]}
-                    onValuesChangeStart={()=> setscrollEnabled(false)}
-                    onValuesChangeFinish={()=> setscrollEnabled(true)}
-                    onValuesChange={(value)=> setfilterDistance(value)}
-                    min={1}
-                    max={150}
-                    
-                    step={1}
-                    enabledOne={true}
-                    
-                    selectedStyle={{
-                        backgroundColor: PRIMARYCOLOR
-                    }}
-                    containerStyle={{
-                        width:WIDTH,
-                        alignItems:'center'
-                    }}
-                    sliderLength={WIDTH*0.8}
-                
-                    /> */}
                     <Slider
                         style={{width: WIDTH*0.8, height: HEIGHT*0.1}}
                         value={filterPreviewDistanceValue}
@@ -408,23 +334,6 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                     
                    
                         <AmenitiesContainer>
-                            {/* {amenitiesList.map((value, index) => (
-                                <View key={value.name + index + 'view'} style={{
-                                    minWidth: WIDTH * 0.35, width: value.name.length * 0.03 * WIDTH, height: HEIGHT * 0.0575, justifyContent: 'center',
-                                    paddingRight: WIDTH * 0.03
-                                }}>
-                                    <Pressable key={value.name + 'pressable'} onPress={() => updateAmenities(value.name)} style={{
-                                        borderWidth: 3, borderColor: propertyAmenities.indexOf(value.name) == -1 ? value.color : '#0085FF', height: HEIGHT * 0.045,
-                                        borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
-                                    }}>
-                                        <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                            <Ionicons name={value.icon} size={15} />
-                                            {"   "}{value.name}
-                                        </Text>
-                                    </Pressable>
-
-                                </View>
-                            ))} */}
                             {amenitiesList.map((value, index)=>(
                               
                                 <TypeOption key={value.name + "amenitiesfilter"} >

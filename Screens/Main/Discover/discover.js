@@ -1,63 +1,37 @@
-import React, {useState, useEffect, useRef, useMemo, useCallback, useContext} from 'react';
+import React, {useState, useEffect, useRef, useCallback, useContext} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
   Text,
-  useColorScheme,
   View,
-  Dimensions,
-  Button,
   Keyboard,
   Animated,
-  Image,
-  ActivityIndicator,
-  TouchableOpacity,
-  Modal
-  
+  Image
 } from 'react-native';
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLOR, DARKGREY } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
 import OneSignal from 'react-native-onesignal';
-
-
-const TEXTGREY = '#969696'
-
+import { CardStyleInterpolators } from '@react-navigation/stack';
 import DiscoverSearchScreen from './discoverSearch'
-
-
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
-
-import {LocationMainText, LocationSecondaryText, LogoText, PressableContainer, SearchInputContainerText,
-    PlaceholderLogoTextContainer, Header, AutocompleteLocationContainer, PreviewTopContainer, PreviewBottomContainer,
-    PreviewTopLeftContaier,PreviewTopRightContaier, PreviewNameText, PreviewPriceText, PreviewLocationText, 
-    SeachIconContainer, DeleteIconContainer, CustomMarker,  SearchHerePressable, SearchHereText } from './discoverStyle';
-
+import {LocationMainText, LocationSecondaryText, PlaceholderLogoTextContainer, Header, AutocompleteLocationContainer, 
+    PreviewTopContainer, PreviewBottomContainer, PreviewPriceText, PreviewLocationText, SeachIconContainer, DeleteIconContainer, 
+    CustomMarker,  SearchHerePressable, SearchHereText } from './discoverStyle';
 import { SearchInputCancelIconContainer } from './discoverStyle';
-
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-
 import DiscoverFilterScreen from './Filter/discoverFilter';
-
 //Components 
 import PropertyCard from './propertyCard';
-
-
-
 //React Native Map
 import MapView , { Marker }from 'react-native-maps';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-
 import { UserContext } from '../../../UserContext';
 
+const TEXTGREY = '#969696'
+FontAwesome.loadFont()
+Ionicons.loadFont()
 var axios = require('axios');
 
 export default function DiscoverScreen({navigation, route}){
-
 
     const {sb, USERID, userInitialLocation} = useContext(UserContext);
       //Method for handling notifications received while app in foreground
@@ -160,19 +134,6 @@ export default function DiscoverScreen({navigation, route}){
             return false;
         }
     }
-    //Open The search bar container to displya all autocomplete results according to if searching is true 
-    function openHeader(){
-        if(!searching){
-            Animated.spring(translation,{
-                toValue: HEIGHT*0.445 ,
-                bounciness:0,
-                speed: 6,
-                useNativeDriver:false,
-            }).start()
-        }
-    }
-
-
 
     //Close The search bar container to displya all autocomplete results according to if searching is true 
     function closeHeader(){
@@ -288,9 +249,6 @@ export default function DiscoverScreen({navigation, route}){
         if(filterType != ""){
             s = s + "&type=" + filterType;
         }
-        // if(filterSort != ""){
-        //     s = s + "&type=" + filterSort;
-        // }
         if(filterDistance != ""){
             s = s + "&maxDistance=" + parseInt(filterDistance);
         }
@@ -601,10 +559,6 @@ export default function DiscoverScreen({navigation, route}){
                                 <Ionicons name='search-outline' size={25}  color={TEXTINPUTBORDERCOLOR} />
                             </SeachIconContainer>
                             {/* This is the actual search input when user press on search bar  */}
-                            {/* <PlaceholderLogoTextContainer 
-                            placeholderTextColor={TEXTINPUTBORDERCOLOR}
-                            placeholder="Search Location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
-                            onEndEditing={()=>{closeHeader(), setSearching(false), Keyboard.dismiss()}}  onFocus={()=> {openHeader(), setSearching(true), setPropertyPreviewCard(false)}}/> */}
                             <PlaceholderLogoTextContainer 
                             placeholderTextColor={TEXTINPUTBORDERCOLOR}
                             placeholder="Search Location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
@@ -663,7 +617,10 @@ export default function DiscoverScreen({navigation, route}){
         loadProperty={loadProperty}
         />
 
-        <DiscoverSearchScreen open={discoverSearchVisible} close={()=> setDiscoverSearchVisible(false)}/>
+        <DiscoverSearchScreen open={discoverSearchVisible}               options={{
+                cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+              }}
+              close={()=> setDiscoverSearchVisible(false)}/>
         
         </SafeAreaView>
         
