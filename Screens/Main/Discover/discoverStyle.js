@@ -55,12 +55,15 @@ export const SearchInputContainerText = styled.Text`
 // borderWidth: 1, borderColor: '#E0E0E0',  alignItems: 'center', shadowColor: 'black', shadowRadius: 1, shadowOpacity: 0.2, backgroundColor:'#F8F8F8',
 // elevation: 5, borderRadius: 20, flexDirection: 'row', shadowOffset: {width: 0, height: 3}}
 
-export const PlaceholderLogoTextContainer  = styled.TextInput`
+export const PlaceholderLogoTextContainer  = styled.Pressable`
   flex-direction: row;
   height: 100%
   width: 70%
   padding-left: ${WIDTH*0.02}px
   align-items: center  
+  flex-direction: row
+ 
+ 
 `
 
 export const ModalSearchContainer = styled.View`

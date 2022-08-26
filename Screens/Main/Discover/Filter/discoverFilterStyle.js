@@ -6,7 +6,6 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, EXTRALIGHT, MEDIUMGREY, DARKGRE
 const PRIMARYGREY = '#5e5d5d'
 
 
-export const ModalStyle = {padding:0, margin:0, flex: 1, backgroundColor: 'white',}
 
 
 export const HeaderContainer = styled.View`

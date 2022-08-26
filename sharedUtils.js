@@ -29,7 +29,7 @@ export const MEDIUMGREY = '#D9D9D9'
 //Light Grey
 export const LIGHTGREY = '#E0E0E0'
 
-export const EXTRALIGHT = '#EFEFEF'
+export const EXTRALIGHT = '#f5f5f5'
 
 export const GOOGLEBLUE = '#4c8bf5'
 
@@ -241,7 +241,7 @@ export const GetFAIconsInBlack = (name) =>{
         return <FontAwesomeIcon icon={faBottleDroplet} color='black'/>
     }
     else if(name=="Pots_Pans"){
-        
+        return <FontAwesomeIcon icon={faKitchenSet} color='black'/>
     }
     else if(name=="Utilities_Included"){
         return <FontAwesomeIcon icon={faPowerOff} color='black'/>
@@ -386,4 +386,8 @@ export const ContinueText = styled.Text`
     font-weight: 400
     color: white
     
+`
+
+export const IconPressable = styled.Pressable`
+
 `

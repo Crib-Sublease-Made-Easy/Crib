@@ -19,11 +19,12 @@ export const PropertyDescription = styled.View`
     position: relative
 `
 
-export const CardTitle = styled.Text`
+export const CardTitle = styled.Text`   
+
     max-height: ${HEIGHT*0.075}px
     font-size: ${HEIGHT*0.03}px;
     margin-top: ${HEIGHT*0.025}px
-    font-weight: 500;
+    font-weight: 600;
     width: ${WIDTH*0.9}px;
     font-family: ${ROBOTOFONTFAMILY}
    
@@ -35,18 +36,18 @@ export const CardSectionOne = styled.View`
     align-self:center
 `
 export const LocationDistanceContainer = styled.View`
-    height: ${HEIGHT*0.05}px;
     width: ${WIDTH*0.9}px;
     flex-direction: row
     align-items: center;
-    font-weight: 500;
-    font-family: ${ROBOTOFONTFAMILY}
+    
+    padding-vertical: ${HEIGHT*0.01}px
+  
    
 `
 export const LocationText = styled.Text`
     font-family: ${ROBOTOFONTFAMILY}
     font-size: ${HEIGHT*0.0175}px;
-    font-weight: 400;
+    font-weight: 500;
     color: ${DARKGREY}
 `
 
@@ -64,7 +65,7 @@ export const BedAndBathContainer = styled.View`
     align-items: center;
     justify-content: space-between;
     background-color: ${EXTRALIGHT}
-    border-radius:40px
+    border-radius:20px
 `
 
 export const BedBathLogo = styled.View`
@@ -92,34 +93,38 @@ export const CardSectionTwo = styled.View`
     align-self: center
 `
 export const InfoContainer = styled.View`
-    height: ${HEIGHT*0.075}px 
+    height: ${HEIGHT*0.065}px
     width: ${WIDTH*0.9}px;
     justify-content: space-between
-    
+    margin-top : ${HEIGHT*0.02}px
+
 `
 export const InfoHeaderText = styled.Text`
     
-    height: ${HEIGHT*0.06}px
+    
    
-    font-size: ${HEIGHT*0.0225}px;
+    font-size: ${HEIGHT*0.021}px;
     font-weight: 500;
     width: ${WIDTH*0.5}px;
     text-align: left
+    font-family: ${ROBOTOFONTFAMILY}
 `
 
 export const InfoText = styled.Text`
-    font-size: ${HEIGHT*0.0175}px;
+    font-size: ${HEIGHT*0.015}px;
     font-weight: 400;
     width: ${WIDTH*0.5}px;
     color: ${PRIMARYGREY}
     margin-top: ${HEIGHT*0.005}px
+    font-family: ${ROBOTOFONTFAMILY}
+
 `
 
 export const DescriptionText = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     font-weight: 400;
     width: ${WIDTH*0.8}px;
-    marginTop: ${HEIGHT*0.01}px;
+    marginTop: ${HEIGHT*0.05}px;
 `
 
 export const AmenitiesItem = styled.View`
@@ -155,25 +160,30 @@ export const ContactTanentButton = styled(Pressable)`
 `
 
 export const TenantInfoContainer = styled.View`
-   
+    margin-top: ${HEIGHT*0.025}px
     flex-direction: row;
     width: ${WIDTH*0.9}px;
     justify-content: space-between;
     align-items: center;
+    background-color: ${EXTRALIGHT}
+    border-radius: 20px
+    padding-vertical:${HEIGHT*0.01}px
+    padding-horizontal:${HEIGHT*0.01}px
 `
 
 export const TenantNameText = styled.Text`
 font-size: ${HEIGHT*0.0225}px;
 font-weight: 500;
-width: ${WIDTH*0.9}px;
 align-self: center
+font-family: ${ROBOTOFONTFAMILY}
+
 `
 
 export const TenantInfo = styled.View`
-    
-    
+    font-family: ${ROBOTOFONTFAMILY}
     width: ${WIDTH*0.6}px;
-    justify-content:center
+    justify-content:space-between
+    
 
 `
 
@@ -199,7 +209,7 @@ export const RowContainer = styled.View`
 `
 
 export const DateContainer = styled.View`
-   
+    
     width: ${WIDTH*0.8}px;
     align-items: center
     flex-direction: row
@@ -208,16 +218,18 @@ export const DateContainer = styled.View`
 export const DateText = styled.Text`
     font-size: ${HEIGHT*0.0175}px;
     color: ${PRIMARYGREY}
+    font-family: ${ROBOTOFONTFAMILY}
 `
 
 export const DescriptionContainer = styled.Text`
-    margin-top: ${HEIGHT*0.01}px
+   
     width: ${WIDTH*0.9}px;
-    color: ${DARKGREY}
+    color: ${PRIMARYGREY}
     align-self: center
     border-radius: 10px
-    padding-vertical: ${HEIGHT*0.005}px;
-    padding-horizontal: ${WIDTH*0.02}px
+    margin-top : ${HEIGHT*0.02}px
+    font-family: ${ROBOTOFONTFAMILY}
+    
 `
 
 export const TypeText = styled.Text`
@@ -249,11 +261,13 @@ export const BedNumberText = styled.Text`
 `
 
 export const BedroomNameText = styled.Text`
-    
+    margin-top: ${HEIGHT*0.005}px
     font-size: ${HEIGHT*0.015}px;
     justify-content: center;
     align-items: center
     align-self: center
+    font-weight: 400
+    font-family: ${ROBOTOFONTFAMILY}
 `
 
 export const InfoHeaderTextAndCenter = styled.View`

@@ -237,7 +237,6 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       }).then(async e => e.json()).then(async (response) => {
         console.log("APP", response.firstName)
         try {
-          await SecureStorage.setItem("profilePic", response.profilePic)
           login(id);
         } catch (err) {
           console.log(err)

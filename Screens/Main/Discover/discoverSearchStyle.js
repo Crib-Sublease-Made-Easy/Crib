@@ -69,6 +69,26 @@ export const  SearchResultContainer = styled.View`
 export const SearchResultTitle = styled.Text`
   font-size: ${HEIGHT*0.0175}px;
   font-weight: 600;
-  width: ${WIDTH};
+  width: ${WIDTH}px;
   padding-horizontal: ${WIDTH*0.05}px
+`
+
+export const AutocompleteResultItems = styled.Pressable`
+  width: ${WIDTH*0.9}px;
+  align-self: center
+  flex-direction: row
+  padding-vertical: ${HEIGHT*0.015}px
+  align-items: center
+`
+
+export const LocationPrimaryText = styled.Text`
+  font-size: ${HEIGHT*0.02}px
+  font-weight: 500
+  color: black
+`
+
+export const LocationSecondaryText = styled.Text`
+  font-size: ${HEIGHT*0.0175}px
+  font-weight: 400
+  color: ${DARKGREY}
 `
