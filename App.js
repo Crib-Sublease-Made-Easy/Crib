@@ -78,7 +78,6 @@ import MessageTab from './Screens/Main/Message/message.js';
 import { NavigationContainer, getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { CardStyleInterpolators } from '@react-navigation/stack';
 
 
@@ -94,12 +93,11 @@ import OneSignal from 'react-native-onesignal';
 
 export default function App() {
   const appState = useRef(AppState.currentState);
-  const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const [userInitialLocation, setUserInitialLocation] = useState(null)
   const [sendBirdConnected, setSendbirdConnection] = useState(false)
 
-  const [testUserId, setTestUserId] = useState('')
+
 
   const sb = new SendBird({ appId: appId});   // The `localCacheEnabled` is optional. The default is false.
 
@@ -113,7 +111,16 @@ OneSignal.setAppId("440ad232-b229-4ea1-963b-5037d3ac9413");
 //Prompt for push on iOS
 OneSignal.promptForPushNotificationsWithUserResponse(async response => {
   const deviceState = await OneSignal.getDeviceState();
-  await SecureStorage.setItem("oneSignalUserID", deviceState.userId);
+  try{
+    const cacheOneSignalID = await SecureStorage.getItem("oneSignalUserID");
+    if (deviceState.userId != cacheOneSignalID){
+      await SecureStorage.setItem("oneSignalUserID", deviceState.userId);
+    }
+  }
+  catch{e=>{
+    console.log(("TRY/CATCH in APP.js SecureStorage.setItem('oneSignalUserID')"))
+    console.log(e)
+  }}
 });
 
 
@@ -141,22 +148,22 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
   useEffect(() => {
     getLocation()
-    console.log("NEW APP REFRESH")
-    refreshAccessToken()
+    console.log("INITIALIZE APP.JS USEEFFECT")
+    // refreshAccessToken()
     const subscription = AppState.addEventListener("change", nextAppState => {
+
       if (
-        appState.current.match(/inactive|background/) &&
+        // appState.current.match(/inactive|background/) &&
         nextAppState === "active"
       ) {
         console.log("App has come to the foreground!");
         refreshAccessToken()
-        connectSendbird()
+        // connectSendbird()
       } else{
         disconnectSendbird()
       }
 
       appState.current = nextAppState;
-      setAppStateVisible(appState.current);
       console.log("AppState", appState.current);
     });
 
@@ -201,9 +208,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       
     const rt = await SecureStorage.getItem("refreshToken");
     const id = await SecureStorage.getItem("userId");
-
     if (rt != undefined) {
-      console.log("REFRESH TOKEN", rt)
       setUser(id)
       fetch('https://sublease-app.herokuapp.com/tokens/accessRefresh', {
         method: 'POST',
@@ -223,7 +228,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       const at = await SecureStorage.getItem("accessToken");
 
 
-      fetch('https://sublease-app.herokuapp.com/users/' + id, {
+      await fetch('https://sublease-app.herokuapp.com/users/' + id, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -231,20 +236,29 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
           'Authorization': 'Bearer ' + at
         }
       }).then(async e => e.json()).then(async (response) => {
-        console.log("APP", response.firstName)
-        try {
-          login(id);
-        } catch (err) {
-          console.log(err)
+        if(response._id != undefined){
+          await connectSendbird().then(()=>{
+              try {
+                console.log("Login")
+                login(id);
+              } 
+              catch (err) {
+                console.log(err)
+              }
+            })
         }
-      })
-      console.log("token regreshed")
-      console.log("ACCESS TOKEN ", at)
-      connectSendbird()
+        else{
+          alert("Error logging in.")
+        }
+      })      
+    }
+    else{
+      console.log("Refresh Token is undefined. User is not logged in.")
     }
   }
 
   async function getLocation(){
+    console.log("hello")
     Geolocation.getCurrentPosition(info => 
      
       setUserInitialLocation([info.coords.latitude,info.coords.longitude])
@@ -284,7 +298,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             <Stack.Screen
               name="DiscoverTabs"
               component={DiscoverTab}
-              options={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter  }}
+              options={{headerShadowVisible: false,cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter, headerShown:false }}
             />
 
             <Stack.Screen
@@ -453,7 +467,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             />
 
           </Stack.Navigator>
-          :
+        :
 
           <Stack.Navigator >
 
@@ -466,7 +480,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               name="Login"
               component={LoginScreen}
 
-              options={{ headerShown: false, animation: 'slide_from_right' }}
+              options={{ headerShown: false }}
             />
             <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
             <Stack.Screen name="FirstLastName" component={FirstLastNameScreen} options={{ headerShown: false, }} />
@@ -483,7 +497,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               options={{
                 headerShown: false,
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
+        }}
             />
 
 <Stack.Screen name="TermsAndService"

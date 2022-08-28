@@ -50,14 +50,10 @@ export const SearchContainer = styled.TextInput`
   width: 80%
   background-color: white
   
-  border-width: 1px;
   border-radius: 25px
   border-color: ${EXTRALIGHT}
   padding-horizontal: ${WIDTH*0.035}px
-  shadow-offset: 0 0
-  shadow-color: ${DARKGREY};
-  shadow-radius: 5px;
-  shadow-opacity: 0.2;
+  
   elevation: 5
 `
 export const  SearchResultContainer = styled.View`

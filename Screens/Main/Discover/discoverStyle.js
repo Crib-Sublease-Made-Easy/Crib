@@ -17,70 +17,55 @@ import {
 } from 'react-native';
 
 import styled from 'styled-components/native';
-import { LIGHTGREY, TEXTINPUTBORDERCOLOR, GOOGLEBLUE } from '../../../sharedUtils';
+import { LIGHTGREY, TEXTINPUTBORDERCOLOR, GOOGLEBLUE, PRIMARYCOLOR, DARKGREY, HEIGHT, WIDTH, ROBOTOFONTFAMILY } from '../../../sharedUtils';
 
 
-const PRIMARYCOLOR = '#4050B5'
-const PRIMARYGREY = '#5e5d5d'
-const TEXTGREY = '#E0E0E0'
-
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
-
-
-export const Container = styled.Pressable`
-  height: ${HEIGHT}px;
-  width: ${WIDTH}px;
-  align-items: center
-  
-  
+export const MapContainer = styled.View`
+  width: ${WIDTH}px
+  height: ${HEIGHT}px
+  position: absolute
+  top: 0px
+  flex: 1
 `
-
-export const Header = styled.View`
-  width: ${WIDTH}px;
-  flex-direction: row
-`
-export const ModalContainer = styled.View`
-  height: ${HEIGHT}px;
-  width: ${WIDTH}px;
-`
-
 export const SearchInputContainerText = styled.Text`
   font-size: ${HEIGHT*0.02}px;
-  color: ${TEXTGREY};
+  color: ${DARKGREY};
   margin-left: ${WIDTH*0.02}px;
- 
 `
-// export const SearchContainerStyle = ({}) = { height: HEIGHT*0.067, width: WIDTH*0.9, paddingLeft:WIDTH*0.07, paddingRight: WIDTH*0.03,
-// borderWidth: 1, borderColor: '#E0E0E0',  alignItems: 'center', shadowColor: 'black', shadowRadius: 1, shadowOpacity: 0.2, backgroundColor:'#F8F8F8',
-// elevation: 5, borderRadius: 20, flexDirection: 'row', shadowOffset: {width: 0, height: 3}}
 
-export const PlaceholderLogoTextContainer  = styled.Pressable`
+export const PlaceholderLogoTextContainer  = styled.Text`
   flex-direction: row;
   height: 100%
   width: 70%
   padding-left: ${WIDTH*0.02}px
   align-items: center  
   flex-direction: row
- 
- 
 `
 
-export const ModalSearchContainer = styled.View`
-    height: ${HEIGHT*0.06}px;
-    width: ${WIDTH*0.9}px;
-    justify-content: space-between;
-    align-items: center
-    flex-direction: row
-    align-self: center
+export const SearchContainer = styled.Pressable`
+  height: ${HEIGHT*0.065}px
+  width: ${WIDTH*0.9}px
+  marginLeft: ${WIDTH*0.05}px
+  shadowColor: black
+  shadowRadius: 10px
+  shadowOpacity: 0.32
+  backgroundColor: white
+  elevation: 7
+  borderRadius: 30px
+  shadowOffset: 0 0
+  flex-direction: row;
+  align-items:center
+`
+export const SearchContainerPlaceholderText = styled(Text)`
+  font-family: ${ROBOTOFONTFAMILY}
+  
+  height: ${HEIGHT*0.02}px
+  width: 70% 
+  align-items: center
+  padding-horizontal: ${WIDTH*0.01}px
+  color : ${props=>(props.locationQuery == "Search Location ..." ? DARKGREY : 'black')}
 `
 
-export const SearchInput = styled.TextInput`
-  width: ${WIDTH*0.8}px;
-  height: ${HEIGHT*0.075}px;
-  border-radius: 20px;
- 
-`
 
 export const FilterPressable  = styled.Pressable`
   width: ${WIDTH*0.1}px;
@@ -95,7 +80,7 @@ export const FilterPressable  = styled.Pressable`
 export const Subheading = styled.Text`
   font-size: ${HEIGHT*0.02}px;
   font-weight: 700;
-  color: ${PRIMARYGREY}
+  color: ${DARKGREY}
 `
 
 export const SearchResultContainer = styled.View`
@@ -105,7 +90,7 @@ export const SearchResultContainer = styled.View`
 
 export const CancelGoBackText = styled.Text`
   font-size:${HEIGHT*0.015}px;
-  color: ${PRIMARYGREY}
+  color: ${DARKGREY}
   font-weight: 500;
 `
 
@@ -115,7 +100,7 @@ export const LocationMainText = styled.Text`
 `
 export const LocationSecondaryText = styled.Text`
   font-size:${HEIGHT*0.015}px;
-  color: ${PRIMARYGREY}
+  color: ${DARKGREY}
   font-weight: 300;
   margin-top: ${HEIGHT*0.005}px
 `
@@ -158,7 +143,7 @@ export const AutocompleteLocationContainer = styled(Pressable)`
 
 export const SearchInputCancelIconContainer = styled.View`
   flex-direction: row;
-  height: ${HEIGHT*0.065}px
+ 
   align-items:center
 `
 
@@ -216,7 +201,7 @@ export const PreviewPriceText = styled.Text`
   width: ${WIDTH*0.9}px
   padding-horizontal: ${WIDTH*0.025}px
   font-size: ${HEIGHT*0.014}px;
-  color: ${PRIMARYGREY}
+  color: ${DARKGREY}
 
 `
 export const PreviewLocationText = styled.Text`

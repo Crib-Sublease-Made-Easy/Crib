@@ -15,7 +15,7 @@ import { faFaceGrinWide } from '@fortawesome/free-regular-svg-icons';
 
 
 //Color 
-export const PRIMARYCOLOR = '#8559E3'
+export const PRIMARYCOLOR = '#8559E3' //133 89 227
 export const OPACITYPRIMARYCOLOR = 'rgba(133, 89, 227, 1)'
 
 //Dark Grey
@@ -319,7 +319,7 @@ export const GetAmenitiesIcon = (name) =>{
 }
 
 export const HeaderContainer = styled.View`
-    width: ${WIDTH*0.9}px;
+    width: ${WIDTH}px;
     height: ${HEIGHT*0.05}px;
     border-top-right-radius: 20px;
     border-top-left-radius: 20px;

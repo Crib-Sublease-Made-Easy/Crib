@@ -10,7 +10,7 @@ import {
   Dimensions,
   Button,
   Keyboard,
-  Animated,
+  Animated as RNAnimated,
   Image,
   ActivityIndicator,
   TouchableOpacity,
@@ -18,7 +18,7 @@ import {
   
 } from 'react-native';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLOR, DARKGREY } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLOR, DARKGREY, EXTRALIGHT } from '../../../sharedUtils';
 import OneSignal from 'react-native-onesignal';
 
 
@@ -32,8 +32,8 @@ FontAwesome.loadFont()
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import {LocationMainText, LocationSecondaryText, LogoText, PressableContainer, SearchInputContainerText,
-    PlaceholderLogoTextContainer, Header, AutocompleteLocationContainer, PreviewTopContainer, PreviewBottomContainer,
+import {SearchContainer, SearchContainerPlaceholderText, MapContainer,
+    PlaceholderLogoTextContainer, PreviewTopContainer, PreviewBottomContainer,
     PreviewTopLeftContaier,PreviewTopRightContaier, PreviewNameText, PreviewPriceText, PreviewLocationText, 
     SeachIconContainer, DeleteIconContainer, CustomMarker,  SearchHerePressable, SearchHereText } from './discoverStyle';
 
@@ -69,9 +69,9 @@ export default function DiscoverScreen({navigation, route}){
     //Reference to the MapView
     const mapRef = useRef(null)
     //This is to control the height of the input view container
-    const translation = useRef(new Animated.Value(HEIGHT*0.065)).current;
-    const widthtranslation = useRef(new Animated.Value(WIDTH*0.9)).current;
-    const opacityTranslation = useRef(new Animated.Value(0)).current;
+    const translation = useRef(new RNAnimated.Value(HEIGHT*0.065)).current;
+    const widthtranslation = useRef(new RNAnimated.Value(WIDTH*0.9)).current;
+    const opacityTranslation = useRef(new RNAnimated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
     const [currentLocation, setCurrentLocation] = useState((userInitialLocation == null? [37.7749,-122.4194] :  userInitialLocation) )
     //The location of the user input in string
@@ -123,10 +123,9 @@ export default function DiscoverScreen({navigation, route}){
 
     const [discoverSearchVisible, setDiscoverSearchVisible] = useState(false)
     useEffect(()=>{
-        setFlatlistRefreshing(true)
-        console.log("USEFFECT")
-
         
+        setFlatlistRefreshing(true)
+        // console.log("USEFFECT")        
         //This loads the property in the flatlist 
         loadProperty()
        
@@ -160,35 +159,11 @@ export default function DiscoverScreen({navigation, route}){
             return false;
         }
     }
-    //Open The search bar container to displya all autocomplete results according to if searching is true 
-    function openHeader(){
-        if(!searching){
-            Animated.spring(translation,{
-                toValue: HEIGHT*0.445 ,
-                bounciness:0,
-                speed: 6,
-                useNativeDriver:false,
-            }).start()
-        }
-    }
 
-
-
-    //Close The search bar container to displya all autocomplete results according to if searching is true 
-    function closeHeader(){
-       
-        Animated.spring(translation,{
-            toValue: HEIGHT*0.065 ,
-            bounciness:0,
-            speed: 6,
-            useNativeDriver:false,
-        }).start()
-      
-    }
 
     //Open the preview card when the map button on the propertycard in flatlsit is pressed 
     function openPreviewCard(){
-        Animated.spring(opacityTranslation,{
+        RNAnimated.spring(opacityTranslation,{
             toValue: 1 ,
             duration:300,
             bounciness:0,
@@ -199,7 +174,7 @@ export default function DiscoverScreen({navigation, route}){
     }
     //Close the preview card when the map button on the propertycard in flatlsit is pressed 
     function closePreviewCard(){
-        Animated.spring(opacityTranslation,{
+        RNAnimated.spring(opacityTranslation,{
             toValue: 0,
             duration:300,
             bounciness:0,
@@ -235,7 +210,6 @@ export default function DiscoverScreen({navigation, route}){
 
     //Load initial properties
     const loadProperty = useCallback(()=> {
-        console.log("Load properties")
         setPropertyPage(1)
         setRetrieveMore(true)
         let s = "";
@@ -270,7 +244,12 @@ export default function DiscoverScreen({navigation, route}){
             }
             }) 
             .then(res => res.json()).then(properties =>{
-                
+                properties.forEach(async prop => {
+                     prop.propertyInfo.imgList.forEach(async img => {
+                        const success = await Image.prefetch(img)
+                        console.log(success)
+                     });
+                });
                 setFilteredProperties(properties)
                 
                 
@@ -371,7 +350,6 @@ export default function DiscoverScreen({navigation, route}){
         .then(res => res.json()).then( pins =>{
            
             if(pins.length == 0){
-                console.log("PINS DATA IS EMPTY")
                 setPinsData([])
             }
             else{
@@ -414,9 +392,7 @@ export default function DiscoverScreen({navigation, route}){
     //setSearching to false so to shrink the header
     //Dismiss keyboard
     function selectCurrentLocation(locationQueryName){
-        console.log(locationQueryName)
         if (locationQueryName != ""){
-            console.log("hello")
            
             setlocationQuery(locationQueryName)
             setSearching(false)
@@ -427,7 +403,6 @@ export default function DiscoverScreen({navigation, route}){
             };
             axios(config)
             .then(async (response)=> {           
-                // console.log(response)
                 let lat = response.data.results[0].geometry.location.lat;
                 let long = response.data.results[0].geometry.location.lng
                 setCurrentLocation([lat,long])
@@ -474,7 +449,6 @@ export default function DiscoverScreen({navigation, route}){
         })
         }) 
         .then(res => res.json()).then(property =>{
-            console.log("PROPERTY", property.propertyInfo._id)
             setSelectedPin(property)
             moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
         })
@@ -508,128 +482,109 @@ export default function DiscoverScreen({navigation, route}){
             
             
         <SafeAreaView>
-        <View style={{width:WIDTH,height:HEIGHT,position:'absolute', top:0, flex: 1}}>
-                <MapView
-                    onRegionChange={(Region)=> setMapCenterLocation([Region.latitude,Region.longitude])}
-                    scrollEnabled={mapViewing}
-                    ref={mapRef}
-                    style={{flex:1, position:'relative'}}
-                    initialRegion={{
-                    latitude: currentLocation[0], 
-                    longitude: currentLocation[1],
-                    latitudeDelta: 0.02,
-                    longitudeDelta: 0.02,
-                    }}
-                >
-                    <Marker
-                        key={"currentlocationmarker"}
-                        coordinate={{ latitude:currentLocation[0], longitude:currentLocation[1] }}
-                        style={{zIndex:1}}
-                    ></Marker>
-                    
-
-                    {pinsData.length != 0 && pinsData.map((value,index)=>(
-                        <Marker
-                        key={value._id}
-                        coordinate={{ latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
-                        onPress={()=>onMarkerClick(value)}
-                       
-                    >
-                        <CustomMarker style={{backgroundColor: value._id == selectedPin?._id ? PRIMARYCOLOR : 'green', zIndex: value._id == selectedPin._id ? 2 : 1}}>
-                            <Text style={{color:'white'}}>${value.price}</Text>                       
-                        </CustomMarker>
-                    </Marker>
-                    ))} 
-                </MapView>
-                <Animated.View style={{position:'absolute', backgroundColor:'rgba(255,255,255,0.95)', width:WIDTH, height:HEIGHT,top:0,
-                opacity: translation.interpolate({
-                    inputRange: [0, HEIGHT*0.5],
-                    outputRange: [0, 1]
-                }), display: searching ? 'flex' : 'none' }}/>
-
-                < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), updateQueryString(mapCenterLocation),
-                retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom.getTime(), filterAvailableTo.getTime() )
-                }}>
-                    <SearchHereText>Search Here</SearchHereText>
-                </ SearchHerePressable>
-                <Animated.View 
-                style={{width:WIDTH*0.9, height: HEIGHT*0.275,backgroundColor:'white', borderRadius:25,
-                position:'absolute', bottom: HEIGHT*0.17, alignSelf:'center',shadowColor: 'black', shadowRadius: 5,
-                shadowOpacity: 0.4, elevation: 5, display: propertyPreviewCard ? 'flex' : 'none',
-                opacity: opacityTranslation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 1]
-                })}}>
-                    
-                    {selectedPin != undefined && selectedPin != "" &&
-                    <Pressable disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0]))})}}>
-                        <PreviewTopContainer>
-                            <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
-                            borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
-                        </PreviewTopContainer>
-
-                        <PreviewBottomContainer >
-                            <PreviewLocationText>{selectedPin.propertyInfo.loc.secondaryTxt}</PreviewLocationText>
-                            <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).getDate() + " " +
-                                    new Date(selectedPin.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
-                                    }  -  {new Date(selectedPin.propertyInfo.availableTo).getDate() + " " +
-                                    new Date(selectedPin.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}</PreviewPriceText>
-                            
-                            <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
-
-                            
-                        </ PreviewBottomContainer> 
-                    </Pressable>
-                    }
-
-                    <FontAwesome onPress={()=>closePreviewCard()} name="times-circle" size={30}  color='white' style={{position: 'absolute', right:WIDTH*0.025,
-                    top: HEIGHT*0.015}}/>
-
-                </Animated.View>
-            </View>
-            
-        
-            <Header>
-                {/* This sets the container of the search input */}
-                <Animated.View style={ { height: translation, width: widthtranslation, marginLeft: WIDTH*0.05,
-                shadowColor: 'black', shadowRadius: 13, shadowOpacity: 0.32, backgroundColor:'white',
-                elevation: 7, borderRadius: 25, shadowOffset: {width: 0, height: 0}}} 
-                >
-                        <SearchInputCancelIconContainer>
-
-                            {/* The search icon on the search outlien */}
-                            <SeachIconContainer>
-                                <Ionicons name='search-outline' size={25}  color={TEXTINPUTBORDERCOLOR} />
-                            </SeachIconContainer>
-                            {/* This is the actual search input when user press on search bar  */}
-                            {/* <PlaceholderLogoTextContainer 
-                            placeholderTextColor={TEXTINPUTBORDERCOLOR}
-                            placeholder="Search Location" value={locationQuery}  onChangeText={(value)=>autocomplete(value)} onSubmitEditing={({nativeEvent: { text, eventCount, target }})=>{autocompleteLocation.length != 0 && selectCurrentLocation(autocompleteLocation[0].description) }}
-                            onEndEditing={()=>{closeHeader(), setSearching(false), Keyboard.dismiss()}}  onFocus={()=> {openHeader(), setSearching(true), setPropertyPreviewCard(false)}}/> */}
-                            
-                            <DeleteIconContainer onPress={()=>setlocationQuery("")} style={{ display: searching ? 'flex' : 'none',}}>
-                                <FontAwesome name="times-circle" size={25}  color={TEXTGREY} />
-                            </DeleteIconContainer>
-                            <PlaceholderLogoTextContainer onPress={()=>setDiscoverSearchVisible(true)}>
-                                <Text style={{height: HEIGHT*0.02, width:'100%', alignItems:'center', color: locationQuery == "Search Location ..." ? DARKGREY : 'black'}}>{locationQuery}</Text>
-                            </PlaceholderLogoTextContainer>
-                            <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
-                                {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) || !(dateCompare(new Date(1759190400000), new Date(filterAvailableTo))) || !(dateCompare(new Date(), new Date(filterAvailableFrom)))?
-                                <View style={{borderWidth:2, padding: 7, borderRadius: 50, borderColor: '#8559E3' }}>
-                                <Ionicons name="options-sharp" size={20} />
-                                </View>
-                                :
-                                <View style={{borderWidth:1, padding: 7, borderRadius: 50, borderColor: '#D3D3D3'}}>
-                                <Ionicons name="options-sharp" size={20} />
-                                </View>                        
-                                }
-                            </DeleteIconContainer> 
-                            
-
-                        </SearchInputCancelIconContainer>
+        <MapContainer>
+            <MapView
+                onRegionChange={(Region)=> setMapCenterLocation([Region.latitude,Region.longitude])}
+                scrollEnabled={mapViewing}
+                ref={mapRef}
+                style={{flex:1, position:'relative'}}
+                initialRegion={{
+                latitude: currentLocation[0], 
+                longitude: currentLocation[1],
+                latitudeDelta: 0.02,
+                longitudeDelta: 0.02,
+                }}
+            >
+                <Marker
+                    key={"currentlocationmarker"}
+                    coordinate={{ latitude:currentLocation[0], longitude:currentLocation[1] }}
+                    style={{zIndex:1}}
+                ></Marker>
                         
-                </Animated.View>
-            </Header>
+
+                {pinsData.length != 0 && pinsData.map((value,index)=>(
+                <Marker
+                    key={value._id}
+                    coordinate={{ latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
+                    onPress={()=>onMarkerClick(value)}
+                    
+                >
+                    <CustomMarker style={{backgroundColor: value._id == selectedPin?._id ? PRIMARYCOLOR : 'green', zIndex: value._id == selectedPin._id ? 2 : 1}}>
+                        <Text style={{color:'white'}}>${value.price}</Text>                       
+                    </CustomMarker>
+                </Marker>
+            ))} 
+            </MapView>
+                
+
+            < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), updateQueryString(mapCenterLocation),
+            retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom.getTime(), filterAvailableTo.getTime() )
+            }}>
+                <SearchHereText>Search Here</SearchHereText>
+            </ SearchHerePressable>
+
+            <RNAnimated.View 
+            style={{width:WIDTH*0.9, height: HEIGHT*0.275,backgroundColor:'white', borderRadius:25,
+            position:'absolute', bottom: HEIGHT*0.17, alignSelf:'center',shadowColor: 'black', shadowRadius: 5,
+            shadowOpacity: 0.4, elevation: 5, display: propertyPreviewCard ? 'flex' : 'none',
+            opacity: opacityTranslation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1]
+            })}}>
+                    
+                {selectedPin != undefined && selectedPin != "" &&
+                <Pressable disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0]))})}}>
+                    <PreviewTopContainer>
+                        <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
+                        borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
+                    </PreviewTopContainer>
+
+                    <PreviewBottomContainer >
+                        <PreviewLocationText>{selectedPin.propertyInfo.loc.secondaryTxt}</PreviewLocationText>
+                        <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).getDate() + " " +
+                                new Date(selectedPin.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
+                                }  -  {new Date(selectedPin.propertyInfo.availableTo).getDate() + " " +
+                                new Date(selectedPin.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}</PreviewPriceText>
+                        
+                        <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
+
+                        
+                    </ PreviewBottomContainer> 
+                </Pressable>
+                }
+
+                <FontAwesome onPress={()=>closePreviewCard()} name="times-circle" size={25}  color='white' style={{position: 'absolute', right:WIDTH*0.025,
+                top: HEIGHT*0.015}}/>
+
+            </RNAnimated.View>
+        </MapContainer>
+            
+            {/* This sets the container of the search input */}
+            <SearchContainer onPress={()=>setDiscoverSearchVisible(true)}>
+                {/* The search icon on the search outlien */}
+                <SeachIconContainer>
+                    <Ionicons name='search' size={20}  color={DARKGREY} />
+                </SeachIconContainer>
+                
+                {/* Placeholder for locationquerytext selected in discoversearch */}
+               
+                <SearchContainerPlaceholderText locationQuery={locationQuery}> {locationQuery}</SearchContainerPlaceholderText>
+                
+
+                {/* This is the icon for filters when locationquery is not empty  */}
+                <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
+                    {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) || !(dateCompare(new Date(1759190400000), new Date(filterAvailableTo))) || !(dateCompare(new Date(), new Date(filterAvailableFrom)))?
+                    <View style={{padding: 7, borderRadius:100, backgroundColor: EXTRALIGHT, borderColor: PRIMARYCOLOR, borderWidth: 2}}>
+                    <Ionicons name="options-sharp" size={20} />
+                    </View>
+                    :
+                    <View style={{ padding: 7, borderRadius:100, backgroundColor: EXTRALIGHT, borderWidth:0.5, borderColor: MEDIUMGREY}}>
+                    <Ionicons name="options-sharp" size={20} />
+                    </View>                        
+                    }
+                </DeleteIconContainer> 
+            </SearchContainer>
+          
         <View style={{width:WIDTH, height:HEIGHT*0.05, }}>
 
         </View>

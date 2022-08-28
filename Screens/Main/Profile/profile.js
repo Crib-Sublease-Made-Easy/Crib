@@ -48,7 +48,7 @@ import {Container, NameText, OccupationText,EditProfilePressable,SlidingContaine
     PropertyName, DatePriceText, InformationContainer, IconContainer, IconsContainer,PriceEditContainer,
     EditPropertyPressable, EditText, FavPropertyCard, FavPropertyCardName, FavPropertyCardContent,
     FavPropertyCardDateText, FavPropertyCardDateContainer, PostedPropertyCard, HeaderIndividualContainer,
-    RowContainer, RowItemName
+    RowContainer, RowItemName,ProfileHeading
  } from './profileStyle';
 import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, MEDIUMGREY, DARKGREY } from '../../../sharedUtils';
 export default function ProfileScreen({navigation}){
@@ -64,8 +64,6 @@ export default function ProfileScreen({navigation}){
     const [userData, setUserData] = useState('')
 
     const [profilePic, setProfilePic] = useState(null)
-
-    var tempFavProp = []
  
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
@@ -126,45 +124,6 @@ export default function ProfileScreen({navigation}){
                     await AsyncStorage.setItem("profilePic", userData.profilePic);
                 }
             }
-            // let cachedFavoriteProperties = await AsyncStorage.getItem("favoriteProperties")
-            // let cachedFavoritePropertiesId = await AsyncStorage.getItem("favoritePropertiesId")
-            // let compare = new Object(JSON.parse(cachedFavoritePropertiesId)).toString() == userData.favoriteProperties;
-            
-            // if(cachedFavoriteProperties == null || !compare){
-            //     console.log("UPDATE --- API --- favoriteProperties")
-            //     setFavoriteProperties([])
-            //     await AsyncStorage.removeItem('favoriteProperties')
-            //     await AsyncStorage.removeItem('favoritePropertiesId')
-            //     userData.favoriteProperties.forEach(async propID => {
-            //         await fetch('https://sublease-app.herokuapp.com/properties/' + propID, {
-            //             method: 'GET',
-            //             headers: {
-            //             Accept: 'application/json',
-            //             'Content-Type': 'application/json',
-            //             'Authorization': 'Bearer ' + accessToken,
-            //             }
-            //             }) 
-            //             .then( async res => await res.json()).then(propertyData =>{
-                                
-            //                 tempFavProp.push(propertyData)
-            //                 setFavoriteProperties(prev=>[...prev, propertyData])
-
-            //                 //testing 
-                            
-            //             })
-            //             .catch(e=>{
-            //                 alert(e)
-            //         })
-            //     });
-                
-            //     await AsyncStorage.setItem('favoriteProperties', JSON.stringify(tempFavProp))
-            //     await AsyncStorage.setItem('favoritePropertiesId', JSON.stringify(userData.favoriteProperties))
-                
-            // }
-            // else{
-            //     console.log("UPDATE --- CACHE --- favoriteProperties")
-            //     setFavoriteProperties(JSON.parse(cachedFavoriteProperties))
-            // }
 
             if(userData.postedProperties != undefined){
                 fetchPostedProperties(userData.postedProperties[0], accessToken)
@@ -285,7 +244,7 @@ export default function ProfileScreen({navigation}){
     }
 
     function toPostProperty(){
-        if(userData.postedProperties.length == 1){
+        if(userData.postedProperties.length == 9){
             alert("As a regular member, you can only post one property.")
         }
         else{
@@ -317,77 +276,42 @@ export default function ProfileScreen({navigation}){
     return(
         <SafeAreaView style={{backgroundColor:'white'}}>
             <HeaderContainer style={{borderBottomWidth: 0}}>
-                <HeaderIndividualContainer style={{justifyContent:'flex-start',}}>
+                <HeaderIndividualContainer style={{justifyContent:'flex-end', width: '15%'}}>
+                    <Pressable onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
                     <Image source={{uri: profilePic}} 
                     style={{width:WIDTH*0.1, height: WIDTH*0.1, borderRadius: WIDTH*0.05, alignSelf:'center', backgroundColor:EXTRALIGHT}} />
+                    </Pressable>
                 </HeaderIndividualContainer> 
                     
-                <HeaderIndividualContainer style={{width: '80%'}}>
+                <HeaderIndividualContainer style={{width: '70%'}}>
                     <Header>{userData.firstName}</Header>
                 </HeaderIndividualContainer>
 
-                <HeaderIndividualContainer style={{ width:'10%'}}>
+                <HeaderIndividualContainer style={{ width:'15%',justifyContent:'flex-start', }}>
                     <Pressable onPress={()=>navigation.navigate('Setting')}>
                         <Ionicons name='cog-outline' size={30} />
                     </Pressable>
                 </HeaderIndividualContainer>
                
             </HeaderContainer>
-            {/* <Header>
-                <Pressable onPress={()=>navigation.navigate('Setting')}>
-                    <Ionicons name='cog-outline' size={30} />
-                </Pressable>
-            </Header> */}
-            <View style={{marginTop: HEIGHT*0.05}}>
+            <ProfileHeading>Profile</ProfileHeading>
+            <View >
                 <RowContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>    
-                    <Ionicons name="create"  size={30} color={GOOGLEBLUE}/>
+                    <Ionicons name="create"  size={25} color={GOOGLEBLUE}/>
                     <RowItemName>Edit Profile</RowItemName>
                 </RowContainer>
                 <RowContainer onPress={()=> toPostProperty()}>    
-                    <Ionicons name="home"  size={30} color={PRIMARYCOLOR}/>
+                    <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
                     <RowItemName>Post a property</RowItemName>
                 </RowContainer>
                 <RowContainer onPress={()=> onShare()}>    
-                    <Ionicons name="share"  size={30} color={DARKGREY}/>
+                    <Ionicons name="share"  size={25} color={DARKGREY}/>
                     <RowItemName>Share Crib</RowItemName>
                 </RowContainer>
             </View>
             <Container>
                 
-                {/* <View style={{width:WIDTH*0.9, height: WIDTH*0.30, borderRadius: WIDTH*0.175,}}>
-                    <Image source={{uri: profilePic}} 
-                    style={{width:WIDTH*0.3, height: WIDTH*0.3, borderRadius: WIDTH*0.15, alignSelf:'center', backgroundColor:EXTRALIGHT}} />
-                </View> */}
-                
-                    
-                    {/* <NameText>{userData.firstName} {""} {userData.lastName}</NameText> */}
-
-                     {/* <IconsContainer>
-                        <View style={{justifyContent:"center", alignItems:"center"}}>
-                        <IconContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
-                            <Ionicons name="create"  size={25} color={GOOGLEBLUE}/>
-                        </IconContainer>
-                        <Text style={{ padding:5}}>Edit Profile</Text>
-                        </View>
-                        <View style={{justifyContent:"center", alignItems:"center"}}>
-                        <IconContainer onPress={()=> toPostProperty()}>
-
-                            <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
-                        </IconContainer>
-                        <Text style={{padding:5}}>List Property</Text>
-                        </View>
-                        <View style={{justifyContent:"center", alignItems:"center"}}>
-                        <IconContainer onPress={()=> onShare()}>
-                            <Ionicons name="share"  size={25} color={DARKGREY}/>
-                        </IconContainer>
-                        <Text style={{padding: 5}}>Share Crîb</Text>
-                        </View>
-                    </IconsContainer>  */}
-               
-
-                {/* <EditProfilePressable onPress={()=>navigation.navigate("ProfileEdit")}>
-                    <Text style={{color:'white',}}>Edit Profile</Text>
-                </EditProfilePressable> */}
+       
                 <SlidingContainer>
                     <Animated.View style={{width:WIDTH*0.35, height: HEIGHT*0.05, borderRadius: 25, position:'absolute', left:WIDTH*0.05,
                      backgroundColor:PRIMARYCOLOR, opacity:0.2, transform:[{translateX: translation}]}}></Animated.View>

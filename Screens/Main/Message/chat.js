@@ -320,7 +320,7 @@ export default function ChatScreen({navigation, route}){
         loadEarlier = {true}
         infiniteScroll={true}
         onLoadEarlier = {() => loadMore(query)}
-        renderLoadEarlier = {() => <View></View>}
+        renderLoadEarlier = {() => <View/>}
         user={{
           _id: id
         }}

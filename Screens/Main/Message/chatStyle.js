@@ -8,7 +8,7 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, EXTRALIGHT, MEDIUMGREY, DARKGRE
 const PRIMARYGREY = '#5e5d5d'
 
 export const MessageContainer = styled.View`
-    
+    margin-top : ${HEIGHT*0.01}PX
     width: ${WIDTH*0.9}px;
     margin-left: ${WIDTH*0.05}px
     flex-direction:row

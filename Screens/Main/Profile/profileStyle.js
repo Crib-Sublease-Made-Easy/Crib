@@ -15,7 +15,7 @@ import {
   
 
 import styled from 'styled-components/native';
-import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
+import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, ROBOTOFONTFAMILY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
 
 const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
@@ -241,7 +241,7 @@ export const HeaderIndividualContainer = styled.View`
 
 export const RowContainer = styled.Pressable`
   flex-direction: row;
-  width: ${WIDTH*0.8}px
+  width: ${WIDTH*0.9}px
   align-self: center
   justify-content: flex-start
   align-items: center
@@ -254,4 +254,11 @@ export const RowItemName = styled.Text`
   margin-left: ${WIDTH*0.05}px
   font-size: ${HEIGHT*0.0175}px
   font-weight: 500
+`
+
+export const ProfileHeading = styled.Text`
+  width: ${WIDTH*0.9}px
+  font-size: ${HEIGHT*0.03}px
+  padding-vertical: ${HEIGHT*0.025}px
+  align-self: center
 `

@@ -101,7 +101,6 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     },[])
 
     function filter(){
-        setPropertyPage(1)
         setRetrieveMore(true)
     let s = "";
     if(filterType != ""){

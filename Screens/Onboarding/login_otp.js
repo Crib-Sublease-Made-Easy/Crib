@@ -39,7 +39,6 @@ import Modal from "react-native-modal";
 export default function Login_OTP({navigation, route}){
 
     const {user, login} = useContext(UserContext);
-    const [phoneNumber, setphoneNumber] = useState('')
     const [code, setCode] = useState('')
     const [pinReady, setpinReady] = useState(false)
     const [authyID, setauthyID] = useState(route.authy_id)
@@ -54,14 +53,14 @@ export default function Login_OTP({navigation, route}){
         if(code.length == 6){
             userLogin();
         }
-
+        return
     },[code])
 
     async function userLogin(){ 
         
         let oneSignalUserId = await SecureStorage.getItem('oneSignalUserID');
        
-        setLoading(true)
+      
         console.log("TOKEN")
         console.log(code);
         console.log("AuthyID")
@@ -113,7 +112,7 @@ export default function Login_OTP({navigation, route}){
                     console.log(e)
                 }}
 
-                setTimeout(()=>{setLoading(false)},2000)
+                
                 login(data.loggedIn._id);
                 
             }

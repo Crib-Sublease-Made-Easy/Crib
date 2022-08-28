@@ -35,8 +35,6 @@ export default function MessageScreen({navigation, route}){
     const [changed, setChanged] = useState(false)
 
     useEffect(()=>{
-        console.log("MESSAGEEE")
-
         const unsubscribe = navigation.addListener('focus', async  () => {
             console.log("FOCUSSSSSS")
             fetchConvos()

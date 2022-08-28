@@ -14,7 +14,8 @@ import {
     Image,
     Pressable,
     RefreshControl,
-    Vibration
+    Vibration,
+    Animated as RNAnimated
   } from 'react-native';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,6 +26,8 @@ import MapView , { Marker }from 'react-native-maps';
 import {UserContext} from '../../../UserContext'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
+
+import Lottie from 'lottie-react-native';
 
 
 
@@ -40,6 +43,7 @@ import getFAAmenities, { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsI
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBath, faBed, faEye, faFire, faFireFlameCurved, faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
 import { faWatchmanMonitoring } from '@fortawesome/free-brands-svg-icons';
+import Animated from 'react-native-reanimated';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -53,7 +57,7 @@ export default function PropertyDetailScreen({navigation, route}){
       fetchProperties()
       getTokens()
     }, [])
- 
+    const imageOpacityTranslation = useRef(new RNAnimated.Value(0)).current;
     const flatListRef = useRef(null)
     const [propData, setPropData] = useState(route.params.data.propertyInfo);
     const postedUserData = route.params.data.userInfo;
@@ -78,8 +82,18 @@ export default function PropertyDetailScreen({navigation, route}){
                 navigation.navigate("Chat", {url:channelUrl, id: USERID, postedBy:postedUserData.firstName})
             }
         });
+    }
 
-        
+    function changeImageOpacity(){
+
+        RNAnimated.timing(imageOpacityTranslation,{
+            toValue:1,
+            bounciness:0,
+            delay:100,
+            useNativeDriver: true,
+            duration:400
+        }).start()
+       
     }
 
     async function getTokens(){
@@ -108,7 +122,6 @@ export default function PropertyDetailScreen({navigation, route}){
 
     async function fetchProperties(){
         const accessToken = await SecureStorage.getItem("accessToken");
-        console.log("FETCH PROPERTYDETAIL")
         await fetch('https://sublease-app.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
             method: 'POST',
             headers: {
@@ -203,27 +216,38 @@ export default function PropertyDetailScreen({navigation, route}){
         })
     }
 
-    function isCloseToTop({layoutMeasurement, contentOffset, contentSize}){
-       
-        return contentOffset.y < -HEIGHT*0.2;
-     }
+ 
+    function getMapView(lat1,lon1,lat2,lon2) {
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2-lat1);  // deg2rad below
+        var dLon = deg2rad(lon2-lon1); 
+        var a = 
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+          Math.sin(dLon/2) * Math.sin(dLon/2)
+          ; 
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var d = R * c; // Distance in km
+        return ((d+1) * 0.621371) / 69 ; //km to miles
+      }
+      
+      function deg2rad(deg) {
+        return deg * (Math.PI/180)
+      }
 
     return(
        
         <Container>             
             <PropertyDescription>
     
-                <ScrollView showsVerticalScrollIndicator={false} onRefresh={()=>console.log("hi")} 
-               
+                <ScrollView 
+                showsVerticalScrollIndicator={false} 
                 bouncesZoom={1}
                 scrollEventThrottle={5}
-                // onScroll={({nativeEvent}) => {
-                //     if(isCloseToTop(nativeEvent)){
-                //        navigation.goBack()
-                //     }
-                // }}
+
                 >
-                
+                    <Lottie source={require('../../../ImageLoading.json')} autoPlay loop={2}  style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/>
+
                     <View style={{height:HEIGHT*0.35, width:WIDTH}}>
                         <FlatList 
                         onScroll={onScroll}
@@ -234,7 +258,11 @@ export default function PropertyDetailScreen({navigation, route}){
                         renderItem={({item})=>(
                            
                             <View style={{width:WIDTH, height:HEIGHT*0.35,justifyContent:'center'}}>
-                                <Image source={{uri: item}} style={{width:WIDTH, height:HEIGHT*0.35,}} />
+                                <RNAnimated.Image onLoadEnd={changeImageOpacity} source={{uri: item}} style={{width:WIDTH, height:HEIGHT*0.35, 
+                                opacity: imageOpacityTranslation.interpolate({
+                                    inputRange:[0,1],
+                                    outputRange:[0,1]
+                                })}} />
                             </View>
                         )}
                         snapToAlignment="center"
@@ -256,22 +284,21 @@ export default function PropertyDetailScreen({navigation, route}){
                             }
 
                         </View>
+
+
                         
                     </View>
                     
                     <CardSectionOne>
                         <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                             <TypeText>{propData.type} for rent</TypeText>
-                            <View style={{flexDirection:'row'}}>
-                                {route.params.distance != undefined &&
-                                <View>
-                                    <Ionicons name="location"  size={20} style={{marginRight:WIDTH*0.01}}/>
-                                    
-                                    <TypeText style={{color:'black', fontWeight: '500',}}>{route.params.distance} miles</TypeText>
-                                </View>
-                                }
+                            {route.params.distance != undefined &&
+                            <View style={{flexDirection:'row'}}>   
+                                <Ionicons name="location"  size={20} style={{marginRight:WIDTH*0.01}}/>
+                                <TypeText style={{color:'black', fontWeight: '500',}}>{route.params.distance} miles</TypeText>
                             </View>
-                        </View>
+                        }
+                       </View>
                         <CardTitle>{propData.loc.streetAddr}</CardTitle>
                         <LocationDistanceContainer>
                             <LocationText>{propData.loc.secondaryTxt}</LocationText>
@@ -354,13 +381,13 @@ export default function PropertyDetailScreen({navigation, route}){
                         <View style={{width: WIDTH*0.9, height: HEIGHT*0.25, borderRadius:25, marginTop: HEIGHT*0.025 }}>
                         <MapView
                             scrollEnabled={false}
-                            zoomEnabled={false}
+                           
                             style={{flex:1, position:'relative', borderRadius:10}}
                             initialRegion={{
                             latitude: route.params.currentLocation == undefined ? propData.loc.coordinates[1] : (propData.loc.coordinates[1] +route.params.currentLocation[0])/2, 
                             longitude: route.params.currentLocation == undefined ? propData.loc.coordinates[0] : (propData.loc.coordinates[0]+ route.params.currentLocation[1]) /2,
-                            latitudeDelta: 0.03,
-                            longitudeDelta: 0.03,
+                            latitudeDelta: route.params.currentLocation == undefined ? 0.03 : getMapView(propData.loc.coordinates[1], propData.loc.coordinates[0], route.params.currentLocation[0], route.params.currentLocation[1]),
+                            longitudeDelta: route.params.currentLocation == undefined ? 0.03 : getMapView(propData.loc.coordinates[1], propData.loc.coordinates[0], route.params.currentLocation[0], route.params.currentLocation[1])
                             }}
                         >
                             <Marker
