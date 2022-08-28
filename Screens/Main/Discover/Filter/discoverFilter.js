@@ -5,30 +5,9 @@ import {
   View,
   Pressable,
   Animated,
-<<<<<<< HEAD
 } from 'react-native';
 import { MEDIUMGREY,HEIGHT, WIDTH, amenitiesList, GetFAIconsInBlack, PRIMARYCOLOR } from '../../../../sharedUtils';
 import Modal from "react-native-modal";
-=======
-  Modal
-} from 'react-native';
-
-const PROPERTIESTYPES = 
-[{type: "Room", icon:'bed'},
-  {type: "House", icon:'home'}, 
-  {type: "Apartment", icon: 'building'}, 
-  {type:"Studio", icon :'user'}
-];
-
-const BEDROOMTYPES = ["Studio","1" ,"2", "3", "4P"];
-const BATHROOMTYPES = ["1", "2", "3", "4P"];
-
-
-const PRIMARYGREY = '#5e5d5d'
-
-import { MEDIUMGREY,HEIGHT, WIDTH, DARKGREY, amenitiesList, GetAmenitiesIcon, GetFAIcons, GetFAIconsInBlack, PRIMARYCOLOR } from '../../../../sharedUtils';
-
->>>>>>> 5329ff7e9811eb80e4a71b1fc84169038306f418
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
