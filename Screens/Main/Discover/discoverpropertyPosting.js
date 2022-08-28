@@ -3,22 +3,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
     SafeAreaView,
     ScrollView,
-    StatusBar,
-    StyleSheet,
     Text,
-    useColorScheme,
     View,
-    Dimensions,
-    Button,
     Keyboard,
-    TextInput,
     Image,
     Animated,
     Pressable,
     FlatList,
-    KeyboardAvoidingView,
     TouchableOpacity,
-    InteractionManager
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,11 +20,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import DatePicker from 'react-native-date-picker'
 

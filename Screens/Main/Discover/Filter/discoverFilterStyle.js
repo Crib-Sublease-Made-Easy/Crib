@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import {Dimensions, Pressable, Text} from 'react-native';
+import {Pressable, Text} from 'react-native';
 
 import styled from 'styled-components/native';
 import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, EXTRALIGHT, MEDIUMGREY, DARKGREY } from '../../../../sharedUtils';

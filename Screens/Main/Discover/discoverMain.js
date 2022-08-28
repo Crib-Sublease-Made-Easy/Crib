@@ -1,19 +1,5 @@
 import * as React  from 'react';
-import { useState, useContext, createContext } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  Dimensions
-} from 'react-native';
-
 import { createBottomTabNavigator,  } from '@react-navigation/bottom-tabs';
-
-
 import DiscoverScreen from './discover';
 import MessageScreen from '../Message/message.js'
 import ProfileScreen from '../Profile/profile';
@@ -21,21 +7,12 @@ import ProfileScreen from '../Profile/profile';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-
-
 const Tab = createBottomTabNavigator();
 
 const PRIMARYCOLOR = '#4050B5'
-const PRIMARYGREY = '#5e5d5d'
 
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
 
 export default function DiscoverTab(){
-
-
-
-
     return(
 
     <Tab.Navigator 
@@ -78,7 +55,6 @@ export default function DiscoverTab(){
               }
          
           })})}/>
-        {/* <Tab.Screen name="Message" options={{ unmountOnBlur: true}}component={MessageScreen} /> */}
         <Tab.Screen name="Message" component={MessageScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>

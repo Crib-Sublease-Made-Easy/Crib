@@ -1,14 +1,8 @@
-import React, {useState, useEffect, useRef, useMemo, useCallback, useContext} from 'react';
+import React, {useState, useEffect, useRef, useCallback, useContext} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
   Text,
-  useColorScheme,
   View,
-  Dimensions,
-  Button,
   Keyboard,
   Animated as RNAnimated,
   Image,
@@ -20,15 +14,9 @@ import {
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLOR, DARKGREY, EXTRALIGHT } from '../../../sharedUtils';
 import OneSignal from 'react-native-onesignal';
-
-
-const TEXTGREY = '#969696'
-
+import { CardStyleInterpolators } from '@react-navigation/stack';
 import DiscoverSearchScreen from './discoverSearch'
-
-
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
@@ -38,26 +26,21 @@ import {SearchContainer, SearchContainerPlaceholderText, MapContainer,
     SeachIconContainer, DeleteIconContainer, CustomMarker,  SearchHerePressable, SearchHereText } from './discoverStyle';
 
 import { SearchInputCancelIconContainer } from './discoverStyle';
-
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-
 import DiscoverFilterScreen from './Filter/discoverFilter';
-
 //Components 
 import PropertyCard from './propertyCard';
-
-
-
 //React Native Map
 import MapView , { Marker }from 'react-native-maps';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-
 import { UserContext } from '../../../UserContext';
 
+const TEXTGREY = '#969696'
+FontAwesome.loadFont()
+Ionicons.loadFont()
 var axios = require('axios');
 
 export default function DiscoverScreen({navigation, route}){
-
 
     const {sb, USERID, userInitialLocation} = useContext(UserContext);
       //Method for handling notifications received while app in foreground
@@ -159,7 +142,6 @@ export default function DiscoverScreen({navigation, route}){
             return false;
         }
     }
-
 
     //Open the preview card when the map button on the propertycard in flatlsit is pressed 
     function openPreviewCard(){
@@ -267,9 +249,6 @@ export default function DiscoverScreen({navigation, route}){
         if(filterType != ""){
             s = s + "&type=" + filterType;
         }
-        // if(filterSort != ""){
-        //     s = s + "&type=" + filterSort;
-        // }
         if(filterDistance != ""){
             s = s + "&maxDistance=" + parseInt(filterDistance);
         }

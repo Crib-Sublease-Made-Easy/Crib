@@ -220,12 +220,13 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       }).then(async e => e.json()).then(async (response) => {
         try {
           await SecureStorage.setItem("accessToken", response.accessToken)
+          const at = await SecureStorage.getItem("accessToken");
+          console.log("ACCESS TOKEN ", at)
         } catch (err) {
           alert(err)
         }
       })
 
-      const at = await SecureStorage.getItem("accessToken");
 
 
       await fetch('https://sublease-app.herokuapp.com/users/' + id, {

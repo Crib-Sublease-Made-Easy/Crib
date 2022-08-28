@@ -1,23 +1,19 @@
 import React, {useState, useEffect, useRef, useContext, useCallback} from 'react';
 import {
-    SafeAreaView,
     ScrollView,
-    StatusBar,
-    StyleSheet,
     Text,
-    useColorScheme,
     View,
     Dimensions,
-    Button,
-    Keyboard,
-    TextInput,
     Image,
+<<<<<<< HEAD
     Pressable,
     RefreshControl,
     Vibration,
     Animated as RNAnimated
+=======
+>>>>>>> a4a55b24d2e6f9e48d307bbe1946f449ce63869d
   } from 'react-native';
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import SecureStorage from 'react-native-secure-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -31,9 +27,9 @@ import Lottie from 'lottie-react-native';
 
 
 
-import { Container, PropertyDescription, ImageStyle, CardSectionOne, CardTitle, LocationDistanceContainer,
-        LocationText, BedAndBathContainer, BedBathLogo, Divider, CardSectionTwo, InfoHeaderText,
-            InfoContainer, BothInfoContainer, InfoText, DescriptionText, AmenitiesItem, Footer,
+import { Container, PropertyDescription, CardSectionOne, CardTitle, LocationDistanceContainer,
+        LocationText, BedAndBathContainer, CardSectionTwo, InfoHeaderText,
+            InfoContainer, InfoText, AmenitiesItem, Footer,
             PricePerMonth, ContactTanentButton, TenantInfoContainer, TenantInfo, ProfileImageContainer,
            DateContainer, DateText, DescriptionContainer, AmenitiesText, TypeText, BedContainer,
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
@@ -42,9 +38,12 @@ import { FlatList } from 'react-native-gesture-handler';
 import getFAAmenities, { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY } from '../../../sharedUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBath, faBed, faEye, faFire, faFireFlameCurved, faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
+<<<<<<< HEAD
 import { faWatchmanMonitoring } from '@fortawesome/free-brands-svg-icons';
 import Animated from 'react-native-reanimated';
 
+=======
+>>>>>>> a4a55b24d2e6f9e48d307bbe1946f449ce63869d
 const PRIMARYGREY = '#5e5d5d'
 
 const HEIGHT = Dimensions.get('screen').height;
@@ -185,28 +184,6 @@ export default function PropertyDetailScreen({navigation, route}){
             }) 
             .then(res => res.json()).then(async message =>{
                 console.log(message)
-                
-                    
-                
-                    // const tempFavProp = await AsyncStorage.getItem("favoritePropertiesId")
-                    // if(tempFavProp != null){
-                    //     const JSONtempFavProp = JSON.parse(tempFavProp)
-                    //     let temp = [];
-                        
-                    //     JSONtempFavProp.forEach(element => {
-                    //         temp.push(element)
-                    //     });
-                    //     temp.push(route.params.data.propertyInfo._id)
-                        
-                    //     await AsyncStorage.setItem("favoritePropertiesId", JSON.stringify(temp))
-                    // }
-                    // else{
-                    //     let temp = [];
-                    //     temp.push(route.params.data.propertyInfo._id)
-                    //     await AsyncStorage.setItem("favoritePropertiesId",  JSON.stringify(temp))
-                    // }
-                    
-
                 await AsyncStorage.removeItem("favoriteProperties");
                
                 setLiked(!liked)
@@ -244,7 +221,10 @@ export default function PropertyDetailScreen({navigation, route}){
                 showsVerticalScrollIndicator={false} 
                 bouncesZoom={1}
                 scrollEventThrottle={5}
+<<<<<<< HEAD
 
+=======
+>>>>>>> a4a55b24d2e6f9e48d307bbe1946f449ce63869d
                 >
                     <Lottie source={require('../../../ImageLoading.json')} autoPlay loop={2}  style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/>
 
