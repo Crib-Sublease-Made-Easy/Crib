@@ -257,6 +257,7 @@ export const RowItemName = styled.Text`
 `
 
 export const ProfileHeading = styled.Text`
+  font-family: ${ROBOTOFONTFAMILY}
   width: ${WIDTH*0.9}px
   font-size: ${HEIGHT*0.03}px
   padding-vertical: ${HEIGHT*0.025}px

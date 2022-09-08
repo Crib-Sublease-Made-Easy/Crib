@@ -36,7 +36,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     ,filterType, setfilterType, filterDistance, setfilterDistance, filterBedroom, setfilterBedroom,filterBathroom, setfilterBathroom
     ,filterPriceHigher, setfilterPriceHigher, filterAmenities, setfilterAmenities, propertyAmenities, setpropertyAmenities, setRetrieveMore,
     filterPreviewValue, setfilterPreviewValue, filterPreviewDistanceValue, setfilterPreviewDistanceValue, filterAvailableFrom, setfilterAvailableFrom,
-    filterAvailableTo, setfilterAvailableTo, loadProperty
+    filterAvailableTo, setfilterAvailableTo, loadProperty, setFlatlistRefreshingTrue, setFlatlistRefreshingFalse
 }){
     const [scrollEnabled, setscrollEnabled] = useState(true)
     const [reset, setReset] = useState(false)
@@ -83,7 +83,8 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     },[])
 
     function filter(){
-        setRetrieveMore(true)
+        setFlatlistRefreshingTrue()
+    setRetrieveMore(true)
     let s = "";
     if(filterType != ""){
         s = s + "&type=" + filterType;
@@ -129,6 +130,11 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
             alert(e)
     })
     retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities,new Date(filterAvailableFrom).getTime(), new Date(filterAvailableTo).getTime() )
+
+    setTimeout(()=>{
+        setFlatlistRefreshingFalse()
+    },2000)
+        
     }
 
     async function checkResetAndBack(){
@@ -144,7 +150,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
 
     return(
        
-        <Modal visible={open} animationType='slide'>
+        <Modal visible={open} animationType='slide' style={{flex: 1, backgroundColor:'white', margin: 0}}>
         <SafeAreaView style={{flex: 1}}>
             <Animated.View>
             <HeaderContainer>

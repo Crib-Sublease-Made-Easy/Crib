@@ -365,7 +365,7 @@ export default function ProfileScreen({navigation}){
                 <View style={{width:WIDTH, height:HEIGHT*0.45, }}>
                     {favoriteProperties.length == 0 ?
                         <Pressable style={{width:WIDTH, height:'100%',alignItems:'center',justifyContent:'center'}} onPress={()=> navigation.navigate("Discover")}>
-                            <Lottie source={require('../../../likeanimation.json')} autoPlay loop={20}  style={{width:WIDTH*0.4, height: WIDTH*0.4, }}/>
+                            {/* <Lottie source={require('../../../likeanimation.json')} autoPlay loop={20}  style={{width:WIDTH*0.4, height: WIDTH*0.4, }}/> */}
                             <DefaultPostFavText>No likes yet. Start discovering...</ DefaultPostFavText>
                         </Pressable>
                         :

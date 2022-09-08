@@ -137,13 +137,13 @@ const DefaultPostFavText = styled.Text`
 
 export default function PropertyCard({navigation, setSelectedPin, loadMoreProperties,
     filteredPropertiesData, flatlistRefreshing, length, moveMap, openPreviewCard, userId,
-    searching, currentLocation
+    searching, currentLocation, loading
    
 }){
     const flatListItemOpacity = useRef(new RNAnimated.Value(0)).current;
     const flatlistRef = useRef(0);
     const [previewing, setPreviewing] = useState(false)
-    const [loading, setLoading] = useState(true);
+   
     // const [propertiesData, setPropertiesData] = useState([]);
 
     useEffect(()=>{
@@ -217,21 +217,13 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     function handleFlatlistOpacity(){
       RNAnimated.timing(flatListItemOpacity,{
         toValue: 1,
-        delay:0,
+        delay:200,
         useNativeDriver: true,
-        duration:400
+        duration:200
         
       }).start()
     }
-    function closeFlatlistOpacity(){
-      console.log("helloeeee")
-      RNAnimated.timing(flatListItemOpacity,{
-        toValue: 0,
-        useNativeDriver: true,
-        duration:0
-        
-      }).start()
-    }
+
 
     const bottomSheetStyle = useAnimatedStyle(()=>{
         return{
@@ -290,9 +282,9 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                   <DateFont>{Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0]))} miles away</DateFont>
             
                 </PropertyInfoContainer>   
-                <SharedElement id="view">
+              
                     <View style={{backgroundColor:'white'}}></View>
-                </SharedElement>
+              
             </CardContainer>
           </RNAnimated.View>
          
@@ -305,7 +297,6 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     <View  style={{flex:1}}>
       
     <GestureDetector  gesture={gesture}>
-    {/* <RNAnimated.View></RNAnimated.View> */}
     
     
       <Animated.View
@@ -316,15 +307,13 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         <DragGreyLineContainer>
           <DragGreyLine></DragGreyLine>
           <View style={{width: WIDTH, justifyContent:'center', alignItems:'center', height: HEIGHT*0.045, shadowColor:LIGHTGREY, shadowOffset:{width:0, height:HEIGHT*0.01}, shadowRadius: 5, shadowOpacity: 0.2, backgroundColor:'white'}}>
-          {length != 0 && 
-            <PropertiesLength>{length} properties found</PropertiesLength>
-          }
+       
           </View>
         </DragGreyLineContainer>
-        {flatlistRefreshing ?
+        {/* {flatlistRefreshing ?
         <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />
-        :
-        length != 0 ?
+        : */
+        filteredPropertiesData.length != 0 ?
        
           <FlatList
           onEndReachedThreshold = {0.4}
@@ -359,6 +348,11 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
           renderItem={(item, index)=>renderCards(item, index)}
           />
          
+          :
+          loading ?
+          <View>
+
+          </View>
           :
           <View style={{justifyContent:'center', alignItems:'center', marginTop: HEIGHT*0.1}}>
             <Lottie source={require('../../../noProperties.json')} autoPlay loop={false} style={{width:WIDTH*0.6, height: WIDTH*0.4, }}/>

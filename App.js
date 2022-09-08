@@ -10,6 +10,7 @@ import {
   useColorScheme,
   View,
   Dimensions,
+  Image
 } from 'react-native';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
@@ -96,6 +97,7 @@ export default function App() {
 
   const [userInitialLocation, setUserInitialLocation] = useState(null)
   const [sendBirdConnected, setSendbirdConnection] = useState(false)
+  const [preloadProperties, setPreloadProperties] = useState([])
 
 
 
@@ -147,6 +149,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 });
 
   useEffect(() => {
+    prefetch()
     getLocation()
     console.log("INITIALIZE APP.JS USEEFFECT")
     // refreshAccessToken()
@@ -172,6 +175,29 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     };
 
   }, [])
+
+  function prefetch(){
+    fetch('https://sublease-app.herokuapp.com/properties/query?page=0', {
+            method: 'GET',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+            }
+            }) 
+            .then(res => res.json()).then(properties =>{
+                properties.forEach(async prop => {
+                  
+                    const success = await Image.prefetch(prop.propertyInfo.imgList[0])
+                    console.log(success)
+                });
+              
+                
+                
+            })
+            .catch(e=>{
+                alert(e)
+      })
+  }
   const disconnectSendbird = async () =>{
     const UID = await SecureStorage.getItem("userId");
     if (UID != undefined) {
@@ -209,8 +235,11 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     const rt = await SecureStorage.getItem("refreshToken");
     const id = await SecureStorage.getItem("userId");
     if (rt != undefined) {
-      setUser(id)
-      fetch('https://sublease-app.herokuapp.com/tokens/accessRefresh', {
+
+      connectSendbird()
+      setUser(id) 
+     
+      await fetch('https://sublease-app.herokuapp.com/tokens/accessRefresh', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -220,14 +249,12 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       }).then(async e => e.json()).then(async (response) => {
         try {
           await SecureStorage.setItem("accessToken", response.accessToken)
-          const at = await SecureStorage.getItem("accessToken");
-          console.log("ACCESS TOKEN ", at)
         } catch (err) {
           alert(err)
         }
       })
-
-
+      
+      const at = await SecureStorage.getItem("accessToken");
 
       await fetch('https://sublease-app.herokuapp.com/users/' + id, {
         method: 'GET',
@@ -237,21 +264,10 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
           'Authorization': 'Bearer ' + at
         }
       }).then(async e => e.json()).then(async (response) => {
-        if(response._id != undefined){
-          await connectSendbird().then(()=>{
-              try {
-                console.log("Login")
-                login(id);
-              } 
-              catch (err) {
-                console.log(err)
-              }
-            })
-        }
-        else{
-          alert("Error logging in.")
-        }
-      })      
+        const success = Image.prefetch(response.profilePic)
+        console.log("PREFETCH  --- ProfilePic")
+      })     
+       
     }
     else{
       console.log("Refresh Token is undefined. User is not logged in.")
@@ -259,7 +275,6 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   }
 
   async function getLocation(){
-    console.log("hello")
     Geolocation.getCurrentPosition(info => 
      
       setUserInitialLocation([info.coords.latitude,info.coords.longitude])
@@ -287,10 +302,12 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     },
   });
 
+
+
   return (
 
     <NavigationContainer>
-      <UserContext.Provider value={{ user, login, logout, sb, USERID: user, userInitialLocation: userInitialLocation}}>
+      <UserContext.Provider value={{ user, login, logout, sb, USERID: user, userInitialLocation: userInitialLocation, preloadProperties: preloadProperties}}>
 
         {user != null ?
 
@@ -474,7 +491,8 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
 
             <Stack.Screen name="Landing" component={LandingScreen} options={{ 
-              headerStyle:{backgroundColor: PRIMARYCOLOR}, headerShadowVisible: false, headerTitle:"",
+              // headerStyle:{backgroundColor: PRIMARYCOLOR}, headerShadowVisible: false, headerTitle:"",
+              headerShown: false,
               cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter}} 
               />
             <Stack.Screen

@@ -24,26 +24,24 @@ const WIDTH = Dimensions.get('screen').width;
 
 import { InboxTitle, FlatlistItemContainer, FlatlistUnread, FlatlistLeft, FlatlistRight, 
     LocationText,TextAndTime, LastMessageTime, DefaultPostFavText } from './messageStyle';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MessageScreen({navigation, route}){
-    const {sb} = useContext(UserContext);
+    const {sb, USERID} = useContext(UserContext);
 
-    const [convoList, setConvoList] = useState('')
+    const [convoList, setConvoList] = useState([])
     const [userId, setUserId] = useState('')
     const [receiverName, setReceiverName] = useState('')
-    const [changed, setChanged] = useState(false)
 
     useEffect(()=>{
-        const unsubscribe = navigation.addListener('focus', async  () => {
+        const unsubscribe = navigation.addListener('focus', () => {
             console.log("FOCUSSSSSS")
             fetchConvos()
         });
-        sb.addChannelHandler('channels', channelHandler);
+        // sb.addChannelHandler('channels', channelHandler);
 
         return unsubscribe;
 
-    }, [navigation])
+    }, [navigation, convoList])
 
     const channelHandler = new sb.ChannelHandler();
     channelHandler.onChannelChanged = channel => {
@@ -55,9 +53,10 @@ export default function MessageScreen({navigation, route}){
   
     const fetchConvos = useCallback(async() => {
         console.log("rEFRESH")
-        const UID = await SecureStorage.getItem("userId");
-        setUserId(UID)
-        var listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+       
+        setUserId(USERID)
+        let listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+        
         listQuery.includeEmpty = false;
         listQuery.order = 'latest_last_message'; 
         listQuery.limit = 15;   // The value of pagination limit could be set up to 100.
@@ -68,7 +67,7 @@ export default function MessageScreen({navigation, route}){
                     // Handle error.
                     console.log("error", error)
                 }
-                const tempConvoList = await AsyncStorage.getItem("convoList")
+                // const tempConvoList = await AsyncStorage.getItem("convoList")
                 // if(new Object(JSON.parse(tempConvoList)).toLocaleString() == new Object(groupChannels).toLocaleString()){
                 //     console.log("UPDATE --- CACHE --- convoList")
                 //     setConvoList(tempConvoList)
@@ -82,18 +81,18 @@ export default function MessageScreen({navigation, route}){
                 // A list of group channels is successfully retrieved.
                 // console.log(groupChannels)
                 // console.log("new console list")
-                try{
-                    groupChannels.forEach(channel => {
-                        // console.log(channel)
-                        // console.log("===============")
-                        // console.log(channel.memberMap.
+                // try{
+                //     groupChannels.forEach(channel => {
+                //         // console.log(channel)
+                //         // console.log("===============")
+                //         // console.log(channel.memberMap.
                     
                     
-                    })
-                }
-                catch{e=>{
-                    console.log(e)
-                }}
+                //     })
+                // }
+                // catch{e=>{
+                //     console.log(e)
+                // }}
                     
                 
                 // console.log("After")

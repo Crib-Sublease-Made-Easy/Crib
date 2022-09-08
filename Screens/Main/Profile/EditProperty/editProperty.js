@@ -140,10 +140,10 @@ export default function EditPropertyScreen({navigation, route}){
        
         const accessToken = await SecureStorage.getItem("accessToken");
         ImagePicker.openPicker({
-            width: 300,
-            height: 300,
+            width: 812,
+            height: 812,
             cropping:true,
-            compressImageQuality: 0.3
+            compressImageQuality: 0.8
           }).then(image => {
 
             const formData = new FormData();

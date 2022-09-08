@@ -13,7 +13,8 @@ import {
   Dimensions,
   Image,
   Pressable,
-  ActivityIndicator
+  ActivityIndicator,
+  KeyboardAvoidingView
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
@@ -58,9 +59,9 @@ export default function ChatScreen({navigation, route}){
       onChat = true
       getGroupChannel()
       sb.addChannelHandler('channels', channelHandler);
-      console.log("USEEFFECT Refresh")
+      console.log("USE_EFFECT Refresh")
       
-    }, [channel])
+    }, [])
 
     const channelHandler = new sb.ChannelHandler();
     channelHandler.onMessageReceived = async (targetChannel, m) => {
@@ -142,11 +143,11 @@ export default function ChatScreen({navigation, route}){
           } else{
           await groupChannel.markAsRead()
 
-          await setChannel(groupChannel)
+          setChannel(groupChannel)
           console.log("GROUP CHANNEL", groupChannel.data)
           await getPropertyInfo(groupChannel.data)
           var listQuery = groupChannel.createPreviousMessageListQuery();
-          await setQuery(listQuery)
+          setQuery(listQuery)
           fetchConvos(listQuery)
           }
         }
@@ -230,7 +231,7 @@ export default function ChatScreen({navigation, route}){
             // Handle error.
             console.log("ERROR CHANNEL")
         } else{
-        console.log("messages fetched")
+        console.log("messages fetcheddddd")
         messages.map(m => {
           m._id = m.messageId
           m.text = m.message
@@ -289,18 +290,21 @@ export default function ChatScreen({navigation, route}){
                 <Ionicons name="ellipsis-horizontal" size={25} />
               </Pressable>
           </ChatImageSettingContainer>
-      </HeaderContainer>
+    </HeaderContainer>
+    {/* <View style={{height:HEIGHT*0.075, backgroundColor:'red'}}>
 
+    </View> */}
     {loading ?
       <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />
     :
+
       <GiftedChat
         
         ref={GiftedChatRef}
         bottomOffset={getBottomSpace()}
-      
+       
         
-      
+     
 
         renderInputToolbar={(props)=>(
           <MessageContainer>
@@ -312,9 +316,6 @@ export default function ChatScreen({navigation, route}){
               
           </MessageContainer>
         )}
-        
-          
-        
         messages={messages}
         onSend={messages => onSend(messages)}
         loadEarlier = {true}
@@ -325,7 +326,8 @@ export default function ChatScreen({navigation, route}){
           _id: id
         }}
       />  
-    }
+      
+      }
     <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} leaveChat={()=> leaveChat()} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
     </SafeAreaView>
     )

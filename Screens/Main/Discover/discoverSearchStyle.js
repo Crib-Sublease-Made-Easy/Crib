@@ -19,7 +19,7 @@ import {
 
 
 import styled from 'styled-components/native';
-import { DARKGREY, EXTRALIGHT } from '../../../sharedUtils';
+import { DARKGREY, EXTRALIGHT, MEDIUMGREY } from '../../../sharedUtils';
 
 const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
@@ -70,21 +70,25 @@ export const SearchResultTitle = styled.Text`
 `
 
 export const AutocompleteResultItems = styled.Pressable`
-  width: ${WIDTH*0.9}px;
+  width: ${WIDTH}px;
   align-self: center
   flex-direction: row
-  padding-vertical: ${HEIGHT*0.015}px
+  padding-vertical: ${HEIGHT*0.0125}px
+  padding-horizontal: ${WIDTH*0.05}px
   align-items: center
+  border-bottom-width: 1px
+  border-color: ${MEDIUMGREY}
 `
 
 export const LocationPrimaryText = styled.Text`
-  font-size: ${HEIGHT*0.02}px
+  font-size: ${HEIGHT*0.0175}px
+  max-width:${WIDTH*0.7}px
   font-weight: 500
   color: black
 `
 
 export const LocationSecondaryText = styled.Text`
-  font-size: ${HEIGHT*0.0175}px
+  font-size: ${HEIGHT*0.015}px
   font-weight: 400
   color: ${DARKGREY}
 `

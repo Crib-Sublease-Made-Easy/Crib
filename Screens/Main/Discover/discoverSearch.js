@@ -85,7 +85,7 @@ async function pressAutocompleteItem(value){
         {locationQuery.trim().length != 0 &&
         <Pressable hitSlop={WIDTH*0.025} onPress={()=>setLocationQuery("")}>
         
-          <Ionicons name='close-circle'  color='black' size={20}/>
+          <Ionicons name='close-circle'  color='black' size={25}/>
         </Pressable>
         }
         </CancelContainer>

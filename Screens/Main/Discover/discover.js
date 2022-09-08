@@ -42,7 +42,7 @@ var axios = require('axios');
 
 export default function DiscoverScreen({navigation, route}){
 
-    const {sb, USERID, userInitialLocation} = useContext(UserContext);
+    const {sb, USERID, userInitialLocation, preloadProperties} = useContext(UserContext);
       //Method for handling notifications received while app in foreground
       OneSignal.setNotificationOpenedHandler(notification => {
         // console.log("OneSignal: notification opened:", notification);
@@ -77,7 +77,7 @@ export default function DiscoverScreen({navigation, route}){
 
     const [filterModal, setFilterModal] = useState(false)
 
-    const [filteredProperties, setFilteredProperties] = useState([])
+    const [filteredProperties, setFilteredProperties] = useState(preloadProperties)
 
     const [propertyPreviewCard, setPropertyPreviewCard] = useState(false)
     const [markerClickIndex, setMarkerClickIndex] = useState()    
@@ -192,8 +192,10 @@ export default function DiscoverScreen({navigation, route}){
 
     //Load initial properties
     const loadProperty = useCallback(()=> {
+
         setPropertyPage(1)
         setRetrieveMore(true)
+        setLoading(true)
         let s = "";
         if(filterType != ""){
             s = s + "&type=" + filterType;
@@ -227,10 +229,9 @@ export default function DiscoverScreen({navigation, route}){
             }) 
             .then(res => res.json()).then(properties =>{
                 properties.forEach(async prop => {
-                     prop.propertyInfo.imgList.forEach(async img => {
-                        const success = await Image.prefetch(img)
-                        console.log(success)
-                     });
+                  
+                    const success = await Image.prefetch(prop.propertyInfo.imgList[0])
+                     
                 });
                 setFilteredProperties(properties)
                 
@@ -239,6 +240,10 @@ export default function DiscoverScreen({navigation, route}){
             .catch(e=>{
                 alert(e)
         })
+        setTimeout(()=>{
+            setLoading(false)
+        },2000)
+        
     },[currentLocation])
 
     const loadMoreProperties = async() => {
@@ -508,7 +513,7 @@ export default function DiscoverScreen({navigation, route}){
             shadowOpacity: 0.4, elevation: 5, display: propertyPreviewCard ? 'flex' : 'none',
             opacity: opacityTranslation.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0, 1]
+                outputRange: [0, 1],
             })}}>
                     
                 {selectedPin != undefined && selectedPin != "" &&
@@ -572,7 +577,7 @@ export default function DiscoverScreen({navigation, route}){
         <PropertyCard index={0} navigation={navigation} length={pinsData.length} userId={userId}
         propertiesData={propertiesData} loadMoreProperties={loadMoreProperties} filteredPropertiesData={filteredProperties} markerClickIndex={markerClickIndex}
         flatlistRefreshing={flatlistRefreshing} mapRef={mapRef} onMarkerClick={onMarkerClick} currentLocation={currentLocation} moveMap={moveMap}
-        setSelectedPin={setSelectedPin} openPreviewCard={openPreviewCard} locationQuery={locationQuery} searching={searching}/>
+        setSelectedPin={setSelectedPin} openPreviewCard={openPreviewCard} locationQuery={locationQuery} searching={searching} loading={loading}/>
 
         <DiscoverFilterScreen open={filterModal} close={()=>setFilterModal(false)} retrieveAllPins={retrieveAllPins}
         currentLocation={currentLocation} setFilteredProperties={setFilteredProperties} setPropertyPage={setPropertyPage} setRetrieveMore={setRetrieveMore}
@@ -584,7 +589,7 @@ export default function DiscoverScreen({navigation, route}){
         filterPreviewDistanceValue={filterPreviewDistanceValue} setfilterPreviewDistanceValue={setfilterPreviewDistanceValue}
         filterAvailableFrom={filterAvailableFrom} setfilterAvailableFrom={setfilterAvailableFrom}
         filterAvailableTo={filterAvailableTo} setfilterAvailableTo={setfilterAvailableTo} openMapViewing={()=> setMapViewing(true)} closeMapViewing={()=> setMapViewing(false)}
-        loadProperty={loadProperty}
+        loadProperty={loadProperty} setFlatlistRefreshingTrue={()=>setFlatlistRefreshing(true)} setFlatlistRefreshingFalse={()=>setFlatlistRefreshing(false)}
         />
 
         <DiscoverSearchScreen open={discoverSearchVisible} close={()=> setDiscoverSearchVisible(false)} selectCurrentLocation={selectCurrentLocation}/>
