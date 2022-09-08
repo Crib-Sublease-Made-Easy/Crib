@@ -38,7 +38,8 @@ import Lottie from 'lottie-react-native';
 const PRIMARYCOLOR = '#4050B5'
 const TEXTGREY = '#969696'
 
-import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, TEXTINPUTBORDERCOLOR, ROBOTOFONTFAMILY } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, TEXTINPUTBORDERCOLOR, ROBOTOFONTFAMILY, EXTRALIGHT } from '../../../sharedUtils';
+import { SystemMessage } from 'react-native-gifted-chat';
 
 const CardContainer = styled(Pressable)`
   width: ${WIDTH*0.9}px
@@ -112,7 +113,7 @@ const DragGreyLineContainer = styled.View`
   
   width: ${WIDTH}px;
   align-items: center
-  padding-top: ${HEIGHT*0.02}px;
+  padding-top: ${HEIGHT*0.015}px;
 `  
 const DragGreyLine = styled.View`
   height: ${HEIGHT*0.004}px;
@@ -149,7 +150,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     useEffect(()=>{
      
       if(searching){
-        translateY.value = withSpring(HEIGHT*0.66, {stiffness: 70, mass: 0.3, damping:15})
+        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:15})
       }
       if(flatlistRefreshing){
         translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
@@ -238,6 +239,17 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         moveMap(pinInfo.propertyInfo.loc.coordinates[1] - 0.015,pinInfo.propertyInfo.loc.coordinates[0])
         translateY.value = withSpring(HEIGHT*0.67, {stiffness: 50, mass: 0.3, damping:15})
     }
+
+    function toogleCard(){
+      console.log(translateY.value)
+      if(translateY.value > HEIGHT*0.5){
+
+        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
+      }
+      else{
+        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:15})
+      }
+    }
   
 
     const renderCards = (data, index) =>{
@@ -305,9 +317,12 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         shadowColor: 'black', shadowRadius: 15,shadowOffset: {width: 0, height: 0},  shadowOpacity: 0.2, elevation: 5,
       }]}>
         <DragGreyLineContainer>
-          <DragGreyLine></DragGreyLine>
+          
           <View style={{width: WIDTH, justifyContent:'center', alignItems:'center', height: HEIGHT*0.045, shadowColor:LIGHTGREY, shadowOffset:{width:0, height:HEIGHT*0.01}, shadowRadius: 5, shadowOpacity: 0.2, backgroundColor:'white'}}>
-       
+            <Pressable onPress={toogleCard}
+            style={{paddingVertical: HEIGHT*0.005, paddingHorizontal: WIDTH*0.05, backgroundColor: EXTRALIGHT, borderRadius:20}}>
+              <Ionicons name='map' size={25} color={PRIMARYCOLOR}/>
+            </Pressable>
           </View>
         </DragGreyLineContainer>
         {/* {flatlistRefreshing ?
