@@ -37,6 +37,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
 import { ChatImageSettingContainer } from './chatStyle';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -133,7 +134,7 @@ export default function ChatScreen({navigation, route}){
 
 
     const getGroupChannel = async() => {
-      sb.GroupChannel.getChannel(url, async function(groupChannel, error) {
+      await sb.GroupChannel.getChannel(url, async function(groupChannel, error) {
         if (error) {
             // Handle error.
             console.log("ERROR CHANNEL")
@@ -147,14 +148,15 @@ export default function ChatScreen({navigation, route}){
           console.log("GROUP CHANNEL", groupChannel.data)
           await getPropertyInfo(groupChannel.data)
           var listQuery = groupChannel.createPreviousMessageListQuery();
-          setQuery(listQuery)
-          fetchConvos(listQuery)
+
+            setQuery(listQuery);
+            fetchConvos(listQuery)
+      
+          
           }
         }
-      })
-      setTimeout(()=>{
         setLoading(false)
-      },1000)
+      })
     }
 
     deletedChat = (groupChannel) => {
@@ -182,11 +184,7 @@ export default function ChatScreen({navigation, route}){
             channel.leave()
             navigation.goBack()
             onChat = false
-            setLoading(false)
-
-          } else {
-            setLoading(false)
-          }
+          } 
         } else {
           setPropertyInfo(response)
         }
@@ -199,7 +197,8 @@ export default function ChatScreen({navigation, route}){
       listQuery.limit = 20;
       listQuery.reverse = true;
 
-    // Retrieving previous messages.
+      // Retrieving previous messages.
+      console.log(url)
       listQuery.load(function(messages, error) {
         if (error) {
             // Handle error.
@@ -220,26 +219,43 @@ export default function ChatScreen({navigation, route}){
 
     });
   }
-    const fetchConvos = (listQuery) => {
+    const fetchConvos = async (listQuery) => {
       
       listQuery.limit = 20;
       listQuery.reverse = true;
-
-    // Retrieving previous messages.
-      listQuery.load(function(messages, error) {
+      console.log(listQuery)
+      // Retrieving previous messages.
+      listQuery.load(async function(messages, error) {
+        
+          
+        
+       
         if (error) {
             // Handle error.
             console.log("ERROR CHANNEL")
-        } else{
-        console.log("messages fetcheddddd")
-        messages.map(m => {
-          m._id = m.messageId
-          m.text = m.message
-          m.user = {}
-          m.user._id = m._sender.userId
-          m.user.avatar = m._sender.plainProfileUrl
-        })
-        setMessages(messages)
+        } 
+        else{
+          const cachedMessages = await AsyncStorage.getItem(url);
+         
+          if(cachedMessages != null && new Object(JSON.parse(cachedMessages)).toLocaleString() === new Object(messages).toLocaleString()){
+            console.log("UPDATE --- CACHE --- messages")
+            setMessages(JSON.parse(cachedMessages));
+            return;
+          }
+          else{
+            console.log("UPDATE --- FETCH --- messages")
+            console.log("messages fetcheddddd")
+            messages.map(m => {
+              m._id = m.messageId
+              m.text = m.message
+              m.user = {}
+              m.user._id = m._sender.userId
+              m.user.avatar = m._sender.plainProfileUrl
+            })
+            setMessages(messages)
+            console.log(JSON.parse(cachedMessages) == messages)
+            await AsyncStorage.setItem(url, JSON.stringify(messages))
+          }
         // console.log(messages)
         }
         
@@ -256,11 +272,14 @@ export default function ChatScreen({navigation, route}){
 
     //route.params.userData 
 
-    leaveChat = () => {
-      onChat= false
-      channel.leave()
-      navigation.goBack()
-      alert("You have successfully left this chat.")
+    async function leaveChat(){
+        onChat= false
+        await channel.leave()
+      
+        alert("You have successfully left this chat.")
+        navigation.goBack()
+     
+      
     }
     return(
     <SafeAreaView style={{backgroundColor:'white', flex:1}}>
@@ -328,7 +347,7 @@ export default function ChatScreen({navigation, route}){
       />  
       
       }
-    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} leaveChat={()=> leaveChat()} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
+    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} leaveChat={leaveChat} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
     </SafeAreaView>
     )
 }

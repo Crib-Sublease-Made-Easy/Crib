@@ -20,7 +20,7 @@ Ionicons.loadFont()
 import { RowContainer, RowName } from './PropertyOptionStyle';
 
 import { WIDTH, HEIGHT, HeaderContainer, Header, BackButtonContainer, NameContainer, PRIMARYCOLOR, MEDIUMGREY, DARKGREY,  } from '../../../sharedUtils';
-export default function PropertyOptionsModal({navigation,close, visible ,viewProp}){
+export default function PropertyOptionsModal({navigation,close, visible ,viewProp, leaveChat}){
     return(
         <SafeAreaView>
             <Modal backdropTransitionInTiming={300} animationOutTiming={700} 
@@ -47,7 +47,7 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                     <RowName>Report Property</RowName>
                    
                 </RowContainer> */}
-                <RowContainer onPress={()=> leaveChat()}>
+                <RowContainer onPress={leaveChat}>
                     <Ionicons name='close' size={25}  style={{paddingLeft: WIDTH*0.05}} color='red'/>
                     <RowName>Delete Conversation</RowName>
                 </RowContainer>

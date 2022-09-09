@@ -41,12 +41,24 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     const [scrollEnabled, setscrollEnabled] = useState(true)
     const [reset, setReset] = useState(false)
 
-    
-
     //Sets DatePicker Modal Visibility
     
     const [openFrom, setOpenFrom] = useState(false)
     const [openTo, setOpenTo] = useState(false)
+
+    //Save the previos user options in case user make changes but doesnt want it 
+    const [savedType, setSavedType] = useState(filterType);
+    const [savedPriceHigher, setSavedPriceHigher] = useState(filterPriceHigher)
+    const [savedAvailableFrom, setSavedAvailableFrom] = useState(filterAvailableFrom);
+    const [savedAvailableTo, setSavedAvailableTo] = useState(filterAvailableTo);
+    const [savedPreviewDistance, setSavedPreviewDistance] = useState(filterDistance);
+    const [savedPreviewValue, setSavedPreviewValue] = useState(filterPreviewValue);
+    const [savedAmenities, setSavedAmenities] = useState(filterAmenities);
+    const [savedBathroom, setSavedBathroom] = useState(filterBathroom);
+    const [savedBedroom, setSavedBedroom] = useState(filterBedroom);
+    const [savedDistance, setSavedDistance] = useState(filterDistance);
+
+
 
     
 
@@ -145,6 +157,20 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
             retrieveAllPins(currentLocation[0], currentLocation[1], 150, 10000, "", "", "", [],new Date().getTime(), 1759176355615)
             loadProperty()
         }
+        else{
+            console.log("Normal back")
+            setfilterType(savedType)
+            setfilterPriceHigher(savedPriceHigher)
+            setfilterAvailableFrom(savedAvailableFrom)
+            setfilterAvailableTo(savedAvailableTo)
+            setfilterPreviewDistanceValue(savedPreviewDistance)
+            setfilterPreviewValue(savedPreviewValue)
+            setfilterAmenities(savedAmenities)
+            setfilterBathroom(savedBedroom)
+            setfilterBedroom(savedBathroom)
+            setfilterDistance(savedDistance)
+    
+        }
         close()
     }
 
@@ -155,7 +181,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
             <Animated.View>
             <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable hitSlop={WIDTH*0.02} style={{height:'50%', width:'50%', alignItems:'center'}} onPress={checkResetAndBack}>
+                    <Pressable hitSlop={WIDTH*0.05} style={{height:'50%', width:'50%', alignItems:'center'}} onPress={checkResetAndBack}>
                         <Ionicons name='arrow-back-outline' size={25} />
                     </Pressable>
                 </BackButtonContainer>

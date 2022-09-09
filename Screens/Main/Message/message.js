@@ -15,6 +15,15 @@ import {
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import { SendbirdUIKitContainer } from '@sendbird/uikit-react-native';
+
+import {
+    createGroupChannelListFragment,
+    createGroupChannelCreateFragment,
+    createGroupChannelFragment,
+} from '@sendbird/uikit-react-native';
+
+
 
 import Lottie from 'lottie-react-native';
 
@@ -24,6 +33,7 @@ const WIDTH = Dimensions.get('screen').width;
 
 import { InboxTitle, FlatlistItemContainer, FlatlistUnread, FlatlistLeft, FlatlistRight, 
     LocationText,TextAndTime, LastMessageTime, DefaultPostFavText } from './messageStyle';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MessageScreen({navigation, route}){
     const {sb, USERID} = useContext(UserContext);
@@ -31,6 +41,8 @@ export default function MessageScreen({navigation, route}){
     const [convoList, setConvoList] = useState([])
     const [userId, setUserId] = useState('')
     const [receiverName, setReceiverName] = useState('')
+   
+
 
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
@@ -111,6 +123,7 @@ export default function MessageScreen({navigation, route}){
         <SafeAreaView style={{backgroundColor:'white', flex: 1}}>
             <InboxTitle>Messages</InboxTitle>
             
+          
             {convoList != null && convoList.length != 0 ?
             <FlatList
                 style={{marginTop:HEIGHT*0.015}}

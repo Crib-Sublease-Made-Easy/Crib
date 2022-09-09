@@ -58,6 +58,9 @@ export default function PropertyDetailScreen({navigation, route}){
     const [flatlistIndex, setFlatlistIndex] = useState(0)
     const [liked, setLiked]  = useState()
     const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == USERID)
+
+
+    
     const createConversation = async () =>{
         var userIds = [USERID, propData.postedBy]
         

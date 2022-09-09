@@ -113,21 +113,32 @@ const DragGreyLineContainer = styled.View`
   
   width: ${WIDTH}px;
   align-items: center
-  padding-top: ${HEIGHT*0.015}px;
+  background-color:red
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
 `  
-const DragGreyLine = styled.View`
-  height: ${HEIGHT*0.004}px;
-  width: ${WIDTH*0.25}px;
-  border-radius: 15px;
-  background-color: ${MEDIUMGREY}
+// const DragGreyLine = styled.View`
+//   height: ${HEIGHT*0.004}px;
+//   width: ${WIDTH*0.25}px;
+//   border-radius: 15px;
+//   background-color: ${MEDIUMGREY}
+// `
+
+const TopBarSlider = styled.View`
+  width: ${WIDTH}px
+  justify-content: center
+  align-items: center
+  height: ${HEIGHT*0.07}px
+  shadow-color: ${LIGHTGREY} 
+  shadow-offset: 0 ${HEIGHT*0.01}px
+  shadowRadius: 5px
+  shadowOpacity: 0.2
+  backgroundColor: white
+  border-top-left-radius: 25px
+  border-top-right-radius: 25px
 `
 
-const PropertiesLength = styled.Text`
-  font-size: ${HEIGHT*0.015}px;
-  font-weight: 500
-  color: black
-  padding-vertical: ${HEIGHT*0.015}px
-`
+
 const DefaultPostFavText = styled.Text`
     color: ${DARKGREY};
     font-weight: 700
@@ -305,11 +316,9 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     }
 
     
-    return(
-    <View  style={{flex:1}}>
-      
-    <GestureDetector  gesture={gesture}>
+  return(
     
+  <GestureDetector  gesture={gesture}>
     
       <Animated.View
         style={[bottomSheetStyle,{width: WIDTH, height: HEIGHT*0.75, alignItems:'center', borderTopLeftRadius:25, 
@@ -318,12 +327,12 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
       }]}>
         <DragGreyLineContainer>
           
-          <View style={{width: WIDTH, justifyContent:'center', alignItems:'center', height: HEIGHT*0.045, shadowColor:LIGHTGREY, shadowOffset:{width:0, height:HEIGHT*0.01}, shadowRadius: 5, shadowOpacity: 0.2, backgroundColor:'white'}}>
+          <TopBarSlider>
             <Pressable onPress={toogleCard}
             style={{paddingVertical: HEIGHT*0.005, paddingHorizontal: WIDTH*0.05, backgroundColor: EXTRALIGHT, borderRadius:20}}>
               <Ionicons name='map' size={25} color={PRIMARYCOLOR}/>
             </Pressable>
-          </View>
+          </TopBarSlider>
         </DragGreyLineContainer>
         {/* {flatlistRefreshing ?
         <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />
@@ -376,7 +385,6 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
           }   
         </Animated.View>
     
-   </GestureDetector>
-   </View>
-    )
+  </GestureDetector>
+  )
 }
