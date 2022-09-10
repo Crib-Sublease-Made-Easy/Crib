@@ -19,7 +19,7 @@ import { UserContext } from '../../../UserContext';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { PRIMARYCOLOR, Header, HeaderContainer,BackButtonContainer, NameContainer, ResetButtonContainer  } from '../../../sharedUtils';
+import { PRIMARYCOLOR, Header, HeaderContainer, } from '../../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -34,8 +34,6 @@ Ionicons.loadFont()
 
 import Lottie from 'lottie-react-native';
 
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faSquareCheck, faSwimmer, faDog, faWifi } from '@fortawesome/free-solid-svg-icons'
 
@@ -45,15 +43,15 @@ library.add(faSquareCheck, faSwimmer, faDog)
 
 import {Container, NameText, OccupationText,EditProfilePressable,SlidingContainer,
     PostContainer, FavContainer, PostedText, FavText,  DefaultPostFavText, PostedPropertyInfoContainer,
-    PropertyName, DatePriceText, InformationContainer, IconContainer, IconsContainer,PriceEditContainer,
-    EditPropertyPressable, EditText, FavPropertyCard, FavPropertyCardName, FavPropertyCardContent,
-    FavPropertyCardDateText, FavPropertyCardDateContainer, PostedPropertyCard, HeaderIndividualContainer,
-    RowContainer, RowItemName,ProfileHeading
+    PropertyName, DatePriceText,PriceEditContainer, EditPropertyPressable, EditText, FavPropertyCard, FavPropertyCardName, 
+    FavPropertyCardContent, FavPropertyCardDateText, FavPropertyCardDateContainer, PostedPropertyCard, HeaderIndividualContainer,
+    RowContainer, RowItemName,ProfileHeading, NoUserViewContainer, LoginContainer, LoginText, SignupContainer,
+    SignupText
  } from './profileStyle';
 import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, MEDIUMGREY, DARKGREY } from '../../../sharedUtils';
 export default function ProfileScreen({navigation}){
     const scrollviewRef = useRef(null)
-    const {sb, USERID} = useContext(UserContext);
+    const {sb, USERID, user} = useContext(UserContext);
 
     const [tabPressed, setTabPressed] = useState("Posted")
     const [postedProperties, setPostedProperties] = useState(null)
@@ -66,11 +64,17 @@ export default function ProfileScreen({navigation}){
     const [profilePic, setProfilePic] = useState(null)
  
     useEffect(()=>{
-        const unsubscribe = navigation.addListener('focus', () => {
-            console.log("REFRESH --- USEEFFECT")
-            getTokens()
-        });
-        return unsubscribe; 
+        
+            const unsubscribe = navigation.addListener('focus', () => {
+                console.log("REFRESH --- USEEFFECT")
+                console.log(user)
+                if(user != null){
+                    getTokens()
+                }
+            });
+            return unsubscribe; 
+        
+        
     }, [navigation])
 
     const onShare = async () => {
@@ -274,7 +278,10 @@ export default function ProfileScreen({navigation}){
         scrollviewRef.current.scrollTo({x:WIDTH})
     }
     return(
-        <SafeAreaView style={{backgroundColor:'white'}}>
+
+        <SafeAreaView style={{backgroundColor:'white', flex:1}}>
+            {user != null ? 
+            <View style={{flex: 1}}>
             <HeaderContainer style={{borderBottomWidth: 0}}>
                 <HeaderIndividualContainer style={{justifyContent:'flex-end', width: '15%'}}>
                     <Pressable onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
@@ -395,8 +402,8 @@ export default function ProfileScreen({navigation}){
                             </FavPropertyCard>
 
                             ))}
-                            <View style={{width:WIDTH*0.9, height: HEIGHT*0.05}}>
-
+                            <View style={{width:WIDTH*0.9, height: HEIGHT*0.05,}}>
+                            
                             </View>
                         </ScrollView>
                         
@@ -405,7 +412,25 @@ export default function ProfileScreen({navigation}){
                
             </ScrollView>
             </Container>
+            </View>
+            :
+            <NoUserViewContainer>
+                <View style={{width:WIDTH*0.6, height: WIDTH*0.6, }}>
+                <Lottie source={require('../../../notLoggedIn.json')} style={{width:WIDTH*0.6, height: WIDTH*0.6, }}/>
+                </View>
+                <DefaultPostFavText>Login to view and post properties.</DefaultPostFavText>
+
+                <LoginContainer onPress={()=> navigation.navigate("Login")}>
+                    <LoginText>Login</LoginText>
+                </LoginContainer>
+                <SignupContainer onPress={()=> navigation.navigate("FirstLastName")}>
+                    <SignupText>Sign up</SignupText>
+                </SignupContainer>
+
+            </NoUserViewContainer>
+        }
         </SafeAreaView>
+        
     )
 }
 

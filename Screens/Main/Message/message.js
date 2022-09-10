@@ -15,14 +15,6 @@ import {
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
-import { SendbirdUIKitContainer } from '@sendbird/uikit-react-native';
-
-import {
-    createGroupChannelListFragment,
-    createGroupChannelCreateFragment,
-    createGroupChannelFragment,
-} from '@sendbird/uikit-react-native';
-
 
 
 import Lottie from 'lottie-react-native';
@@ -32,11 +24,12 @@ const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
 import { InboxTitle, FlatlistItemContainer, FlatlistUnread, FlatlistLeft, FlatlistRight, 
-    LocationText,TextAndTime, LastMessageTime, DefaultPostFavText } from './messageStyle';
+    LocationText,TextAndTime, LastMessageTime, DefaultPostFavText, NoUserViewContainer,
+LoginContainer, SignupContainer, LoginText, SignupText, NoUserText } from './messageStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MessageScreen({navigation, route}){
-    const {sb, USERID} = useContext(UserContext);
+    const {sb, USERID, user} = useContext(UserContext);
 
     const [convoList, setConvoList] = useState([])
     const [userId, setUserId] = useState('')
@@ -47,7 +40,9 @@ export default function MessageScreen({navigation, route}){
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
             console.log("FOCUSSSSSS")
-            fetchConvos()
+            if(user != null){
+                fetchConvos()
+            }
         });
         // sb.addChannelHandler('channels', channelHandler);
 
@@ -121,9 +116,12 @@ export default function MessageScreen({navigation, route}){
 
     return(
         <SafeAreaView style={{backgroundColor:'white', flex: 1}}>
-            <InboxTitle>Messages</InboxTitle>
+
             
-          
+            
+            {user != null ?
+            <View style={{flex: 1}}>
+                <InboxTitle>Messages</InboxTitle>
             {convoList != null && convoList.length != 0 ?
             <FlatList
                 style={{marginTop:HEIGHT*0.015}}
@@ -172,9 +170,23 @@ export default function MessageScreen({navigation, route}){
 
             </View>
             }
-            <TouchableOpacity >
+            </View>
+            
+            :
+            <NoUserViewContainer>
+                <View style={{width:WIDTH*0.6, height: WIDTH*0.6, }}>
+                    <Lottie source={require('../../../notLoggedIn.json')} style={{width:WIDTH*0.6, height: WIDTH*0.6, }}/>
+                </View>
+                <NoUserText>Login to view and post properties.</NoUserText>
 
-                </TouchableOpacity>
+                <LoginContainer onPress={()=> navigation.navigate("Login")}>
+                    <LoginText>Login</LoginText>
+                </LoginContainer>
+                <SignupContainer onPress={()=> navigation.navigate("FirstLastName")}>
+                    <SignupText>Sign up</SignupText>
+                </SignupContainer>
+            </NoUserViewContainer>
+            }
         </SafeAreaView>
     )
 }

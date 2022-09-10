@@ -55,7 +55,10 @@ export default function SettingScreen({navigation, route}){
       await SecureStorage.removeItem("accessToken")
       await SecureStorage.removeItem("refreshToken")
       await AsyncStorage.clear()
-      login(null)
+      await login(null)
+      navigation.reset(
+        {index: 0 , routes: [{ name: 'ProfileTabs'}]}
+    )
     }
 
     const toggleNotification = async () => {

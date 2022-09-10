@@ -42,7 +42,7 @@ var axios = require('axios');
 
 export default function DiscoverScreen({navigation, route}){
 
-    const {sb, USERID, userInitialLocation, preloadProperties} = useContext(UserContext);
+    const {sb, USERID, preloadProperties} = useContext(UserContext);
       //Method for handling notifications received while app in foreground
       OneSignal.setNotificationOpenedHandler(notification => {
         // console.log("OneSignal: notification opened:", notification);
@@ -56,7 +56,7 @@ export default function DiscoverScreen({navigation, route}){
     const widthtranslation = useRef(new RNAnimated.Value(WIDTH*0.9)).current;
     const opacityTranslation = useRef(new RNAnimated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
-    const [currentLocation, setCurrentLocation] = useState((userInitialLocation == null? [37.7749,-122.4194] :  userInitialLocation) )
+    const [currentLocation, setCurrentLocation] = useState([37.7749,-122.4194])
     //The location of the user input in string
     const [locationQuery, setlocationQuery] = useState("Search Location ...")
     //The data of the pins to acess a field its pinsData.item.field

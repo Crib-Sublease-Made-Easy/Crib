@@ -161,6 +161,7 @@ export default function OTPScreen({navigation, route}){
     if (UID != undefined) {
       try {
         console.log("connecting to sendbird")
+        console.log("UID", UID)
      
         sb.connect(UID, function (user, error) {
           if (error) {

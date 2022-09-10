@@ -81,3 +81,57 @@ export const DefaultPostFavText = styled.Text`
     text-align: center
     align-self: center
 `
+
+export const NoUserViewContainer = styled.View`
+  background-color: white;
+  flex: 1;
+  justify-content: center;
+  align-items: center 
+`
+
+export const LoginContainer = styled.Pressable`
+  width: ${WIDTH*0.8}px;
+  height: ${HEIGHT*0.065}px;
+  border-radius: 25px;
+  background-color: ${PRIMARYCOLOR}
+  margin-top: ${HEIGHT*0.15}px
+  justify-content: center;
+  align-items: center
+  shadowColor: ${MEDIUMGREY}
+  shadowRadius: 10px
+  shadowOpacity: 0.32
+  shadowOffset: 0 0
+  elevation: 7
+`
+export const SignupContainer = styled.Pressable`
+  width: ${WIDTH*0.8}px;
+  height: ${HEIGHT*0.065}px;
+  border-radius: 25px;
+  border-color: ${PRIMARYCOLOR}
+  background-color: white
+  margin-top: ${HEIGHT*0.02}px
+  justify-content: center;
+  align-items: center
+  shadowColor: ${DARKGREY}
+  shadowRadius: 10px
+  shadowOpacity: 0.5
+  shadowOffset: 0 0
+  elevation: 7
+`
+
+export const LoginText = styled.Text`
+  font-size: ${HEIGHT*0.0175}px;
+  font-weight: 600
+  color: white
+`
+export const SignupText = styled.Text`
+  font-size: ${HEIGHT*0.0175}px;
+  font-weight: 600
+  color: ${PRIMARYCOLOR}
+`
+
+export const NoUserText = styled.Text`
+    color: ${PRIMARYGREY};
+    font-weight: 700
+    font-size: ${HEIGHT*0.015}px;
+`

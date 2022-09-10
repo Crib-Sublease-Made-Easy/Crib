@@ -150,7 +150,6 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
   useEffect(() => {
     prefetch()
-    getLocation()
     console.log("INITIALIZE APP.JS USEEFFECT")
     // refreshAccessToken()
     const subscription = AppState.addEventListener("change", nextAppState => {
@@ -274,14 +273,14 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     }
   }
 
-  async function getLocation(){
-    Geolocation.getCurrentPosition(info => 
+  // async function getLocation(){
+  //   Geolocation.getCurrentPosition(info => 
      
-      setUserInitialLocation([info.coords.latitude,info.coords.longitude])
+  //     setUserInitialLocation([info.coords.latitude,info.coords.longitude])
       
       
-   );
-  }
+  //  );
+  // }
   
 
   const [user, setUser] = useState(null)
@@ -307,9 +306,9 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   return (
 
     <NavigationContainer>
-      <UserContext.Provider value={{ user, login, logout, sb, USERID: user, userInitialLocation: userInitialLocation, preloadProperties: preloadProperties}}>
+      <UserContext.Provider value={{ user, login, logout, sb, USERID: user, preloadProperties: preloadProperties}}>
 
-        {user != null ?
+        
 
           <Stack.Navigator>
 
@@ -484,16 +483,12 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               }}
             />
 
-          </Stack.Navigator>
-        :
-
-          <Stack.Navigator >
-
+          
 
             <Stack.Screen name="Landing" component={LandingScreen} options={{ 
               // headerStyle:{backgroundColor: PRIMARYCOLOR}, headerShadowVisible: false, headerTitle:"",
               headerShown: false,
-              cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter}} 
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS}} 
               />
             <Stack.Screen
               name="Login"
@@ -519,25 +514,11 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
         }}
             />
 
-<Stack.Screen name="TermsAndService"
-              component={TermsAndService}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
-            />
-            <Stack.Screen name="Privacy"
-              component={Privacy}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
-            />
             <Stack.Screen name="EmailPassword" component={EmailPasswordScreen} options={{ headerShown: false }} />
             <Stack.Screen name="otp" component={OTPScreen} options={{ headerShown: false }} />
 
           </Stack.Navigator>
-        }
+        
 
 
       </UserContext.Provider>
