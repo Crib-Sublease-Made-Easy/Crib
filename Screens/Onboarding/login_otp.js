@@ -38,7 +38,7 @@ import Modal from "react-native-modal";
 
 export default function Login_OTP({navigation, route}){
 
-    const {user, login} = useContext(UserContext);
+    const {user, login, sb} = useContext(UserContext);
     const [code, setCode] = useState('')
     const [pinReady, setpinReady] = useState(false)
     const [authyID, setauthyID] = useState(route.authy_id)
@@ -112,8 +112,10 @@ export default function Login_OTP({navigation, route}){
                     console.log(e)
                 }}
 
-                
-                login(data.loggedIn._id);
+                login(data.loggedIn._id)
+                navigation.reset(
+                    {index: 0 , routes: [{ name: 'DiscoverTabs'}]}
+                )
                 
             }
 
@@ -139,7 +141,7 @@ export default function Login_OTP({navigation, route}){
             });
             // The user is connected to the Sendbird server.
           } catch (err) {
-            // Handle error.
+            console.log(err)
             console.log("SENDBIRD ERROR")
           }
         }

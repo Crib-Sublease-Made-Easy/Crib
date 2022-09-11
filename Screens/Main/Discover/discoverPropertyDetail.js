@@ -48,13 +48,15 @@ const WIDTH = Dimensions.get('screen').width;
 export default function PropertyDetailScreen({navigation, route}){
     useEffect(()=>{
       fetchProperties()
-      getTokens()
+      if(user != null){
+        getTokens()
+      }
     }, [])
     const imageOpacityTranslation = useRef(new RNAnimated.Value(0)).current;
     const flatListRef = useRef(null)
     const [propData, setPropData] = useState(route.params.data.propertyInfo);
     const postedUserData = route.params.data.userInfo;
-    const {sb, USERID} = useContext(UserContext);
+    const {sb, USERID, user} = useContext(UserContext);
     const [flatlistIndex, setFlatlistIndex] = useState(0)
     const [liked, setLiked]  = useState()
     const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == USERID)
@@ -62,22 +64,31 @@ export default function PropertyDetailScreen({navigation, route}){
 
     
     const createConversation = async () =>{
-        var userIds = [USERID, propData.postedBy]
+
+        if(user != null){
+
         
-        sb.GroupChannel.createChannelWithUserIds(userIds, true, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
-            if (error) {
-                // Handle error.
-                console.log("Failed To Create Channel")
-                console.log(error)
-                alert("You are currently engaged in a conversation with this user")
-            } else {
-                console.log("Channel Created Successfully")
-                //console.log(groupChannel)
-                // A group channel with additional information is successfully created.
-                var channelUrl = groupChannel.url;
-                navigation.navigate("Chat", {url:channelUrl, id: USERID, postedBy:postedUserData.firstName})
-            }
-        });
+            var userIds = [USERID, propData.postedBy]
+            
+            sb.GroupChannel.createChannelWithUserIds(userIds, true, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
+                if (error) {
+                    // Handle error.
+                    console.log("Failed To Create Channel")
+                    console.log(error)
+                    alert("You are currently engaged in a conversation with this user")
+                } else {
+                    console.log("Channel Created Successfully")
+                    //console.log(groupChannel)
+                    // A group channel with additional information is successfully created.
+                    var channelUrl = groupChannel.url;
+                    navigation.navigate("Chat", {url:channelUrl, id: USERID, postedBy:postedUserData.firstName})
+                }
+            });
+        }
+        else{
+            alert("Sign in to contact tenant.");
+            navigation.navigate("Landing")
+        }
     }
 
     function changeImageOpacity(){
@@ -166,9 +177,14 @@ export default function PropertyDetailScreen({navigation, route}){
 
     async function likeProperty(){
         console.log("Liking")
-        const accessToken = await SecureStorage.getItem("accessToken");
+        if(user != null){
+            const accessToken = await SecureStorage.getItem("accessToken");
         
+<<<<<<< HEAD
         await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
+=======
+            await fetch('https://sublease-app.herokuapp.com/properties/favorite', {
+>>>>>>> 991ae9a8d048265f40c620586d83e0b3111cd6c6
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -188,6 +204,12 @@ export default function PropertyDetailScreen({navigation, route}){
             .catch(e=>{
                 alert(e)
         })
+        }
+        else{
+            alert("Sign in to like properties.");
+            navigation.navigate("Landing")
+        }
+        
     }
 
  

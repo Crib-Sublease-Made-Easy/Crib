@@ -15,9 +15,8 @@ import {
   
 
 import styled from 'styled-components/native';
-import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, ROBOTOFONTFAMILY, TEXTINPUTBORDERCOLOR } from '../../../sharedUtils';
+import { DARKGREY, EXTRALIGHT, LIGHTGREY, MEDIUMGREY, ROBOTOFONTFAMILY, TEXTINPUTBORDERCOLOR, PRIMARYCOLOR } from '../../../sharedUtils';
 
-const PRIMARYCOLOR = '#4050B5'
 const PRIMARYGREY = '#5e5d5d'
 
 const HEIGHT = Dimensions.get('screen').height;
@@ -262,4 +261,51 @@ export const ProfileHeading = styled.Text`
   font-size: ${HEIGHT*0.03}px
   padding-vertical: ${HEIGHT*0.025}px
   align-self: center
+`
+export const NoUserViewContainer = styled.View`
+  background-color: white;
+  flex: 1;
+  justify-content: center;
+  align-items: center 
+`
+
+export const LoginContainer = styled.Pressable`
+  width: ${WIDTH*0.8}px;
+  height: ${HEIGHT*0.065}px;
+  border-radius: 25px;
+  background-color: ${PRIMARYCOLOR}
+  margin-top: ${HEIGHT*0.15}px
+  justify-content: center;
+  align-items: center
+  shadowColor: ${MEDIUMGREY}
+  shadowRadius: 10px
+  shadowOpacity: 0.32
+  shadowOffset: 0 0
+  elevation: 7
+`
+export const SignupContainer = styled.Pressable`
+  width: ${WIDTH*0.8}px;
+  height: ${HEIGHT*0.065}px;
+  border-radius: 25px;
+  border-color: ${PRIMARYCOLOR}
+  background-color: white
+  margin-top: ${HEIGHT*0.02}px
+  justify-content: center;
+  align-items: center
+  shadowColor: ${DARKGREY}
+  shadowRadius: 10px
+  shadowOpacity: 0.5
+  shadowOffset: 0 0
+  elevation: 7
+`
+
+export const LoginText = styled.Text`
+  font-size: ${HEIGHT*0.0175}px;
+  font-weight: 600
+  color: white
+`
+export const SignupText = styled.Text`
+  font-size: ${HEIGHT*0.0175}px;
+  font-weight: 600
+  color: ${PRIMARYCOLOR}
 `

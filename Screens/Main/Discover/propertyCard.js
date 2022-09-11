@@ -153,7 +153,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
    
 }){
     const flatListItemOpacity = useRef(new RNAnimated.Value(0)).current;
-    const flatlistRef = useRef(0);
+    const flatlistRef = useRef();
     const [previewing, setPreviewing] = useState(false)
    
     // const [propertiesData, setPropertiesData] = useState([]);
@@ -165,6 +165,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
       }
       if(flatlistRefreshing){
         translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
+        // flatlistRef.current.scrollToIndex({index:0})
       }
      
     }, [searching, flatlistRefreshing,])

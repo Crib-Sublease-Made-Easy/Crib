@@ -138,7 +138,7 @@ export default function LoginScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
             <Header>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.navigate('Landing') }>
+                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
                    
                     <Ionicons name='arrow-back-outline' size={25} />
                 </Pressable>

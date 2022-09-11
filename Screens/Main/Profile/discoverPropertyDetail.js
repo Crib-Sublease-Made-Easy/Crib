@@ -46,18 +46,27 @@ const WIDTH = Dimensions.get('screen').width;
 
 export default function PropertyDetailScreen({navigation, route}){
     
-    useEffect(()=>{
-      fetchProperties()
-      getTokens()
-    }, [])
+    
 
     const flatListRef = useRef(null)
     const [propData, setPropData] = useState(route.params.data.propertyInfo);
     const postedUserData = route.params.data.userInfo;
-    const {sb, USERID} = useContext(UserContext);
+    const {sb, USERID, user} = useContext(UserContext);
     const [flatlistIndex, setFlatlistIndex] = useState(0)
     const [liked, setLiked]  = useState()
-    const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == route.params.uid)
+    // const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == route.params.uid)
+    console.log("refresh")
+    useEffect(()=>{
+        console.log("refresh")
+        if(user == null){
+        fetchProperties()
+        console.log("USER", user)
+        
+            alert("dedede")
+          getTokens()
+        }
+      }, [])
+
     const createConversation = async () =>{
         var userIds = [USERID, propData.postedBy]
         
@@ -89,6 +98,7 @@ export default function PropertyDetailScreen({navigation, route}){
         }
         }) 
         .then(res => res.json()).then(async userData =>{
+            
             if(userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) == -1){
                 setLiked(false)
             }
@@ -97,6 +107,7 @@ export default function PropertyDetailScreen({navigation, route}){
             }
         })
         .catch(e=>{
+            console.log("dedjeid")
             alert(e)
         })
     }
@@ -129,6 +140,7 @@ export default function PropertyDetailScreen({navigation, route}){
                         })
                         }) 
                         .catch(e=>{
+                            console.log("dedjeid")
                             alert(e)
                     })
                     alert("Property is deleted.")
@@ -136,6 +148,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 }
             })
             .catch(e=>{
+                console.log("dedjeid")
                 alert(e)
         })
     }
@@ -192,6 +205,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 setLiked(!liked)
             })
             .catch(e=>{
+                console.log("dedjeid")
                 alert(e)
         })
     }
@@ -253,12 +267,12 @@ export default function PropertyDetailScreen({navigation, route}){
                          position:'absolute',top:HEIGHT*0.05, left:WIDTH*0.05, width:WIDTH*0.1, height:WIDTH*0.1, borderRadius: WIDTH*0.05 }} onPress={()=>navigation.goBack()}>
                             <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
                         </Pressable>
-                        { !ownProperty &&
+                        {/* { !ownProperty && user != null &&
                         <Pressable  style={{backgroundColor:'rgba(43,43,43,0.8)',justifyContent:'center', alignItems:'center',
                          position:'absolute',top:HEIGHT*0.05, right:WIDTH*0.05, width:WIDTH*0.1, height:WIDTH*0.1, borderRadius: WIDTH*0.05 }} onPress={likeProperty}>
                             <Ionicons  name="heart" size={25} color={ liked ? '#ee88a6' : 'white'}></Ionicons>
                         </Pressable>
-                        }
+                        } */}
                     </View>
                     
                     <CardSectionOne>
@@ -388,9 +402,9 @@ export default function PropertyDetailScreen({navigation, route}){
             <Footer>
                     <PricePerMonth>${propData.price} <Text style={{fontSize: HEIGHT*0.025, fontWeight:'500'}}>/ month</Text></PricePerMonth>
                 
-                    <ContactTanentButton disabled={ownProperty} ownProperty={ownProperty} onPress={()=>createConversation()}>
+                    {/* <ContactTanentButton disabled={ownProperty} ownProperty={ownProperty} onPress={()=>createConversation()}>
                         <Text style={{color:'white', fontWeight:'700'}}>Contact Tenant</Text>
-                    </ContactTanentButton>
+                    </ContactTanentButton> */}
             </Footer>
 
         </Container>

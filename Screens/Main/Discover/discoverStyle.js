@@ -49,10 +49,12 @@ export const SearchContainer = styled.Pressable`
   shadowColor: black
   shadowRadius: 10px
   shadowOpacity: 0.32
-  backgroundColor: white
-  elevation: 7
-  borderRadius: 30px
   shadowOffset: 0 0
+  elevation: 7
+  backgroundColor: white
+
+  borderRadius: 30px
+
   flex-direction: row;
   align-items:center
 `
