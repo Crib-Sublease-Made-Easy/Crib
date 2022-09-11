@@ -681,7 +681,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.lighthouseLHY;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.Cribapp;
 				PRODUCT_NAME = lighthouse;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -709,7 +709,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.lighthouseLHY;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.Cribapp;
 				PRODUCT_NAME = lighthouse;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -875,7 +875,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.lighthouseLHY.OneSignalNotificationService;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.Cribapp.OneSignalNotificationService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -909,7 +909,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.lighthouseLHY.OneSignalNotificationService;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.Cribapp.OneSignalNotificationService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;

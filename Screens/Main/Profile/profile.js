@@ -101,7 +101,7 @@ export default function ProfileScreen({navigation}){
         const accessToken = await SecureStorage.getItem("accessToken");
 
         fetchFavoriteProperties(accessToken)
-        fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
+        fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
         method: 'GET',
         headers: {
         Accept: 'application/json',
@@ -140,7 +140,7 @@ export default function ProfileScreen({navigation}){
 
     async function fetchPostedProperties(id, token){
        
-        await fetch('https://sublease-app.herokuapp.com/properties/' + id, {
+        await fetch('https://crib-llc.herokuapp.com/properties/' + id, {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -197,7 +197,7 @@ export default function ProfileScreen({navigation}){
         })
     }
     function fetchFavoriteProperties (token){
-        fetch('https://sublease-app.herokuapp.com/users/favorites/all', {
+        fetch('https://crib-llc.herokuapp.com/users/favorites/all', {
             method: 'GET',
             headers: {
             Accept: 'application/json',

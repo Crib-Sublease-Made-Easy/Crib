@@ -88,7 +88,7 @@ import SendBird from 'sendbird'
 
 const Stack = createSharedElementStackNavigator();
 
-const appId = '14BD0602-4159-48D7-9292-66136C479B46';
+const appId = '58220273-043E-4162-AFFC-B4035FD78760';
 import OneSignal from 'react-native-onesignal';
 
 
@@ -107,7 +107,7 @@ export default function App() {
 
 //OneSignal Init Code
 OneSignal.setLogLevel(6, 0);
-OneSignal.setAppId("440ad232-b229-4ea1-963b-5037d3ac9413");
+OneSignal.setAppId("a979dd6f-dffb-476e-8d0b-bb27863a3c55");
 //END OneSignal Init Code
 
 //Prompt for push on iOS
@@ -177,7 +177,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   }, [])
 
   function prefetch(){
-    fetch('https://sublease-app.herokuapp.com/properties/query?page=0', {
+    fetch('https://crib-llc.herokuapp.com/properties/query?page=0', {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -239,7 +239,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       connectSendbird()
       setUser(id) 
      
-      await fetch('https://sublease-app.herokuapp.com/tokens/accessRefresh', {
+      await fetch('https://crib-llc.herokuapp.com/tokens/accessRefresh', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -256,7 +256,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       
       const at = await SecureStorage.getItem("accessToken");
 
-      await fetch('https://sublease-app.herokuapp.com/users/' + id, {
+      await fetch('https://crib-llc.herokuapp.com/users/' + id, {
         method: 'GET',
         headers: {
           Accept: 'application/json',

@@ -121,7 +121,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     s = s + '&priceLow=0'
    
 
-    fetch('https://sublease-app.herokuapp.com/properties/query?page=0' + s, {
+    fetch('https://crib-llc.herokuapp.com/properties/query?page=0' + s, {
         method: 'GET',
         headers: {
         Accept: 'application/json',

@@ -214,7 +214,7 @@ export default function PropertyPostingScreen({ navigation }) {
         if (query != "" && query.length % 2 == 0) {
             var config = {
                 method: 'get',
-                url: `https://sublease-app.herokuapp.com/autocomplete/places/${query}`,
+                url: `https://crib-llc.herokuapp.com/autocomplete/places/${query}`,
             };
             axios(config)
             .then(function (response) {
@@ -323,7 +323,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
         console.log("AccessToken", accessToken)
       
-        fetch('https://sublease-app.herokuapp.com/properties', {
+        fetch('https://crib-llc.herokuapp.com/properties', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

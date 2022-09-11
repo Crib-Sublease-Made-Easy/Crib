@@ -39,7 +39,7 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
     
     var config = {
         method: 'get',
-        url: `https://sublease-app.herokuapp.com/autocomplete/places/${query}`,
+        url: `https://crib-llc.herokuapp.com/autocomplete/places/${query}`,
     };
     axios(config)
     .then(response => {

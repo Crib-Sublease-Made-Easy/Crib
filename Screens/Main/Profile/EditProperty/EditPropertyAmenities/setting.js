@@ -57,7 +57,7 @@ export default function SettingScreen({navigation, route}){
       const UID = await SecureStorage.getItem("userId");
 
     //  console.log("UID " + UID)
-      fetch('https://sublease-app.herokuapp.com/users/' + UID, {
+      fetch('https://crib-llc.herokuapp.com/users/' + UID, {
       method: 'GET',
       headers: {
       Accept: 'application/json',

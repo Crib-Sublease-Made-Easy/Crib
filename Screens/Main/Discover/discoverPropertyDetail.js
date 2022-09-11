@@ -95,7 +95,7 @@ export default function PropertyDetailScreen({navigation, route}){
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("accessToken");
 
-        fetch('https://sublease-app.herokuapp.com/users/' + USERID, {
+        fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
         method: 'GET',
         headers: {
         Accept: 'application/json',
@@ -118,7 +118,7 @@ export default function PropertyDetailScreen({navigation, route}){
 
     async function fetchProperties(){
         const accessToken = await SecureStorage.getItem("accessToken");
-        await fetch('https://sublease-app.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
+        await fetch('https://crib-llc.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -133,7 +133,7 @@ export default function PropertyDetailScreen({navigation, route}){
             }) 
             .then(res => res.json()).then( async propertyData =>{
                 if(propertyData.propertyInfo.deleted){
-                    await fetch('https://sublease-app.herokuapp.com/properties/favorite', {
+                    await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
                         method: 'POST',
                         headers: {
                         Accept: 'application/json',
@@ -168,7 +168,7 @@ export default function PropertyDetailScreen({navigation, route}){
         console.log("Liking")
         const accessToken = await SecureStorage.getItem("accessToken");
         
-        await fetch('https://sublease-app.herokuapp.com/properties/favorite', {
+        await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
             method: 'POST',
             headers: {
             Accept: 'application/json',

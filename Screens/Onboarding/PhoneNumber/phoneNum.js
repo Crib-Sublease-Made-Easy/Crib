@@ -39,7 +39,7 @@ export default function PhoneNumberScreen({navigation, route}){
         console.log("Stepping 1")
         console.log("PHONENUMBER  ", passedPhoneNumber);
         console.log("EMAIL  ", route.params.email);
-        fetch('https://sublease-app.herokuapp.com/users/OTP/step1', {
+        fetch('https://crib-llc.herokuapp.com/users/OTP/step1', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -66,7 +66,7 @@ export default function PhoneNumberScreen({navigation, route}){
     function signupStep2(id){
         console.log("STEP2");
         console.log("ID", id)
-        fetch('https://sublease-app.herokuapp.com/users/OTP/step2', {
+        fetch('https://crib-llc.herokuapp.com/users/OTP/step2', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -119,7 +119,7 @@ export default function PhoneNumberScreen({navigation, route}){
         else{
             setLoading(true)
             console.log("Inside Signup")
-            const res =  await fetch('https://sublease-app.herokuapp.com/users/check', {
+            const res =  await fetch('https://crib-llc.herokuapp.com/users/check', {
                 method: 'POST',
                 headers: {
                 Accept: 'application/json',

@@ -45,7 +45,7 @@ export default function EditPropertyAmenitiesScreen({navigation, route}){
        
        
         const accessToken = await SecureStorage.getItem("accessToken");
-        fetch('https://sublease-app.herokuapp.com/properties/' + route.params.uid, {
+        fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',

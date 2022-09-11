@@ -176,7 +176,7 @@ export default function DiscoverScreen({navigation, route}){
         
         var config = {
             method: 'get',
-            url: `https://sublease-app.herokuapp.com/autocomplete/places/${query}`,
+            url: `https://crib-llc.herokuapp.com/autocomplete/places/${query}`,
         };
         axios(config)
         .then(response => {
@@ -220,7 +220,7 @@ export default function DiscoverScreen({navigation, route}){
 
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
-            fetch('https://sublease-app.herokuapp.com/properties/query?page=0' + s, {
+            fetch('https://crib-llc.herokuapp.com/properties/query?page=0' + s, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -275,7 +275,7 @@ export default function DiscoverScreen({navigation, route}){
 
 
         if(propertyPage != 0){
-            await fetch('https://sublease-app.herokuapp.com/properties/query?page=' + propertyPage + s, {
+            await fetch('https://crib-llc.herokuapp.com/properties/query?page=' + propertyPage + s, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -324,7 +324,7 @@ export default function DiscoverScreen({navigation, route}){
         s = s +`&availableFrom=${from}`
         s = s +`&availableTo=${to}`
         // console.log("Retrieving pins ")
-        fetch(`https://sublease-app.herokuapp.com/properties/pins?${s}` , {
+        fetch(`https://crib-llc.herokuapp.com/properties/pins?${s}` , {
         method: 'GET',
         headers: {
         Accept: 'application/json',
@@ -422,7 +422,7 @@ export default function DiscoverScreen({navigation, route}){
     async function onMarkerClick(item){
         setLoading(true)
        
-        await fetch('https://sublease-app.herokuapp.com/properties/' + item._id, {
+        await fetch('https://crib-llc.herokuapp.com/properties/' + item._id, {
         method: 'POST',
         headers: {
         Accept: 'application/json',
@@ -450,7 +450,7 @@ export default function DiscoverScreen({navigation, route}){
     async function updateQueryString (loc){
         var config = {
             method: 'get',
-            url: `https://sublease-app.herokuapp.com/autocomplete/reversegeocoding?lat=${loc[0]}&long=${loc[1]}`,
+            url: `https://crib-llc.herokuapp.com/autocomplete/reversegeocoding?lat=${loc[0]}&long=${loc[1]}`,
         };
         await axios(config)
         .then(async (response)=> {           
