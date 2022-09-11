@@ -165,7 +165,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
       }
       if(flatlistRefreshing){
         translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
-        flatlistRef.current.scrollToIndex({index:0})
+        // flatlistRef.current.scrollToIndex({index:0})
       }
      
     }, [searching, flatlistRefreshing,])
