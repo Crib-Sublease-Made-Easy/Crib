@@ -209,6 +209,13 @@ export default function DiscoverScreen({navigation}){
             'Content-Type': 'application/json'
             }
         }) 
+        .then(res => res.json()).then(properties =>{
+
+           
+            setFilteredProperties(properties)
+            
+            
+        })
         .catch(e=>{
             console.log("ERROR --- DISCOVER --- loadProperty")
             alert(e)
@@ -320,7 +327,6 @@ export default function DiscoverScreen({navigation}){
     //If both the currentLocation and the pinLocation is valid, then use delta to adjust mapview
     function moveMap(lat,long){  
         if(currentLocation != ""){
-            // console.log("Only Location")
             mapRef.current?.animateToRegion({
                 latitude: lat,
                 longitude: long,
@@ -464,7 +470,7 @@ export default function DiscoverScreen({navigation}){
                     </MapView>
                         
                     {/* When pressed this moves the current location to center of the map and load properties */}
-                    < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), updateQueryString(mapCenterLocation),
+                    < SearchHerePressable hitSlop={WIDTH*0.05} onPress={()=>{setCurrentLocation(mapCenterLocation), updateQueryString(mapCenterLocation),
                     retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom.getTime(), filterAvailableTo.getTime() )
                     }}>
                         <SearchHereText>Search Here</SearchHereText>
@@ -481,7 +487,7 @@ export default function DiscoverScreen({navigation}){
                     })}}>
                             {/* Checks if any pin is selected for displaying in the preview card */}
                         {selectedPin != undefined && selectedPin != "" &&
-                        <Pressable disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0]))})}}>
+                        <Pressable disabled={loading}  hitSlop={WIDTH*0.05} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0]))})}}>
                             <PreviewTopContainer>
                                 <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
                                 borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
@@ -499,13 +505,13 @@ export default function DiscoverScreen({navigation}){
                         </Pressable>
                         }
 
-                        <FontAwesome onPress={()=>closePreviewCard()} name="times-circle" size={25}  color='white' style={{position: 'absolute', right:WIDTH*0.025,
+                        <FontAwesome  hitSlop={WIDTH*0.05} onPress={()=>closePreviewCard()} name="times-circle" size={25}  color='white' style={{position: 'absolute', right:WIDTH*0.025,
                         top: HEIGHT*0.015}}/>
                     </RNAnimated.View>
                 </MapContainer>
                     
                 {/* This sets the container of the search input */}
-                <SearchContainer onPress={()=>setDiscoverSearchVisible(true)}>
+                <SearchContainer  hitSlop={WIDTH*0.05}onPress={()=>setDiscoverSearchVisible(true)}>
                     {/* The search icon on the search outlien */}
                     <SeachIconContainer>
                         <Ionicons name='search' size={20}  color={DARKGREY} />
@@ -516,7 +522,7 @@ export default function DiscoverScreen({navigation}){
                     <SearchContainerPlaceholderText locationQuery={locationQuery}> {locationQuery}</SearchContainerPlaceholderText>
 
                     {/* This is the icon for filters when locationquery is not empty  */}
-                    <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
+                    <DeleteIconContainer hitSlop={WIDTH*0.05} onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
                         {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) || !(dateCompare(new Date(1759190400000), new Date(filterAvailableTo))) || !(dateCompare(new Date(), new Date(filterAvailableFrom)))?
                         <FilterAppliedIconBackground>
                             <Ionicons name="options-sharp" size={20} />

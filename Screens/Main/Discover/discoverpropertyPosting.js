@@ -228,7 +228,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
     //Render individual card items for PropertyType in posting page
     const renderItem = ({ item, index }) => (
-        <Pressable onPress={() => setpropertyType(item.name)}
+        <Pressable hitSlop={WIDTH*0.05} onPress={() => setpropertyType(item.name)}
             style={{ width: WIDTH * 0.9, height: WIDTH * 0.2, backgroundColor: propertyType == item.name ? PRIMARYCOLOR : 'white', borderRadius: 15, marginLeft: HEIGHT * 0.01, marginTop: HEIGHT * 0.01, flexDirection: 'row' }}>
 
             <Image source={item.image} style={{ height: '100%', width: WIDTH * 0.45, borderBottomLeftRadius: 15, borderTopLeftRadius: 15 }} />
@@ -462,7 +462,7 @@ export default function PropertyPostingScreen({ navigation }) {
                         <Ionicons name="arrow-back" size={30} color='white'></Ionicons>
                     </Pressable>
                     <Pressable style={{ display: scrollviewIndex == 10 || scrollviewIndex == 9 || scrollviewIndex == 0 ? 'none' : 'flex', }}
-                        onPress={() => moveScrollView(scrollviewIndex + 1)}>
+                         hitSlop={WIDTH*0.05} onPress={() => moveScrollView(scrollviewIndex + 1)}>
                         <Ionicons name="checkmark-outline" size={30} color={PRIMARYCOLOR}></Ionicons>
                     </Pressable>
                 </ButtonContainer>
@@ -527,7 +527,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                         alignItems: 'center', flexDirection: 'row',
                                     }}>
                                         <Ionicons name="location-outline" size={25} color={LIGHTGREY} />
-                                        <Pressable style={{ width: WIDTH * 0.8, marginLeft: WIDTH * 0.025 }} onPress={() => moveOn(value)}>
+                                        <Pressable style={{ width: WIDTH * 0.8, marginLeft: WIDTH * 0.025 }} hitSlop={WIDTH*0.05} onPress={() => moveOn(value)}>
                                             <Text style={{ color: 'white', fontSize: HEIGHT * 0.015 }}>{value.structured_formatting.main_text}</Text>
                                             <Text style={{ color: LIGHTGREY, fontSize: HEIGHT * 0.015 }}>{value.structured_formatting.secondary_text}</Text>
                                         </Pressable>
@@ -554,7 +554,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                     <ImageSelectionContainer key={"Image" + value.name}>
                                         <Subheading>{value.name}</Subheading>
                                         <ImageText >{value.des}</ImageText>
-                                        <ImageContainer onPress={() => selectGallery(value.name)}>
+                                        <ImageContainer hitSlop={WIDTH*0.05} onPress={() => selectGallery(value.name)}>
                                             <Ionicons name={value.icon} size={40} color='white' />
                                             <Image
                                                 style={{ position: 'absolute', height: '100%', width: '100%', borderRadius: 10 }}
@@ -613,11 +613,11 @@ export default function PropertyPostingScreen({ navigation }) {
                         <InputContainer >
                             <DateSelectContainer>
 
-                                <RowContainer onPress={() => setOpenFrom(true)}>
+                                <RowContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenFrom(true)}>
                                     <DateCategoryName>Available From</DateCategoryName>
                                     <Ionicons name="shuffle" size={20} color='white' />
-                                    <RowValueContainer onPress={() => setOpenFrom(true)} >
-                                        <DateSelectPressable onPress={() => setOpenFrom(true)}>
+                                    <RowValueContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenFrom(true)} >
+                                        <DateSelectPressable  hitSlop={WIDTH*0.05} onPress={() => setOpenFrom(true)}>
                                         {
                                             propertydateFrom == null ?
                                                 <Text style={{color:'white'}}> Select Date</Text>
@@ -628,11 +628,11 @@ export default function PropertyPostingScreen({ navigation }) {
                                         <Ionicons name='chevron-forward-outline' size={25} color='white' style={{ paddingLeft: WIDTH * 0.05 }} />
                                     </RowValueContainer>
                                 </RowContainer>
-                                <RowContainer onPress={() => setOpenTo(true)}>
+                                <RowContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenTo(true)}>
                                     <DateCategoryName>Available To</DateCategoryName>
                                     <Ionicons name="shuffle" size={20} color='white' />
-                                    <RowValueContainer onPress={() => setOpenTo(true)}>
-                                        <DateSelectPressable onPress={() => setOpenTo(true)}>
+                                    <RowValueContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenTo(true)}>
+                                        <DateSelectPressable  hitSlop={WIDTH*0.05} onPress={() => setOpenTo(true)}>
                                             {
                                             propertydateTo == null ?
                                                 <Text style={{color: 'white'}}>Select Date</Text>
@@ -722,7 +722,7 @@ export default function PropertyPostingScreen({ navigation }) {
                             <Ionicons name='bed-outline' color='white' size={25} style={{ paddingVertical: HEIGHT * 0.015 }} />
                             <BedroomContaienr>
                                 {bedroomList.map((value) => (
-                                    <BedroomItemContainer onPress={() => setpropertyNumBed(value)} userInput={propertyNumBed} value={value}
+                                    <BedroomItemContainer hitSlop={WIDTH*0.05} onPress={() => setpropertyNumBed(value)} userInput={propertyNumBed} value={value}
                                         key={"bedroom" + value}>
                                         <Text style={{ color: value == propertyNumBed ? 'black' : 'white', fontWeight: '500' }}>{value.replace("P","+")}</Text>
                                     </BedroomItemContainer>
@@ -735,7 +735,7 @@ export default function PropertyPostingScreen({ navigation }) {
                             <Ionicons name='water-outline' color='white' size={25} style={{ paddingVertical: HEIGHT * 0.015 }} />
                             <BedroomContaienr>
                                 {bathroomList.map((value) => (
-                                    <BedroomItemContainer onPress={() => setpropertyNumBath(value)} userInput={propertyNumBath} value={value}
+                                    <BedroomItemContainer hitSlop={WIDTH*0.05} onPress={() => setpropertyNumBath(value)} userInput={propertyNumBath} value={value}
                                         key={"bathroom" + value}>
                                         <Text style={{ color: value == propertyNumBath ? 'black' : 'white', fontWeight: '500' }}>{value.replace("P","+")}</Text>
                                     </BedroomItemContainer>
@@ -763,7 +763,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                         minWidth: WIDTH * 0.35, width: value.name.length * 0.03 * WIDTH, height: HEIGHT * 0.055, justifyContent: 'center',
                                         paddingRight: WIDTH * 0.03
                                     }}>
-                                        <Pressable key={value.name + 'pressable'} onPress={() => updateAmenities(value.name)} style={{
+                                        <Pressable key={value.name + 'pressable'} hitSlop={WIDTH*0.05} onPress={() => updateAmenities(value.name)} style={{
                                             borderWidth: 3, borderColor: propertyAmenities.indexOf(value.name) == -1 ? value.color : '#0085FF', height: HEIGHT * 0.045,
                                             borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
                                         }}>
@@ -804,35 +804,35 @@ export default function PropertyPostingScreen({ navigation }) {
                             <ReviewHeading style={{ marginTop: HEIGHT * 0.02 }}>Gallery</ReviewHeading>
                             <PropertyPhotoContainer >
 
-                                <TouchableOpacity key={"bedroomPic"} onPress={() => setHeaderImage(propertyBedroomImage)}>
+                                <TouchableOpacity key={"bedroomPic"} hitSlop={WIDTH*0.05}  onPress={() => setHeaderImage(propertyBedroomImage)}>
                                     <PhotoContainer >
                                         <Image source={{ uri: propertyBedroomImage == null ? null : propertyBedroomImage }}
                                             style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
                                         {/* <Text>{propertyphotoGallery[index]}</Text> */}
                                     </PhotoContainer>
                                 </TouchableOpacity>
-                                <TouchableOpacity key={"bathRoomPic"} onPress={() => setHeaderImage(propertyBathroomImage)}>
+                                <TouchableOpacity key={"bathRoomPic"} hitSlop={WIDTH*0.05}  onPress={() => setHeaderImage(propertyBathroomImage)}>
                                     <PhotoContainer >
                                         <Image source={{ uri: propertyBathroomImage == null ? null : propertyBathroomImage}}
                                             style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
                                         {/* <Text>{propertyphotoGallery[index]}</Text> */}
                                     </PhotoContainer>
                                 </TouchableOpacity>
-                                <TouchableOpacity key={"livingRoomPic"} onPress={() => setHeaderImage(propertyLivingroomImage)}>
+                                <TouchableOpacity key={"livingRoomPic"} hitSlop={WIDTH*0.05}  onPress={() => setHeaderImage(propertyLivingroomImage)}>
                                     <PhotoContainer >
                                         <Image source={{ uri: propertyLivingroomImage == null ? null : propertyLivingroomImage}}
                                             style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
                                         {/* <Text>{propertyphotoGallery[index]}</Text> */}
                                     </PhotoContainer>
                                 </TouchableOpacity>
-                                <TouchableOpacity key={"kitchenPic"} onPress={() => setHeaderImage(propertyKitchenImage)}>
+                                <TouchableOpacity key={"kitchenPic"} hitSlop={WIDTH*0.05}  onPress={() => setHeaderImage(propertyKitchenImage)}>
                                     <PhotoContainer >
                                         <Image source={{ uri: propertyKitchenImage == null ? null : propertyKitchenImage }}
                                             style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
                                         {/* <Text>{propertyphotoGallery[index]}</Text> */}
                                     </PhotoContainer>
                                 </TouchableOpacity>
-                                <TouchableOpacity key={"floorplanPic"} onPress={() => setHeaderImage(propertyFloorplanImage)}>
+                                <TouchableOpacity key={"floorplanPic"}  hitSlop={WIDTH*0.05} onPress={() => setHeaderImage(propertyFloorplanImage)}>
                                     <PhotoContainer >
                                         <Image source={{ uri: propertyFloorplanImage == null ? null : propertyFloorplanImage}}
                                             style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
@@ -900,7 +900,7 @@ export default function PropertyPostingScreen({ navigation }) {
                         </ScrollView>
                         <Footer>
                             <PricePerMonth>{propertyPrice} <Text style={{ fontSize: HEIGHT * 0.025, fontWeight: '500', color: 'white' }}>/ month</Text></PricePerMonth>
-                            <ContactTanentButton loading={loading}onPress={postproperty}>
+                            <ContactTanentButton loading={loading} hitSlop={WIDTH*0.05} onPress={postproperty}>
                             {loading ? 
                                  <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
                             :
@@ -916,7 +916,7 @@ export default function PropertyPostingScreen({ navigation }) {
                 </Animated.ScrollView>
 
                 <NextContainer style={{ display: scrollviewIndex == 0 || scrollviewIndex == 9 ? 'flex' : 'none' }}>
-                    <ContinueButton onPress={() => moveScrollView(scrollviewIndex + 1)}>
+                    <ContinueButton hitSlop={WIDTH*0.05} onPress={() => moveScrollView(scrollviewIndex + 1)}>
                         <ContinueText>
                             {scrollviewIndex == 0 ? "Start" : "Review"}
                         </ContinueText>

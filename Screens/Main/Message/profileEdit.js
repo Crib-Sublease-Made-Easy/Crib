@@ -163,7 +163,7 @@ export default function ProfileEditScreen({navigation, route}){
         <ScrollView>
             <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.navigate("Profile")}>
+                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} hitSlop={WIDTH*0.05} onPress={()=> navigation.navigate("Profile")}>
                         <Ionicons name='close-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>
@@ -175,9 +175,9 @@ export default function ProfileEditScreen({navigation, route}){
 
             
             <TopContainer>
-                    <ImageContainer onPress={SelectProfilePic}>
+                    <ImageContainer hitSlop={WIDTH*0.05} onPress={SelectProfilePic}>
                         <Image source={{uri: profilePic}} style={{width: WIDTH*0.35, height:WIDTH*0.35, borderRadius:WIDTH*0.175, backgroundColor: EXTRALIGHT}}/>
-                        <Pressable onPress={SelectProfilePic}>
+                        <Pressable hitSlop={WIDTH*0.05} onPress={SelectProfilePic}>
                             <ChangeProfilePicText>Tap to change</ChangeProfilePicText>
                         </Pressable>
                     </ImageContainer>
@@ -186,32 +186,15 @@ export default function ProfileEditScreen({navigation, route}){
                         {/* <AgeText style={{color:DARKGREY}}>{userAge} years old</AgeText> */}
                     </NameJobContainer>
             </TopContainer>
-            
-            {/* <RowContainerCol>
-                <CategoryName>About me</CategoryName>
-                <TextInputPressable onPress={()=> navigation.navigate("EditAboutMe", {userData: userAPIData})} >
-                    <Text style={{color:DARKGREY}}>
-                    After informing the parties of your intent to make an introduction, 
-                    state the name of the person you are introducing. In most situations, this is usually the younger person
-                    </Text>
-                </TextInputPressable>
-            </RowContainerCol> */}
-          
-{/* 
-            <CategoryName>Pronouns</CategoryName>
-            <RowContainer>
-                <RowName>{userAPIData.gender}</RowName>
-                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
-            </RowContainer> */}
-
+         
             <CategoryName>Education</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditEducation", {uid: USERID })}>
+            <RowContainer hitSlop={WIDTH*0.05} onPress={()=> navigation.navigate("EditEducation", {uid: USERID })}>
                 <RowName>{school}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
 
             <CategoryName>Occupation</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditOccupation")}>
+            <RowContainer hitSlop={WIDTH*0.05} onPress={()=> navigation.navigate("EditOccupation")}>
                 <RowName>{occupation}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>

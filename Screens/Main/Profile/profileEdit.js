@@ -1,15 +1,12 @@
 import React, {useState, useRef, useEffect, useContext} from 'react'
 import {
-    SafeAreaView,
-    Image,
-    Pressable,
-    Animated,
-    Keyboard,
-    Text
+SafeAreaView,
+Image,
+Pressable,
 } from 'react-native';
-import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import SecureStorage from 'react-native-secure-storage'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -23,11 +20,22 @@ import ImagePicker from 'react-native-image-crop-picker';
 
 import { UserContext } from '../../../UserContext';
 
-import { DARKGREY, HEIGHT, LIGHTGREY, MEDIUMGREY, PRIMARYCOLOR, WIDTH, EXTRALIGHT } from '../../../sharedUtils';
+import {WIDTH, EXTRALIGHT } from '../../../sharedUtils';
 
-import {HeaderContainer, Header, BackButtonContainer, NameContainer, ResetButtonContainer, TopContainer, ImageContainer
-        ,NameJobContainer, JobText, RowContainer, CategoryName, AboutMeInput, RowName, RowContainerCol, 
-        TextInputPressable, ChangeProfilePicText, AgeText, NameText} from './profileEditStyle';
+import {
+HeaderContainer, 
+Header, 
+BackButtonContainer, 
+NameContainer,
+TopContainer, 
+ImageContainer,
+NameJobContainer,
+RowContainer, 
+CategoryName, 
+RowName,
+ChangeProfilePicText,
+NameText
+} from './profileEditStyle';
 
 export default function ProfileEditScreen({navigation, route}){
     
@@ -36,26 +44,26 @@ export default function ProfileEditScreen({navigation, route}){
     const [profilePic, setProfilePic] = useState(route.params.userData == undefined ? null : route.params.userData.profilePic)
     const [school, setSchool] = useState(route.params.userData == undefined ? null : route.params.userData.school)
     const [occupation, setOccupation] =  useState(route.params.userData == undefined ? null : route.params.userData.occupation)
-    //const userAge = Math.floor(route.params.userData.dob/(1000*60*60*24*365))
    
     useEffect(()=>{
-      
+        
         const unsubscribe = navigation.addListener('focus', () => {
             getTokens()
         });
         return unsubscribe;       
     },[navigation])
     
+    // Get user inforamtion 
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("accessToken");
        
         fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
-        method: 'GET',
-        headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken,
-        }
+            method: 'GET',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken,
+            }
         }) 
         .then(res => res.json()).then(async userData =>{
             setUserAPIData(userData)
@@ -86,6 +94,7 @@ export default function ProfileEditScreen({navigation, route}){
                 }
                 catch{
                     e=>{
+                        console.log("ERROR --- PROFILEEDIT --- GETTOKEN")
                         console.log(e)
                     }
                 }
@@ -99,10 +108,12 @@ export default function ProfileEditScreen({navigation, route}){
             }
         })
         .catch(e=>{
+            console.log("ERROR --- PROFILEEDIT --- GETTOKEN")
             alert(e)
         })
     }
 
+    //Function cahnge profile pic
     async function SelectProfilePic(){
         try{
             const accessToken = await SecureStorage.getItem("accessToken");
@@ -110,7 +121,7 @@ export default function ProfileEditScreen({navigation, route}){
                 width: 300,
                 height: 300,
                 cropping:true,
-                compressImageQuality: 0.3
+                compressImageQuality: 0.8
             }).then(image => {
         
                 const formData = new FormData();
@@ -143,7 +154,6 @@ export default function ProfileEditScreen({navigation, route}){
                         catch{e=>{
                             console.log(e)
                         }}
-                        
                     }
                 })
                 .catch((error) => {
@@ -156,76 +166,57 @@ export default function ProfileEditScreen({navigation, route}){
             })
         }
         catch{
+            console.log("ERROR --- PROFILEEDIT --- SELECTPROFILEPIC")
             if (error.code === 'E_PICKER_CANCELLED') { // here the solution
                 return false;
             }
         }
-        
-        
     }   
-
-    
 
     return(
         
         <SafeAreaView style={{flex: 1, backgroundColor:'white'}}>
-        <ScrollView>
-            <HeaderContainer>
-                <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.navigate("Profile")}>
-                        <Ionicons name='close-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
-                    </Pressable>
-                </BackButtonContainer>
-                <NameContainer>
-                    <Header>Edit Profile</Header>
-                </NameContainer>
-               
-            </HeaderContainer>
-
-            
-            <TopContainer>
-                    <ImageContainer onPress={SelectProfilePic}>
-                        <Image source={{uri: profilePic}} style={{width: WIDTH*0.35, height:WIDTH*0.35, borderRadius:WIDTH*0.175, backgroundColor: EXTRALIGHT}}/>
-                        <Pressable onPress={SelectProfilePic}>
-                            <ChangeProfilePicText>Tap to change</ChangeProfilePicText>
+            <ScrollView>
+                {/* Header EditProfile */}
+                <HeaderContainer>
+                    <BackButtonContainer>
+                        <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.navigate("Profile")}>
+                            <Ionicons name='close-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                         </Pressable>
-                    </ImageContainer>
-                    <NameJobContainer>
-                        <NameText>{userAPIData.firstName}  {userAPIData.lastName}</NameText>
-                        {/* <AgeText style={{color:DARKGREY}}>{userAge} years old</AgeText> */}
-                    </NameJobContainer>
-            </TopContainer>
-            
-            {/* <RowContainerCol>
-                <CategoryName>About me</CategoryName>
-                <TextInputPressable onPress={()=> navigation.navigate("EditAboutMe", {userData: userAPIData})} >
-                    <Text style={{color:DARKGREY}}>
-                    After informing the parties of your intent to make an introduction, 
-                    state the name of the person you are introducing. In most situations, this is usually the younger person
-                    </Text>
-                </TextInputPressable>
-            </RowContainerCol> */}
-          
-{/* 
-            <CategoryName>Pronouns</CategoryName>
-            <RowContainer>
-                <RowName>{userAPIData.gender}</RowName>
-                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
-            </RowContainer> */}
+                    </BackButtonContainer>
+                    <NameContainer>
+                        <Header>Edit Profile</Header>
+                    </NameContainer> 
+                </HeaderContainer>
+                
+                {/* This is for select profile pic and tap */}
+                <TopContainer>
+                        <ImageContainer onPress={SelectProfilePic}>
+                            <Image source={{uri: profilePic}} style={{width: WIDTH*0.35, height:WIDTH*0.35, borderRadius:WIDTH*0.175, backgroundColor: EXTRALIGHT}}/>
+                            <Pressable onPress={SelectProfilePic}>
+                                <ChangeProfilePicText>Tap to change</ChangeProfilePicText>
+                            </Pressable>
+                        </ImageContainer>
+                        <NameJobContainer>
+                            <NameText>{userAPIData.firstName}  {userAPIData.lastName}</NameText>
+                            {/* <AgeText style={{color:DARKGREY}}>{userAge} years old</AgeText> */}
+                        </NameJobContainer>
+                </TopContainer>
+                
+                {/* Change Education */}
+                <CategoryName>Education</CategoryName>
+                <RowContainer onPress={()=> navigation.navigate("EditEducation", {uid: USERID })}>
+                    <RowName>{school}</RowName>
+                    <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+                </RowContainer>
 
-            <CategoryName>Education</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditEducation", {uid: USERID })}>
-                <RowName>{school}</RowName>
-                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
-            </RowContainer>
-
-            <CategoryName>Occupation</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditOccupation")}>
-                <RowName>{occupation}</RowName>
-                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
-            </RowContainer>
-        </ScrollView>
+                {/* Change Occupation*/}
+                <CategoryName>Occupation</CategoryName>
+                <RowContainer onPress={()=> navigation.navigate("EditOccupation")}>
+                    <RowName>{occupation}</RowName>
+                    <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+                </RowContainer>
+            </ScrollView>
         </SafeAreaView>
-       
     )
 }

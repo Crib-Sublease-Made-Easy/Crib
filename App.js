@@ -94,6 +94,8 @@ import OneSignal from 'react-native-onesignal';
 
 export default function App() {
   const appState = useRef(AppState.currentState);
+  const [user, setUser] = useState(null)
+
 
   const [userInitialLocation, setUserInitialLocation] = useState(null)
   const [sendBirdConnected, setSendbirdConnection] = useState(false)
@@ -115,7 +117,7 @@ OneSignal.promptForPushNotificationsWithUserResponse(async response => {
   const deviceState = await OneSignal.getDeviceState();
   try{
     const cacheOneSignalID = await SecureStorage.getItem("oneSignalUserID");
-    if (deviceState.userId != cacheOneSignalID){
+    if (deviceState.userId != cacheOneSignalID && deviceState != null){
       await SecureStorage.setItem("oneSignalUserID", deviceState.userId);
     }
   }
@@ -149,7 +151,6 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 });
 
   useEffect(() => {
-    prefetch()
     console.log("INITIALIZE APP.JS USEEFFECT")
     // refreshAccessToken()
     const subscription = AppState.addEventListener("change", nextAppState => {
@@ -175,28 +176,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
   }, [])
 
-  function prefetch(){
-    fetch('https://crib-llc.herokuapp.com/properties/query?page=0', {
-            method: 'GET',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-            }
-            }) 
-            .then(res => res.json()).then(properties =>{
-                properties.forEach(async prop => {
-                  
-                    const success = await Image.prefetch(prop.propertyInfo.imgList[0])
-                    console.log(success)
-                });
-              
-                
-                
-            })
-            .catch(e=>{
-                alert(e)
-      })
-  }
+
   const disconnectSendbird = async () =>{
     const UID = await SecureStorage.getItem("userId");
     if (UID != undefined) {
@@ -206,17 +186,20 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   }
   const connectSendbird = async () => {
     const UID = await SecureStorage.getItem("userId");
+    console.log("UID",UID)
     if (UID != undefined) {
+      setUser(UID)
       try {
         console.log("connecting to sendbird")
      
-        sb.connect(UID, function (user, error) {
+        await sb.connect(UID, function (user, error) {
           if (error) {
             // Handle error.
             console.log("sendbird error")
             console.log(error)
           }
           else {
+            
             console.log("sendbird connected")
           }
           // The user is connected to Sendbird server.
@@ -230,13 +213,15 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   }
 
   const refreshAccessToken = async () => {
-      
+    console.log("refrehing access")
     const rt = await SecureStorage.getItem("refreshToken");
     const id = await SecureStorage.getItem("userId");
+    console.log("id", id)
     if (rt != undefined) {
-
+      console.log(id)
+      setUser(id)
+      console.log("refreshingggggg")
       connectSendbird()
-      setUser(id) 
      
       await fetch('https://crib-llc.herokuapp.com/tokens/accessRefresh', {
         method: 'POST',
@@ -252,31 +237,13 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
           alert(err)
         }
       })
-      
-      const at = await SecureStorage.getItem("accessToken");
-
-      await fetch('https://crib-llc.herokuapp.com/users/' + id, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + at
-        }
-      }).then(async e => e.json()).then(async (response) => {
-        const success = Image.prefetch(response.profilePic)
-        console.log("PREFETCH  --- ProfilePic")
-      })     
+    
        
     }
     else{
       console.log("Refresh Token is undefined. User is not logged in.")
     }
   }
-
-
-
-  const [user, setUser] = useState(null)
-
   const login = (name) => {
     setUser(name);
   };
@@ -299,8 +266,6 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
     <NavigationContainer>
       <UserContext.Provider value={{ user, login, logout, sb, USERID: user, preloadProperties: preloadProperties}}>
-
-        
 
           <Stack.Navigator>
 

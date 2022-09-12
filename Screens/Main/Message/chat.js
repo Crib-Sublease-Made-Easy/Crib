@@ -285,7 +285,7 @@ export default function ChatScreen({navigation, route}){
     <SafeAreaView style={{backgroundColor:'white', flex:1}}>
     <HeaderContainer>
           <BackButtonContainer>
-              <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> { onChat=false, navigation.goBack()}}>
+              <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} hitSlop={WIDTH*0.05} onPress={()=> { onChat=false, navigation.goBack()}}>
                   <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
               </Pressable>
           </BackButtonContainer>
@@ -305,7 +305,7 @@ export default function ChatScreen({navigation, route}){
               {/* <Pressable disabled={loading} style={{alignItems:'center'}} >
                 <Image source={{uri:channel.coverUrl}} style={{height:HEIGHT*0.035, width:HEIGHT*0.035, borderRadius:HEIGHT*0.025/2, backgroundColor:'grey'}}/>
               </Pressable> */}
-              <Pressable onPress={()=> setOptionsModal(true)}>
+              <Pressable hitSlop={WIDTH*0.05} onPress={()=> setOptionsModal(true)}>
                 <Ionicons name="ellipsis-horizontal" size={25} />
               </Pressable>
           </ChatImageSettingContainer>
@@ -329,7 +329,7 @@ export default function ChatScreen({navigation, route}){
           <MessageContainer>
               <MessageInput multiline value={typingText} onChangeText={(value)=> setTypingText(value)} placeholder="Enter a message ..." />
             
-              <TouchableOpacity onPress={()=> typingText != "" && props.onSend({text: typingText} )}>
+              <TouchableOpacity hitSlop={WIDTH*0.05} onPress={()=> typingText != "" && props.onSend({text: typingText} )}>
                 <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
               </TouchableOpacity>
               

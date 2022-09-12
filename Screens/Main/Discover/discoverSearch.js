@@ -108,7 +108,6 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
 
           <View style={{marginTop: HEIGHT*0.025}}>
           {autocompleteLocation.length != 0 && autocompleteLocation.map((value, index)=>(
-                  // <View key={"autocomplete" + value.description + index} onPress={()=>{selectCurrentLocation(value.description), setFilteredProperties([])}}>
                   <AutocompleteResultItems key={"autocomplete" + value.description + index}  hitSlop={WIDTH*0.05} onPress={()=>pressAutocompleteItem(value.description)}>
 
                       <Ionicons name="navigate-circle-outline" size={25} color= {PRIMARYCOLOR} style={{width: WIDTH*0.1}}/>

@@ -309,3 +309,8 @@ export const SignupText = styled.Text`
   font-weight: 600
   color: ${PRIMARYCOLOR}
 `
+
+export const PostedFavContainer = styled.View`
+  width: ${WIDTH}px
+  height: ${HEIGHT*0.45}px
+`

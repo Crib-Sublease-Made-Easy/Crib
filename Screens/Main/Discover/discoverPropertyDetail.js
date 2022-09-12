@@ -435,11 +435,11 @@ export default function PropertyDetailScreen({navigation, route}){
                     
                 </ScrollView>
                 <StickyHeaderContainer>
-                    < StickyHeaderIcon onPress={()=>navigation.goBack()}>
+                    < StickyHeaderIcon  hitSlop={WIDTH*0.05} onPress={()=>navigation.goBack()}>
                         <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
                     </ StickyHeaderIcon>
                     { !ownProperty &&
-                    < StickyHeaderIcon  onPress={likeProperty}>
+                    < StickyHeaderIcon hitSlop={WIDTH*0.05} onPress={likeProperty}>
                         <Ionicons  name="heart" size={25} color={ liked ? '#ee88a6' : 'white'}></Ionicons>
                     </ StickyHeaderIcon>
                     }
@@ -449,7 +449,7 @@ export default function PropertyDetailScreen({navigation, route}){
             <Footer>
                     <PricePerMonth>${propData.price} <Text style={{fontSize: HEIGHT*0.025, fontWeight:'500'}}>/ month</Text></PricePerMonth>
                 
-                    <ContactTanentButton disabled={ownProperty} ownProperty={ownProperty} onPress={()=>createConversation()}>
+                    <ContactTanentButton disabled={ownProperty} ownProperty={ownProperty} hitSlop={WIDTH*0.05} onPress={()=>createConversation()}>
                         <Text style={{color:'white', fontWeight:'700'}}>Contact Tenant</Text>
                     </ContactTanentButton>
             </Footer>

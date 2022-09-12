@@ -29,7 +29,7 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                 <View style={{width: WIDTH, height: HEIGHT*0.3, backgroundColor:'white', borderTopLeftRadius: 15, borderTopRightRadius: 15}}>
                 <HeaderContainer>
                     <BackButtonContainer>
-                        <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> close()}>
+                        <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} hitSlop={WIDTH*0.05} onPress={()=> close()}>
                             <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                         </Pressable>
                     </BackButtonContainer>
@@ -38,7 +38,7 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                     </NameContainer>
                    
                 </HeaderContainer>
-                <RowContainer onPress={()=> {close(), viewProp()}}>
+                <RowContainer hitSlop={WIDTH*0.05} onPress={()=> {close(), viewProp()}}>
                     <Ionicons name='home' size={25}  style={{paddingLeft: WIDTH*0.05}} color={PRIMARYCOLOR}/>
                     <RowName>View Property</RowName>
                 </RowContainer>
@@ -47,7 +47,7 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                     <RowName>Report Property</RowName>
                    
                 </RowContainer> */}
-                <RowContainer onPress={leaveChat}>
+                <RowContainer hitSlop={WIDTH*0.05} onPress={leaveChat}>
                     <Ionicons name='close' size={25}  style={{paddingLeft: WIDTH*0.05}} color='red'/>
                     <RowName>Delete Conversation</RowName>
                 </RowContainer>

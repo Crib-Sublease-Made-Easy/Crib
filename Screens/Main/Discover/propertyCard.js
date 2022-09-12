@@ -273,7 +273,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
             inputRange:[0,1],
             outputRange:[0,1]
           })}}>
-            <CardContainer 
+            <CardContainer hitSlop={WIDTH*0.05}
             onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId, incrementViewCount : true, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0])), currentLocation: currentLocation})} >
                
               <PropertyImageContainer >
@@ -282,7 +282,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                 opacity: 1
                 }} source={{uri:data.item.propertyInfo.imgList[0]}}/>
                 
-                  <OpenMapIconContainer onPress={()=>MoveMapToPin(data.item)}>
+                  <OpenMapIconContainer hitSlop={WIDTH*0.05} onPress={()=>MoveMapToPin(data.item)}>
                       <FontAwesome name='location-arrow' size={HEIGHT*0.02} color='white'/>
                   </OpenMapIconContainer>
               </PropertyImageContainer>
@@ -329,7 +329,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         <DragGreyLineContainer>
           
           <TopBarSlider>
-            <Pressable onPress={toogleCard}
+            <Pressable hitSlop={WIDTH*0.05} onPress={toogleCard}
             style={{paddingVertical: HEIGHT*0.005, paddingHorizontal: WIDTH*0.05, backgroundColor: EXTRALIGHT, borderRadius:20}}>
               <Ionicons name='map' size={25} color={PRIMARYCOLOR}/>
             </Pressable>

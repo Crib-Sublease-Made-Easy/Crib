@@ -6,15 +6,13 @@ import {
   Animated,
   View
 } from 'react-native';
-import { User } from 'realm';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import SecureStorage from 'react-native-secure-storage'
 
 import { HEIGHT, WIDTH, HeaderContainer, Header,BackButtonContainer,ResetButtonContainer, NameContainer } from '../../../../../sharedUtils';
 
 import { RowContainer,CategoryName, TitleContainer,DescriptionInput  } from './contactusStyle';
 
-import { UserContext } from '../../../../../UserContext';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
@@ -26,7 +24,6 @@ export default function ContactUsScreen({navigation, route}){
 
     async function send(){
         const accessToken = await SecureStorage.getItem("accessToken");
-        console.log(accessToken)
         await fetch('https://crib-llc.herokuapp.com/contact', {
             method: 'POST',
             headers: {

@@ -40,7 +40,7 @@ export function DiscoverModalCotent({visible}){
                 
                     <DiscoverModalCotent/>
                
-                <Button onPress={()=> setsearchModal(false)} title="ress" > </Button>
+                <Button hitSlop={WIDTH*0.05} onPress={()=> setsearchModal(false)} title="ress" > </Button>
                 <Text> Hello</Text>
                 </SafeAreaView>
     </Modal>

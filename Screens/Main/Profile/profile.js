@@ -3,7 +3,7 @@ import {
   SafeAreaView,
   ScrollView,
   View,
-  Dimensions,
+  Text,
   Image,
   Pressable,
   Animated,
@@ -14,38 +14,56 @@ import { UserContext } from '../../../UserContext';
 import SecureStorage from 'react-native-secure-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { PRIMARYCOLOR, Header, HeaderContainer, } from '../../../sharedUtils';
-
-const PRIMARYGREY = '#5e5d5d'
-
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
+import { PRIMARYCOLOR, Header, HeaderContainer, HEIGHT, WIDTH, MEDIUMGREY } from '../../../sharedUtils';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
-
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faSquareCheck, faSwimmer, faDog} from '@fortawesome/free-solid-svg-icons'
+library.add(faSquareCheck, faSwimmer, faDog)
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
 import Lottie from 'lottie-react-native';
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSquareCheck, faSwimmer, faDog} from '@fortawesome/free-solid-svg-icons'
+import {
+Container,
+SlidingContainer, 
+PostContainer, 
+FavContainer, 
+PostedText, 
+FavText,  
+DefaultPostFavText, 
+PostedPropertyInfoContainer,
+PropertyName, 
+DatePriceText,PriceEditContainer, 
+EditPropertyPressable, 
+EditText, 
+FavPropertyCard, 
+FavPropertyCardName, 
+FavPropertyCardContent, 
+FavPropertyCardDateText, 
+FavPropertyCardDateContainer, 
+PostedPropertyCard, 
+HeaderIndividualContainer,
+RowContainer, 
+RowItemName,
+ProfileHeading, 
+NoUserViewContainer, 
+LoginContainer, 
+LoginText, 
+SignupContainer,
+SignupText,
+PostedFavContainer
+} from './profileStyle';
 
-library.add(faSquareCheck, faSwimmer, faDog)
-
-
-
-import {Container,SlidingContainer, PostContainer, FavContainer, PostedText, FavText,  DefaultPostFavText, PostedPropertyInfoContainer,
-    PropertyName, DatePriceText,PriceEditContainer, EditPropertyPressable, EditText, FavPropertyCard, FavPropertyCardName, 
-    FavPropertyCardContent, FavPropertyCardDateText, FavPropertyCardDateContainer, PostedPropertyCard, HeaderIndividualContainer,
-    RowContainer, RowItemName,ProfileHeading, NoUserViewContainer, LoginContainer, LoginText, SignupContainer,
-    SignupText
- } from './profileStyle';
 import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, DARKGREY } from '../../../sharedUtils';
+
+
 export default function ProfileScreen({navigation}){
     const scrollviewRef = useRef(null)
     const {USERID, user} = useContext(UserContext);
+
 
     const [tabPressed, setTabPressed] = useState("Posted")
     const [postedProperties, setPostedProperties] = useState(null)
@@ -56,25 +74,24 @@ export default function ProfileScreen({navigation}){
     const [userData, setUserData] = useState('')
 
     const [profilePic, setProfilePic] = useState(null)
- 
+   
     useEffect(()=>{
-        
-            const unsubscribe = navigation.addListener('focus', () => {
-                console.log("REFRESH --- USEEFFECT")
-                console.log(user)
-                if(user != null){
-                    getTokens()
-                }
-            });
-            return unsubscribe; 
-        
-        
+        const unsubscribe = navigation.addListener('focus', () => {
+            console.log("REFRESH --- USEEFFECT")
+            //If user is defined then retrieve user info
+            console.log("hello")
+            console.log(user != null)
+           
+            getTokens()
+                     
+        });
+        return unsubscribe; 
     }, [navigation])
 
+    //Share the app on app store to freinds throguh message 
     const onShare = async () => {
         try {
           const result = await Share.share({
-            // message:
             //   'Lighthouse | An app to find short term housing solutions made easy',
               url: 'https://apps.apple.com/us/app/google-chrome/id535886823https://apps.apple.com/us/app/google-chrome/id535886823'
           });
@@ -90,52 +107,63 @@ export default function ProfileScreen({navigation}){
         } catch (error) {
           alert(error.message);
         }
-      };
+    };
 
-
+    //Retrieve user info for display and cache for later use
     async function getTokens(){
-
-        
+       
         const accessToken = await SecureStorage.getItem("accessToken");
+        const refreshToken = await SecureStorage.getItem("refreshToken");
 
-        fetchFavoriteProperties(accessToken)
-        fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
-        method: 'GET',
-        headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken,
+        if(refreshToken != undefined){
+            const UID = await SecureStorage.getItem("userId")
+            //Get user favorite properties
+            fetchFavoriteProperties(accessToken)
+            fetch('https://crib-llc.herokuapp.com/users/' + UID, {
+                method: 'GET',
+                headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
+                }
+            }) 
+            .then(res => res.json()).then(async userData =>{
+                setUserData(userData)
+                //Load API data if the cached profile pic is null
+                let cachedProfilePic = await AsyncStorage.getItem("profilePic");
+                if(profilePic == null){
+                    if(cachedProfilePic != null && cachedProfilePic == userData.profilePic ){
+                     
+                        console.log("UPDATE --- CACHE --- profilePic")
+                        setProfilePic(cachedProfilePic)
+                    }
+                    else{
+                        console.log("UPDATE --- API --- profilePic")
+                        setProfilePic(userData.profilePic)
+                        try{
+                            await AsyncStorage.setItem("profilePic", userData.profilePic);
+                        }
+                        catch{e=>{
+                            console.log("ERROR --- PROFILE --- GETTOKEN")
+                        }
+
+                        }
+                        
+                    }
+                }
+                if(userData.postedProperties != undefined){
+                    fetchPostedProperties(userData.postedProperties[0], accessToken)
+                }
+            })
+            .catch(e=>{
+                console.log("ERROR --- PROFILE --- GETTOKEN")
+                alert(e)
+            })
         }
-        }) 
-        .then(res => res.json()).then(async userData =>{
-            setUserData(userData)
-            //Load API data if the cached profile pic is null
-            let cachedProfilePic = await AsyncStorage.getItem("profilePic");
-            if(profilePic == null){
-                if(cachedProfilePic != null && cachedProfilePic == userData.profilePic ){
-                    console.log("UPDATE --- CACHE --- profilePic")
-                    setProfilePic(cachedProfilePic)
-                }
-                else{
-                    console.log("UPDATE --- API --- profilePic")
-                    setProfilePic(userData.profilePic)
-                    await AsyncStorage.setItem("profilePic", userData.profilePic);
-                }
-            }
-
-            if(userData.postedProperties != undefined){
-                fetchPostedProperties(userData.postedProperties[0], accessToken)
-            }
-
-           
-        })
-        .catch(e=>{
-            alert(e)
-        })
+        
     }
     
-
-
+    //Funciton: Get user's posted proeprty
     async function fetchPostedProperties(id, token){
        
         await fetch('https://crib-llc.herokuapp.com/properties/' + id, {
@@ -145,56 +173,51 @@ export default function ProfileScreen({navigation}){
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token,
             }
-            })
-            .then(res => {
-                
-                if(res.status == 404){
-                    setPostedProperties(null)
-                }
-                else{
-                    return res.json()
-                }
-            }).then(async propertyData =>{
-                if(propertyData != undefined){
+        })
+        .then(res => {
+            if(res.status == 404){
+                setPostedProperties(null)
+            }
+            else{
+                return res.json()
+            }
+        }).then(async propertyData =>{
+            if(propertyData != undefined){
                    
-                    //Returns no prop found when theres nothing 
-                    const tempPropData = await AsyncStorage.getItem('postedProperty')
-                    
-                    let compare = (tempPropData === JSON.stringify(propertyData))
-                    // console.log(JSON.stringify(propertyData))
-                    // console.log(tempPropData)
-                    // console.log(propertyData)
-                    // console.log("COMPARE", compare)
-                    if(!compare || tempPropData == null) {
-                        console.log("UPDATE --- API --- POSTED PROPERTY")
-                        try{
-                            await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
-                        }
-                        catch{
-                            e=>{
-                                console.log(e)
-                            }
-                        }
-                        
-                        if(JSON.stringify(propertyData) != {"Error": "No Property found"}){
-                            setPostedProperties(propertyData)
+                //Returns no prop found when theres nothing 
+                const tempPropData = await AsyncStorage.getItem('postedProperty')
+                
+                let compare = (tempPropData === JSON.stringify(propertyData))
+                   
+                if(!compare || tempPropData == null) {
+                    console.log("UPDATE --- API --- POSTED PROPERTY")
+                    try{
+                        await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
+                    }
+                    catch{
+                        e=>{
+                            console.log(e)
                         }
                     }
-                    else{
-                        console.log("UPDATE --- CACHE --- POSTED PROPERTY")
-                        setPostedProperties(JSON.parse((tempPropData)))
-                    }           
+                    
+                    if(JSON.stringify(propertyData) != {"Error": "No Property found"}){
+                        setPostedProperties(propertyData)
+                    }
                 }
-               
-                
-                
-            })
-        
-            .catch(e=>{
-                alert(e)
+                else{
+                    console.log("UPDATE --- CACHE --- POSTED PROPERTY")
+                    setPostedProperties(JSON.parse((tempPropData)))
+                }           
+            }
+
+        }).catch(e=>{
+            console.log("ERROR --- PROFILE --- FETCHPOSTEDPROPERTIES")
+            alert(e)
         })
     }
-    function fetchFavoriteProperties (token){
+
+    //Function: Fetch favorite properties 
+    function fetchFavoriteProperties(token){
         fetch('https://crib-llc.herokuapp.com/users/favorites/all', {
             method: 'GET',
             headers: {
@@ -221,12 +244,9 @@ export default function ProfileScreen({navigation}){
                     try{
                         await AsyncStorage.setItem("favoriteProperties", JSON.stringify(data) )
                     }
-                    catch{
-                        e=>{
-                            console.log(e)
-                        }
-                    }
-                    
+                    catch{e=>{
+                        console.log("ERRROR --- PROFILE --- FETCHFAVORITEPROPERTY")
+                    }}
                 }
                 else{
                     setFavoriteProperties([])
@@ -236,13 +256,12 @@ export default function ProfileScreen({navigation}){
                 console.log("UPDATE --- CACHE --- FAV PROPERTY")
                 setFavoriteProperties(JSON.parse(tempFavProp))
             }
-
         })
-
     }
 
+    //Function to post properties, only if user have no properties 
     function toPostProperty(){
-        if(userData.postedProperties.length == 9){
+        if(userData.postedProperties.length >= 9 ){
             alert("As a regular member, you can only post one property.")
         }
         else{
@@ -250,7 +269,7 @@ export default function ProfileScreen({navigation}){
         }
     }
 
-
+    //Function: animate the process of the sliding half transparant bckground between psoted and favorite 
     function PressPosted(){
         Animated.spring(translation,{
         toValue: 0,
@@ -261,6 +280,7 @@ export default function ProfileScreen({navigation}){
         }).start()
         scrollviewRef.current.scrollTo({x:0})
     }
+
     function PressFav(){
         Animated.spring(translation,{
         toValue: WIDTH*0.45 ,
@@ -272,151 +292,165 @@ export default function ProfileScreen({navigation}){
         scrollviewRef.current.scrollTo({x:WIDTH})
     }
     return(
-
         <SafeAreaView style={{backgroundColor:'white', flex:1}}>
+            {/* Check if user is logged in and show differnt page*/}
             {user != null ? 
+            
+            // This is when user is logged in 
             <View style={{flex: 1}}>
-            <HeaderContainer style={{borderBottomWidth: 0}}>
-                <HeaderIndividualContainer style={{justifyContent:'flex-end', width: '15%'}}>
-                    <Pressable onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
-                    <Image source={{uri: profilePic}} 
-                    style={{width:WIDTH*0.1, height: WIDTH*0.1, borderRadius: WIDTH*0.05, alignSelf:'center', backgroundColor:EXTRALIGHT}} />
-                    </Pressable>
-                </HeaderIndividualContainer> 
-                    
-                <HeaderIndividualContainer style={{width: '70%'}}>
-                    <Header>{userData.firstName}</Header>
-                </HeaderIndividualContainer>
-
-                <HeaderIndividualContainer style={{ width:'15%',justifyContent:'flex-start', }}>
-                    <Pressable onPress={()=>navigation.navigate('Setting')}>
-                        <Ionicons name='cog-outline' size={30} />
-                    </Pressable>
-                </HeaderIndividualContainer>
-               
-            </HeaderContainer>
-            <ProfileHeading>Profile</ProfileHeading>
-            <View >
-                <RowContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>    
-                    <Ionicons name="create"  size={25} color={GOOGLEBLUE}/>
-                    <RowItemName>Edit Profile</RowItemName>
-                </RowContainer>
-                <RowContainer onPress={()=> toPostProperty()}>    
-                    <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
-                    <RowItemName>Post a property</RowItemName>
-                </RowContainer>
-                <RowContainer onPress={()=> onShare()}>    
-                    <Ionicons name="share"  size={25} color={DARKGREY}/>
-                    <RowItemName>Share Crib</RowItemName>
-                </RowContainer>
-            </View>
-            <Container>
-                
-       
-                <SlidingContainer>
-                    <Animated.View style={{width:WIDTH*0.35, height: HEIGHT*0.05, borderRadius: 25, position:'absolute', left:WIDTH*0.05,
-                     backgroundColor:PRIMARYCOLOR, opacity:0.2, transform:[{translateX: translation}]}}></Animated.View>
-                    <PostContainer tabPressed={tabPressed} onPress={()=> {setTabPressed('Posted'), PressPosted()}}>
-                        <FontAwesome name='home'  size={20} color={tabPressed == 'Posted' ? PRIMARYCOLOR : PRIMARYGREY}/>
-                        <PostedText tabPressed={tabPressed} >Posted</PostedText>
-                    </PostContainer>
-                    <FavContainer tabPressed={tabPressed} onPress={()=> {setTabPressed('Fav'), PressFav()}}>
-                        <FontAwesome name='heart' size={20} color={tabPressed == "Fav" ? PRIMARYCOLOR : PRIMARYGREY} />
-                        <FavText tabPressed={tabPressed}>Favorite</FavText>
-                    </FavContainer>
-                </SlidingContainer>
-
-            <ScrollView ref={scrollviewRef} horizontal snapToAlignment='start' snapToInterval={WIDTH} decelerationRate='fast'
-                style={{width:WIDTH, maxHeight:HEIGHT*0.45, }} scrollEnabled={false}>
-                <View style={{ width:WIDTH, alignItems:'center' , paddingVertical: HEIGHT*0.02}}>
-                    {postedProperties != null ?
-                        <PostedPropertyCard onPress={()=>navigation.navigate("PropertyDetail", {data: postedProperties, uid: userData._id})}>
-                            <Image key={"defaultPropPic"}
-                            source={{uri: postedProperties == null ? null : postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
-                            <PostedPropertyInfoContainer>
-                                <PropertyName>{postedProperties.propertyInfo.loc.streetAddr}</PropertyName>
-                                <DatePriceText>{postedProperties.propertyInfo.loc.secondaryTxt}</DatePriceText>
-                                <DatePriceText>
-                                    {new Date(postedProperties.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' })} {""}
-                                    {new Date(postedProperties.propertyInfo.availableFrom).getFullYear()}
-                                    {" "} - {" "}
-                                    {new Date(postedProperties.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })} {""}
-                                    {new Date(postedProperties.propertyInfo.availableTo).getFullYear()}
-                                </DatePriceText>
-                                <PriceEditContainer>
-                                    <PropertyName style={{color:'black'}}>${postedProperties.propertyInfo.price} / month</PropertyName>
-                                    <EditPropertyPressable onPress={()=>navigation.navigate("EditProperty", {propertyData: postedProperties.propertyInfo, propId: postedProperties.propertyInfo._id})}>
-                                        <EditText>Edit</EditText>
-                                    </EditPropertyPressable>
-                                </PriceEditContainer>
-                            </PostedPropertyInfoContainer>
-                        </PostedPropertyCard>
-                    :
-                        <Pressable style={{width:WIDTH, height:'100%', alignItems:'center', justifyContent:'center'}}
-                            onPress={toPostProperty}>
-                            <Lottie source={require('../../../subleaseProperties.json')} autoPlay loop={20}  style={{width:WIDTH*0.6, height: WIDTH*0.6, }}/>
-                            {/* <Pressable style={{width:WIDTH*0.5, height:HEIGHT*0.06, borderRadius:30,
-                            backgroundColor: PRIMARYCOLOR, justifyContent:'center', alignItems:'center'}}>
-                                <Text style={{color:'white', fontSize:HEIGHT*0.0175, fontWeight:'500'}}>Start Sublease</Text>
-                            </Pressable> */}
-                            <DefaultPostFavText>Sublease in just a few steps</ DefaultPostFavText>
+                <HeaderContainer style={{borderBottomWidth: 0}}>
+                    <HeaderIndividualContainer style={{justifyContent:'flex-end', width: '15%'}}>
+                        <Pressable  hitSlop={WIDTH*0.05} onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
+                        <Image source={{uri: profilePic}} 
+                        style={{width:WIDTH*0.1, height: WIDTH*0.1, borderRadius: WIDTH*0.05, alignSelf:'center', backgroundColor:EXTRALIGHT}} />
                         </Pressable>
-                    }
-                </View>
-                <View style={{width:WIDTH, height:HEIGHT*0.45, }}>
-                    {favoriteProperties.length == 0 ?
-                        <Pressable style={{width:WIDTH, height:'100%',alignItems:'center',justifyContent:'center'}} onPress={()=> navigation.navigate("Discover")}>
-                            {/* <Lottie source={require('../../../likeanimation.json')} autoPlay loop={20}  style={{width:WIDTH*0.4, height: WIDTH*0.4, }}/> */}
-                            <DefaultPostFavText>No likes yet. Start discovering...</ DefaultPostFavText>
-                        </Pressable>
-                        :
-                        <ScrollView contentContainerStyle={{alignSelf:'center'}}
-                        style={{alignSelf:'center', width: WIDTH, paddingTop: HEIGHT*0.01}} showsVerticalScrollIndicator={false}>
-                            {favoriteProperties.map((item, index)=>(
-                            <FavPropertyCard key={item.propertyInfo._id + index}>
-                                <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
-                                <Image source={{uri: item.propertyInfo.imgList[0]}} 
-                                style={{width:'100%', height:'100%', borderTopLeftRadius:10, borderBottomLeftRadius:10}}/>
-                                </Pressable>
-                                <FavPropertyCardContent onPress={()=> navigation.navigate("PropertyDetail", {data: item, uid: userData._id})}>
-                                    <FavPropertyCardName>{item.propertyInfo.loc.secondaryTxt}</FavPropertyCardName>
-                                    <FavPropertyCardDateContainer>
-                                        <FavPropertyCardDateText>
-                                            {new Date(item.propertyInfo.availableFrom).getDate() + " " +
-                                            new Date(item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) }
-                                        </FavPropertyCardDateText>
-                                        <Ionicons name="arrow-forward-outline" size={15} color={DARKGREY}/>
-                                        <FavPropertyCardDateText>
-                                        {new Date(item.propertyInfo.availableTo).getDate() + " " +
-                                            new Date(item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' }) }
-                                        </FavPropertyCardDateText>
-                                    </FavPropertyCardDateContainer>
-                                    <FavPropertyCardName>$ {item.propertyInfo.price}</FavPropertyCardName>
-                                </FavPropertyCardContent>
-                            </FavPropertyCard>
-
-                            ))}
-                            <View style={{width:WIDTH*0.9, height: HEIGHT*0.05,}}>
-                            
-                            </View>
-                        </ScrollView>
+                    </HeaderIndividualContainer> 
                         
-                    }
+                    <HeaderIndividualContainer style={{width: '70%'}}>
+                        <Header>{userData.firstName}</Header>
+                    </HeaderIndividualContainer>
+
+                    <HeaderIndividualContainer style={{ width:'15%',justifyContent:'flex-start', }}>
+                        <Pressable onPress={()=>navigation.navigate('Setting')}>
+                            <Ionicons name='cog-outline' size={30} />
+                        </Pressable>
+                    </HeaderIndividualContainer>
+                
+                </HeaderContainer>
+                <ProfileHeading>Profile</ProfileHeading>
+                {/* The Edit Profie, Post a Property and Share a Crib function */}
+                <View>
+                    <RowContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>    
+                        <Ionicons name="create"  size={25} color={GOOGLEBLUE}/>
+                        <RowItemName>Edit Profile</RowItemName>
+                    </RowContainer>
+                    <RowContainer onPress={()=> toPostProperty()}>    
+                        <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
+                        <RowItemName>Post a property</RowItemName>
+                    </RowContainer>
+                    <RowContainer onPress={()=> onShare()}>    
+                        <Ionicons name="share"  size={25} color={DARKGREY}/>
+                        <RowItemName>Share Crib</RowItemName>
+                    </RowContainer>
                 </View>
-               
-            </ScrollView>
-            </Container>
+
+                <Container>
+                    {/* This is the Slider between Posted and Favorite */}
+                    <SlidingContainer>
+                        <Animated.View style={{width:WIDTH*0.35, height: HEIGHT*0.05, borderRadius: 25, position:'absolute', left:WIDTH*0.05,
+                        backgroundColor:PRIMARYCOLOR, opacity:0.2, transform:[{translateX: translation}]}}></Animated.View>
+                        <PostContainer tabPressed={tabPressed} onPress={()=> {setTabPressed('Posted'), PressPosted()}}>
+                            <FontAwesome name='home'  size={20} color={tabPressed == 'Posted' ? PRIMARYCOLOR : DARKGREY}/>
+                            <PostedText tabPressed={tabPressed} >Posted</PostedText>
+                        </PostContainer>
+                        <FavContainer tabPressed={tabPressed} onPress={()=> {setTabPressed('Fav'), PressFav()}}>
+                            <FontAwesome name='heart' size={20} color={tabPressed == "Fav" ? PRIMARYCOLOR : DARKGREY} />
+                            <FavText tabPressed={tabPressed}>Favorite</FavText>
+                        </FavContainer>
+                    </SlidingContainer>
+
+                    {/* Horizontal scrollview for posted and favorite property */}
+                    <ScrollView ref={scrollviewRef} horizontal snapToAlignment='start' snapToInterval={WIDTH} decelerationRate='fast'
+                        style={{width:WIDTH, maxHeight:HEIGHT*0.45, }} scrollEnabled={false}>
+                        {/* This is the View of posted property */}
+                        <View style={{ width:WIDTH, alignItems:'center' , paddingVertical: HEIGHT*0.02}}>
+                            {/* When user have a property */}
+                            {postedProperties != null ?
+                                <PostedPropertyCard onPress={()=>navigation.navigate("PropertyDetail", {data: postedProperties, uid: userData._id})}>
+                                    <Image key={"defaultPropPic"}
+                                    source={{uri: postedProperties == null ? null : postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
+                                    <PostedPropertyInfoContainer>
+                                        <PropertyName>{postedProperties.propertyInfo.loc.streetAddr}</PropertyName>
+                                        <DatePriceText>{postedProperties.propertyInfo.loc.secondaryTxt}</DatePriceText>
+                                        <DatePriceText>
+                                            {new Date(postedProperties.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' })} {""}
+                                            {new Date(postedProperties.propertyInfo.availableFrom).getFullYear()}
+                                            {" "} - {" "}
+                                            {new Date(postedProperties.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })} {""}
+                                            {new Date(postedProperties.propertyInfo.availableTo).getFullYear()}
+                                        </DatePriceText>
+                                        <PriceEditContainer>
+                                            <PropertyName style={{color:'black'}}>${postedProperties.propertyInfo.price} / month</PropertyName>
+                                            <EditPropertyPressable onPress={()=>navigation.navigate("EditProperty", {propertyData: postedProperties.propertyInfo, propId: postedProperties.propertyInfo._id})}>
+                                                <EditText>Edit</EditText>
+                                            </EditPropertyPressable>
+                                        </PriceEditContainer>
+                                    </PostedPropertyInfoContainer>
+                                </PostedPropertyCard>
+                            :
+                                //When user have no property
+                                <Pressable style={{width:WIDTH, height:'100%', alignItems:'center', justifyContent:'center'}}
+                                    onPress={toPostProperty}>
+                                    <Lottie source={require('../../../subleaseProperties.json')} autoPlay loop={20}  style={{width:WIDTH*0.6, height: WIDTH*0.6, }}/>
+                                    {/* <Pressable style={{width:WIDTH*0.5, height:HEIGHT*0.06, borderRadius:30,
+                                    backgroundColor: PRIMARYCOLOR, justifyContent:'center', alignItems:'center'}}>
+                                        <Text style={{color:'white', fontSize:HEIGHT*0.0175, fontWeight:'500'}}>Start Sublease</Text>
+                                    </Pressable> */}
+                                    <DefaultPostFavText>Sublease in just a few steps</ DefaultPostFavText>
+                                </Pressable>
+                            }
+                        </View>
+
+                         {/* This is the View of favorite property */}
+                        <PostedFavContainer>
+                            
+                            {favoriteProperties.length == 0 ?
+                            //When there is no favorite property
+                                <Pressable style={{width:WIDTH, height:'100%',alignItems:'center',justifyContent:'center'}} onPress={()=> navigation.navigate("Discover")}>
+                                    {/* <Lottie source={require('../../../likeanimation.json')} autoPlay loop={20}  style={{width:WIDTH*0.4, height: WIDTH*0.4, }}/> */}
+                                    <DefaultPostFavText>No likes yet. Start discovering...</ DefaultPostFavText>
+                                </Pressable>
+                                :
+                                //When there exist at least 1 fav prop
+                                <ScrollView contentContainerStyle={{alignSelf:'center'}}
+                                style={{alignSelf:'center', width: WIDTH, paddingTop: HEIGHT*0.01}} showsVerticalScrollIndicator={false}>
+                                    {favoriteProperties.map((item, index)=>(
+                                    <FavPropertyCard key={item.propertyInfo._id + index}>
+                                        <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
+                                        <Image source={{uri: item.propertyInfo.imgList[0]}} 
+                                        style={{width:'100%', height:'100%', borderTopLeftRadius:10, borderBottomLeftRadius:10}}/>
+                                        </Pressable>
+                                        <FavPropertyCardContent onPress={()=> navigation.navigate("PropertyDetail", {data: item, uid: userData._id})}>
+                                            <FavPropertyCardName>{item.propertyInfo.loc.secondaryTxt}</FavPropertyCardName>
+                                            <FavPropertyCardDateContainer>
+                                                <FavPropertyCardDateText>
+                                                    {new Date(item.propertyInfo.availableFrom).getDate() + " " +
+                                                    new Date(item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) }
+                                                </FavPropertyCardDateText>
+                                                <Ionicons name="arrow-forward-outline" size={15} color={DARKGREY}/>
+                                                <FavPropertyCardDateText>
+                                                {new Date(item.propertyInfo.availableTo).getDate() + " " +
+                                                    new Date(item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' }) }
+                                                </FavPropertyCardDateText>
+                                            </FavPropertyCardDateContainer>
+                                            <FavPropertyCardName>$ {item.propertyInfo.price}</FavPropertyCardName>
+                                        </FavPropertyCardContent>
+                                    </FavPropertyCard>
+
+                                    ))}
+                                    {/* Padding in the bottom so the fav pro wont stick to bottom */}
+                                    <View style={{width:WIDTH*0.9, height: HEIGHT*0.05,}}/>
+                
+                                </ScrollView>
+                            }
+                        </PostedFavContainer>
+                    
+                    </ScrollView>
+                </Container>
             </View>
             :
+            // When user is not logged in 
             <NoUserViewContainer>
                 <View style={{width:WIDTH*0.6, height: WIDTH*0.6, }}>
-                <Lottie source={require('../../../notLoggedIn.json')} style={{width:WIDTH*0.6, height: WIDTH*0.6, }}/>
+                    <Lottie source={require('../../../notLoggedIn.json')} style={{width:'100%', height: '100%' }}/>
                 </View>
+
                 <DefaultPostFavText>Login to view and post properties.</DefaultPostFavText>
 
                 <LoginContainer onPress={()=> navigation.navigate("Login")}>
                     <LoginText>Login</LoginText>
                 </LoginContainer>
+
                 <SignupContainer onPress={()=> navigation.navigate("FirstLastName")}>
                     <SignupText>Sign up</SignupText>
                 </SignupContainer>
@@ -424,7 +458,6 @@ export default function ProfileScreen({navigation}){
             </NoUserViewContainer>
         }
         </SafeAreaView>
-        
     )
 }
 

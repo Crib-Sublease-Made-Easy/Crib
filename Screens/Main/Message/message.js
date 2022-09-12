@@ -130,7 +130,7 @@ export default function MessageScreen({navigation, route}){
                 keyExtractor={item => item.url}
                 renderItem={({item})=>(
                 
-                <FlatlistItemContainer onPress={()=> navigation.navigate("Chat", {url:item.url, id: userId})}>
+                <FlatlistItemContainer hitSlop={WIDTH*0.05} onPress={()=> navigation.navigate("Chat", {url:item.url, id: userId})}>
                         <View style={{width:WIDTH*0.025, height: '100%', justifyContent:'center'}}>
                             {
                             item.unreadMessageCount == 0 ?
@@ -179,10 +179,10 @@ export default function MessageScreen({navigation, route}){
                 </View>
                 <NoUserText>Login to view and post properties.</NoUserText>
 
-                <LoginContainer onPress={()=> navigation.navigate("Login")}>
+                <LoginContainer hitSlop={WIDTH*0.05} onPress={()=> navigation.navigate("Login")}>
                     <LoginText>Login</LoginText>
                 </LoginContainer>
-                <SignupContainer onPress={()=> navigation.navigate("FirstLastName")}>
+                <SignupContainer hitSlop={WIDTH*0.05} onPress={()=> navigation.navigate("FirstLastName")}>
                     <SignupText>Sign up</SignupText>
                 </SignupContainer>
             </NoUserViewContainer>
