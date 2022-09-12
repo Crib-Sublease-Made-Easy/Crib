@@ -41,9 +41,9 @@ export default function MessageScreen({navigation, route}){
         const unsubscribe = navigation.addListener('focus', () => {
             console.log("FOCUSSSSSS")
             console.log(user)
-            if(user != null){
-                fetchConvos()
-            }
+            
+            fetchConvos()
+            
         });
         sb.addChannelHandler('channels', channelHandler);
 
@@ -60,52 +60,56 @@ export default function MessageScreen({navigation, route}){
 
   
     const fetchConvos = useCallback(async() => {
-        console.log("rEFRESH")
+
+        const refreshToken = await SecureStorage.getItem("refreshToken");
+
+        if(refreshToken != undefined){
        
-        setUserId(USERID)
-        let listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
-        
-        listQuery.includeEmpty = false;
-        listQuery.order = 'latest_last_message'; 
-        listQuery.limit = 15;   // The value of pagination limit could be set up to 100.
-        
-        if (listQuery.hasNext) {
-            listQuery.next(async function(groupChannels, error) {
-                if (error) {
-                    // Handle error.
-                    console.log("error", error)
-                }
-                // const tempConvoList = await AsyncStorage.getItem("convoList")
-                // if(new Object(JSON.parse(tempConvoList)).toLocaleString() == new Object(groupChannels).toLocaleString()){
-                //     console.log("UPDATE --- CACHE --- convoList")
-                //     setConvoList(tempConvoList)
-                // }
-                // else{
-                //     console.log("UPDATE --- API --- convoList")
-                //     setConvoList(groupChannels)
-                // }
-                setConvoList(groupChannels)
-                
-                // A list of group channels is successfully retrieved.
-                // console.log(groupChannels)
-                // console.log("new console list")
-                // try{
-                //     groupChannels.forEach(channel => {
-                //         // console.log(channel)
-                //         // console.log("===============")
-                //         // console.log(channel.memberMap.
+            setUserId(USERID)
+            let listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+            
+            listQuery.includeEmpty = false;
+            listQuery.order = 'latest_last_message'; 
+            listQuery.limit = 15;   // The value of pagination limit could be set up to 100.
+            
+            if (listQuery.hasNext) {
+                listQuery.next(async function(groupChannels, error) {
+                    if (error) {
+                        // Handle error.
+                        console.log("error", error)
+                    }
+                    // const tempConvoList = await AsyncStorage.getItem("convoList")
+                    // if(new Object(JSON.parse(tempConvoList)).toLocaleString() == new Object(groupChannels).toLocaleString()){
+                    //     console.log("UPDATE --- CACHE --- convoList")
+                    //     setConvoList(tempConvoList)
+                    // }
+                    // else{
+                    //     console.log("UPDATE --- API --- convoList")
+                    //     setConvoList(groupChannels)
+                    // }
+                    setConvoList(groupChannels)
                     
+                    // A list of group channels is successfully retrieved.
+                    // console.log(groupChannels)
+                    // console.log("new console list")
+                    // try{
+                    //     groupChannels.forEach(channel => {
+                    //         // console.log(channel)
+                    //         // console.log("===============")
+                    //         // console.log(channel.memberMap.
+                        
+                        
+                    //     })
+                    // }
+                    // catch{e=>{
+                    //     console.log(e)
+                    // }}
+                        
                     
-                //     })
-                // }
-                // catch{e=>{
-                //     console.log(e)
-                // }}
-                    
-                
-                // console.log("After")
-        
-            });
+                    // console.log("After")
+            
+                });
+            }
         }
         return;
     },[])
