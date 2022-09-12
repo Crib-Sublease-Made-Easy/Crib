@@ -40,11 +40,12 @@ export default function MessageScreen({navigation, route}){
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
             console.log("FOCUSSSSSS")
+            console.log(user)
             if(user != null){
                 fetchConvos()
             }
         });
-        // sb.addChannelHandler('channels', channelHandler);
+        sb.addChannelHandler('channels', channelHandler);
 
         return unsubscribe;
 
