@@ -295,12 +295,16 @@ export default function PropertyDetailScreen({navigation, route}){
                         <BedAndBathContainer>
                             <BedContainer>
                                 <BedTopContainer>
-                                {propData.bed != "Studio" &&
-                                    <FontAwesomeIcon icon={faBed} size={30}/>
-                                }
+                              
+                                <FontAwesomeIcon icon={faBed} size={30}/>
+                                
                                     {/* <BedNumberText>{propData.bed.replace("P","+")}</BedNumberText> */}
                                 </BedTopContainer>
-                                <BedroomNameText>{propData.bed.replace("P","+")} Bedroom</BedroomNameText>
+                                {propData.bed == "Studio" ?
+                                    <BedroomNameText>Studio</BedroomNameText>
+                                    :
+                                    <BedroomNameText>{propData.bed.replace("P","+")} Bedroom</BedroomNameText>
+                                }
                             </BedContainer>
                             <BedContainer>
                                 <BedTopContainer>
