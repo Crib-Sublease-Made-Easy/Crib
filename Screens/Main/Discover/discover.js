@@ -3,57 +3,74 @@ import {
   SafeAreaView,
   Text,
   View,
-  Keyboard,
   Animated as RNAnimated,
   Image,
-  ActivityIndicator,
-  TouchableOpacity,
-  Modal
-  
+  Pressable
 } from 'react-native';
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, TEXTINPUTBORDERCOLOR, DARKGREY, EXTRALIGHT } from '../../../sharedUtils';
+
+var axios = require('axios');
+
+//Global variables that is shared among pages, initialized in App.js
+import { UserContext } from '../../../UserContext';
+
+//Notification Service
 import OneSignal from 'react-native-onesignal';
-import { CardStyleInterpolators } from '@react-navigation/stack';
-import DiscoverSearchScreen from './discoverSearch'
+
+//Screen Components
+import DiscoverSearchScreen from './discoverSearch' //onPress Search Bar
+
+import DiscoverFilterScreen from './Filter/discoverFilter'; //onPress Search Filter Icon
+
+import PropertyCard from './propertyCard';  //The slide up screen that shows all properties
+
+//Icons
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
+FontAwesome.loadFont()
 
-import {SearchContainer, SearchContainerPlaceholderText, MapContainer,
-    PlaceholderLogoTextContainer, PreviewTopContainer, PreviewBottomContainer,
-    PreviewTopLeftContaier,PreviewTopRightContaier, PreviewNameText, PreviewPriceText, PreviewLocationText, 
-    SeachIconContainer, DeleteIconContainer, CustomMarker,  SearchHerePressable, SearchHereText } from './discoverStyle';
 
-import { SearchInputCancelIconContainer } from './discoverStyle';
+//Style components 
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, DARKGREY, EXTRALIGHT } from '../../../sharedUtils';
+
+//Custom components
+import {
+    SearchContainer, 
+    SearchContainerPlaceholderText, 
+    MapContainer, 
+    PreviewTopContainer, 
+    PreviewBottomContainer,
+    PreviewPriceText, 
+    PreviewLocationText, 
+    SeachIconContainer,
+    DeleteIconContainer, 
+    CustomMarker,  
+    SearchHerePressable, 
+    SearchHereText,
+    FilterAppliedIconBackground,
+    NoFilterAppliedIconBackground
+} from './discoverStyle';
+
+//Gesture Handler to control propertycard
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import DiscoverFilterScreen from './Filter/discoverFilter';
-//Components 
-import PropertyCard from './propertyCard';
+
 //React Native Map
 import MapView , { Marker }from 'react-native-maps';
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-import { UserContext } from '../../../UserContext';
 
-const TEXTGREY = '#969696'
-FontAwesome.loadFont()
-Ionicons.loadFont()
-var axios = require('axios');
 
-export default function DiscoverScreen({navigation, route}){
+export default function DiscoverScreen({navigation}){
 
-    const {sb, USERID, preloadProperties} = useContext(UserContext);
-      //Method for handling notifications received while app in foreground
-      OneSignal.setNotificationOpenedHandler(notification => {
-        // console.log("OneSignal: notification opened:", notification);
-            navigation.navigate("Message")
-        
-      });
+    const {USERID, preloadProperties} = useContext(UserContext);
+
+    //Method for handling notifications received while app in foreground
+    OneSignal.setNotificationOpenedHandler(notification => {
+    // console.log("OneSignal: notification opened:", notification);
+        navigation.navigate("Message")
+    });
+
     //Reference to the MapView
     const mapRef = useRef(null)
-    //This is to control the height of the input view container
-    const translation = useRef(new RNAnimated.Value(HEIGHT*0.065)).current;
-    const widthtranslation = useRef(new RNAnimated.Value(WIDTH*0.9)).current;
+    //This controls preview modal open opacity when the location icon in propertycard is pressed
     const opacityTranslation = useRef(new RNAnimated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
     const [currentLocation, setCurrentLocation] = useState([37.7749,-122.4194])
@@ -63,29 +80,24 @@ export default function DiscoverScreen({navigation, route}){
     const [pinsData, setPinsData] = useState([])
     //Toggle to retrieve more properties
     const [retrieveMore, setRetrieveMore] = useState(true)
-    //The array to store all predictions of the user input
-    const [autocompleteLocation, setautocompleteLocation] = useState([])
     //To indicate if user is searching or not
     const [searching, setSearching] = useState(false)
-    //If user press view map in each card container, this stores the data of the property selected 
     //Access the fields by selectedPin.item.name
     const [selectedPin, setSelectedPin] = useState(null)
-    
-    const [propertiesData, setPropertiesData] = useState([]);
-
+    //Page number of properties shown, it is called in load more properties, hence initial 1 
     const [propertyPage, setPropertyPage] = useState(1);
-
+    //Controls the filter modal page
     const [filterModal, setFilterModal] = useState(false)
-
+    //Array of properties shawn in loadProperties
     const [filteredProperties, setFilteredProperties] = useState(preloadProperties)
-
+    //A modal that shows when location icon is pressed in property card
     const [propertyPreviewCard, setPropertyPreviewCard] = useState(false)
-    const [markerClickIndex, setMarkerClickIndex] = useState()    
-
+    //Loading indicator appears when true, signal new search result, so loadproperties is called
     const [flatlistRefreshing, setFlatlistRefreshing] = useState(false)
-
+    //This is an array of [x,y], changes when user map around map
     const [mapCenterLocation, setMapCenterLocation] = useState(currentLocation)
 
+    //Default filter vales 
     const [filterType, setfilterType] = useState('')
     const [filterSort, setfilterSort] = useState('')
     const [filterDistance, setfilterDistance] = useState(150)
@@ -95,38 +107,34 @@ export default function DiscoverScreen({navigation, route}){
     const [filterPriceHigher, setfilterPriceHigher] = useState(10000);
     const [filterAvailableFrom, setfilterAvailableFrom] = useState(new Date())
     const [filterAvailableTo, setfilterAvailableTo] = useState(new Date(1759190400000))
-
-    const [filterPreviewValue, setfilterPreviewValue] = useState(10000)
-    const [filterPreviewDistanceValue, setfilterPreviewDistanceValue] = useState(150)
     const [filterAmenities, setfilterAmenities] = useState([])
-
+    //Another useState var for price to improve performance because the slider is laggy
+    const [filterPreviewValue, setfilterPreviewValue] = useState(10000)
+    //Another usestate var for distance to improve performance because the slider is laggy
+    const [filterPreviewDistanceValue, setfilterPreviewDistanceValue] = useState(150)
+    //Toggles between true and false before and after a function call
     const [loading, setLoading] = useState(false)
-    const [userId, setUserId] = useState(null)
-    const [mapViewing, setMapViewing] = useState(true)
-
+    //Toggle the screen when searchbar is onPress
     const [discoverSearchVisible, setDiscoverSearchVisible] = useState(false)
+
     useEffect(()=>{
-        
         setFlatlistRefreshing(true)
-        // console.log("USEFFECT")        
-        //This loads the property in the flatlist 
+        //Loading initial batch of properties
         loadProperty()
-       
-        retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom, filterAvailableTo )
+        // Loading the pins on the map with default values
+        retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom, filterAvailableTo)
+        //Reset selected pin and preview card visibility
         setPropertyPreviewCard(false)
         setSelectedPin([])
        
-            let timer1 = setTimeout(() => setFlatlistRefreshing(false), 2000);
-      
-            // this will clear Timeout
-            // when component unmount like in willComponentUnmount
-            // and show will not change to true
-            return () => {
-              clearTimeout(timer1);
-            };
-        
-        
-        
+        //Disable loading indicator
+        let timer1 = setTimeout(() => setFlatlistRefreshing(false), 2000);
+        // this will clear Timeout
+        // when component unmount like in willComponentUnmount
+        // and show will not change to true
+        return () => {
+            clearTimeout(timer1);
+        };
     },[currentLocation])
 
 
@@ -154,6 +162,7 @@ export default function DiscoverScreen({navigation, route}){
         }).start()
         setPropertyPreviewCard(true)
     }
+
     //Close the preview card when the map button on the propertycard in flatlsit is pressed 
     function closePreviewCard(){
         RNAnimated.spring(opacityTranslation,{
@@ -165,34 +174,9 @@ export default function DiscoverScreen({navigation, route}){
         }).start()
         setPropertyPreviewCard(false)
     }
-   
-    //Show all the predictions according to the input string 
-    //Input: The user input 
-    function autocomplete(query){
-        if(query == ""){
-            setautocompleteLocation([])
-        }
-        setlocationQuery(query);
-        
-        var config = {
-            method: 'get',
-            url: `https://crib-llc.herokuapp.com/autocomplete/places/${query}`,
-        };
-        axios(config)
-        .then(response => {
-            setautocompleteLocation([]);           
-            for( let name of response.data){
-                setautocompleteLocation(prevArray => [...prevArray,name])   
-            }        
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-    } 
 
     //Load initial properties
     const loadProperty = useCallback(()=> {
-
         setPropertyPage(1)
         setRetrieveMore(true)
         setLoading(true)
@@ -200,9 +184,6 @@ export default function DiscoverScreen({navigation, route}){
         if(filterType != ""){
             s = s + "&type=" + filterType;
         }
-        // if(filterSort != ""){
-        //     s = s + "&type=" + filterSort;
-        // }
         if(filterDistance != ""){
             s = s + "&maxDistance=" + parseInt(filterDistance);
         }
@@ -220,32 +201,24 @@ export default function DiscoverScreen({navigation, route}){
 
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
-            fetch('https://crib-llc.herokuapp.com/properties/query?page=0' + s, {
+
+        fetch('https://crib-llc.herokuapp.com/properties/query?page=0' + s, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
             }
-            }) 
-            .then(res => res.json()).then(properties =>{
-                properties.forEach(async prop => {
-                  
-                    const success = await Image.prefetch(prop.propertyInfo.imgList[0])
-                     
-                });
-                setFilteredProperties(properties)
-                
-                
-            })
-            .catch(e=>{
-                alert(e)
+        }) 
+        .catch(e=>{
+            console.log("ERROR --- DISCOVER --- loadProperty")
+            alert(e)
         })
         setTimeout(()=>{
             setLoading(false)
         },2000)
-        
     },[currentLocation])
 
+    //Load more properties when threshold is reached in propertycard page
     const loadMoreProperties = async() => {
         if(retrieveMore){
             setPropertyPage(propertyPage+1);
@@ -270,9 +243,6 @@ export default function DiscoverScreen({navigation, route}){
         s = s + `&longitude=${currentLocation[1]}`
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
-        // s = s +`&availableFrom=${filterAvailableFrom}`
-        // s = s +`&availableTo=${filterAvailableTo}`
-
 
         if(propertyPage != 0){
             await fetch('https://crib-llc.herokuapp.com/properties/query?page=' + propertyPage + s, {
@@ -283,14 +253,14 @@ export default function DiscoverScreen({navigation, route}){
             }
             }) 
             .then(res => res.json()).then(properties =>{
-                // setPropertiesData([...propertiesData,...properties])
-            //   console.log("PROPERTIES", properties)
+
             if(properties.length == 0){
                 setRetrieveMore(false)
             }
                 setFilteredProperties([...filteredProperties,...properties])
             })
             .catch(e=>{
+                console.log("ERROR --- DISCOVER --- loadMoreProperties")
                 alert(e)
             })   
         }   
@@ -315,49 +285,40 @@ export default function DiscoverScreen({navigation, route}){
             for(let amen of amens){
                 s = s + "&" + amen + "=true";
             }
-        
-         }
+        }
         s = s + `&latitude=${lat}`
         s = s + `&longitude=${long}`
         s = s + `&priceHigh=${price}`
         s = s + `&priceLow=0`
         s = s +`&availableFrom=${from}`
         s = s +`&availableTo=${to}`
-        // console.log("Retrieving pins ")
+
         fetch(`https://crib-llc.herokuapp.com/properties/pins?${s}` , {
-        method: 'GET',
-        headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-        }
+            method: 'GET',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+            }
         }) 
         .then(res => res.json()).then( pins =>{
-           
             if(pins.length == 0){
                 setPinsData([])
             }
             else{
                 setPinsData(pins) 
             }
-        
-            
         })
         .catch(e=>{
+            console.log("ERROR --- DISCOVER --- retrieveAllPins")
             alert(e)
         })
-        
     }
-
 
     //Move to the center the view property  
     //Input is an array [lat, long]
     //If only currentLocation is vlaid data, then center the mapview to current location
     //If both the currentLocation and the pinLocation is valid, then use delta to adjust mapview
-    function moveMap(lat,long){
-       
-        let latDelta = -1;
-        let longDelta = -1
-        
+    function moveMap(lat,long){  
         if(currentLocation != ""){
             // console.log("Only Location")
             mapRef.current?.animateToRegion({
@@ -377,7 +338,6 @@ export default function DiscoverScreen({navigation, route}){
     //Dismiss keyboard
     function selectCurrentLocation(locationQueryName){
         if (locationQueryName != ""){
-           
             setlocationQuery(locationQueryName)
             setSearching(false)
             let spacelessLocation = locationQueryName.replaceAll(" ", "+");
@@ -396,11 +356,11 @@ export default function DiscoverScreen({navigation, route}){
                 
                 console.log(error);
             });
-        
-        
         }
     }
 
+    //Input: Lat1 Long1 Lat2 Long2
+    //Output: Distance in miles
     function getDistanceFromLatLonInMiles(lat1,lon1,lat2,lon2) {
         var R = 6371; // Radius of the earth in km
         var dLat = deg2rad(lat2-lat1);  // deg2rad below
@@ -419,9 +379,10 @@ export default function DiscoverScreen({navigation, route}){
         return deg * (Math.PI/180)
     }
 
+    //Function to move map to selected property on map when the location icon is pressed
+    //Open the preview card modal 
     async function onMarkerClick(item){
         setLoading(true)
-       
         await fetch('https://crib-llc.herokuapp.com/properties/' + item._id, {
         method: 'POST',
         headers: {
@@ -440,13 +401,15 @@ export default function DiscoverScreen({navigation, route}){
             alert(e)
         })
         
-        
+        //Toggle previewCard modal, but the opcaity is 0 when opened 
         setPropertyPreviewCard(true)
+        //Function that animates the opcaity of preview caed
         openPreviewCard()
         setLoading(false)
     }
 
-
+    //Input is the lat and long location 
+    //Output is the google map location query formatted
     async function updateQueryString (loc){
         var config = {
             method: 'get',
@@ -463,141 +426,136 @@ export default function DiscoverScreen({navigation, route}){
 
     return(
         <GestureHandlerRootView style={{flex: 1}}>
-            
-            
-        <SafeAreaView>
-        <MapContainer>
-            <MapView
-                onRegionChange={(Region)=> setMapCenterLocation([Region.latitude,Region.longitude])}
-                scrollEnabled={mapViewing}
-                ref={mapRef}
-                style={{flex:1, position:'relative'}}
-                initialRegion={{
-                latitude: currentLocation[0], 
-                longitude: currentLocation[1],
-                latitudeDelta: 0.02,
-                longitudeDelta: 0.02,
-                }}
-            >
-                <Marker
-                    key={"currentlocationmarker"}
-                    coordinate={{ latitude:currentLocation[0], longitude:currentLocation[1] }}
-                    style={{zIndex:1}}
-                ></Marker>
-                        
 
-                {pinsData.length != 0 && pinsData.map((value,index)=>(
-                <Marker
-                    key={value._id}
-                    coordinate={{ latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
-                    onPress={()=>onMarkerClick(value)}
+            <SafeAreaView>
+                {/* This is the container for the whole map background in discover behind search bar */}
+                {/* Includes the Search Here pressable, map view, markers and preview modal */}
+                <MapContainer>
+                    <MapView
+                        onRegionChange={(Region)=> setMapCenterLocation([Region.latitude,Region.longitude])}
+                        ref={mapRef}
+                        style={{flex:1, position:'relative'}}
+                        initialRegion={{
+                        latitude: currentLocation[0], 
+                        longitude: currentLocation[1],
+                        latitudeDelta: 0.02,
+                        longitudeDelta: 0.02,
+                        }}
+                    >
+                        <Marker
+                            key={"currentlocationmarker"}
+                            coordinate={{ latitude:currentLocation[0], longitude:currentLocation[1] }}
+                            style={{zIndex:1}}
+                        ></Marker>
+                                
+
+                        {pinsData.length != 0 && pinsData.map((value,index)=>(
+                        <Marker
+                            key={value._id}
+                            coordinate={{ latitude:value.loc.coordinates[1], longitude: value.loc.coordinates[0] }}
+                            onPress={()=>onMarkerClick(value)}
+                            
+                        >
+                            <CustomMarker style={{backgroundColor: value._id == selectedPin?._id ? PRIMARYCOLOR : 'green', zIndex: value._id == selectedPin._id ? 2 : 1}}>
+                                <Text style={{color:'white'}}>${value.price}</Text>                       
+                            </CustomMarker>
+                        </Marker>
+                        ))} 
+                    </MapView>
+                        
+                    {/* When pressed this moves the current location to center of the map and load properties */}
+                    < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), updateQueryString(mapCenterLocation),
+                    retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom.getTime(), filterAvailableTo.getTime() )
+                    }}>
+                        <SearchHereText>Search Here</SearchHereText>
+                    </ SearchHerePressable>
+
+                    {/* This is the container for the preview modal/card */}
+                    <RNAnimated.View 
+                    style={{width:WIDTH*0.9, height: HEIGHT*0.275,backgroundColor:'white', borderRadius:25,
+                    position:'absolute', bottom: HEIGHT*0.17, alignSelf:'center',shadowColor: 'black', shadowRadius: 5,
+                    shadowOpacity: 0.4, elevation: 5, display: propertyPreviewCard ? 'flex' : 'none',
+                    opacity: opacityTranslation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [0, 1],
+                    })}}>
+                            {/* Checks if any pin is selected for displaying in the preview card */}
+                        {selectedPin != undefined && selectedPin != "" &&
+                        <Pressable disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0]))})}}>
+                            <PreviewTopContainer>
+                                <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
+                                borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
+                            </PreviewTopContainer>
+
+                            <PreviewBottomContainer >
+                                <PreviewLocationText>{selectedPin.propertyInfo.loc.secondaryTxt}</PreviewLocationText>
+                                <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).getDate() + " " +
+                                        new Date(selectedPin.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
+                                        }  -  {new Date(selectedPin.propertyInfo.availableTo).getDate() + " " +
+                                        new Date(selectedPin.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}</PreviewPriceText>
+                                
+                                <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
+                            </ PreviewBottomContainer> 
+                        </Pressable>
+                        }
+
+                        <FontAwesome onPress={()=>closePreviewCard()} name="times-circle" size={25}  color='white' style={{position: 'absolute', right:WIDTH*0.025,
+                        top: HEIGHT*0.015}}/>
+                    </RNAnimated.View>
+                </MapContainer>
                     
-                >
-                    <CustomMarker style={{backgroundColor: value._id == selectedPin?._id ? PRIMARYCOLOR : 'green', zIndex: value._id == selectedPin._id ? 2 : 1}}>
-                        <Text style={{color:'white'}}>${value.price}</Text>                       
-                    </CustomMarker>
-                </Marker>
-            ))} 
-            </MapView>
-                
-
-            < SearchHerePressable onPress={()=>{setCurrentLocation(mapCenterLocation), updateQueryString(mapCenterLocation),
-            retrieveAllPins(currentLocation[0], currentLocation[1], filterDistance, filterPriceHigher, filterBedroom, filterBathroom, filterType, filterAmenities, filterAvailableFrom.getTime(), filterAvailableTo.getTime() )
-            }}>
-                <SearchHereText>Search Here</SearchHereText>
-            </ SearchHerePressable>
-
-            <RNAnimated.View 
-            style={{width:WIDTH*0.9, height: HEIGHT*0.275,backgroundColor:'white', borderRadius:25,
-            position:'absolute', bottom: HEIGHT*0.17, alignSelf:'center',shadowColor: 'black', shadowRadius: 5,
-            shadowOpacity: 0.4, elevation: 5, display: propertyPreviewCard ? 'flex' : 'none',
-            opacity: opacityTranslation.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 1],
-            })}}>
+                {/* This sets the container of the search input */}
+                <SearchContainer onPress={()=>setDiscoverSearchVisible(true)}>
+                    {/* The search icon on the search outlien */}
+                    <SeachIconContainer>
+                        <Ionicons name='search' size={20}  color={DARKGREY} />
+                    </SeachIconContainer>
                     
-                {selectedPin != undefined && selectedPin != "" &&
-                <Pressable disabled={loading} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0]))})}}>
-                    <PreviewTopContainer>
-                        <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
-                        borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
-                    </PreviewTopContainer>
+                    {/* Placeholder for locationquerytext selected in discoversearch */}
+                    
+                    <SearchContainerPlaceholderText locationQuery={locationQuery}> {locationQuery}</SearchContainerPlaceholderText>
 
-                    <PreviewBottomContainer >
-                        <PreviewLocationText>{selectedPin.propertyInfo.loc.secondaryTxt}</PreviewLocationText>
-                        <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).getDate() + " " +
-                                new Date(selectedPin.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
-                                }  -  {new Date(selectedPin.propertyInfo.availableTo).getDate() + " " +
-                                new Date(selectedPin.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}</PreviewPriceText>
-                        
-                        <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
-
-                        
-                    </ PreviewBottomContainer> 
-                </Pressable>
-                }
-
-                <FontAwesome onPress={()=>closePreviewCard()} name="times-circle" size={25}  color='white' style={{position: 'absolute', right:WIDTH*0.025,
-                top: HEIGHT*0.015}}/>
-
-            </RNAnimated.View>
-        </MapContainer>
-            
-            {/* This sets the container of the search input */}
-            <SearchContainer onPress={()=>setDiscoverSearchVisible(true)}>
-                {/* The search icon on the search outlien */}
-                <SeachIconContainer>
-                    <Ionicons name='search' size={20}  color={DARKGREY} />
-                </SeachIconContainer>
+                    {/* This is the icon for filters when locationquery is not empty  */}
+                    <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
+                        {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) || !(dateCompare(new Date(1759190400000), new Date(filterAvailableTo))) || !(dateCompare(new Date(), new Date(filterAvailableFrom)))?
+                        <FilterAppliedIconBackground>
+                            <Ionicons name="options-sharp" size={20} />
+                        </FilterAppliedIconBackground>
+                        :
+                        <NoFilterAppliedIconBackground>
+                            <Ionicons name="options-sharp" size={20} />
+                        </NoFilterAppliedIconBackground>                        
+                        }
+                    </DeleteIconContainer> 
+                </SearchContainer>
                 
-                {/* Placeholder for locationquerytext selected in discoversearch */}
-               
-                <SearchContainerPlaceholderText locationQuery={locationQuery}> {locationQuery}</SearchContainerPlaceholderText>
+                {/* View component to seperate the search bar and the propertycard */}
+                <View style={{width:WIDTH, height:HEIGHT*0.05}}/>
+
+                {/* Property Cards*/}       
+                <PropertyCard index={0} navigation={navigation} length={pinsData.length} userId={USERID}
+                loadMoreProperties={loadMoreProperties} filteredPropertiesData={filteredProperties} 
+                flatlistRefreshing={flatlistRefreshing} mapRef={mapRef} onMarkerClick={onMarkerClick} currentLocation={currentLocation} moveMap={moveMap}
+                setSelectedPin={setSelectedPin} openPreviewCard={openPreviewCard} locationQuery={locationQuery} searching={searching} loading={loading}/>
+
+                {/* Filter screen when filter icon is pressed */}
+                <DiscoverFilterScreen open={filterModal} close={()=>setFilterModal(false)} retrieveAllPins={retrieveAllPins}
+                currentLocation={currentLocation} setFilteredProperties={setFilteredProperties} setPropertyPage={setPropertyPage} setRetrieveMore={setRetrieveMore}
+                filterType={filterType} setfilterType={setfilterType} filterSort={filterSort} setfilterSort={setfilterSort} filterDistance={filterDistance}
+                setfilterDistance={setfilterDistance} filterBedroom={filterBedroom} setfilterBedroom={setfilterBedroom} filterBathroom={filterBathroom}
+                setfilterBathroom={setfilterBathroom} filterPriceLower={filterPriceLower} setfilterPriceLower={setfilterPriceLower}
+                filterPriceHigher={filterPriceHigher} setfilterPriceHigher={setfilterPriceHigher} filterAmenities={filterAmenities}
+                setfilterAmenities={setfilterAmenities} filterPreviewValue={filterPreviewValue} setfilterPreviewValue={setfilterPreviewValue}
+                filterPreviewDistanceValue={filterPreviewDistanceValue} setfilterPreviewDistanceValue={setfilterPreviewDistanceValue}
+                filterAvailableFrom={filterAvailableFrom} setfilterAvailableFrom={setfilterAvailableFrom}
+                filterAvailableTo={filterAvailableTo} setfilterAvailableTo={setfilterAvailableTo} 
+                loadProperty={loadProperty} setFlatlistRefreshingTrue={()=>setFlatlistRefreshing(true)} setFlatlistRefreshingFalse={()=>setFlatlistRefreshing(false)}
+                />
+
+                {/* Search screen when the search bar is pressed */}
+                <DiscoverSearchScreen open={discoverSearchVisible} close={()=> setDiscoverSearchVisible(false)} selectCurrentLocation={selectCurrentLocation}/>
                 
-
-                {/* This is the icon for filters when locationquery is not empty  */}
-                <DeleteIconContainer onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
-                    {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) || !(dateCompare(new Date(1759190400000), new Date(filterAvailableTo))) || !(dateCompare(new Date(), new Date(filterAvailableFrom)))?
-                    <View style={{padding: 7, borderRadius:100, backgroundColor: EXTRALIGHT, borderColor: PRIMARYCOLOR, borderWidth: 2}}>
-                    <Ionicons name="options-sharp" size={20} />
-                    </View>
-                    :
-                    <View style={{ padding: 7, borderRadius:100, backgroundColor: EXTRALIGHT, borderWidth:0.5, borderColor: MEDIUMGREY}}>
-                    <Ionicons name="options-sharp" size={20} />
-                    </View>                        
-                    }
-                </DeleteIconContainer> 
-            </SearchContainer>
-          
-        <View style={{width:WIDTH, height:HEIGHT*0.05, }}>
-
-        </View>
-        {/* Property Cards and the search bar */}       
-        
-        <PropertyCard index={0} navigation={navigation} length={pinsData.length} userId={userId}
-        propertiesData={propertiesData} loadMoreProperties={loadMoreProperties} filteredPropertiesData={filteredProperties} markerClickIndex={markerClickIndex}
-        flatlistRefreshing={flatlistRefreshing} mapRef={mapRef} onMarkerClick={onMarkerClick} currentLocation={currentLocation} moveMap={moveMap}
-        setSelectedPin={setSelectedPin} openPreviewCard={openPreviewCard} locationQuery={locationQuery} searching={searching} loading={loading}/>
-
-        <DiscoverFilterScreen open={filterModal} close={()=>setFilterModal(false)} retrieveAllPins={retrieveAllPins}
-        currentLocation={currentLocation} setFilteredProperties={setFilteredProperties} setPropertyPage={setPropertyPage} setRetrieveMore={setRetrieveMore}
-        filterType={filterType} setfilterType={setfilterType} filterSort={filterSort} setfilterSort={setfilterSort} filterDistance={filterDistance}
-        setfilterDistance={setfilterDistance} filterBedroom={filterBedroom} setfilterBedroom={setfilterBedroom} filterBathroom={filterBathroom}
-        setfilterBathroom={setfilterBathroom} filterPriceLower={filterPriceLower} setfilterPriceLower={setfilterPriceLower}
-        filterPriceHigher={filterPriceHigher} setfilterPriceHigher={setfilterPriceHigher} filterAmenities={filterAmenities}
-        setfilterAmenities={setfilterAmenities} filterPreviewValue={filterPreviewValue} setfilterPreviewValue={setfilterPreviewValue}
-        filterPreviewDistanceValue={filterPreviewDistanceValue} setfilterPreviewDistanceValue={setfilterPreviewDistanceValue}
-        filterAvailableFrom={filterAvailableFrom} setfilterAvailableFrom={setfilterAvailableFrom}
-        filterAvailableTo={filterAvailableTo} setfilterAvailableTo={setfilterAvailableTo} openMapViewing={()=> setMapViewing(true)} closeMapViewing={()=> setMapViewing(false)}
-        loadProperty={loadProperty} setFlatlistRefreshingTrue={()=>setFlatlistRefreshing(true)} setFlatlistRefreshingFalse={()=>setFlatlistRefreshing(false)}
-        />
-
-        <DiscoverSearchScreen open={discoverSearchVisible} close={()=> setDiscoverSearchVisible(false)} selectCurrentLocation={selectCurrentLocation}/>
-        
-        </SafeAreaView>
-        
-
-            
+            </SafeAreaView>  
         </GestureHandlerRootView>
     )
 }

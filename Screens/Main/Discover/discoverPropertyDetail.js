@@ -5,14 +5,11 @@ import {
     View,
     Dimensions,
     Image,
-    Pressable,
-    RefreshControl,
-    Vibration,
     Animated as RNAnimated
-  } from 'react-native';
+} from 'react-native';
+
 import SecureStorage from 'react-native-secure-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 import MapView , { Marker }from 'react-native-maps';
 
@@ -180,11 +177,7 @@ export default function PropertyDetailScreen({navigation, route}){
         if(user != null){
             const accessToken = await SecureStorage.getItem("accessToken");
         
-<<<<<<< HEAD
-        await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
-=======
             await fetch('https://sublease-app.herokuapp.com/properties/favorite', {
->>>>>>> 991ae9a8d048265f40c620586d83e0b3111cd6c6
             method: 'POST',
             headers: {
             Accept: 'application/json',

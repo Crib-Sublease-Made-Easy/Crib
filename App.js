@@ -273,15 +273,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     }
   }
 
-  // async function getLocation(){
-  //   Geolocation.getCurrentPosition(info => 
-     
-  //     setUserInitialLocation([info.coords.latitude,info.coords.longitude])
-      
-      
-  //  );
-  // }
-  
+
 
   const [user, setUser] = useState(null)
 

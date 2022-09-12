@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 
 import styled from 'styled-components/native';
-import { LIGHTGREY, TEXTINPUTBORDERCOLOR, GOOGLEBLUE, PRIMARYCOLOR, DARKGREY, HEIGHT, WIDTH, ROBOTOFONTFAMILY } from '../../../sharedUtils';
+import { LIGHTGREY, TEXTINPUTBORDERCOLOR, GOOGLEBLUE, PRIMARYCOLOR, DARKGREY, HEIGHT, WIDTH, ROBOTOFONTFAMILY, EXTRALIGHT, MEDIUMGREY } from '../../../sharedUtils';
 
 
 export const MapContainer = styled.View`
@@ -227,6 +227,21 @@ export const DeleteIconContainer = styled.Pressable`
 width:15%
 align-items: center;
 justify-content: center
+`
+
+export const FilterAppliedIconBackground = styled.View`
+  padding: 7px;
+  border-radius: 100px;
+  background-color: ${EXTRALIGHT}
+  border-color: ${PRIMARYCOLOR} 
+  border-width: 2px
+`
+export const NoFilterAppliedIconBackground = styled.View`
+  padding: 7px;
+  border-radius: 100px;
+  background-color: ${EXTRALIGHT}
+  border-width:0.5px
+  border-color: ${MEDIUMGREY}
 `
 
 export const CustomMarker = styled.Pressable`

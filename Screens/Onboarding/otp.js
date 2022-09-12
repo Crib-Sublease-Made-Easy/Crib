@@ -153,6 +153,8 @@ export default function OTPScreen({navigation, route}){
                 
                 setTimeout(()=>{setLoading(false)},2000)
                 login(data.createdUser._id);
+                navigation.navigate("DiscoverTabs")
+
             }
         })
     }

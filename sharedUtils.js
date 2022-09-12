@@ -9,10 +9,6 @@ import styled from 'styled-components/native';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab, faBoltLightning, faBottleDroplet, faBottleWater, faBowlFood, faBreadSlice, faBus, faCar, faCaretUp, faCircleNodes, faClosedCaptioning, faCoffee, faCookieBite, faCouch, faDog, faDoorClosed, faDumbbell, faFire, faGripHorizontal, faGripLinesVertical, faHandsWash, faIceCream, faKitchenSet, faMattressPillow, faParking, faPowerOff, faShirt, faSpaghettiMonsterFlying, faStreetView, faSwimmingPool, faTv, faWater, faWifi, faWind, faWindowClose} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faFaceGrinWide } from '@fortawesome/free-regular-svg-icons';
-
-
-
 
 //Color 
 export const PRIMARYCOLOR = '#8559E3' //133 89 227
@@ -65,6 +61,25 @@ export function OnlyLetters(str) {
 export function ContainsSpace(str){
     return /\s/.test(str);
 }
+
+export const PROPERTIESTYPES = 
+[
+    {type: "Room", icon:'bed'},
+    {type: "House", icon:'home'}, 
+    {type: "Apartment", icon: 'building'}, 
+    {type:"Studio", icon :'user'}
+];
+
+//Default Filter Vaues 
+export const DEFAULTDISTANCE = 150;
+export const DEFAULTTYPE = "";
+export const DEFAULTPRICE = 10000;
+export const DEFAULTAVAILABLEFROM = new Date();
+export const DEFAULTAVAILABLETO = new Date(1759176355615);
+export const DEFAULTAMENITIES = [];
+export const DEFAULTBEDROOM = "";
+export const DEFAULTBATHROOM = "";
+
 export const amenitiesList =
     [{ name: 'Pet_Friendly', library: 'FontAwesome', color: '#57b2f7', icon: "paw" },
     { name: "Garages", library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: "garage"},

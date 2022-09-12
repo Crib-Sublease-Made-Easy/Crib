@@ -2,12 +2,7 @@ import React , {useContext, useState, useRef, useEffect, useCallback, useId} fro
 import {
   SafeAreaView,
   ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
   View,
-  Button,
   Dimensions,
   Image,
   Pressable,
@@ -16,7 +11,7 @@ import {
 } from 'react-native';
 import { UserContext } from '../../../UserContext';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import SecureStorage from 'react-native-secure-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { PRIMARYCOLOR, Header, HeaderContainer, } from '../../../sharedUtils';
@@ -35,23 +30,22 @@ Ionicons.loadFont()
 import Lottie from 'lottie-react-native';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSquareCheck, faSwimmer, faDog, faWifi } from '@fortawesome/free-solid-svg-icons'
+import { faSquareCheck, faSwimmer, faDog} from '@fortawesome/free-solid-svg-icons'
 
 library.add(faSquareCheck, faSwimmer, faDog)
 
 
 
-import {Container, NameText, OccupationText,EditProfilePressable,SlidingContainer,
-    PostContainer, FavContainer, PostedText, FavText,  DefaultPostFavText, PostedPropertyInfoContainer,
+import {Container,SlidingContainer, PostContainer, FavContainer, PostedText, FavText,  DefaultPostFavText, PostedPropertyInfoContainer,
     PropertyName, DatePriceText,PriceEditContainer, EditPropertyPressable, EditText, FavPropertyCard, FavPropertyCardName, 
     FavPropertyCardContent, FavPropertyCardDateText, FavPropertyCardDateContainer, PostedPropertyCard, HeaderIndividualContainer,
     RowContainer, RowItemName,ProfileHeading, NoUserViewContainer, LoginContainer, LoginText, SignupContainer,
     SignupText
  } from './profileStyle';
-import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, MEDIUMGREY, DARKGREY } from '../../../sharedUtils';
+import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, DARKGREY } from '../../../sharedUtils';
 export default function ProfileScreen({navigation}){
     const scrollviewRef = useRef(null)
-    const {sb, USERID, user} = useContext(UserContext);
+    const {USERID, user} = useContext(UserContext);
 
     const [tabPressed, setTabPressed] = useState("Posted")
     const [postedProperties, setPostedProperties] = useState(null)
