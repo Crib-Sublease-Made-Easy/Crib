@@ -67,7 +67,7 @@ export default function ChatScreen({navigation, route}){
     const channelHandler = new sb.ChannelHandler();
     channelHandler.onMessageReceived = async (targetChannel, m) => {
       await channel.markAsRead()
-
+      
       if (targetChannel.url === url) {
         m._id = m.messageId
         m.text = m.message
@@ -92,7 +92,8 @@ export default function ChatScreen({navigation, route}){
       sb.GroupChannel.getChannel(url, async function(groupChannel, error) {
         if (error) {
             console.log("ERROR CHANNEL 1")
-        }else{
+        }else if(groupChannel.members.length ==2){
+          
           await groupChannel.markAsRead()
           groupChannel.sendUserMessage(params, function(message, error) {
             if (error) {
@@ -127,6 +128,8 @@ export default function ChatScreen({navigation, route}){
           }
           });
         
+        } else{
+          deletedChat(groupChannel)
         }
       })
       setTypingText("")
@@ -143,7 +146,7 @@ export default function ChatScreen({navigation, route}){
             deletedChat(groupChannel)
           } else{
           await groupChannel.markAsRead()
-
+          console.log("GROUP CHANNEL NUMBER" + groupChannel)
           setChannel(groupChannel)
           console.log("GROUP CHANNEL", groupChannel.data)
           await getPropertyInfo(groupChannel.data)
@@ -291,10 +294,14 @@ export default function ChatScreen({navigation, route}){
           </BackButtonContainer>
           <NameContainer>
           {channel != null ? 
+            channel.members.length == 2 ?
             channel.members[0].userId == id ?
-              <Header>{channel.members[1].nickname}</Header>
-              :
-              <Header>{channel.members[0].nickname}</Header>
+                <Header>{channel.members[1].nickname}</Header>
+                :
+                <Header>{channel.members[0].nickname}</Header>
+
+                :
+                deletedChat(channel)
           :
           null
           }
