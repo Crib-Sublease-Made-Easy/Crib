@@ -73,7 +73,7 @@ export default function EmailScreen({navigation, route}){
            
             <ScrollView>
                 <TitleText>What is your email?</TitleText>
-                <SubtitleText>We will to keep you updated </SubtitleText>
+                <SubtitleText>We will keep you updated </SubtitleText>
                 <TextInputContainer>
                     <GeneralTextInput value={email} onChangeText={(value)=> setEmail(value)} placeholder="Ex: lighthouse@gmail.com"  />
                 </TextInputContainer>
