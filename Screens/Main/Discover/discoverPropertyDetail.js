@@ -102,7 +102,7 @@ export default function PropertyDetailScreen({navigation, route}){
 
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("accessToken");
-
+        console.log(USERID)
         fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
         method: 'GET',
         headers: {
@@ -112,6 +112,7 @@ export default function PropertyDetailScreen({navigation, route}){
         }
         }) 
         .then(res => res.json()).then(async userData =>{
+            console.log(userData)
             if(userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) == -1){
                 setLiked(false)
             }
@@ -174,10 +175,14 @@ export default function PropertyDetailScreen({navigation, route}){
 
     async function likeProperty(){
         console.log("Liking")
-        if(user != null){
+
+        const refreshToken = await SecureStorage.getItem("refreshToken");
+
+        if(refreshToken != undefined){
+            
             const accessToken = await SecureStorage.getItem("accessToken");
         
-            await fetch('https://sublease-app.herokuapp.com/properties/favorite', {
+            await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -189,7 +194,8 @@ export default function PropertyDetailScreen({navigation, route}){
             })
             }) 
             .then(res => res.json()).then(async message =>{
-                console.log(message)
+                // console.log(message)
+                console.log("hello")
                 await AsyncStorage.removeItem("favoriteProperties");
                
                 setLiked(!liked)
