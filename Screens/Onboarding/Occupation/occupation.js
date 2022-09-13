@@ -64,7 +64,7 @@ export default function OccupationScreen({navigation, route}){
                     <TitleText>Occupation (Optional)</TitleText>
                     <SubtitleText>Choose your latest occupation</SubtitleText>
                     <TextInputContainer >
-                        <GeneralTextInput value={occupation} onChangeText={(value)=> setOccupation(value)} placeholder="Ex: Plummer"  />
+                        <GeneralTextInput value={occupation} onChangeText={(value)=> setOccupation(value)} placeholder="Ex: Plumber"  />
                     </TextInputContainer>
 
                 

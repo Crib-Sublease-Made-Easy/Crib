@@ -26,7 +26,7 @@ export default function DiscoverTab(){
               iconName = focused
                 ? 'home'
                 : 'home-outline';
-                color = PRIMARYCOLOR
+              color = 'PRIMARYCOLOR'
             } else if (route.name === 'Message') {
               iconName = focused ? 'mail' : 'mail-outline';
               color = PRIMARYCOLOR
@@ -41,14 +41,15 @@ export default function DiscoverTab(){
           },
           tabBarLabelStyle:{
             fontFamily: ROBOTOFONTFAMILY,
-            fontWeight: '500'
+            fontWeight: '500',
+            color: PRIMARYCOLOR
           },
           headerShown: false,
           
         })}
       >
         
-        <Tab.Screen name="Discover" component={DiscoverScreen} 
+        <Tab.Screen name="Discover" component={DiscoverScreen}
         options={({ route }) => ({
           tabBarStyle: ((route) => {
               const routeName = getFocusedRouteNameFromRoute(route) ?? ""

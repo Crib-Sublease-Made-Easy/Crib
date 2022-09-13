@@ -24,8 +24,8 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR, MEDIUMGREY, Continue
 const GENDERS = [
     {name: "Male", icon: 'male-outline'},
     {name:"Female", icon: 'female-outline'},
-    {name: "Others", icon: 'male-female-outline'},
-    {name: "Perfer not to say", icon: 'close-outline'}
+    {name: "Other", icon: 'male-female-outline'},
+    {name: "Prefer not to say", icon: 'close-outline'}
 ]
 
 import { AgeContainer, Header, ProgressBarContainer, SubtitleText, TitleText, GenderRowContainer, GenderName,
