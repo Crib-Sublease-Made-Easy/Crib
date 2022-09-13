@@ -174,7 +174,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       subscription.remove();
     };
 
-  }, [])
+  }, [user])
 
 
   const disconnectSendbird = async () =>{
