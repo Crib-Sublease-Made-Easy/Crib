@@ -162,7 +162,8 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
         console.log("App has come to the foreground!");
         refreshAccessToken()
         // connectSendbird()
-      } else{
+      } 
+      else{
         disconnectSendbird()
       }
 

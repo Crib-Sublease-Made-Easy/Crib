@@ -24,7 +24,6 @@ import { ifIphoneX , getBottomSpace} from 'react-native-iphone-x-helper'
 import PropertyOptionsModal from './PropertyOptions';
 
 const PRIMARYCOLOR = '#4050B5'
-const PRIMARYGREY = '#5e5d5d'
 
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
@@ -42,7 +41,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function ChatScreen({navigation, route}){
-    const {sb} = useContext(UserContext);
+    const {sb, USERID} = useContext(UserContext);
 
     const { url, id } = route.params;
 
@@ -52,16 +51,19 @@ export default function ChatScreen({navigation, route}){
     const [messages, setMessages] = useState([])
     const [typingText, setTypingText] = useState('')
     const [loading, setLoading] = useState(true)
+    const [sending, setSending] = useState(false)
 
     const [optionsModal, setOptionsModal] = useState(false)
 
     const [channel, setChannel] = useState(null)
+
+    const [receiverID, setReceiverID] = useState('')
+
     useEffect(()=>{
+      console.log("USE_EFFECT CHAT")
       onChat = true
       getGroupChannel()
-      sb.addChannelHandler('channels', channelHandler);
-      console.log("USE_EFFECT Refresh")
-      
+      sb.addChannelHandler('channels', channelHandler);      
     }, [])
 
     const channelHandler = new sb.ChannelHandler();
@@ -83,17 +85,16 @@ export default function ChatScreen({navigation, route}){
 
     
     const onSend = useCallback(async (messages = []) => {
+      setSending(true)
       const accessToken = await SecureStorage.getItem("accessToken");
 
       const params = new sb.UserMessageParams();
       params.message = messages[0].text;
-      // console.log(params.message)
       setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
       sb.GroupChannel.getChannel(url, async function(groupChannel, error) {
         if (error) {
             console.log("ERROR CHANNEL 1")
         }else if(groupChannel.members.length ==2){
-          
           await groupChannel.markAsRead()
           groupChannel.sendUserMessage(params, function(message, error) {
             if (error) {
@@ -102,8 +103,8 @@ export default function ChatScreen({navigation, route}){
             }else{
             // The message is successfully sent to the channel.
             // The current user can receive messages from other users through the onMessageReceived() method of an event handler.
-              console.log("Message was successfully sent")
-              // console.log("IDDDD", id)
+              // console.log("Message was successfully sent")
+             
               fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
                 method: 'POST',
                 headers: {
@@ -119,11 +120,8 @@ export default function ChatScreen({navigation, route}){
                     message: messages[0].text
                 })
             })
-            .then( res => res.json())
-            .then( res => {
-              // console.log("RESSS", res)
-            })
-
+            
+            
             
           }
           });
@@ -133,6 +131,7 @@ export default function ChatScreen({navigation, route}){
         }
       })
       setTypingText("")
+      setSending(false)
     }, [])
 
 
@@ -140,22 +139,19 @@ export default function ChatScreen({navigation, route}){
       await sb.GroupChannel.getChannel(url, async function(groupChannel, error) {
         if (error) {
             // Handle error.
-            console.log("ERROR CHANNEL")
+            console.log("ERROR --- CHAT --- GETGROUPCHANNEL")
         }else{
           if(groupChannel.members.length < 2){
             deletedChat(groupChannel)
           } else{
-          await groupChannel.markAsRead()
-          console.log("GROUP CHANNEL NUMBER" + groupChannel)
+          // const readHandler = await groupChannel.markAsRead();
+          // console.log("READHANDLER", readHandler)
           setChannel(groupChannel)
-          console.log("GROUP CHANNEL", groupChannel.data)
+          setReceiverID(groupChannel.members[0].userId == USERID ? groupChannel.members[1].userId : groupChannel.members[0].userId)      
           await getPropertyInfo(groupChannel.data)
           var listQuery = groupChannel.createPreviousMessageListQuery();
-
             setQuery(listQuery);
             fetchConvos(listQuery)
-      
-          
           }
         }
         setLoading(false)
@@ -170,7 +166,6 @@ export default function ChatScreen({navigation, route}){
     }
 
     const getPropertyInfo = async (propId) =>{
-      console.log("RENDEREDDDDDDDDD")
       
       await fetch('https://crib-llc.herokuapp.com/properties/' + propId, {
         method: 'POST',
@@ -201,13 +196,11 @@ export default function ChatScreen({navigation, route}){
       listQuery.reverse = true;
 
       // Retrieving previous messages.
-      console.log(url)
       listQuery.load(function(messages, error) {
         if (error) {
             // Handle error.
             console.log("ERROR CHANNEL")
         } else{
-        console.log("messages fetched")
         messages.map(m => {
           m._id = m.messageId
           m.text = m.message
@@ -216,7 +209,6 @@ export default function ChatScreen({navigation, route}){
           m.user.avatar = m._sender.plainProfileUrl
         })
         setMessages(previousMessages => GiftedChat.append(messages, previousMessages))
-        console.log(messages)
         }
         
 
@@ -226,7 +218,6 @@ export default function ChatScreen({navigation, route}){
       
       listQuery.limit = 20;
       listQuery.reverse = true;
-      console.log(listQuery)
       // Retrieving previous messages.
       listQuery.load(async function(messages, error) {
         
@@ -235,12 +226,11 @@ export default function ChatScreen({navigation, route}){
        
         if (error) {
             // Handle error.
-            console.log("ERROR CHANNEL")
+            console.log("ERROR --- CHAT --- FETCHCONVO")
         } 
         else{
          
-            console.log("UPDATE --- FETCH --- messages")
-            console.log("messages fetcheddddd")
+            console.log("UPDATE --- CHAT --- FETCHCONVO")
             messages.map(m => {
               m._id = m.messageId
               m.text = m.message
@@ -256,11 +246,6 @@ export default function ChatScreen({navigation, route}){
         
 
     });
-      // console.log(listQuery)
-    //   fetch('https://api-14BD0602-4159-48D7-9292-66136C479B46.sendbird.com/v3/group_channels/'+'205308348_48a354561b8903d19eaa9d4c91b23fdb3cd98264'+'/messages')
-    //   .then(response => response.json())
-    //   .then(data => console.log(data));
-  
   }
 
     //navigation.navigate("PAGENAME",{userData: userData})
@@ -273,8 +258,6 @@ export default function ChatScreen({navigation, route}){
       
         alert("You have successfully left this chat.")
         navigation.goBack()
-     
-      
     }
     return(
     <SafeAreaView style={{backgroundColor:'white', flex:1}}>
@@ -328,7 +311,7 @@ export default function ChatScreen({navigation, route}){
           <MessageContainer>
               <MessageInput multiline value={typingText} onChangeText={(value)=> setTypingText(value)} placeholder="Enter a message ..." />
             
-              <TouchableOpacity hitSlop={WIDTH*0.05} onPress={()=> typingText != "" && props.onSend({text: typingText} )}>
+              <TouchableOpacity disabled={sending} hitSlop={WIDTH*0.05} onPress={()=> typingText != "" && props.onSend({text: typingText})}>
                 <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
               </TouchableOpacity>
               
@@ -341,7 +324,7 @@ export default function ChatScreen({navigation, route}){
         onLoadEarlier = {() => loadMore(query)}
         renderLoadEarlier = {() => <View/>}
         user={{
-          _id: id
+          _id: USERID
         }}
       />  
       

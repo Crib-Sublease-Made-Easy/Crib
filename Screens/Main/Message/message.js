@@ -27,10 +27,8 @@ const WIDTH = Dimensions.get('screen').width;
 import { InboxTitle, FlatlistItemContainer, FlatlistUnread, FlatlistLeft, FlatlistRight, 
     LocationText,TextAndTime, LastMessageTime, DefaultPostFavText, NoUserViewContainer,
 LoginContainer, SignupContainer, LoginText, SignupText, NoUserText } from './messageStyle';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MessageScreen({navigation, route}){
-    const appState = useRef(AppState.currentState);
 
     const {sb, USERID, user} = useContext(UserContext);
 
@@ -42,9 +40,7 @@ export default function MessageScreen({navigation, route}){
 
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
-            console.log("FOCUSSSSSS")
-            console.log(user)
-            
+            console.log("FOCUSSSSSS")            
             fetchConvos()
             
         });
@@ -83,36 +79,9 @@ export default function MessageScreen({navigation, route}){
                         // Handle error.
                         console.log("error", error)
                     }
-                    // const tempConvoList = await AsyncStorage.getItem("convoList")
-                    // if(new Object(JSON.parse(tempConvoList)).toLocaleString() == new Object(groupChannels).toLocaleString()){
-                    //     console.log("UPDATE --- CACHE --- convoList")
-                    //     setConvoList(tempConvoList)
-                    // }
-                    // else{
-                    //     console.log("UPDATE --- API --- convoList")
-                    //     setConvoList(groupChannels)
-                    // }
+
                     setConvoList(groupChannels)
-                    
-                    // A list of group channels is successfully retrieved.
-                    // console.log(groupChannels)
-                    // console.log("new console list")
-                    // try{
-                    //     groupChannels.forEach(channel => {
-                    //         // console.log(channel)
-                    //         // console.log("===============")
-                    //         // console.log(channel.memberMap.
-                        
-                        
-                    //     })
-                    // }
-                    // catch{e=>{
-                    //     console.log(e)
-                    // }}
-                        
-                    
-                    // console.log("After")
-            
+
                 });
             }
         }
