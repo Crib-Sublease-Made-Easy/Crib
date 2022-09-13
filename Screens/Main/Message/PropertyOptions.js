@@ -38,7 +38,7 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                     </NameContainer>
                    
                 </HeaderContainer>
-                <RowContainer hitSlop={WIDTH*0.05} onPress={()=> {close(), viewProp()}}>
+                <RowContainer hitSlop={WIDTH*0.025} onPress={()=> {close(), viewProp()}}>
                     <Ionicons name='home' size={25}  style={{paddingLeft: WIDTH*0.05}} color={PRIMARYCOLOR}/>
                     <RowName>View Property</RowName>
                 </RowContainer>
@@ -47,7 +47,7 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                     <RowName>Report Property</RowName>
                    
                 </RowContainer> */}
-                <RowContainer hitSlop={WIDTH*0.05} onPress={leaveChat}>
+                <RowContainer hitSlop={WIDTH*0.025} onPress={leaveChat}>
                     <Ionicons name='close' size={25}  style={{paddingLeft: WIDTH*0.05}} color='red'/>
                     <RowName>Delete Conversation</RowName>
                 </RowContainer>

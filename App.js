@@ -186,7 +186,6 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   }
   const connectSendbird = async () => {
     const UID = await SecureStorage.getItem("userId");
-    console.log("UID",UID)
     if (UID != undefined) {
       setUser(UID)
       try {
@@ -213,14 +212,10 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   }
 
   const refreshAccessToken = async () => {
-    console.log("refrehing access")
     const rt = await SecureStorage.getItem("refreshToken");
     const id = await SecureStorage.getItem("userId");
-    console.log("id", id)
     if (rt != undefined) {
-      console.log(id)
       setUser(id)
-      console.log("refreshingggggg")
       connectSendbird()
      
       await fetch('https://crib-llc.herokuapp.com/tokens/accessRefresh', {

@@ -238,14 +238,7 @@ export default function ChatScreen({navigation, route}){
             console.log("ERROR CHANNEL")
         } 
         else{
-          const cachedMessages = await AsyncStorage.getItem(url);
          
-          if(cachedMessages != null && new Object(JSON.parse(cachedMessages)).toLocaleString() === new Object(messages).toLocaleString()){
-            console.log("UPDATE --- CACHE --- messages")
-            setMessages(JSON.parse(cachedMessages));
-            return;
-          }
-          else{
             console.log("UPDATE --- FETCH --- messages")
             console.log("messages fetcheddddd")
             messages.map(m => {
@@ -256,9 +249,8 @@ export default function ChatScreen({navigation, route}){
               m.user.avatar = m._sender.plainProfileUrl
             })
             setMessages(messages)
-            console.log(JSON.parse(cachedMessages) == messages)
-            await AsyncStorage.setItem(url, JSON.stringify(messages))
-          }
+           
+         
         // console.log(messages)
         }
         
