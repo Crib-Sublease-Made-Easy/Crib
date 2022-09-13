@@ -17,7 +17,7 @@ import {
   Dimensions,
   Pressable
 } from 'react-native';
-
+import OneSignal from 'react-native-onesignal';
 import { Container, Heading, HeadingImageContainer, SubtitleText, 
     ModalView, ModalHeaderText, UserNumberText, ModalOptionContainer, ModalOption,
     InputFollowUpContainer} from './login_otpStyle';
@@ -94,6 +94,7 @@ export default function Login_OTP({navigation, route}){
             if(success){
                 console.log("LOGIN_OTP", data.loggedIn.firstName)
                 try{
+                    OneSignal.disablePush(false);
                     await SecureStorage.setItem("accessToken", data.token.accessToken)
                     await SecureStorage.setItem("profilePic", data.loggedIn.profilePic)
                     await SecureStorage.setItem("userId", data.loggedIn._id)

@@ -66,7 +66,7 @@ export default function ChatScreen({navigation, route}){
 
     const channelHandler = new sb.ChannelHandler();
     channelHandler.onMessageReceived = async (targetChannel, m) => {
-      await channel.markAsRead()
+      await targetChannel.markAsRead()
       
       if (targetChannel.url === url) {
         m._id = m.messageId
@@ -162,9 +162,9 @@ export default function ChatScreen({navigation, route}){
       })
     }
 
-    deletedChat = (groupChannel) => {
+    const deletedChat = async (groupChannel) => {
       onChat= false
-      groupChannel.leave()
+      await groupChannel.leave()
       navigation.navigate("Message")
       alert("The other user has left the chat.")
     }
