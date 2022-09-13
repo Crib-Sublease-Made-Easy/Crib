@@ -35,10 +35,7 @@ import { FlatList, Gesture, GestureDetector, TouchableOpacity,  } from 'react-na
 import Lottie from 'lottie-react-native';
 
 
-const PRIMARYCOLOR = '#4050B5'
-const TEXTGREY = '#969696'
-
-import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, TEXTINPUTBORDERCOLOR, ROBOTOFONTFAMILY, EXTRALIGHT } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, ROBOTOFONTFAMILY, EXTRALIGHT, PRIMARYCOLOR } from '../../../sharedUtils';
 import { SystemMessage } from 'react-native-gifted-chat';
 
 const CardContainer = styled(Pressable)`

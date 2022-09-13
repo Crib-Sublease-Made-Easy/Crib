@@ -21,9 +21,6 @@ import {
 import styled from 'styled-components/native';
 import { DARKGREY, EXTRALIGHT, MEDIUMGREY } from '../../../sharedUtils';
 
-const PRIMARYCOLOR = '#4050B5'
-const PRIMARYGREY = '#5e5d5d'
-const TEXTGREY = '#969696'
 
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;

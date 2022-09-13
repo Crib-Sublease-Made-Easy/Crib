@@ -106,7 +106,7 @@ export const amenitiesList =
     { name: 'Iron', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'iron' },
     { name: 'Freezer', library: 'MaterialCommunityIcons', color: '#00d14d', icon: 'fridge' },
     { name: 'Street_Parking', library: 'MaterialCommunityIcons', color: '#f79c40', icon: 'parking' },
-    { name: 'Parking_on_Premesis', library: 'MaterialCommunityIcons', color: '#00d14d', icon: 'parking' },
+    { name: 'Parking_on_Premises', library: 'MaterialCommunityIcons', color: '#00d14d', icon: 'parking' },
     { name: 'Balcony', library: 'MaterialCommunityIcons', color: '#57b2f7', icon: 'balcony' },
 ]
 
@@ -186,7 +186,7 @@ export const GetFAIcons = (name) =>{
     else if(name=="Street_Parking"){
         return <FontAwesomeIcon icon={faStreetView} color='white'/>
     }
-    else if(name=="Parking_on_Premesis"){
+    else if(name=="Parking_on_Premises"){
         return <FontAwesomeIcon icon={faParking} color='white'/>
     }
     else if(name=="Balcony"){
@@ -273,7 +273,7 @@ export const GetFAIconsInBlack = (name) =>{
     else if(name=="Street_Parking"){
         return <FontAwesomeIcon icon={faStreetView} color='black'/>
     }
-    else if(name=="Parking_on_Premesis"){
+    else if(name=="Parking_on_Premises"){
         return <FontAwesomeIcon icon={faParking} color='black'/>
     }
     else if(name=="Balcony"){

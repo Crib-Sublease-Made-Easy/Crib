@@ -43,6 +43,7 @@ export default function ProfileTab(){
               iconName = focused
                 ? 'home'
                 : 'home-outline';
+            
             } else if (route.name === 'Message') {
               iconName = focused ? 'mail' : 'mail-outline';
             }

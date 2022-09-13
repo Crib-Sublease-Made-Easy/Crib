@@ -5,12 +5,11 @@ import MessageScreen from '../Message/message.js'
 import ProfileScreen from '../Profile/profile';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ROBOTOFONTFAMILY } from '../../../sharedUtils';
+import { ROBOTOFONTFAMILY, PRIMARYCOLOR } from '../../../sharedUtils';
 Ionicons.loadFont()
 
 const Tab = createBottomTabNavigator();
 
-const PRIMARYCOLOR = '#4050B5'
 
 
 export default function DiscoverTab(){
@@ -27,11 +26,14 @@ export default function DiscoverTab(){
               iconName = focused
                 ? 'home'
                 : 'home-outline';
+                color = PRIMARYCOLOR
             } else if (route.name === 'Message') {
               iconName = focused ? 'mail' : 'mail-outline';
+              color = PRIMARYCOLOR
             }
             else if (route.name === 'Profile') {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
+              color = PRIMARYCOLOR
             }
 
             // You can return any component that you like here!

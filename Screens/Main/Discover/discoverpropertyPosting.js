@@ -11,6 +11,7 @@ import {
     Pressable,
     FlatList,
     TouchableOpacity,
+    TouchableHighlight
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,10 +35,10 @@ import Lottie from 'lottie-react-native';
 FontAwesome.loadFont();
 
 const ImageName = [
-    { name: "Bedroom", des: "Please upload an image of where teanant will be sleeping.", icon: "bed-outline" },
-    { name: "Bathroom", des: "Please upload an image of bathroom where teanant can use.", icon: "water-outline" },
-    { name: "Living Room", des: "Please upload an image of common space / shared space." , icon: "tv-outline"},
-    { name: "Kitchen", des: "Please upload an image of kitchen / cooking area." , icon: "fast-food-outline"},
+    { name: "Bedroom", des: "Please upload an image of tenant's bedroom.", icon: "bed-outline" },
+    { name: "Bathroom", des: "Please upload an image of tenant's bathroom.", icon: "water-outline" },
+    { name: "Living Room", des: "Please upload an image of common/shared space." , icon: "tv-outline"},
+    { name: "Kitchen", des: "Please upload an image of kitchen/cooking area." , icon: "fast-food-outline"},
     { name: "Floor Plan", des: "Please upload an image of property floor plan.", icon: "logo-stackoverflow" },
 ]
 
@@ -521,7 +522,7 @@ export default function PropertyPostingScreen({ navigation }) {
                         <Animated.View style={{ width: WIDTH * 0.9, height: HEIGHT * 0.4, borderRadius: 10 }}>
 
                             {propertyLocation.length != 0 && autocompleteLocation.map((value, index) => (
-                                <Pressable key={value.description + index}>
+                                <TouchableHighlight key={value.description + index} >
                                     <View style={{
                                         width: WIDTH * 0.9, height: HEIGHT * 0.08, paddingLeft: WIDTH * 0.025,
                                         alignItems: 'center', flexDirection: 'row',
@@ -532,7 +533,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                             <Text style={{ color: LIGHTGREY, fontSize: HEIGHT * 0.015 }}>{value.structured_formatting.secondary_text}</Text>
                                         </Pressable>
                                     </View>
-                                </Pressable>
+                                </TouchableHighlight>
                             ))}
 
                         </Animated.View>
@@ -769,7 +770,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                         }}>
                                             {GetFAIcons(value.name)}
                                             <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                                {"   "}{value.name.replace("_"," ")}
+                                                {"   "}{value.name.replaceAll("_"," ")}
                                             </Text>
                                         </Pressable>
 

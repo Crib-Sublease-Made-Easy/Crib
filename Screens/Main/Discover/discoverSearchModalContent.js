@@ -15,7 +15,6 @@ import {
 import { BlurView, VibrancyView } from "@react-native-community/blur";
 import Modal from "react-native-modal";
 
-const PRIMARYCOLOR = '#4050B5'
 
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
