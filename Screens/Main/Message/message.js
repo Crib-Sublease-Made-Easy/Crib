@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
-  Image
+  Image,
+  AppState
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
@@ -29,6 +30,8 @@ LoginContainer, SignupContainer, LoginText, SignupText, NoUserText } from './mes
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MessageScreen({navigation, route}){
+    const appState = useRef(AppState.currentState);
+
     const {sb, USERID, user} = useContext(UserContext);
 
     const [convoList, setConvoList] = useState([])
@@ -47,9 +50,11 @@ export default function MessageScreen({navigation, route}){
         });
         sb.addChannelHandler('channels', channelHandler);
 
-        return unsubscribe;
+        return unsubscribe
 
-    }, [navigation, convoList])
+        // return unsubscribe;
+
+    }, [navigation, convoList, AppState])
 
     const channelHandler = new sb.ChannelHandler();
     channelHandler.onChannelChanged = channel => {
