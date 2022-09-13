@@ -39,7 +39,7 @@ NameText
 
 export default function ProfileEditScreen({navigation, route}){
     
-    const {USERID} = useContext(UserContext);
+    const {sb, USERID} = useContext(UserContext);
     const [userAPIData, setUserAPIData] = useState(route.params.userData)
     const [profilePic, setProfilePic] = useState(route.params.userData == undefined ? null : route.params.userData.profilePic)
     const [school, setSchool] = useState(route.params.userData == undefined ? null : route.params.userData.school)
@@ -150,6 +150,8 @@ export default function ProfileEditScreen({navigation, route}){
                         setProfilePic(data.profilePic)
                         try{
                             await AsyncStorage.setItem("profilePic", data.profilePic)
+                            let firstName = await SecureStorage.getItem("firstName")
+                            const ll = await sb.updateCurrentUserInfo(firstName,data.profilePic)
                         }
                         catch{e=>{
                             console.log(e)

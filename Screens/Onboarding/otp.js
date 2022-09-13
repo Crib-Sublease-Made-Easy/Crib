@@ -17,6 +17,7 @@ import {
   Dimensions,
   Pressable
 } from 'react-native';
+import OneSignal from 'react-native-onesignal';
 
 import { Container, Heading, SignupForm, ButtonText, StandardButtonStyle, StandardInputStyle,
     HeadingImageContainer,PhoneNumberContainer, ContinueButton, ContinueText, SubtitleText, 
@@ -133,6 +134,7 @@ export default function OTPScreen({navigation, route}){
                 }
                 console.log("OTP",data.createdUser.firstName)
                 try{
+                    OneSignal.disablePush(false);
                     await SecureStorage.setItem("userId", data.createdUser._id)
                     await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
                     //Create sendbird user here with userid
