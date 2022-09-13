@@ -162,20 +162,10 @@ export default function ChatScreen({navigation, route}){
       })
     }
 
-<<<<<<< HEAD
-    const deletedChat = (groupChannel) => {
-      onChat= false
-      groupChannel.leave()
-      setTimeout(()=>{
-        navigation.goBack()
-      },1000)
-     
-=======
     const deletedChat = async (groupChannel) => {
       onChat= false
       await groupChannel.leave()
       navigation.navigate("Message")
->>>>>>> 3266628d7dd855eb99bee8dbf8a9faf5ce295697
       alert("The other user has left the chat.")
     }
 
