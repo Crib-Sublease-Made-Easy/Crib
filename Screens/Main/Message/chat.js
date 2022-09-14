@@ -104,7 +104,7 @@ export default function ChatScreen({navigation, route}){
             // The message is successfully sent to the channel.
             // The current user can receive messages from other users through the onMessageReceived() method of an event handler.
               // console.log("Message was successfully sent")
-             
+              console.log(USERID)
               fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
                 method: 'POST',
                 headers: {
@@ -116,7 +116,7 @@ export default function ChatScreen({navigation, route}){
                 body: JSON.stringify({
                     participant1: groupChannel.members[0].userId,
                     participant2: groupChannel.members[1].userId,
-                    senderId: id,
+                    senderId: USERID,
                     message: messages[0].text
                 })
             })
@@ -178,8 +178,10 @@ export default function ChatScreen({navigation, route}){
         
         if(response.propertyInfo.deleted == true){
           if(loading == true){
+           
             onChat = false
             alert("This property is unavailable.")
+          
             channel.leave()
             navigation.goBack()
           } 
