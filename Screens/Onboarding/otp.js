@@ -146,8 +146,7 @@ export default function OTPScreen({navigation, route}){
                     await SecureStorage.setItem("firstName", data.createdUser.firstName)
                     await SecureStorage.setItem("lastName", data.createdUser.lastName)
                     await SecureStorage.setItem("refreshToken", data.token.refreshToken)
-                    await SecureStorage.setItem("sendBirdId", data.token.sendBirdId)
-                    await SecureStorage.setItem("oneSignalId", data.token.oneSignalId)
+                  
 
 
                     connectSendbird()

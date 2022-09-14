@@ -102,8 +102,7 @@ export default function Login_OTP({navigation, route}){
                     await SecureStorage.setItem("firstName", data.loggedIn.firstName)
                     await SecureStorage.setItem("lastName", data.loggedIn.lastName)
                     await SecureStorage.setItem("refreshToken", data.token.refreshToken)
-                    await SecureStorage.setItem("sendBirdId", data.token.sendBirdId)
-                    await SecureStorage.setItem("oneSignalId", data.token.oneSignalId)
+                   
 
 
 
