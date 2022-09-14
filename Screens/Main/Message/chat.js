@@ -144,7 +144,7 @@ export default function ChatScreen({navigation, route}){
           if(groupChannel.members.length < 2){
             deletedChat(groupChannel)
           } else{
-          // const readHandler = await groupChannel.markAsRead();
+            await groupChannel.markAsRead();
           // console.log("READHANDLER", readHandler)
           setChannel(groupChannel)
           setReceiverID(groupChannel.members[0].userId == USERID ? groupChannel.members[1].userId : groupChannel.members[0].userId)      

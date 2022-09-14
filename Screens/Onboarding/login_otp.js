@@ -92,7 +92,8 @@ export default function Login_OTP({navigation, route}){
         }).then( async data =>{
             console.log(success)
             if(success){
-                console.log("LOGIN_OTP", data.loggedIn.firstName)
+                console.log("LLLLDLDLDLDLDLDLDLDLDLDLDLDL")
+                console.log("LOGIN_OTP", data)
                 try{
                     OneSignal.disablePush(false);
                     await SecureStorage.setItem("accessToken", data.token.accessToken)
@@ -101,12 +102,15 @@ export default function Login_OTP({navigation, route}){
                     await SecureStorage.setItem("firstName", data.loggedIn.firstName)
                     await SecureStorage.setItem("lastName", data.loggedIn.lastName)
                     await SecureStorage.setItem("refreshToken", data.token.refreshToken)
+                    await SecureStorage.setItem("sendBirdId", data.token.sendBirdId)
+                    await SecureStorage.setItem("oneSignalId", data.token.oneSignalId)
+
+
 
                     await AsyncStorage.setItem("userId", data.loggedIn._id)
                     await AsyncStorage.setItem("firstName", data.loggedIn.firstName)
                     await AsyncStorage.setItem("lastName", data.loggedIn.lastName)
                     await AsyncStorage.setItem("profilePic", data.loggedIn.profilePic)
-                    await AsyncStorage.setItem("userId", data.loggedIn._id)
                     connectSendbird()
                 }
                 catch{e=>{

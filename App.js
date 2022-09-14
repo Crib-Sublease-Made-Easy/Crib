@@ -93,11 +93,12 @@ import OneSignal from 'react-native-onesignal';
 
 
 export default function App() {
+
+  
   const appState = useRef(AppState.currentState);
   const [user, setUser] = useState(null)
 
 
-  const [userInitialLocation, setUserInitialLocation] = useState(null)
   const [sendBirdConnected, setSendbirdConnection] = useState(false)
   const [preloadProperties, setPreloadProperties] = useState([])
 
@@ -164,6 +165,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
         // connectSendbird()
       } 
       else{
+
         disconnectSendbird()
       }
 

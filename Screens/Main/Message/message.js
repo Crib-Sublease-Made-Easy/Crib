@@ -50,9 +50,10 @@ export default function MessageScreen({navigation, route}){
 
         // return unsubscribe;
 
-    }, [navigation, convoList, AppState])
+    }, [navigation, convoList])
 
     const channelHandler = new sb.ChannelHandler();
+    
     channelHandler.onChannelChanged = channel => {
         console.log("rEFRESH")
 

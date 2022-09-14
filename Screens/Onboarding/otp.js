@@ -132,7 +132,7 @@ export default function OTPScreen({navigation, route}){
                 } catch (err) {
                     // Handle error.
                 }
-                console.log("OTP",data.createdUser.firstName)
+                console.log("OTP",data)
                 try{
                     OneSignal.disablePush(false);
                     await SecureStorage.setItem("userId", data.createdUser._id)
@@ -146,6 +146,10 @@ export default function OTPScreen({navigation, route}){
                     await SecureStorage.setItem("firstName", data.createdUser.firstName)
                     await SecureStorage.setItem("lastName", data.createdUser.lastName)
                     await SecureStorage.setItem("refreshToken", data.token.refreshToken)
+                    await SecureStorage.setItem("sendBirdId", data.token.sendBirdId)
+                    await SecureStorage.setItem("oneSignalId", data.token.oneSignalId)
+
+
                     connectSendbird()
 
                 }
