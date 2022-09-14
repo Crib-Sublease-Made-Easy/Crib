@@ -24,7 +24,7 @@ FontAwesome.loadFont()
 export default function SettingScreen({navigation, route}){
     const [notificationsEnabled, setNotificationsEnabled] = useState(true)
     const [userData, setUserData] = useState("")
-    const {USERID, login} = useContext(UserContext);
+    const {sb, USERID, login} = useContext(UserContext);
 
     useEffect( ()=>{
       getNotificationStatus()
@@ -47,6 +47,7 @@ export default function SettingScreen({navigation, route}){
     }
 
     const logout =  async() => {
+      disconnectSendbird()
       OneSignal.disablePush(true);
       await SecureStorage.removeItem("accessToken")
       await SecureStorage.removeItem("refreshToken")
@@ -55,6 +56,14 @@ export default function SettingScreen({navigation, route}){
       navigation.reset(
         {index: 0 , routes: [{ name: 'ProfileTabs'}]}
     )
+    }
+
+    const disconnectSendbird = async () =>{
+      const UID = await SecureStorage.getItem("userId");
+      if (UID != undefined) {
+        await sb.disconnect()
+        console.log("Sendbird Disconnected")
+      }
     }
 
     const toggleNotification = async () => {
