@@ -23,6 +23,8 @@ import DiscoverFilterScreen from './Filter/discoverFilter'; //onPress Search Fil
 
 import PropertyCard from './propertyCard';  //The slide up screen that shows all properties
 
+import SecureStorage from 'react-native-secure-storage'
+
 //Icons
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -60,13 +62,39 @@ import MapView , { Marker }from 'react-native-maps';
 
 export default function DiscoverScreen({navigation}){
 
-    const {USERID, preloadProperties} = useContext(UserContext);
+    const {sb, USERID, preloadProperties} = useContext(UserContext);
 
     //Method for handling notifications received while app in foreground
-    OneSignal.setNotificationOpenedHandler(notification => {
+    OneSignal.setNotificationOpenedHandler(async notification => {
     // console.log("OneSignal: notification opened:", notification);
+        await connectSendbird()
         navigation.navigate("Message")
     });
+    const connectSendbird = async () => {
+        const UID = await SecureStorage.getItem("userId");
+        if (UID != undefined) {
+          try {
+            console.log("connecting to sendbird")
+         
+            await sb.connect(UID, function (user, error) {
+              if (error) {
+                // Handle error.
+                console.log("sendbird error")
+                console.log(error)
+              }
+              else {
+                
+                console.log("sendbird connected")
+              }
+              // The user is connected to Sendbird server.
+            });
+            // The user is connected to the Sendbird server.
+          } catch (err) {
+            // Handle error.
+            console.log("SENDBIRD ERROR",err)
+          }
+        }
+      }
 
     //Reference to the MapView
     const mapRef = useRef(null)
