@@ -178,10 +178,10 @@ export default function ChatScreen({navigation, route}){
         
         if(response.propertyInfo.deleted == true){
           if(loading == true){
+            onChat = false
             alert("This property is unavailable.")
             channel.leave()
             navigation.goBack()
-            onChat = false
           } 
         } else {
           setPropertyInfo(response)

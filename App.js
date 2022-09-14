@@ -144,8 +144,11 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   // console.log("additionalData: ", data);
   // Complete with null means don't show a notification.
   if(!onChat){
+    console.log("WILL SHOW MSG ")
+
     notificationReceivedEvent.complete(notification);
   } else{
+    console.log("DOES NOT SHOW MSG ")
     notificationReceivedEvent.complete(null);
   }
 
@@ -164,10 +167,10 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
         refreshAccessToken()
         // connectSendbird()
       } 
-      // else{
-
-      //   disconnectSendbird()
-      // }
+      else{
+        onChat = false
+        // disconnectSendbird()
+      }
 
       appState.current = nextAppState;
       console.log("AppState", appState.current);
