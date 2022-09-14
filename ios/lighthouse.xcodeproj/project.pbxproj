@@ -25,6 +25,8 @@
 		5DE61C3028B549490023B7DA /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C2A28B549490023B7DA /* Roboto-Black.ttf */; };
 		5DE61C3128B549490023B7DA /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C2B28B549490023B7DA /* Roboto-Regular.ttf */; };
 		5DE61C3528B5F9410023B7DA /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C3428B5F9410023B7DA /* logo.png */; };
+		5DE61C3828D247C30023B7DA /* Group 245.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C3628D247C30023B7DA /* Group 245.png */; };
+		5DE61C3928D247C30023B7DA /* Group 246.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C3728D247C30023B7DA /* Group 246.png */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B1C384E1289C497B00B4D85F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C384E0289C497B00B4D85F /* NotificationService.swift */; };
 		B1C384E5289C497B00B4D85F /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B1C384DE289C497A00B4D85F /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -88,6 +90,8 @@
 		5DE61C2A28B549490023B7DA /* Roboto-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Black.ttf"; path = "../../assets/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
 		5DE61C2B28B549490023B7DA /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Regular.ttf"; path = "../../assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		5DE61C3428B5F9410023B7DA /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		5DE61C3628D247C30023B7DA /* Group 245.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Group 245.png"; sourceTree = "<group>"; };
+		5DE61C3728D247C30023B7DA /* Group 246.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Group 246.png"; sourceTree = "<group>"; };
 		64D070E831057E54AF814969 /* Pods-lighthouse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse.release.xcconfig"; path = "Target Support Files/Pods-lighthouse/Pods-lighthouse.release.xcconfig"; sourceTree = "<group>"; };
 		669CB2B8F3F1EC4D7CC5F300 /* libPods-lighthouse.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lighthouse.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = lighthouse/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -151,6 +155,8 @@
 			isa = PBXGroup;
 			children = (
 				5DE61C3428B5F9410023B7DA /* logo.png */,
+				5DE61C3628D247C30023B7DA /* Group 245.png */,
+				5DE61C3728D247C30023B7DA /* Group 246.png */,
 				B1C384D7289C488200B4D85F /* lighthouse.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -376,7 +382,9 @@
 				5DE61C1228B30C8A0023B7DA /* EBGaramond-Bold.ttf in Resources */,
 				5DE61C3528B5F9410023B7DA /* logo.png in Resources */,
 				5DE61C1828B30C8A0023B7DA /* EBGaramond-SemiBold.ttf in Resources */,
+				5DE61C3928D247C30023B7DA /* Group 246.png in Resources */,
 				5DE61C3128B549490023B7DA /* Roboto-Regular.ttf in Resources */,
+				5DE61C3828D247C30023B7DA /* Group 245.png in Resources */,
 				5DE61C2F28B549490023B7DA /* Roboto-Thin.ttf in Resources */,
 				5DE61C3028B549490023B7DA /* Roboto-Black.ttf in Resources */,
 				5DE61C1428B30C8A0023B7DA /* EBGaramond-ExtraBold.ttf in Resources */,
@@ -672,6 +680,7 @@
 				DEVELOPMENT_TEAM = R26A35UA9U;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = lighthouse/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -700,6 +709,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R26A35UA9U;
 				INFOPLIST_FILE = lighthouse/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -867,7 +877,7 @@
 				DEVELOPMENT_TEAM = R26A35UA9U;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -902,7 +912,7 @@
 				DEVELOPMENT_TEAM = R26A35UA9U;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
