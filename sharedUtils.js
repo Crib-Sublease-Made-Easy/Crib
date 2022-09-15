@@ -406,3 +406,12 @@ export const ContinueText = styled.Text`
 export const IconPressable = styled.Pressable`
 
 `
+
+export const SignUpHeader = styled.View`
+  width: ${WIDTH*0.9}px
+  height: ${HEIGHT*0.075}px
+  padding-vertical: ${HEIGHT*0.01}px
+  justify-content: flex-start;
+  align-self: center
+  flex-direction: row 
+`

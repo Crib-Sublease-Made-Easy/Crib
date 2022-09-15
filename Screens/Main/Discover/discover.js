@@ -58,6 +58,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 //React Native Map
 import MapView , { Marker }from 'react-native-maps';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function DiscoverScreen({navigation}){
@@ -146,6 +147,7 @@ export default function DiscoverScreen({navigation}){
     const [discoverSearchVisible, setDiscoverSearchVisible] = useState(false)
 
     useEffect(()=>{
+        prefetch();
         setFlatlistRefreshing(true)
         //Loading initial batch of properties
         loadProperty()
@@ -165,7 +167,14 @@ export default function DiscoverScreen({navigation}){
         };
     },[currentLocation])
 
-
+    async function prefetch(){
+        const cachedProfilePic = await AsyncStorage.getItem('profilePic');
+        if(cachedProfilePic != null){
+            const profileImagePrefetch = await Image.prefetch(cachedProfilePic);
+            console.log(profileImagePrefetch)
+        }
+        
+    }
     function dateCompare(date1, date2){
         let d1 = date1
         let d2 = date2

@@ -15,7 +15,7 @@ Ionicons.loadFont()
 
 import DatePicker from 'react-native-date-picker'
   
-import { HEIGHT, WIDTH, ContinueButton, ContinueText, ProgressText } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, ContinueButton, ContinueText, ProgressText, SignUpHeader } from '../../../sharedUtils';
 
 import { AgeContainer, Header, ProgressBarContainer, SubtitleText, TitleText, DatePlaceHolder } from './ageStyle';
 
@@ -57,12 +57,12 @@ export default function AgeScreen({navigation, route}){
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior={'padding'} style={{flex:1}}>
-                <Header>
+                <SignUpHeader>
                     <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
                         {/* <FontAwesome name='arrow-left' size={25} /> */}
                         <Ionicons name='arrow-back-outline' size={25} />
                     </Pressable>
-                </Header>
+                </SignUpHeader>
                 
                 <ProgressBarContainer>
                     <ProgressText>Step  2 / 9</ProgressText>

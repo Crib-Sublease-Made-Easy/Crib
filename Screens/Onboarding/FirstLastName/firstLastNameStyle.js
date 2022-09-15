@@ -9,11 +9,11 @@ import {
 
 export const Header = styled.View`
   width: ${WIDTH*0.9}px
-  height: ${HEIGHT*0.05}px
-  justify-content: center;
-  align-items: flex-start;
+  height: ${HEIGHT*0.075}px
+  padding-vertical: ${HEIGHT*0.01}px
+  justify-content: flex-start;
   align-self: center
- 
+  flex-direction: row 
 `
 
 export const ProgressBarContainer = styled(View)`
