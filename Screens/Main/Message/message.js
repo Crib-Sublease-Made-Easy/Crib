@@ -35,7 +35,8 @@ export default function MessageScreen({navigation, route}){
     const [convoList, setConvoList] = useState([])
     const [userId, setUserId] = useState('')
     const [receiverName, setReceiverName] = useState('')
-   
+    const [firstName, setFirstName] = useState('')
+
 
 
     useEffect(()=>{
@@ -61,7 +62,10 @@ export default function MessageScreen({navigation, route}){
         fetchConvos()
       };
 
-  
+    const getFirstName = async()  => {
+        const firstName = await SecureStorage.getItem("firstName");
+        setFirstName(firstName)
+    }
     const fetchConvos = useCallback(async() => {
 
         const refreshToken = await SecureStorage.getItem("refreshToken");
@@ -70,7 +74,7 @@ export default function MessageScreen({navigation, route}){
        
             setUserId(USERID)
             let listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
-            
+            listQuery.hiddenChannelFilter = 'unhidden_only'
             listQuery.includeEmpty = false;
             listQuery.order = 'latest_last_message'; 
             listQuery.limit = 15;   // The value of pagination limit could be set up to 100.
@@ -83,7 +87,7 @@ export default function MessageScreen({navigation, route}){
                     }
 
                     setConvoList(groupChannels)
-
+                    console.log(groupChannels)
                 });
             }
         }
@@ -127,7 +131,7 @@ export default function MessageScreen({navigation, route}){
                             <Image source = {{uri: item.coverUrl}} style = {{ width: WIDTH*0.14, height: WIDTH*0.14, borderRadius: WIDTH*0.07 }}/>
                         </FlatlistLeft>
                         <FlatlistRight>
-                        <LocationText numberOfLines={1}>{item.name}</LocationText>
+                        <LocationText numberOfLines={1}> {item.members[0].nickname == firstName ? item.members[1].nickname : item.members[0].nickname} - {item.name}</LocationText>
 
                             {item.lastMessage != undefined &&
                             <TextAndTime>

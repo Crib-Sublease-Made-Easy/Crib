@@ -257,6 +257,7 @@ export default function ChatScreen({navigation, route}){
 
     async function leaveChat(){
         onChat= false
+        await channel.hide()
         await channel.leave()
       
         alert("You have successfully left this chat.")
