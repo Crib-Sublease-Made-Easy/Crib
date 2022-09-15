@@ -22,7 +22,7 @@ var axios = require('axios');
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import {PRIMARYCOLOR, WIDTH, HEIGHT, IconPressable, DARKGREY} from '../../../sharedUtils.js';
+import {PRIMARYCOLOR, WIDTH, HEIGHT, IconPressable, DARKGREY,} from '../../../sharedUtils.js';
 
 export default function DiscoverSearchScreen({navigation, route, open, close, selectCurrentLocation}){
   const [autocompleteLocation, setautocompleteLocation] = useState([])

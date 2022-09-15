@@ -19,7 +19,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, ContinueText, ProgressText, DARKGREY, MEDIUMGREY, GOOGLEBLUE } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, ContinueText, ProgressText, DARKGREY, MEDIUMGREY, GOOGLEBLUE, SignUpHeader } from '../../../sharedUtils';
 
 import Lottie from 'lottie-react-native';
 
@@ -196,12 +196,12 @@ export default function PhoneNumberScreen({navigation, route}){
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
-            <Header>
+            <SignUpHeader>
                 <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
                    
                     <Ionicons name='arrow-back-outline' size={25} />
                 </Pressable>
-            </Header>
+            </SignUpHeader>
                 
             <ProgressBarContainer>
                 <ProgressText>Step  8 / 9</ProgressText>
@@ -209,7 +209,7 @@ export default function PhoneNumberScreen({navigation, route}){
            
             <ScrollView scrollEnabled={false}>
                 <TitleText>Enter your phone number</TitleText>
-                <SubtitleText>We will send you a one time password to verify your number</SubtitleText>
+                <SubtitleText>We will send you a one time password</SubtitleText>
                 <TextInputContainer>
                     <GeneralTextInput editable={!loading} value={phoneNumber} onChangeText={(value)=> handleInput(value)}
                     keyboardType = "number-pad" placeholder="xxx-xxx-xxxx"/>

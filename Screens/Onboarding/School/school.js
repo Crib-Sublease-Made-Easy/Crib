@@ -20,7 +20,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
   
-import { HEIGHT, WIDTH , LIGHTGREY, DARKGREY, ContinueButton, ContinueText, ProgressText} from '../../../sharedUtils';
+import { HEIGHT, WIDTH , LIGHTGREY, DARKGREY, ContinueButton, ContinueText, ProgressText, SignUpHeader} from '../../../sharedUtils';
 
 import {Header, ProgressBarContainer, SubtitleText, TitleText,  FollowUpContainer, FollowUpText,
     GeneralTextInput, TextInputContainer} from './schoolStyle';
@@ -49,12 +49,12 @@ export default function SchoolScreen({navigation, route}){
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
            <KeyboardAvoidingView behavior='padding' style={{flex: 1}}>
-            <Header>
+            <SignUpHeader>
                 <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
                     <Ionicons name='arrow-back-outline' size={25} />
                 </Pressable>
-            </Header>
+            </SignUpHeader>
                 
             <ProgressBarContainer>
                 <ProgressText>Step  5 / 9</ProgressText>
