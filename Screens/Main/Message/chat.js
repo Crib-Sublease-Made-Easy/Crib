@@ -146,6 +146,7 @@ export default function ChatScreen({navigation, route}){
           } else{
             await groupChannel.markAsRead();
           // console.log("READHANDLER", readHandler)
+          // console.log(groupChannel)
           setChannel(groupChannel)
           setReceiverID(groupChannel.members[0].userId == USERID ? groupChannel.members[1].userId : groupChannel.members[0].userId)      
           await getPropertyInfo(groupChannel.data)
@@ -182,7 +183,7 @@ export default function ChatScreen({navigation, route}){
             onChat = false
             alert("This property is unavailable.")
           
-            channel.leave()
+            await channel.leave()
             navigation.goBack()
           } 
         } else {
@@ -272,7 +273,7 @@ export default function ChatScreen({navigation, route}){
           <NameContainer>
           {channel != null ? 
             channel.members.length == 2 ?
-            channel.members[0].userId == id ?
+            channel.members[0].userId == USERID ?
                 <Header>{channel.members[1].nickname}</Header>
                 :
                 <Header>{channel.members[0].nickname}</Header>

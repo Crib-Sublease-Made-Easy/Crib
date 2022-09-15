@@ -93,7 +93,7 @@ export default function ProfileScreen({navigation}){
         try {
           const result = await Share.share({
             //   'Lighthouse | An app to find short term housing solutions made easy',
-              url: 'https://apps.apple.com/us/app/google-chrome/id535886823https://apps.apple.com/us/app/google-chrome/id535886823'
+              url: 'https://apps.apple.com/us/app/google-chrome/id535886823'
           });
           if (result.action === Share.sharedAction) {
             if (result.activityType) {
@@ -261,7 +261,7 @@ export default function ProfileScreen({navigation}){
 
     //Function to post properties, only if user have no properties 
     function toPostProperty(){
-        if(userData.postedProperties.length >= 9 ){
+        if(userData.postedProperties.length >= 1 ){
             alert("As a regular member, you can only post one property.")
         }
         else{

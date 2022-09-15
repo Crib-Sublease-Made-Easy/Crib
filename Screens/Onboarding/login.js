@@ -35,9 +35,9 @@ export default function LoginScreen({navigation, route}){
 
     async function signupStep1(){
         console.log("Stepping 1")
-        console.log(phoneNumber)
+        
         const number = phoneNumber.replace(/[^\d]/g, '');
-        console.log(number)
+      
         await fetch('https://crib-llc.herokuapp.com/users/authy', {
             method: 'POST',
             headers: {
@@ -55,7 +55,10 @@ export default function LoginScreen({navigation, route}){
                 signupStep2(data.authy_id, number)
             }
             else{
-                alert('ERROR OCCURED')
+                alert("User doesn't exist, please sign up.")
+                setLoading(false)
+                setPhoneNumber("")
+                navigation.navigate("FirstLastName")
             }
         })   
     }

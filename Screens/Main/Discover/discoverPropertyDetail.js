@@ -44,10 +44,15 @@ const WIDTH = Dimensions.get('screen').width;
 
 export default function PropertyDetailScreen({navigation, route}){
     useEffect(()=>{
+        const unsubscribe = navigation.addListener('focus', () => {
+            onChat = false 
+        });
+   
       fetchProperties()
       if(user != null){
         getTokens()
       }
+      return unsubscribe
     }, [])
     const imageOpacityTranslation = useRef(new RNAnimated.Value(0)).current;
     const flatListRef = useRef(null)

@@ -40,6 +40,7 @@ export default function MessageScreen({navigation, route}){
 
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
+            onChat = false
             console.log("FOCUSSSSSS")            
             fetchConvos()
             

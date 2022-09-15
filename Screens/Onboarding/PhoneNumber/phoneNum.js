@@ -134,7 +134,7 @@ export default function PhoneNumberScreen({navigation, route}){
                 }
                 else if(data.message == 'User already has an account with this phone number'){
                     alert("Account with phone number exist, please login.")
-                    navigation.reset({index: 0 , routes: [{ name: 'Login'}]})
+                    navigation.reset({index: 0 , routes: [{ name: 'ProfileTabs'}]})
                 }
                 console.log(data)
             }).catch(e=>

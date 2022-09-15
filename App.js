@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
-import Geolocation from '@react-native-community/geolocation';
 import './onChat'
 var axios = require('axios');
 
@@ -116,6 +115,7 @@ OneSignal.setAppId("a979dd6f-dffb-476e-8d0b-bb27863a3c55");
 //Prompt for push on iOS
 OneSignal.promptForPushNotificationsWithUserResponse(async response => {
   const deviceState = await OneSignal.getDeviceState();
+  console.log(deviceState)
   try{
     const cacheOneSignalID = await SecureStorage.getItem("oneSignalUserID");
     if (deviceState.userId != cacheOneSignalID && deviceState != null){
@@ -337,8 +337,10 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               component={ChatScreen}
               options={{
                 headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, 
               }}
+              
+              
             />
             <Stack.Screen name="ChangeNumber"
               component={ChangeNumberScreen}
