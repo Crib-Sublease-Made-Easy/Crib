@@ -76,6 +76,7 @@ export default function ProfileScreen({navigation}){
     const [profilePic, setProfilePic] = useState(null)
    
     useEffect(()=>{
+        console.log(new Date().getTime())
         const unsubscribe = navigation.addListener('focus', () => {
             console.log("REFRESH --- USEEFFECT")
             //If user is defined then retrieve user info
@@ -85,6 +86,7 @@ export default function ProfileScreen({navigation}){
             getTokens()
                      
         });
+        console.log(new Date().getTime())
         return unsubscribe; 
     }, [navigation])
 
