@@ -171,6 +171,7 @@ export default function DiscoverScreen({navigation}){
         const cachedProfilePic = await AsyncStorage.getItem('profilePic');
         if(cachedProfilePic != null){
             const profileImagePrefetch = await Image.prefetch(cachedProfilePic);
+            
             console.log(profileImagePrefetch)
         }
         
@@ -426,23 +427,26 @@ export default function DiscoverScreen({navigation}){
     //Open the preview card modal 
     async function onMarkerClick(item){
         setLoading(true)
-        await fetch('https://crib-llc.herokuapp.com/properties/' + item._id, {
-        method: 'POST',
-        headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            viewCount: "false"
-        })
-        }) 
-        .then(res => res.json()).then(property =>{
-            setSelectedPin(property)
-            moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
-        })
-        .catch(e=>{
-            alert(e)
-        })
+        if(item != null && item != undefined){
+            await fetch('https://crib-llc.herokuapp.com/properties/' + item._id, {
+            method: 'POST',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                viewCount: "false"
+            })
+            }) 
+            .then(res => res.json()).then(property =>{
+                setSelectedPin(property)
+                moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
+            })
+            .catch(e=>{
+                console.log("ERROR --- DISCOVER --- onMarkerClick")
+                alert(e)
+            })
+        }
         
         //Toggle previewCard modal, but the opcaity is 0 when opened 
         setPropertyPreviewCard(true)

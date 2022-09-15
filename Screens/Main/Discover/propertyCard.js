@@ -187,7 +187,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     }).onEnd(()=>{
     //console.log(velocityY.value)
     if(translateY.value  < HEIGHT*0.35){
-      if(Math.abs(velocityY.value) > 1750){
+      if(Math.abs(velocityY.value) > 1500){
         translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:10})
       }
       else{

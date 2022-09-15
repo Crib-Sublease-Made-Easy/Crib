@@ -38,7 +38,7 @@ import Modal from "react-native-modal";
 
 export default function OTPScreen({navigation, route}){
 
-    const {user, login, sb} = useContext(UserContext);
+    const {login, sb} = useContext(UserContext);
     const [phoneNumber, setphoneNumber] = useState('')
     const [code, setCode] = useState('')
     const [pinReady, setpinReady] = useState(false)
@@ -117,7 +117,6 @@ export default function OTPScreen({navigation, route}){
                         }
                         else{
                             console.log("sendbird connected")
-                            console.log(user)
                             sb.updateCurrentUserInfo(data.createdUser.firstName, data.createdUser.profilePic, (user, err) => {
                                 if (!err) {
                                     console.log("Successfully updated current user", err)

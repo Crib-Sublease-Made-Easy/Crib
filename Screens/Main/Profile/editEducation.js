@@ -23,31 +23,33 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
 export default function EditEducationScreen({navigation, route}){
-   
+    const {USERID} = useContext(UserContext);
     const [education, setEducation] = useState('')
     
     async function update(){
         const accessToken = await SecureStorage.getItem("accessToken");
-        console.log("UID" , route.params.uid)
-        fetch('https://crib-llc.herokuapp.com/users/' + route.params.uid, {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken,
-            },
-            body: JSON.stringify({
-                school: education.trim(),
+        if(USERID != null && accessToken != null){
+            fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken,
+                },
+                body: JSON.stringify({
+                    school: education.trim(),
+                })
             })
-        })
-        .then((response) => response.json()).then(data => {
-            console.log("Update education reponse")
-            console.log(data)
-            navigation.navigate('ProfileEdit',{userData:data,})
-        })
-        .catch(e => {
-            console.log(e)
-        })
+            .then((response) => response.json()).then(data => {
+                console.log("Update education reponse")
+                console.log(data)
+                navigation.navigate('ProfileEdit',{userData:data,})
+            })
+            .catch(e => {
+                console.log("ERROR --- EDITEDUCATION --- UPDATE")
+            })
+        }
+        
     }
 
     return(

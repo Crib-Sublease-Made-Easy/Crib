@@ -38,7 +38,7 @@ import Modal from "react-native-modal";
 
 export default function Login_OTP({navigation, route}){
 
-    const {user, login, sb} = useContext(UserContext);
+    const {login, sb} = useContext(UserContext);
     const [code, setCode] = useState('')
     const [pinReady, setpinReady] = useState(false)
     const [authyID, setauthyID] = useState(route.authy_id)

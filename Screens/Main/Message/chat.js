@@ -63,7 +63,10 @@ export default function ChatScreen({navigation, route}){
       console.log("USE_EFFECT CHAT")
       onChat = true
       getGroupChannel()
-      sb.addChannelHandler('channels', channelHandler);      
+      if(sb != null && sb != undefined){
+        sb.addChannelHandler('channels', channelHandler);     
+      }
+      
     }, [])
 
     const channelHandler = new sb.ChannelHandler();
@@ -94,7 +97,8 @@ export default function ChatScreen({navigation, route}){
       sb.GroupChannel.getChannel(url, async function(groupChannel, error) {
         if (error) {
             console.log("ERROR CHANNEL 1")
-        }else if(groupChannel.members.length ==2){
+        }
+        else if(groupChannel.members.length ==2){
           await groupChannel.markAsRead()
           groupChannel.sendUserMessage(params, function(message, error) {
             if (error) {
@@ -104,8 +108,8 @@ export default function ChatScreen({navigation, route}){
             // The message is successfully sent to the channel.
             // The current user can receive messages from other users through the onMessageReceived() method of an event handler.
               // console.log("Message was successfully sent")
-              console.log(USERID)
-              fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
+              if(accessToken != null){
+                fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',
@@ -119,14 +123,12 @@ export default function ChatScreen({navigation, route}){
                     senderId: USERID,
                     message: messages[0].text
                 })
-            })
-            
-            
-            
+                })
+              }
           }
           });
-        
-        } else{
+        } 
+        else{
           deletedChat(groupChannel)
         }
       })
@@ -145,8 +147,6 @@ export default function ChatScreen({navigation, route}){
             deletedChat(groupChannel)
           } else{
             await groupChannel.markAsRead();
-          // console.log("READHANDLER", readHandler)
-          // console.log(groupChannel)
           setChannel(groupChannel)
           setReceiverID(groupChannel.members[0].userId == USERID ? groupChannel.members[1].userId : groupChannel.members[0].userId)      
           await getPropertyInfo(groupChannel.data)
@@ -179,10 +179,8 @@ export default function ChatScreen({navigation, route}){
         
         if(response.propertyInfo.deleted == true){
           if(loading == true){
-           
             onChat = false
             alert("This property is unavailable.")
-          
             await channel.leave()
             navigation.goBack()
           } 
@@ -288,17 +286,12 @@ export default function ChatScreen({navigation, route}){
              
          
           <ChatImageSettingContainer>
-              {/* <Pressable disabled={loading} style={{alignItems:'center'}} >
-                <Image source={{uri:channel.coverUrl}} style={{height:HEIGHT*0.035, width:HEIGHT*0.035, borderRadius:HEIGHT*0.025/2, backgroundColor:'grey'}}/>
-              </Pressable> */}
               <Pressable hitSlop={WIDTH*0.05} onPress={()=> setOptionsModal(true)}>
                 <Ionicons name="ellipsis-horizontal" size={25} />
               </Pressable>
           </ChatImageSettingContainer>
     </HeaderContainer>
-    {/* <View style={{height:HEIGHT*0.075, backgroundColor:'red'}}>
 
-    </View> */}
     {loading ?
       <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />
     :
@@ -308,9 +301,6 @@ export default function ChatScreen({navigation, route}){
         ref={GiftedChatRef}
         bottomOffset={getBottomSpace()}
        
-        
-     
-
         renderInputToolbar={(props)=>(
           <MessageContainer>
               <MessageInput multiline value={typingText} onChangeText={(value)=> setTypingText(value)} placeholder="Enter a message ..." />

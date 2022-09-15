@@ -30,7 +30,7 @@ LoginContainer, SignupContainer, LoginText, SignupText, NoUserText } from './mes
 
 export default function MessageScreen({navigation, route}){
 
-    const {sb, USERID, user} = useContext(UserContext);
+    const {sb, USERID} = useContext(UserContext);
 
     const [convoList, setConvoList] = useState([])
     const [userId, setUserId] = useState('')
@@ -87,24 +87,18 @@ export default function MessageScreen({navigation, route}){
                     }
 
                     setConvoList(groupChannels)
-                    console.log(groupChannels)
                 });
             }
         }
         return;
     },[])
 
-    //navigation.navigate("PAGENAME",{userData: userData})
-
-    //route.params.userData 
-
-
     return(
         <SafeAreaView style={{backgroundColor:'white', flex: 1}}>
 
             
             
-            {user != null ?
+            {USERID != null ?
             <View style={{flex: 1}}>
                 <InboxTitle>Messages</InboxTitle>
             {convoList != null && convoList.length != 0 ?

@@ -319,17 +319,17 @@ export default function PropertyPostingScreen({ navigation }) {
             postingData.append("amenities", element);
         });
 
-        console.log("AccessToken", accessToken)
-      
-        fetch('https://crib-llc.herokuapp.com/properties', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'multipart/form-data',
-                'Authorization': 'bearer ' + accessToken
-            },
-            body: postingData,
-        })
+       
+        if(accessToken != null){
+            fetch('https://crib-llc.herokuapp.com/properties', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': 'bearer ' + accessToken
+                },
+                body: postingData,
+            })
             .then((response) => response.json()).then( async data => {
                 console.log("RESPONSE", data)
                 await SecureStorage.removeItem("postedProperty")
@@ -342,7 +342,11 @@ export default function PropertyPostingScreen({ navigation }) {
             .catch(e => {
                 alert(e)
             })
-
+        }
+        else{
+            console.log("ERROR --- DISCOVERPOSTING -- POSTPROPERTY")
+        }
+      
     }
 
     async function selectGallery(name) {
@@ -427,7 +431,8 @@ export default function PropertyPostingScreen({ navigation }) {
 
     async function LocationToLatLong(name){
         const accessToken = await SecureStorage.getItem("accessToken");
-        await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${name}&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`, {
+        if(accessToken != null && name != null && name != undefined){
+            await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${name}&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -448,7 +453,8 @@ export default function PropertyPostingScreen({ navigation }) {
         
             .catch(e=>{
                 alert(e)
-        })
+            })
+        }
     }
 
    

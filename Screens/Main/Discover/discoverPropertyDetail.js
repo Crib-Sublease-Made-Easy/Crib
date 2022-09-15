@@ -49,7 +49,7 @@ export default function PropertyDetailScreen({navigation, route}){
         });
    
       fetchProperties()
-      if(user != null){
+      if(USERID != null){
         getTokens()
       }
       return unsubscribe
@@ -58,7 +58,7 @@ export default function PropertyDetailScreen({navigation, route}){
     const flatListRef = useRef(null)
     const [propData, setPropData] = useState(route.params.data.propertyInfo);
     const postedUserData = route.params.data.userInfo;
-    const {sb, USERID, user} = useContext(UserContext);
+    const {sb, USERID} = useContext(UserContext);
     const [flatlistIndex, setFlatlistIndex] = useState(0)
     const [liked, setLiked]  = useState()
     const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == USERID)
@@ -67,7 +67,7 @@ export default function PropertyDetailScreen({navigation, route}){
     
     const createConversation = async () =>{
 
-        if(user != null){
+        if(USERID != null){
 
         
             var userIds = [USERID, propData.postedBy]
@@ -107,32 +107,34 @@ export default function PropertyDetailScreen({navigation, route}){
 
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("accessToken");
-        console.log(USERID)
-        fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
-        method: 'GET',
-        headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken,
-        }
-        }) 
-        .then(res => res.json()).then(async userData =>{
-            console.log(userData)
-            if(userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) == -1){
-                setLiked(false)
+        if (USERID != null && accessToken != null){
+            fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+            method: 'GET',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken,
             }
-            else{
-                setLiked(true)
-            }
-        })
-        .catch(e=>{
-            alert(e)
-        })
+            }) 
+            .then(res => res.json()).then(async userData =>{
+                console.log(userData)
+                if(userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) == -1){
+                    setLiked(false)
+                }
+                else{
+                    setLiked(true)
+                }
+            })
+            .catch(e=>{
+                alert(e)
+            })
+        }   
     }
 
     async function fetchProperties(){
         const accessToken = await SecureStorage.getItem("accessToken");
-        await fetch('https://crib-llc.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
+        if(route.params.data != undefined && accessToken != null){
+            await fetch('https://crib-llc.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -167,7 +169,9 @@ export default function PropertyDetailScreen({navigation, route}){
             })
             .catch(e=>{
                 alert(e)
-        })
+            })
+        }
+        
     }
 
 
@@ -186,28 +190,29 @@ export default function PropertyDetailScreen({navigation, route}){
         if(refreshToken != undefined){
             
             const accessToken = await SecureStorage.getItem("accessToken");
-        
-            await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'bearer ' + accessToken,
-            },
-            body: JSON.stringify({
-                propertyId: route.params.data.propertyInfo._id,
-            })
-            }) 
-            .then(res => res.json()).then(async message =>{
-                // console.log(message)
-                console.log("hello")
-                await AsyncStorage.removeItem("favoriteProperties");
-               
-                setLiked(!liked)
-            })
-            .catch(e=>{
-                alert(e)
-        })
+            if(accessToken != null){
+                await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
+                method: 'POST',
+                headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'bearer ' + accessToken,
+                },
+                body: JSON.stringify({
+                    propertyId: route.params.data.propertyInfo._id,
+                })
+                }) 
+                .then(res => res.json()).then(async message =>{
+                    // console.log(message)
+                    console.log("hello")
+                    await AsyncStorage.removeItem("favoriteProperties");
+                
+                    setLiked(!liked)
+                })
+                .catch(e=>{
+                    alert(e)
+                })
+            }
         }
         else{
             alert("Sign in to like properties.");

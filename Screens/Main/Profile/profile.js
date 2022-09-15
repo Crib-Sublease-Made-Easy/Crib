@@ -116,106 +116,114 @@ export default function ProfileScreen({navigation}){
        
         const accessToken = await SecureStorage.getItem("accessToken");
         const refreshToken = await SecureStorage.getItem("refreshToken");
+        const UID = await SecureStorage.getItem("userId")
 
         if(refreshToken != undefined){
-            const UID = await SecureStorage.getItem("userId")
             //Get user favorite properties
             fetchFavoriteProperties(accessToken)
-            fetch('https://crib-llc.herokuapp.com/users/' + UID, {
+            if(accessToken != null && UID != null){
+                fetch('https://crib-llc.herokuapp.com/users/' + UID, {
                 method: 'GET',
                 headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + accessToken,
                 }
-            }) 
-            .then(res => res.json()).then(async userData =>{
-                setUserData(userData)
-                //Load API data if the cached profile pic is null
-                let cachedProfilePic = await AsyncStorage.getItem("profilePic");
-                if(profilePic == null){
-                    if(cachedProfilePic != null && cachedProfilePic == userData.profilePic ){
-                     
-                        console.log("UPDATE --- CACHE --- profilePic")
-                        setProfilePic(cachedProfilePic)
-                    }
-                    else{
-                        console.log("UPDATE --- API --- profilePic")
-                        setProfilePic(userData.profilePic)
-                        try{
-                            await AsyncStorage.setItem("profilePic", userData.profilePic);
-                        }
-                        catch{e=>{
-                            console.log("ERROR --- PROFILE --- GETTOKEN")
-                        }
-
-                        }
+                }) 
+                .then(res => res.json()).then(async userData =>{
+                    setUserData(userData)
+                    //Load API data if the cached profile pic is null
+                    let cachedProfilePic = await AsyncStorage.getItem("profilePic");
+                    if(profilePic == null){
+                        if(cachedProfilePic != null && cachedProfilePic == userData.profilePic ){
                         
+                            console.log("UPDATE --- CACHE --- profilePic")
+                            setProfilePic(cachedProfilePic)
+                        }
+                        else{
+                            console.log("UPDATE --- API --- profilePic")
+                            setProfilePic(userData.profilePic)
+                            try{
+                                await AsyncStorage.setItem("profilePic", userData.profilePic);
+                            }
+                            catch{e=>{
+                                console.log("ERROR --- PROFILE --- GETTOKEN")
+                            }
+
+                            }
+                            
+                        }
                     }
-                }
-                if(userData.postedProperties != undefined){
-                    fetchPostedProperties(userData.postedProperties[0], accessToken)
-                }
-            })
-            .catch(e=>{
-                console.log("ERROR --- PROFILE --- GETTOKEN")
-                alert(e)
-            })
+                    if(userData.postedProperties != undefined){
+                        fetchPostedProperties(userData.postedProperties[0], accessToken)
+                    }
+                })
+                .catch(e=>{
+                    console.log("ERROR --- PROFILE --- GETTOKEN")
+                    alert(e)
+                })
+            }
+            else{
+                console.log("hello")
+                console.log(accessToken)
+                console.log(UID)
+            }
         }
         
     }
     
     //Funciton: Get user's posted proeprty
     async function fetchPostedProperties(id, token){
-       
-        await fetch('https://crib-llc.herokuapp.com/properties/' + id, {
+        if(id != null && id != undefined && token != undefined){
+            await fetch('https://crib-llc.herokuapp.com/properties/' + id, {
             method: 'POST',
             headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token,
             }
-        })
-        .then(res => {
-            if(res.status == 404){
-                setPostedProperties(null)
-            }
-            else{
-                return res.json()
-            }
-        }).then(async propertyData =>{
-            if(propertyData != undefined){
-                   
-                //Returns no prop found when theres nothing 
-                const tempPropData = await AsyncStorage.getItem('postedProperty')
-                
-                let compare = (tempPropData === JSON.stringify(propertyData))
-                   
-                if(!compare || tempPropData == null) {
-                    console.log("UPDATE --- API --- POSTED PROPERTY")
-                    try{
-                        await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
-                    }
-                    catch{
-                        e=>{
-                            console.log(e)
-                        }
-                    }
-                    
-                    if(JSON.stringify(propertyData) != {"Error": "No Property found"}){
-                        setPostedProperties(propertyData)
-                    }
+            })
+            .then(res => {
+                if(res.status == 404){
+                    setPostedProperties(null)
                 }
                 else{
-                    console.log("UPDATE --- CACHE --- POSTED PROPERTY")
-                    setPostedProperties(JSON.parse((tempPropData)))
-                }           
-            }
+                    return res.json()
+                }
+            }).then(async propertyData =>{
+                if(propertyData != undefined){
+                    
+                    //Returns no prop found when theres nothing 
+                    const tempPropData = await AsyncStorage.getItem('postedProperty')
+                    
+                    let compare = (tempPropData === JSON.stringify(propertyData))
+                    
+                    if(!compare || tempPropData == null) {
+                        console.log("UPDATE --- API --- POSTED PROPERTY")
+                        try{
+                            await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
+                        }
+                        catch{
+                            e=>{
+                                console.log(e)
+                            }
+                        }
+                        
+                        if(JSON.stringify(propertyData) != {"Error": "No Property found"}){
+                            setPostedProperties(propertyData)
+                        }
+                    }
+                    else{
+                        console.log("UPDATE --- CACHE --- POSTED PROPERTY")
+                        setPostedProperties(JSON.parse((tempPropData)))
+                    }           
+                }
 
-        }).catch(e=>{
-            console.log("ERROR --- PROFILE --- FETCHPOSTEDPROPERTIES")
-            alert(e)
-        })
+            }).catch(e=>{
+                console.log("ERROR --- PROFILE --- FETCHPOSTEDPROPERTIES")
+                alert(e)
+            })
+        }
     }
 
     //Function: Fetch favorite properties 
@@ -296,7 +304,7 @@ export default function ProfileScreen({navigation}){
     return(
         <SafeAreaView style={{backgroundColor:'white', flex:1}}>
             {/* Check if user is logged in and show differnt page*/}
-            {user != null ? 
+            {USERID != null ? 
             
             // This is when user is logged in 
             <View style={{flex: 1}}>

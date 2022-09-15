@@ -220,6 +220,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   const refreshAccessToken = async () => {
     const rt = await SecureStorage.getItem("refreshToken");
     const id = await SecureStorage.getItem("userId");
+
     if (rt != undefined) {
       setUser(id)
       connectSendbird()
@@ -266,7 +267,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   return (
 
     <NavigationContainer>
-      <UserContext.Provider value={{ user, login, logout, sb, USERID: user, preloadProperties: preloadProperties}}>
+      <UserContext.Provider value={{ login, logout, sb, USERID: user, preloadProperties: preloadProperties}}>
 
           <Stack.Navigator>
 

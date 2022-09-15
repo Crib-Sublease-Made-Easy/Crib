@@ -28,7 +28,7 @@ export default function SettingScreen({navigation, route}){
     const [messageNotification, setMessageNotification] = useState(true)
     const [newPropNotification, setNewPropNotification] = useState(true)
     const [userData, setUserData] = useState("")
-    const {user, login} = useContext(UserContext);
+    const {login} = useContext(UserContext);
 
     useEffect(()=>{
       const unsubscribe = navigation.addListener('focus', () => {
