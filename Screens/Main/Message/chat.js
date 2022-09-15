@@ -63,9 +63,9 @@ export default function ChatScreen({navigation, route}){
       console.log("USE_EFFECT CHAT")
       onChat = true
       getGroupChannel()
-      if(sb != null && sb != undefined){
-        sb.addChannelHandler('channels', channelHandler);     
-      }
+     
+      sb.addChannelHandler('channels', channelHandler);     
+      
       
     }, [])
 
