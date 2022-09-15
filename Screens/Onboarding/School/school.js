@@ -31,7 +31,7 @@ export default function SchoolScreen({navigation, route}){
 
     function checkInput(){
         if(school.length > 50){
-            alert("Name of school cannot be greater than 50 character.")
+            alert("Name of school cannot be greater than 50 characters.")
         }
         else{        
             navigation.navigate("Occupation",

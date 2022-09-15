@@ -751,7 +751,7 @@ export default function PropertyPostingScreen({ navigation }) {
                         <Heading>More Details</Heading>
                         {/* <FontAwesomeIcon icon=blogger color='white' /> */}
                         <InfoText>
-                            Select all of the amenitie that are available
+                            Select all of the amenities that are available
                             at this sublease property. Not all may apply
                         </InfoText>
                         <InputContainer >
