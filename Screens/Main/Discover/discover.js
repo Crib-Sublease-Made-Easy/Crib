@@ -387,12 +387,13 @@ export default function DiscoverScreen({navigation}){
             let spacelessLocation = locationQueryName.replaceAll(" ", "+");
             var config = {
                 method: 'get',
-                url: `https://maps.googleapis.com/maps/api/geocode/json?address=${spacelessLocation}&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`,
+                url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${spacelessLocation}`,
             };
             axios(config)
             .then(async (response)=> {           
-                let lat = response.data.results[0].geometry.location.lat;
-                let long = response.data.results[0].geometry.location.lng
+                console.log(JSON.stringify(response))
+                let lat = response.data.lat;
+                let long = response.data.lng;
                 setCurrentLocation([lat,long])
                 moveMap(lat - 0.015, long)
             })

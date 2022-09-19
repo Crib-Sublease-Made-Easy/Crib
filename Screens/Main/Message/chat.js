@@ -255,7 +255,21 @@ export default function ChatScreen({navigation, route}){
 
     async function leaveChat(){
         onChat= false
-        await channel.hide()
+        await fetch(`https://crib-llc.herokuapp.com/chat/hide/${url}`, {
+          method: 'GET',
+          headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          },
+          body:JSON.stringify({
+              user_id: USERID
+          })                
+      }) 
+          .then(res => res.json()).then(async response =>{
+          
+          })
+          .catch(e=>{
+          })
         await channel.leave()
       
         alert("You have successfully left this chat.")
