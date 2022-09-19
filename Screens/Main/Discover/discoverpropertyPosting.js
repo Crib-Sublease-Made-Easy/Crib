@@ -439,14 +439,13 @@ export default function PropertyPostingScreen({ navigation }) {
             };
             axios(config)
             .then(async (locInfo)=> {           
-                setLatLong([locInfo.data.results[0].geometry.location.lat, locInfo.data.results[0].geometry.location.lng])
+                setLatLong([locInfo.data.lat, locInfo.data.lng])
 
             })
             .catch(function (error) {
                 
                 console.log(error);
             });
-
         }
     }
 
