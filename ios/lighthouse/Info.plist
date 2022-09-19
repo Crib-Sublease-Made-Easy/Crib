@@ -44,7 +44,7 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>To identify user location so application can search nearby results</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Use user's location to pan to user's location in the map</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Photo Library Access Profile Pic</string>
 	<key>UIAppFonts</key>

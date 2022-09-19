@@ -155,7 +155,14 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
 });
 
-  useEffect(() => {
+  useEffect(async () => {
+    await SecureStorage.removeItem("studio.jpg");
+    await SecureStorage.removeItem("accessToken");
+    await SecureStorage.removeItem("firstName");
+    await SecureStorage.removeItem("lastName");
+    await SecureStorage.removeItem("email");
+    await SecureStorage.removeItem("userId");
+    await SecureStorage.removeItem("profilePic");
     console.log("INITIALIZE APP.JS USEEFFECT")
 
     // refreshAccessToken()

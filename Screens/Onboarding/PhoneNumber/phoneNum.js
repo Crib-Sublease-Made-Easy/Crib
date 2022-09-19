@@ -53,8 +53,19 @@ export default function PhoneNumberScreen({navigation, route}){
         .then(res => res.json()).then(data =>{
             console.log("STEP1");
             console.log(data);
-            if(data.response.success != true){
-                alert("invalid in step 1.")
+            if(data.error != undefined){
+                if(data.error.error_code == 60027){
+                    alert("Invalid Email Address")
+
+                    navigation.navigate("Email", {
+                        firstName: route.params.firstName, 
+                        lastName: route.params.lastName,
+                        age: route.params.age,
+                        gender: route.params.gender,
+                        profilePic: route.params.profilePic,
+                        school: route.params.school,
+                        occupation: route.params.occupation});
+                }
             }
             else{
                 console.log("GOING TO STEP2")
