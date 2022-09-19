@@ -341,10 +341,10 @@ export default function ProfileScreen({navigation}){
                         <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
                         <RowItemName>Post a property</RowItemName>
                     </RowContainer>
-                    <RowContainer onPress={()=> onShare()}>    
+                    {/* <RowContainer onPress={()=> onShare()}>    
                         <Ionicons name="share"  size={25} color={DARKGREY}/>
                         <RowItemName>Share Crib</RowItemName>
-                    </RowContainer>
+                    </RowContainer> */}
                 </View>
 
                 <Container>
