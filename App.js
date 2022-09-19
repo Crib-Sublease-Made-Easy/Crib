@@ -191,6 +191,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     
     const launched = await AsyncStorage.getItem("launched")
    
+    console.log(launched)
 
     if (launched == null){
       await SecureStorage.removeItem("studio.jpg");

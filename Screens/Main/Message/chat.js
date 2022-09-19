@@ -279,7 +279,7 @@ export default function ChatScreen({navigation, route}){
                 <Header>{channel.members[0].nickname}</Header>
 
                 :
-                (channel.members[0].userId == USERID ? 
+                (channel.members[0] == undefined || channel.members[0].userId == USERID ? 
                 deletedChat(channel): null)
           :
           null

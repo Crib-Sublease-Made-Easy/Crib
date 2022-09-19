@@ -239,7 +239,7 @@ export default function DiscoverScreen({navigation}){
             }
         }) 
         .then(res => res.json()).then(properties =>{
-           
+            console.log("HAPPY", properties)
             setFilteredProperties(properties)
 
             properties.forEach(async propData => {
