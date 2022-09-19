@@ -143,6 +143,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   const data = notification.additionalData
   // console.log("additionalData: ", data);
   // Complete with null means don't show a notification.
+  console.log("SOMETHING")
   if(!onChat){
     console.log("WILL SHOW MSG ")
 
@@ -156,6 +157,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
   useEffect(() => {
     console.log("INITIALIZE APP.JS USEEFFECT")
+
     // refreshAccessToken()
     const subscription = AppState.addEventListener("change", nextAppState => {
 

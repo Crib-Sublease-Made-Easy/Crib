@@ -49,6 +49,7 @@ export default function MessageScreen({navigation, route}){
             fetchConvos()
             getFirstName()
             
+            
         });
         sb.addChannelHandler('channels', channelHandler);
 
@@ -78,10 +79,9 @@ export default function MessageScreen({navigation, route}){
        
             setUserId(USERID)
             let listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
-            listQuery.hiddenChannelFilter = 'unhidden_only'
             listQuery.includeEmpty = false;
             listQuery.order = 'latest_last_message'; 
-            listQuery.limit = 15;   // The value of pagination limit could be set up to 100.
+            listQuery.limit = 30;   // The value of pagination limit could be set up to 100.
             
             if (listQuery.hasNext) {
                 listQuery.next(async function(groupChannels, error) {
@@ -89,8 +89,11 @@ export default function MessageScreen({navigation, route}){
                         // Handle error.
                         console.log("error", error)
                     }
-
-                    setConvoList(groupChannels)
+                    var gcs = groupChannels.filter(function(item) {
+                        return item.members.length == 2;
+                      });
+                    setConvoList(gcs)
+                    console.log(groupChannels)
                 });
             }
         }
@@ -129,7 +132,7 @@ export default function MessageScreen({navigation, route}){
                             <FastImage source = {{uri: item.coverUrl, priority: FastImage.priority.high}} style = {{ width: WIDTH*0.14, height: WIDTH*0.14, borderRadius: WIDTH*0.07 }}/>
                         </FlatlistLeft>
                         <FlatlistRight>
-                        <LocationText numberOfLines={1}> {item.members[0].nickname == firstName ? item.members[1].nickname : item.members[0].nickname} - {item.name}</LocationText>
+                        <LocationText numberOfLines={1}> {item.members.length < 2 ? "[DELETED] " :(item.members[0].nickname == firstName ? item.members[1].nickname : item.members[0].nickname)} - {item.name}</LocationText>
 
                             {item.lastMessage != undefined &&
                             <TextAndTime>
