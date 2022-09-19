@@ -160,14 +160,16 @@ export default function ChatScreen({navigation, route}){
     }
 
     const deletedChat = async (groupChannel) => {
+      console.log("delete chat" , groupChannel)
       onChat= false
       await groupChannel.leave()
-      navigation.navigate("Message")
+      navigation.navigate("MessageTabs")
       alert("The other user has left the chat.")
     }
 
     const getPropertyInfo = async (propId, gc) =>{
-      
+      console.log("getpropertyinfo" , propId)
+      console.log("getpropertyinfo" , gc)
       await fetch('https://crib-llc.herokuapp.com/properties/' + propId, {
         method: 'POST',
         headers: {
@@ -181,8 +183,9 @@ export default function ChatScreen({navigation, route}){
           if(loading == true){
             onChat = false
             alert("This property is unavailable.")
-            await gc.leave()
+            
             navigation.goBack()
+            await gc.leave()
           } 
         } else {
           setPropertyInfo(response)
