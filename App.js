@@ -89,6 +89,7 @@ const Stack = createSharedElementStackNavigator();
 
 const appId = '58220273-043E-4162-AFFC-B4035FD78760';
 import OneSignal from 'react-native-onesignal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function App() {
@@ -155,14 +156,9 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
 });
 
-  useEffect(async () => {
-    await SecureStorage.removeItem("studio.jpg");
-    await SecureStorage.removeItem("accessToken");
-    await SecureStorage.removeItem("firstName");
-    await SecureStorage.removeItem("lastName");
-    await SecureStorage.removeItem("email");
-    await SecureStorage.removeItem("userId");
-    await SecureStorage.removeItem("profilePic");
+  useEffect(() => {
+   
+    cleanup()
     console.log("INITIALIZE APP.JS USEEFFECT")
 
     // refreshAccessToken()
@@ -191,6 +187,28 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
   }, [user])
 
+  async function cleanup(){
+    
+    const launched = await AsyncStorage.getItem("launched")
+   
+
+    if (launched == null){
+      await SecureStorage.removeItem("studio.jpg");
+      await SecureStorage.removeItem("accessToken");
+      await SecureStorage.removeItem("refreshToken")
+      await SecureStorage.removeItem("firstName");
+      await SecureStorage.removeItem("lastName");
+      await SecureStorage.removeItem("email");
+      await SecureStorage.removeItem("userId");
+      await SecureStorage.removeItem("profilePic");
+      await AsyncStorage.clear()
+      await AsyncStorage.setItem("launched", 'true');
+
+    }
+    else{
+      await AsyncStorage.setItem("launched", 'false');
+    }
+  }
 
   const disconnectSendbird = async () =>{
     const UID = await SecureStorage.getItem("userId");

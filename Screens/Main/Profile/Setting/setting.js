@@ -49,8 +49,14 @@ export default function SettingScreen({navigation, route}){
     const logout =  async() => {
       disconnectSendbird()
       OneSignal.disablePush(true);
-      await SecureStorage.removeItem("accessToken")
+      await SecureStorage.removeItem("studio.jpg");
+      await SecureStorage.removeItem("accessToken");
       await SecureStorage.removeItem("refreshToken")
+      await SecureStorage.removeItem("firstName");
+      await SecureStorage.removeItem("lastName");
+      await SecureStorage.removeItem("email");
+      await SecureStorage.removeItem("userId");
+      await SecureStorage.removeItem("profilePic");
       await AsyncStorage.clear()
       await login(null)
       navigation.reset(
