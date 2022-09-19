@@ -278,9 +278,11 @@ export default function ChatScreen({navigation, route}){
                 <Header>{channel.members[1].nickname}</Header>
                 :
                 <Header>{channel.members[0].nickname}</Header>
+
                 :
                 (console.log("CHANNELLLLLL", channel),
                 deletedChat(channel))
+
           :
           null
           }
