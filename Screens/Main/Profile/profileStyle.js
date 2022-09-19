@@ -314,3 +314,9 @@ export const PostedFavContainer = styled.View`
   width: ${WIDTH}px
   height: ${HEIGHT*0.45}px
 `
+export const StyledView = styled.View`
+  background-color: black;
+  flex: 1;
+  padding-bottom: ${({ insets }) => insets.bottom}px;
+  padding-top: ${({ insets }) => insets.top}px;
+`;

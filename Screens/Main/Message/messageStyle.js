@@ -135,3 +135,10 @@ export const NoUserText = styled.Text`
     font-weight: 700
     font-size: ${HEIGHT*0.015}px;
 `
+
+export const StyledView = styled.View`
+  background-color: black;
+  flex: 1;
+  padding-bottom: ${({ insets }) => insets.bottom}px;
+  padding-top: ${({ insets }) => insets.top}px;
+`;

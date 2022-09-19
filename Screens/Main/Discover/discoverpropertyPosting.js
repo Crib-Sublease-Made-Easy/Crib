@@ -352,10 +352,10 @@ export default function PropertyPostingScreen({ navigation }) {
     async function selectGallery(name) {
         console.log(name)
         ImagePicker.openPicker({
-            width: 812,
-            height: 812,
+            width: 600,
+            height: 600,
             cropping:true,
-            compressImageQuality: 0.8
+            compressImageQuality: 0.7
             
           }).then(image => {
             console.log(image.path)

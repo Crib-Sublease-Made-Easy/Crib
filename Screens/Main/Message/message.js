@@ -17,6 +17,9 @@ import {
 import {UserContext} from '../../../UserContext';
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import FastImage from 'react-native-fast-image'
 
 import Lottie from 'lottie-react-native';
 
@@ -26,10 +29,10 @@ const WIDTH = Dimensions.get('screen').width;
 
 import { InboxTitle, FlatlistItemContainer, FlatlistUnread, FlatlistLeft, FlatlistRight, 
     LocationText,TextAndTime, LastMessageTime, DefaultPostFavText, NoUserViewContainer,
-LoginContainer, SignupContainer, LoginText, SignupText, NoUserText } from './messageStyle';
+LoginContainer, SignupContainer, LoginText, SignupText, NoUserText, StyledView } from './messageStyle';
 
 export default function MessageScreen({navigation, route}){
-
+    const insets = useSafeAreaInsets();
     const {sb, USERID} = useContext(UserContext);
 
     const [convoList, setConvoList] = useState([])
@@ -42,8 +45,9 @@ export default function MessageScreen({navigation, route}){
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
             onChat = false
-            console.log("FOCUSSSSSS")            
+            console.log("FOCUSSSSSS")       
             fetchConvos()
+            getFirstName()
             
         });
         sb.addChannelHandler('channels', channelHandler);
@@ -94,7 +98,7 @@ export default function MessageScreen({navigation, route}){
     },[])
 
     return(
-        <SafeAreaView style={{backgroundColor:'white', flex: 1}}>
+        <StyledView style={{backgroundColor:'white', flex: 1}} insets={insets}>
 
             
             
@@ -122,7 +126,7 @@ export default function MessageScreen({navigation, route}){
                         </View>
                         <FlatlistLeft>
 
-                            <Image source = {{uri: item.coverUrl}} style = {{ width: WIDTH*0.14, height: WIDTH*0.14, borderRadius: WIDTH*0.07 }}/>
+                            <FastImage source = {{uri: item.coverUrl, priority: FastImage.priority.high}} style = {{ width: WIDTH*0.14, height: WIDTH*0.14, borderRadius: WIDTH*0.07 }}/>
                         </FlatlistLeft>
                         <FlatlistRight>
                         <LocationText numberOfLines={1}> {item.members[0].nickname == firstName ? item.members[1].nickname : item.members[0].nickname} - {item.name}</LocationText>
@@ -166,6 +170,6 @@ export default function MessageScreen({navigation, route}){
                 </SignupContainer>
             </NoUserViewContainer>
             }
-        </SafeAreaView>
+        </StyledView>
     )
 }

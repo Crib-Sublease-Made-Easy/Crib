@@ -14,6 +14,11 @@ import { UserContext } from '../../../UserContext';
 import SecureStorage from 'react-native-secure-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+
+import FastImage from 'react-native-fast-image'
+
 import { PRIMARYCOLOR, Header, HeaderContainer, HEIGHT, WIDTH, MEDIUMGREY } from '../../../sharedUtils';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -27,6 +32,7 @@ Ionicons.loadFont()
 import Lottie from 'lottie-react-native';
 
 import {
+StyledView,
 Container,
 SlidingContainer, 
 PostContainer, 
@@ -61,6 +67,7 @@ import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, DARKGREY } from '../../../sharedUtil
 
 
 export default function ProfileScreen({navigation}){
+    const insets = useSafeAreaInsets();
     const scrollviewRef = useRef(null)
     const {USERID, user} = useContext(UserContext);
 
@@ -76,17 +83,12 @@ export default function ProfileScreen({navigation}){
     const [profilePic, setProfilePic] = useState(null)
    
     useEffect(()=>{
-        console.log(new Date().getTime())
+    
         const unsubscribe = navigation.addListener('focus', () => {
             console.log("REFRESH --- USEEFFECT")
-            //If user is defined then retrieve user info
-            console.log("hello")
-            console.log(user != null)
-           
-            getTokens()
-                     
+            getTokens()              
         });
-        console.log(new Date().getTime())
+       
         return unsubscribe; 
     }, [navigation])
 
@@ -119,6 +121,7 @@ export default function ProfileScreen({navigation}){
         const UID = await SecureStorage.getItem("userId")
 
         if(refreshToken != undefined){
+            
             //Get user favorite properties
             fetchFavoriteProperties(accessToken)
             if(accessToken != null && UID != null){
@@ -174,7 +177,7 @@ export default function ProfileScreen({navigation}){
     
     //Funciton: Get user's posted proeprty
     async function fetchPostedProperties(id, token){
-        if(id != null && id != undefined && token != undefined){
+      
             await fetch('https://crib-llc.herokuapp.com/properties/' + id, {
             method: 'POST',
             headers: {
@@ -223,7 +226,7 @@ export default function ProfileScreen({navigation}){
                 console.log("ERROR --- PROFILE --- FETCHPOSTEDPROPERTIES")
                 alert(e)
             })
-        }
+        
     }
 
     //Function: Fetch favorite properties 
@@ -302,7 +305,7 @@ export default function ProfileScreen({navigation}){
         scrollviewRef.current.scrollTo({x:WIDTH})
     }
     return(
-        <SafeAreaView style={{backgroundColor:'white', flex:1}}>
+        <StyledView style={{backgroundColor:'white', flex: 1}} insets={insets}>
             {/* Check if user is logged in and show differnt page*/}
             {USERID != null ? 
             
@@ -311,7 +314,7 @@ export default function ProfileScreen({navigation}){
                 <HeaderContainer style={{borderBottomWidth: 0}}>
                     <HeaderIndividualContainer style={{justifyContent:'flex-end', width: '15%'}}>
                         <Pressable  hitSlop={WIDTH*0.05} onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
-                        <Image source={{uri: profilePic}} 
+                        <FastImage source={{uri: profilePic, priority: FastImage.priority.high}} 
                         style={{width:WIDTH*0.1, height: WIDTH*0.1, borderRadius: WIDTH*0.05, alignSelf:'center', backgroundColor:EXTRALIGHT}} />
                         </Pressable>
                     </HeaderIndividualContainer> 
@@ -367,8 +370,8 @@ export default function ProfileScreen({navigation}){
                             {/* When user have a property */}
                             {postedProperties != null ?
                                 <PostedPropertyCard onPress={()=>navigation.navigate("PropertyDetail", {data: postedProperties, uid: userData._id})}>
-                                    <Image key={"defaultPropPic"}
-                                    source={{uri: postedProperties == null ? null : postedProperties.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
+                                    <FastImage key={"defaultPropPic"}
+                                    source={{uri: postedProperties == null ? null : postedProperties.propertyInfo.imgList[0], priority: FastImage.priority.medium}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
                                     <PostedPropertyInfoContainer>
                                         <PropertyName>{postedProperties.propertyInfo.loc.streetAddr}</PropertyName>
                                         <DatePriceText>{postedProperties.propertyInfo.loc.secondaryTxt}</DatePriceText>
@@ -417,7 +420,7 @@ export default function ProfileScreen({navigation}){
                                     {favoriteProperties.map((item, index)=>(
                                     <FavPropertyCard key={item.propertyInfo._id + index}>
                                         <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
-                                        <Image source={{uri: item.propertyInfo.imgList[0]}} 
+                                        <FastImage source={{uri: item.propertyInfo.imgList[0], priority: FastImage.priority.low}} 
                                         style={{width:'100%', height:'100%', borderTopLeftRadius:10, borderBottomLeftRadius:10}}/>
                                         </Pressable>
                                         <FavPropertyCardContent onPress={()=> navigation.navigate("PropertyDetail", {data: item, uid: userData._id})}>
@@ -467,7 +470,7 @@ export default function ProfileScreen({navigation}){
 
             </NoUserViewContainer>
         }
-        </SafeAreaView>
+        </StyledView>
     )
 }
 

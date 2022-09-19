@@ -19,8 +19,10 @@ import {
     
   } from 'react-native';
 
+import FastImage from 'react-native-fast-image'
+
+
 import styled from 'styled-components/native';
-import { SharedElement } from 'react-navigation-shared-element';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
@@ -250,7 +252,6 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     }
 
     function toogleCard(){
-      console.log(translateY.value)
       if(translateY.value > HEIGHT*0.5){
 
         translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
@@ -274,10 +275,15 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
             onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId, incrementViewCount : true, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0])), currentLocation: currentLocation})} >
                
               <PropertyImageContainer >
-                <Image  
+                <FastImage  
+                source={{
+                  uri: data.item.propertyInfo.imgList[0],
+                  priority: FastImage.priority.high,
+                }} 
                 style={{width:WIDTH*0.9, height:WIDTH*0.6, borderRadius:15, backgroundColor:LIGHTGREY,
-                opacity: 1
-                }} source={{uri:data.item.propertyInfo.imgList[0]}}/>
+                opacity: 1,
+                }}
+                />
                 
                   <OpenMapIconContainer hitSlop={WIDTH*0.05} onPress={()=>MoveMapToPin(data.item)}>
                       <FontAwesome name='location-arrow' size={HEIGHT*0.02} color='white'/>

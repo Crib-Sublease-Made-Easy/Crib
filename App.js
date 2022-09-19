@@ -239,7 +239,14 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
           alert(err)
         }
       })
-    
+      
+      //Prefetch basic info
+      const cachedProfilePic = await SecureStorage.getItem("profilePic");
+      if(cachedProfilePic != null){
+        const success = await Image.prefetch(cachedProfilePic);
+        console.log("PREFETCH --- APP.JS --- PROFILEPIC")
+      }
+
        
     }
     else{
@@ -274,7 +281,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             <Stack.Screen
               name="DiscoverTabs"
               component={DiscoverTab}
-              options={{headerShadowVisible: false,cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter, headerShown:false }}
+              options={{headerShadowVisible: false,cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter, headerShown:false}}
             />
 
             <Stack.Screen
@@ -286,7 +293,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             <Stack.Screen
               name="MessageTabs"
               component={MessageTab}
-              options={{cardStyleInterpolator: forFade, headerStyle:{backgroundColor:'red'} }}
+              options={{cardStyleInterpolator: forFade, headerStyle:{backgroundColor:'red'},  }}
             />
 
 

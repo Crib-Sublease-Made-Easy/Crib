@@ -8,6 +8,8 @@ import {
     Animated as RNAnimated
 } from 'react-native';
 
+import FastImage from 'react-native-fast-image'
+
 import SecureStorage from 'react-native-secure-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -17,10 +19,6 @@ import {UserContext} from '../../../UserContext'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import Lottie from 'lottie-react-native';
-
-
-
 import { Container, PropertyDescription, CardSectionOne, CardTitle, LocationDistanceContainer,
         LocationText, BedAndBathContainer, CardSectionTwo, InfoHeaderText,
             InfoContainer, InfoText, AmenitiesItem, Footer,
@@ -29,13 +27,9 @@ import { Container, PropertyDescription, CardSectionOne, CardTitle, LocationDist
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
            StickyHeaderContainer,  StickyHeaderIcon} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import getFAAmenities, { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY } from '../../../sharedUtils';
+import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY } from '../../../sharedUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBath, faBed, faEye, faFire, faFireFlameCurved, faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
-import { faWatchmanMonitoring } from '@fortawesome/free-brands-svg-icons';
-import Animated from 'react-native-reanimated';
-
-const PRIMARYGREY = '#5e5d5d'
 
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
@@ -48,13 +42,12 @@ export default function PropertyDetailScreen({navigation, route}){
             onChat = false 
         });
    
-      fetchProperties()
-      if(USERID != null){
+        fetchProperties()
         getTokens()
-      }
+      
       return unsubscribe
     }, [])
-    const imageOpacityTranslation = useRef(new RNAnimated.Value(0)).current;
+    
     const flatListRef = useRef(null)
     const [propData, setPropData] = useState(route.params.data.propertyInfo);
     const postedUserData = route.params.data.userInfo;
@@ -67,11 +60,12 @@ export default function PropertyDetailScreen({navigation, route}){
     
     const createConversation = async () =>{
 
-        if(USERID != null){
+        //Check if the user is signed in or not
+        const rt  = SecureStorage.getItem("refressToken");
 
-        
+        if(rt != null){
+
             var userIds = [USERID, propData.postedBy]
-            
             sb.GroupChannel.createChannelWithUserIds(userIds, true, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
                 if (error) {
                     // Handle error.
@@ -93,18 +87,6 @@ export default function PropertyDetailScreen({navigation, route}){
         }
     }
 
-    function changeImageOpacity(){
-
-        RNAnimated.timing(imageOpacityTranslation,{
-            toValue:1,
-            bounciness:0,
-            delay:100,
-            useNativeDriver: true,
-            duration:400
-        }).start()
-       
-    }
-
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("accessToken");
         if (USERID != null && accessToken != null){
@@ -117,7 +99,6 @@ export default function PropertyDetailScreen({navigation, route}){
             }
             }) 
             .then(res => res.json()).then(async userData =>{
-                console.log(userData)
                 if(userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) == -1){
                     setLiked(false)
                 }
@@ -250,7 +231,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 bouncesZoom={1}
                 scrollEventThrottle={5}
                 >
-                    <Lottie source={require('../../../ImageLoading.json')} autoPlay loop={2}  style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/>
+                    {/* <Lottie source={require('../../../ImageLoading.json')} autoPlay loop={2}  style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/> */}
 
                     <View style={{height:HEIGHT*0.35, width:WIDTH}}>
                         <FlatList 
@@ -262,11 +243,13 @@ export default function PropertyDetailScreen({navigation, route}){
                         renderItem={({item})=>(
                            
                             <View style={{width:WIDTH, height:HEIGHT*0.35,justifyContent:'center'}}>
-                                <RNAnimated.Image onLoadEnd={changeImageOpacity} source={{uri: item}} style={{width:WIDTH, height:HEIGHT*0.35, 
-                                opacity: imageOpacityTranslation.interpolate({
-                                    inputRange:[0,1],
-                                    outputRange:[0,1]
-                                })}} />
+                                <FastImage 
+                                source={{
+                                    uri: item,
+                                    priority: FastImage.priority.high,
+                                }} 
+                                style={{width:'100%', height:'100%', 
+                                }}/>
                             </View>
                         )}
                         snapToAlignment="center"

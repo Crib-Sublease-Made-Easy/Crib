@@ -147,7 +147,6 @@ export default function DiscoverScreen({navigation}){
     const [discoverSearchVisible, setDiscoverSearchVisible] = useState(false)
 
     useEffect(()=>{
-        prefetch();
         setFlatlistRefreshing(true)
         //Loading initial batch of properties
         loadProperty()
@@ -167,15 +166,7 @@ export default function DiscoverScreen({navigation}){
         };
     },[currentLocation])
 
-    async function prefetch(){
-        const cachedProfilePic = await AsyncStorage.getItem('profilePic');
-        if(cachedProfilePic != null){
-            const profileImagePrefetch = await Image.prefetch(cachedProfilePic);
-            
-            console.log(profileImagePrefetch)
-        }
-        
-    }
+
     function dateCompare(date1, date2){
         let d1 = date1
         let d2 = date2
@@ -248,9 +239,20 @@ export default function DiscoverScreen({navigation}){
             }
         }) 
         .then(res => res.json()).then(properties =>{
-
            
             setFilteredProperties(properties)
+
+            properties.forEach(async propData => {
+
+                let imgList = propData.propertyInfo.imgList
+                imgList.forEach(async element => {
+                    const success = await Image.prefetch(element)
+                    console.log(success)
+                });
+
+                
+               
+            });
             
             
         })
@@ -258,9 +260,11 @@ export default function DiscoverScreen({navigation}){
             console.log("ERROR --- DISCOVER --- loadProperty")
             alert(e)
         })
+       
         setTimeout(()=>{
             setLoading(false)
         },2000)
+       
     },[currentLocation])
 
     //Load more properties when threshold is reached in propertycard page
