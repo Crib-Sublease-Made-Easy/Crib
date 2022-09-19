@@ -149,7 +149,7 @@ export default function ChatScreen({navigation, route}){
             await groupChannel.markAsRead();
           setChannel(groupChannel)
           setReceiverID(groupChannel.members[0].userId == USERID ? groupChannel.members[1].userId : groupChannel.members[0].userId)      
-          await getPropertyInfo(groupChannel.data)
+          await getPropertyInfo(groupChannel.data, groupChannel)
           var listQuery = groupChannel.createPreviousMessageListQuery();
             setQuery(listQuery);
             fetchConvos(listQuery)
@@ -166,7 +166,7 @@ export default function ChatScreen({navigation, route}){
       alert("The other user has left the chat.")
     }
 
-    const getPropertyInfo = async (propId) =>{
+    const getPropertyInfo = async (propId, gc) =>{
       
       await fetch('https://crib-llc.herokuapp.com/properties/' + propId, {
         method: 'POST',
@@ -181,7 +181,7 @@ export default function ChatScreen({navigation, route}){
           if(loading == true){
             onChat = false
             alert("This property is unavailable.")
-            await channel.leave()
+            await gc.leave()
             navigation.goBack()
           } 
         } else {
@@ -255,21 +255,6 @@ export default function ChatScreen({navigation, route}){
 
     async function leaveChat(){
         onChat= false
-        await fetch(`https://crib-llc.herokuapp.com/chat/hide/${url}`, {
-          method: 'GET',
-          headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          },
-          body:JSON.stringify({
-              user_id: USERID
-          })                
-      }) 
-          .then(res => res.json()).then(async response =>{
-          
-          })
-          .catch(e=>{
-          })
         await channel.leave()
       
         alert("You have successfully left this chat.")
