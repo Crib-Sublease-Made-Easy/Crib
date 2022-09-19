@@ -102,7 +102,7 @@ export default function DiscoverScreen({navigation}){
     //This controls preview modal open opacity when the location icon in propertycard is pressed
     const opacityTranslation = useRef(new RNAnimated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
-    const [currentLocation, setCurrentLocation] = useState([37.7749,-122.4194])
+    const [currentLocation, setCurrentLocation] = useState([43.0747,89.3840])
     //The location of the user input in string
     const [locationQuery, setlocationQuery] = useState("Search Location ...")
     //The data of the pins to acess a field its pinsData.item.field
