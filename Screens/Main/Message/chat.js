@@ -185,6 +185,7 @@ export default function ChatScreen({navigation, route}){
     const deletedChat = async (groupChannel) => {
       console.log("delete chat" , groupChannel)
       onChat= false
+    
       await groupChannel.leave()
       navigation.navigate("Message")
       alert("The other user has left the chat.")
@@ -336,7 +337,7 @@ export default function ChatScreen({navigation, route}){
       />  
       
       }
-    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} leaveChat={leaveChat} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
+    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(fgalse)} leaveChat={leaveChat} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
     </SafeAreaView>
     )
 }
