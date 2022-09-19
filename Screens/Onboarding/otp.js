@@ -134,8 +134,6 @@ export default function OTPScreen({navigation, route}){
                 console.log("OTP",data)
                 try{
                     OneSignal.disablePush(false);
-                    await SecureStorage.setItem("userId", data.createdUser._id)
-                    await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
                     //Create sendbird user here with userid
                     //store user info in
 
