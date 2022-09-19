@@ -66,7 +66,6 @@ export default function ChatScreen({navigation, route}){
      
       sb.addChannelHandler('channels', channelHandler);     
       
-      assignRecipient()
     }, [])
 
     const channelHandler = new sb.ChannelHandler();
@@ -89,6 +88,7 @@ export default function ChatScreen({navigation, route}){
     const assignRecipient = () =>{
       if(channel != null && channel.members.length == 2){
         if(channel.members[0].userId == USERID){
+          console.log("INSIDEEEE")
           setRecipient(channel.members[1].nickname)
         }else{
           setRecipient(channel.members[0].nickname)
@@ -166,7 +166,20 @@ export default function ChatScreen({navigation, route}){
           }
         }
         setLoading(false)
+
+
+        if(groupChannel != null && groupChannel.members.length == 2){
+          if(groupChannel.members[0].userId == USERID){
+            console.log("INSIDEEEE")
+            setRecipient(groupChannel.members[1].nickname)
+          }else{
+            setRecipient(groupChannel.members[0].nickname)
+          }
+        } else{
+          deletedChat(groupChannel)
+        }
       })
+
     }
 
     const deletedChat = async (groupChannel) => {
