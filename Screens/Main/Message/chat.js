@@ -181,11 +181,7 @@ export default function ChatScreen({navigation, route}){
           if(loading == true){
             onChat = false
             alert("This property is unavailable.")
-<<<<<<< HEAD
-            
-=======
             await gc.leave()
->>>>>>> 3d534615df15a128cf734327cce6b2b34d1868b1
             navigation.goBack()
           } 
         } else {

@@ -432,28 +432,21 @@ export default function PropertyPostingScreen({ navigation }) {
     async function LocationToLatLong(name){
         const accessToken = await SecureStorage.getItem("accessToken");
         if(accessToken != null && name != null && name != undefined){
-            await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${name}&key=AIzaSyBLCfWwROY3Bfvq_TOnDjX90wn2nCJF2nA`, {
-            method: 'GET',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + accessToken,
-            },
-            
-            }) 
-            .then(res => res.json()).then(locInfo=>{
-                console.log("KK", locInfo)
-                if(locInfo.status == "ZERO_RESULTS"){
-                    alert("Invalid address.")
-                }
-                else{
-                    setLatLong([locInfo.results[0].geometry.location.lat, locInfo.results[0].geometry.location.lng])
-                }
+            let spacelessLocation = name.replaceAll(" ", "+");
+            var config = {
+                method: 'get',
+                url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${name}`,
+            };
+            axios(config)
+            .then(async (locInfo)=> {           
+                setLatLong([locInfo.data.results[0].geometry.location.lat, locInfo.data.results[0].geometry.location.lng])
+
             })
-        
-            .catch(e=>{
-                alert(e)
-            })
+            .catch(function (error) {
+                
+                console.log(error);
+            });
+
         }
     }
 
