@@ -183,9 +183,8 @@ export default function ChatScreen({navigation, route}){
           if(loading == true){
             onChat = false
             alert("This property is unavailable.")
-            
-            navigation.goBack()
             await gc.leave()
+            navigation.goBack()
           } 
         } else {
           setPropertyInfo(response)
@@ -280,9 +279,8 @@ export default function ChatScreen({navigation, route}){
                 <Header>{channel.members[0].nickname}</Header>
 
                 :
-                (console.log("CHANNELLLLLL", channel),
-                deletedChat(channel))
-
+                (channel.members[0].userId == USERID ? 
+                deletedChat(channel): null)
           :
           null
           }

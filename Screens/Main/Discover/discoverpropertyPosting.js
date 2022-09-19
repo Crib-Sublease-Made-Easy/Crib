@@ -95,6 +95,7 @@ export default function PropertyPostingScreen({ navigation }) {
     const [propertyLivingroomImage, setPropertyLivingroomImage] = useState(null)
     const [propertyKitchenImage, setPropertyKitchenImage] = useState(null)
     const [propertyFloorplanImage, setPropertyFloorPlanImage] = useState(null)
+    const [locationPressed, setLocationPressed] = useState(false)
     const [latLong, setLatLong] = useState([])
 
     const [loading, setLoading] = useState(false)
@@ -115,7 +116,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
 
     function moveScrollView(val) {
-        console.log(val)
+       
         console.log(propertyPrice)
         Keyboard.dismiss()
         if (val < 0) {
@@ -126,6 +127,14 @@ export default function PropertyPostingScreen({ navigation }) {
         }
         else if(val == 3 && propertyLocation== ""){
             alert("Must enter property location.")
+        }
+        else if(val == 3 && !locationPressed){
+            console.log("hello")
+            setpropertyLocation(autocompleteLocation[0].description)
+            setpropertyMainAddr(autocompleteLocation[0].structured_formatting.main_text)
+            setpropertySecondaryAddr(autocompleteLocation[0].structured_formatting.secondary_text)
+            LocationToLatLong(autocompleteLocation[0].description)
+            setLocationPressed(true)
         }
         else if(val == 4 && (propertyBathroomImage == null || propertyBathroomImage == null ||
             propertyLivingroomImage == null || propertyKitchenImage == null)){
@@ -405,7 +414,9 @@ export default function PropertyPostingScreen({ navigation }) {
     }
 
     function moveOn(value) {
+        console.log("fefefwewf", value.description)
         console.log("II", value)
+        setLocationPressed(true)
         Keyboard.dismiss()
         // if(value.results == undefined){
         //     setpropertyLocation("")
