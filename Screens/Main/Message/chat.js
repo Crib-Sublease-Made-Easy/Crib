@@ -52,7 +52,7 @@ export default function ChatScreen({navigation, route}){
     const [typingText, setTypingText] = useState('')
     const [loading, setLoading] = useState(true)
     const [sending, setSending] = useState(false)
-
+    const [recipient, setRecipient] = useState(null)
     const [optionsModal, setOptionsModal] = useState(false)
 
     const [channel, setChannel] = useState(null)
@@ -174,7 +174,6 @@ export default function ChatScreen({navigation, route}){
       onChat= false
     
       await groupChannel.leave()
-      
       navigation.navigate("Message")
       alert("The other user has left the chat.")
     }
@@ -283,6 +282,7 @@ export default function ChatScreen({navigation, route}){
               </Pressable>
           </BackButtonContainer>
           <NameContainer>
+            <Header>{recipient}</Header>
           </NameContainer>
              
          
