@@ -66,7 +66,7 @@ export default function ChatScreen({navigation, route}){
      
       sb.addChannelHandler('channels', channelHandler);     
       
-      
+      assignRecipient()
     }, [])
 
     const channelHandler = new sb.ChannelHandler();
@@ -86,7 +86,17 @@ export default function ChatScreen({navigation, route}){
     }
 
 
-    
+    const assignRecipient = () =>{
+      if(channel != null && channel.members.length == 2){
+        if(channel.members[0].userId == USERID){
+          setRecipient(channel.members[1].nickname)
+        }else{
+          setRecipient(channel.members[0].nickname)
+        }
+      } else{
+        deletedChat(channel)
+      }
+    }
     const onSend = useCallback(async (messages = []) => {
       setSending(true)
       const accessToken = await SecureStorage.getItem("accessToken");
@@ -271,19 +281,7 @@ export default function ChatScreen({navigation, route}){
               </Pressable>
           </BackButtonContainer>
           <NameContainer>
-          {channel != null ? 
-            channel.members.length == 2 ?
-            channel.members[0].userId == USERID ?
-                <Header>{channel.members[1].nickname}</Header>
-                :
-                <Header>{channel.members[0].nickname}</Header>
 
-                :
-                (channel.members[0].userId == USERID ? 
-                deletedChat(channel): null)
-          :
-          null
-          }
           </NameContainer>
              
          
