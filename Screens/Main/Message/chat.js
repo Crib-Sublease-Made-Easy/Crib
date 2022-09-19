@@ -181,8 +181,9 @@ export default function ChatScreen({navigation, route}){
           if(loading == true){
             onChat = false
             alert("This property is unavailable.")
-            await gc.leave()
             navigation.goBack()
+            await gc.leave()
+
           } 
         } else {
           setPropertyInfo(response)
