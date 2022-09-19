@@ -438,7 +438,8 @@ export default function PropertyPostingScreen({ navigation }) {
                 url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${name}`,
             };
             axios(config)
-            .then(async (locInfo)=> {           
+            .then(async (locInfo)=> {    
+                console.log(locInfo)       
                 setLatLong([locInfo.data.results[0].geometry.location.lat, locInfo.data.results[0].geometry.location.lng])
 
             })
