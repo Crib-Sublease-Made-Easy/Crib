@@ -406,7 +406,7 @@ export const ContinueText = styled.Text`
 export const IconPressable = styled.Pressable`
 
 `
-
+//Sing up
 export const SignUpHeader = styled.View`
   width: ${WIDTH*0.9}px
   height: ${HEIGHT*0.075}px
