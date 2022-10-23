@@ -154,7 +154,6 @@ export default function ProfileScreen({navigation}){
                             }
 
                             }
-                            
                         }
                     }
                     if(userData.postedProperties != undefined){
@@ -428,12 +427,16 @@ export default function ProfileScreen({navigation}){
                                             <FavPropertyCardDateContainer>
                                                 <FavPropertyCardDateText>
                                                     {new Date(item.propertyInfo.availableFrom).getDate() + " " +
-                                                    new Date(item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) }
+                                                    new Date(item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) + " " +
+                                                    new Date(item.propertyInfo.availableFrom).getFullYear()
+                                                    }
                                                 </FavPropertyCardDateText>
                                                 <Ionicons name="arrow-forward-outline" size={15} color={DARKGREY}/>
                                                 <FavPropertyCardDateText>
                                                 {new Date(item.propertyInfo.availableTo).getDate() + " " +
-                                                    new Date(item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' }) }
+                                                    new Date(item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' }) + " " +
+                                                    new Date(item.propertyInfo.availableTo).getFullYear()
+                                                    }
                                                 </FavPropertyCardDateText>
                                             </FavPropertyCardDateContainer>
                                             <FavPropertyCardName>$ {item.propertyInfo.price}</FavPropertyCardName>

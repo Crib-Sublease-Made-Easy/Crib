@@ -130,25 +130,27 @@ export default function PropertyDetailScreen({navigation, route}){
             }) 
             .then(res => res.json()).then( async propertyData =>{
                 if(propertyData.propertyInfo.deleted){
-                    await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
-                        method: 'POST',
-                        headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': 'bearer ' + accessToken,
-                        },
-                        body: JSON.stringify({
-                            propertyId: route.params.data.propertyInfo._id,
-                        })
-                        }) 
-                        .catch(e=>{
-                            alert(e)
-                    })
+
+                    // await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
+                    //     method: 'POST',
+                    //     headers: {
+                    //     Accept: 'application/json',
+                    //     'Content-Type': 'application/json',
+                    //     'Authorization': 'bearer ' + accessToken,
+                    //     },
+                    //     body: JSON.stringify({
+                    //         propertyId: route.params.data.propertyInfo._id,
+                    //     })
+                    //     }) 
+                    //     .catch(e=>{
+                    //         alert(e)
+                    // })
                     alert("Property is deleted.")
                     navigation.goBack()
                 }
             })
             .catch(e=>{
+                console.log("ERROR --- DISCOVERPROPERTYDETAIL --- FETCHPROPERTY")
                 alert(e)
             })
         }
@@ -163,12 +165,13 @@ export default function PropertyDetailScreen({navigation, route}){
     setFlatlistIndex(roundIndex)
     }, []);
 
-    async function likeProperty(){
-        console.log("Liking")
 
+    //Check if the current property is being liked, if yes then unlike, if no then like it
+    async function likeProperty(){
+      
         const refreshToken = await SecureStorage.getItem("refreshToken");
 
-        if(refreshToken != undefined){
+        if(refreshToken != null){
             
             const accessToken = await SecureStorage.getItem("accessToken");
             if(accessToken != null){
@@ -184,13 +187,15 @@ export default function PropertyDetailScreen({navigation, route}){
                 })
                 }) 
                 .then(res => res.json()).then(async message =>{
-                    // console.log(message)
-                    console.log("hello")
+
+                    //Hacky way to ask AsyncStorage to fetch new data and disregard the old one
                     await AsyncStorage.removeItem("favoriteProperties");
                 
+                    //If unliked then like it if liked then unlike it
                     setLiked(!liked)
                 })
                 .catch(e=>{
+                    console.log("ERROR --- DISCOVERPROPERTYDETAIL --- LIKEPROPERTY")
                     alert(e)
                 })
             }
@@ -231,8 +236,6 @@ export default function PropertyDetailScreen({navigation, route}){
                 bouncesZoom={1}
                 scrollEventThrottle={5}
                 >
-                    {/* <Lottie source={require('../../../ImageLoading.json')} autoPlay loop={2}  style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/> */}
-
                     <View style={{height:HEIGHT*0.35, width:WIDTH}}>
                         <FlatList 
                         onScroll={onScroll}
@@ -269,11 +272,7 @@ export default function PropertyDetailScreen({navigation, route}){
                             ))
 
                             }
-
                         </View>
-
-
-                        
                     </View>
                     
                     <CardSectionOne>
@@ -284,7 +283,7 @@ export default function PropertyDetailScreen({navigation, route}){
                                 <Ionicons name="location"  size={20} style={{marginRight:WIDTH*0.01}}/>
                                 <TypeText style={{color:'black', fontWeight: '500',}}>{route.params.distance} miles</TypeText>
                             </View>
-                        }
+                            }
                        </View>
                         <CardTitle>{propData.loc.streetAddr}</CardTitle>
                         <LocationDistanceContainer>
@@ -315,14 +314,7 @@ export default function PropertyDetailScreen({navigation, route}){
                             <BedContainer>
                                 <BedTopContainer>
                                 <FontAwesomeIcon icon={faFireFlameSimple} size={30}/>
-                                    {/* <BedNumberText>
-                                    {
-                                    propData.numberOfViews < 1000 ?
-                                    propData.numberOfViews 
-                                    :
-                                    Math.round(propData.numberOfViews/1000) + "K"
-                                    }
-                                    </BedNumberText> */}
+                                  
                                 </BedTopContainer>
                                 <BedroomNameText>{
                                     propData.numberOfViews < 1000 ?

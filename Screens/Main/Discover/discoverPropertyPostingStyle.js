@@ -97,6 +97,7 @@ export const InfoTextSection2 = styled.Text`
 export const SearchInput = styled.TextInput`
   width: ${WIDTH*0.8}px;
   height: ${HEIGHT*0.06}px;
+  
   padding-left: ${WIDTH*0.05}px;
   color: white
   border-radius: 10px;
@@ -105,7 +106,7 @@ export const SearchInput = styled.TextInput`
 export const SearchContainer = styled.View`
   height: ${HEIGHT*0.06}px;
   width: ${WIDTH*0.9}px;
-  
+  margin-top: ${HEIGHT*0.02}px
   justify-content: center;
   align-items: center
   flex-direction: row
@@ -406,5 +407,38 @@ export const ContinueText = styled.Text`
     font-size: ${ HEIGHT*0.025}px;
     font-weight: 500
     color: white
+`
+
+export const StreetAddrInput = styled.TextInput`
     
+    width: ${WIDTH*0.9}px;
+    height: ${HEIGHT*0.05}px;
+    border-width: 1px;
+    border-color: white;
+    color: white
+    padding-horizontal: ${WIDTH*0.025}px;
+    margin-top: ${HEIGHT*0.01}px
+    border-radius: 7px;
+`
+
+export const StreetAddrHalfInput = styled.TextInput`
+    
+    width: ${WIDTH*0.4}px;
+    height: ${HEIGHT*0.05}px;
+    border-width: 1px;
+    border-color: white;
+    color: white
+    padding-horizontal: ${WIDTH*0.025}px;
+    margin-top: ${HEIGHT*0.01}px
+    border-radius: 7px;
+`
+export const LocationDetailName = styled.Text`
+    color: white;
+    font-weight: 500;
+    width: ${WIDTH*0.9}px
+`
+
+
+export const LocationDetailContainer = styled.View`
+    margin-top: ${HEIGHT*0.015}px
 `

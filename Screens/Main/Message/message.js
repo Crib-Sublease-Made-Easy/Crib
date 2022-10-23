@@ -15,7 +15,7 @@ import {
   AppState
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import SecureStorage from 'react-native-secure-storage'
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -93,7 +93,7 @@ export default function MessageScreen({navigation, route}){
                         return item.members.length == 2;
                       });
                     setConvoList(gcs)
-                    console.log(groupChannels)
+                 
                 });
             }
         }

@@ -102,7 +102,7 @@ export default function DiscoverScreen({navigation}){
     //This controls preview modal open opacity when the location icon in propertycard is pressed
     const opacityTranslation = useRef(new RNAnimated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
-    const [currentLocation, setCurrentLocation] = useState([43.0747,89.3840])
+    const [currentLocation, setCurrentLocation] = useState([43.0747,-89.3840])
     //The location of the user input in string
     const [locationQuery, setlocationQuery] = useState("Search Location ...")
     //The data of the pins to acess a field its pinsData.item.field
@@ -249,12 +249,8 @@ export default function DiscoverScreen({navigation}){
                     const success = await Image.prefetch(element)
                     console.log(success)
                 });
-
-                
-               
             });
-            
-            
+             
         })
         .catch(e=>{
             console.log("ERROR --- DISCOVER --- loadProperty")
@@ -542,9 +538,13 @@ export default function DiscoverScreen({navigation}){
                             <PreviewBottomContainer >
                                 <PreviewLocationText>{selectedPin.propertyInfo.loc.secondaryTxt}</PreviewLocationText>
                                 <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).getDate() + " " +
-                                        new Date(selectedPin.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
+                                        new Date(selectedPin.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) + " " +
+                                        new Date(selectedPin.propertyInfo.availableFrom).getFullYear()
                                         }  -  {new Date(selectedPin.propertyInfo.availableTo).getDate() + " " +
-                                        new Date(selectedPin.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}</PreviewPriceText>
+                                        new Date(selectedPin.propertyInfo.availableTo).toLocaleString('default', { month: 'short' }) + " " + 
+                                        new Date(selectedPin.propertyInfo.availableTo).getFullYear()
+                                        } 
+                                        </PreviewPriceText>
                                 
                                 <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
                             </ PreviewBottomContainer> 

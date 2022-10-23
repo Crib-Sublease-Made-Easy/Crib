@@ -11,7 +11,8 @@ import {
     Pressable,
     FlatList,
     TouchableOpacity,
-    TouchableHighlight
+    TouchableHighlight,
+    ActivityIndicator
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -58,7 +59,7 @@ import {
     PricePerMonth, PropertyTypeCard, PriceInputSearchContainer, CategoryName, RowContainer, RowValueContainer, RowName,
     FollowUpContainer, FollowUpText, DateCategoryName, BedroomContaienr, BedroomItemContainer, RowContainerCol,
     ReviewHeading, ReviewLocationContainer, ReviewDateContainer, ImageSelectionContainer, ImageText, CribText,
-    ContinueText, MaxText
+    ContinueText, MaxText, StreetAddrInput,LocationDetailContainer,LocationDetailName, StreetAddrHalfInput
 } from './discoverPropertyPostingStyle';
 import Easing from 'react-native/Libraries/Animated/Easing';
 import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, GetFAIcons} from '../../../sharedUtils';
@@ -90,6 +91,17 @@ export default function PropertyPostingScreen({ navigation }) {
     const [propertyAmenities, setpropertyAmenities] = useState([])
     const [propertyPriceNego, setPropertyPriceNego] = useState(false)
 
+    //Property Details
+    const [propertyLocationStreetNumber, setPropertyLocationStreetNumber] = useState("")
+    const [propertyLocationStreet, setPropertyLocationStreet] = useState("")
+    //Number and street combined
+    const [propertyLocationNumberStreet, setPropertyLocationNumberStreet] = useState("")
+    const [propertyLocationCity, setPropertyLocationCity] = useState("")
+    const [propertyLocationState, setPropertyLocationState] = useState("")
+    const [propertyLocationPostalCode, setPropertyLocationPostalCode] = useState("")
+    const [locationDetailsChanged, setLocationDetailsChanged] = useState(false)
+
+
     const [propertyBedroomImage, setPropertyBedroomImage] = useState(null)
     const [propertyBathroomImage, setPropertyBathroomImage] = useState(null)
     const [propertyLivingroomImage, setPropertyLivingroomImage] = useState(null)
@@ -97,6 +109,7 @@ export default function PropertyPostingScreen({ navigation }) {
     const [propertyFloorplanImage, setPropertyFloorPlanImage] = useState(null)
     const [locationPressed, setLocationPressed] = useState(false)
     const [latLong, setLatLong] = useState([])
+    const [fetching, setFetching] = useState(false)
 
     const [loading, setLoading] = useState(false)
 
@@ -114,29 +127,107 @@ export default function PropertyPostingScreen({ navigation }) {
     const OpacityTranslation = useRef(new Animated.Value(1)).current;
     const TopContainerTranslation = useRef(new Animated.Value(HEIGHT * 0.1)).current;
 
+    /**
+     * 0 : Landing page: start subleasing 
+     * 1 : Enter type of sublease 
+     * 2 : Enter the address of the sublease 
+     * 3 : Location details
+     * 4 : Image Gallery 
+     * 5 : Sublease price 
+     * 6 : Sublease description
+     * 7 : Availability 
+     * 8 : Property Detail (Bedrooms and bathrooms)
+     * 9 : Amenities
+     * 10: One last step! 
+     * 11: Review 
+    */
 
+    /**
+     * Function - moves the horizontal scrollview to the appropreiate page
+     * Input - An index indicating which the NEXT page to scroll to
+     */
     function moveScrollView(val) {
-       
-        console.log(propertyPrice)
+        console.log("The current page is: " + val);
         Keyboard.dismiss()
+       
+        /**
+         * propertyLocation: address that the user input on page 2
+         * findLocationDetail: find components of address withthe given input
+         */
+        if(val == 3 && !locationDetailsChanged){
+            //If user didn't input a location
+            console.log("hello")
+            if(propertyLocation== ""){
+                alert("Must enter property location.")
+                return;
+            }
+            findLocationDetail(propertyLocation);
+        }
+
+        /**
+         * Function - check if the user has changed the recommended address input
+         * Input - the locationdetailschanged varaible
+         */
+        if(locationDetailsChanged){
+            if(propertyLocationNumberStreet.trim() == ""){
+                alert("Street Address cannot be empty.");
+                return;
+            }
+            else if(propertyLocationCity.trim() == ""){
+                alert("City cannot be empty.");
+                return;
+            }
+            else if(propertyLocationState.trim() == ""){
+                alert("City cannot be empty.");
+                return;
+            }
+            else if(propertyLocationPostalCode.trim() == ""){
+                alert("Postal code be empty.");
+                return;
+            }
+            console.log("User changed the loation details")
+            let queryString = "";
+            
+            queryString += propertyLocationNumberStreet + " ";
+            queryString += propertyLocationCity + " ";
+            queryString += propertyLocationState + " ";
+
+            console.log("The changed address is: " + queryString);
+
+            //The complete street Address
+            findLocationDetail(queryString)
+            setpropertyLocation(queryString)
+            setLocationDetailsChanged(false)
+           
+        }
+    
         if (val < 0) {
             navigation.goBack();
         }
         else if(val == 2 && propertyType== ""){
             alert("Must select a property type.")
         }
-        else if(val == 3 && propertyLocation== ""){
-            alert("Must enter property location.")
+        else if(val == 4 && (propertyLocationNumberStreet.trim() == "" || propertyLocationCity.trim() == "" || propertyLocationState.trim() == "" ||
+            propertyLocationPostalCode == "")){
+            console.log("Something is wrong");
+            console.log(propertyLocationNumberStreet == "");
+            if(propertyLocationNumberStreet.trim() == ""){
+                alert("Street Address cannot be empty.");
+            }
+            else if(propertyLocationCity.trim() == ""){
+                alert("City cannot be empty.");
+            }
+            else if(propertyLocationState.trim() == ""){
+                alert("City cannot be empty.");
+            }
+            else if(propertyLocationPostalCode.trim() == ""){
+                alert("cannot be empty.");
+            }
+            else{
+                console.log("oops")
+            }
         }
-        else if(val == 3 && !locationPressed){
-            console.log("hello")
-            setpropertyLocation(autocompleteLocation[0].description)
-            setpropertyMainAddr(autocompleteLocation[0].structured_formatting.main_text)
-            setpropertySecondaryAddr(autocompleteLocation[0].structured_formatting.secondary_text)
-            LocationToLatLong(autocompleteLocation[0].description)
-            setLocationPressed(true)
-        }
-        else if(val == 4 && (propertyBathroomImage == null || propertyBathroomImage == null ||
+        else if(val == 5 && (propertyBathroomImage == null || propertyBathroomImage == null ||
             propertyLivingroomImage == null || propertyKitchenImage == null)){
                 if(propertyBedroomImage == null){
                     alert("Must select Bedroom Image.")
@@ -151,7 +242,7 @@ export default function PropertyPostingScreen({ navigation }) {
                     alert("Must select Livingroom Image.")
                 }
         }
-        else if(val == 5 && (propertyPrice == "" || parseInt(propertyPrice.split("$")[1]) > 10000)){
+        else if(val == 6 && (propertyPrice == "" || parseInt(propertyPrice.split("$")[1]) > 10000)){
             if(propertyPrice == ""){
                 alert("Must enter property price.")
             }
@@ -159,13 +250,14 @@ export default function PropertyPostingScreen({ navigation }) {
                 alert("Property price must be less than $10000 / month.")
             }
         }
-        else if(val == 7 && propertydateFrom == null){
+        else if(val == 8 && propertydateFrom == null){
             alert("Must enter property availability start date.")
         }
-        else if(val == 7 && propertydateTo == null){
+        else if(val == 8 && propertydateTo == null){
             alert("Must enter property availability end date.")
         }
         else {
+            while(fetching){}
             setscrollviewIndex(val)
             
             propertyAmenities.forEach(element => {
@@ -414,8 +506,8 @@ export default function PropertyPostingScreen({ navigation }) {
     }
 
     function moveOn(value) {
+        console.log(value)
         console.log("fefefwewf", value.description)
-        console.log("II", value)
         setLocationPressed(true)
         Keyboard.dismiss()
         // if(value.results == undefined){
@@ -460,6 +552,83 @@ export default function PropertyPostingScreen({ navigation }) {
         }
     }
 
+    //https://maps.googleapis.com/maps/api/place/queryautocomplete/json?input=${query}&country:us&types=address&location=37.76999%2C-122.44696&radius=4000&strictbounds=true&key=${google_api_key}`
+
+    function findLocationDetail(name){
+        setFetching(true)
+        let spacelessname = name.replaceAll("_","+")
+        var config = {
+            method: 'get',
+            url: `https://maps.googleapis.com/maps/api/geocode/json?address=${spacelessname}&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
+        };
+        axios(config)
+        .then(async (locInfo)=> {    
+            if(locInfo.data.status == "ZERO_RESULTS"){
+                var config = {
+                    method: 'get',
+                    url: `https://maps.googleapis.com/maps/api/place/queryautocomplete/json?input=${spacelessname}&country:us&types=address&location=37.76999%2C-122.44696&radius=4000&strictbounds=true&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
+                };
+                axios(config)
+                .then(async (locDetail)=> {
+                   findLocationDetail(locDetail.data.predictions[0].description.replaceAll(" ", "+"))
+                })
+                .catch(function (error) {
+            
+                    console.log(error);
+                });
+                
+            }
+            else{
+                // console.log(locInfo.data.results[0].address_components)
+
+                let streetNumber = "";
+                let streetAddr = "";
+
+                locInfo.data.results[0].address_components.forEach(element => {
+                    //    console.log(element.types + "    " + element.long_name)
+        
+                    if(element.types.indexOf("street_number") != -1){
+                        // console.log("Street number: " + element.long_name);
+                        streetNumber = element.long_name;
+                        setPropertyLocationStreetNumber(element.long_name)
+                    }
+                    else if(element.types.indexOf("route") != -1){
+                        // console.log("Route: " + element.long_name);
+                        streetAddr = element.long_name;
+                        setPropertyLocationStreet(element.long_name)
+                    }
+                    else if(element.types.indexOf("locality") != -1){
+                        // console.log("City: " + element.long_name);
+                        setPropertyLocationCity(element.long_name)
+                    }
+                    else if(element.types.indexOf("administrative_area_level_1") != -1){
+                        // console.log("State: " + element.long_name);
+                        setPropertyLocationState(element.long_name)
+                    }
+                    else if(element.types.indexOf("postal_code") != -1){
+                        // console.log("Postal code: " + element.long_name);
+                        setPropertyLocationPostalCode(element.long_name)
+                    }
+                });
+                console.log(streetNumber + " " + streetAddr)
+                setPropertyLocationNumberStreet(streetNumber + " " + streetAddr);
+
+
+
+            }
+            
+        })
+        .catch(function (error) {
+            
+            console.log(error);
+        });
+        setFetching(false)
+    }
+
+    function FindGoogleMapLocationName(){
+
+    }
+
    
     return (
         <SafeAreaView style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0 }} >
@@ -471,9 +640,14 @@ export default function PropertyPostingScreen({ navigation }) {
                     <Pressable disabled={loading} onPress={() => moveScrollView(scrollviewIndex - 1)} style={{ width: WIDTH * 0.1 }}>
                         <Ionicons name="arrow-back" size={30} color='white'></Ionicons>
                     </Pressable>
-                    <Pressable style={{ display: scrollviewIndex == 10 || scrollviewIndex == 9 || scrollviewIndex == 0 ? 'none' : 'flex', }}
-                         hitSlop={WIDTH*0.05} onPress={() => moveScrollView(scrollviewIndex + 1)}>
-                        <Ionicons name="checkmark-outline" size={30} color={PRIMARYCOLOR}></Ionicons>
+                    <Pressable disabled={fetching} style={{ display: scrollviewIndex == 10 || scrollviewIndex == 11 || scrollviewIndex == 0 ? 'none' : 'flex', }}
+                    hitSlop={WIDTH*0.05} onPress={() => moveScrollView(scrollviewIndex + 1)}>
+                        {
+                            fetching ?
+                            <ActivityIndicator size="small" color={PRIMARYCOLOR}/>
+                            :
+                            <Ionicons name="checkmark-outline" size={30} color={PRIMARYCOLOR}></Ionicons>
+                        }
                     </Pressable>
                 </ButtonContainer>
                 <Animated.ScrollView keyboardShouldPersistTaps={'handled'}
@@ -511,26 +685,23 @@ export default function PropertyPostingScreen({ navigation }) {
                     {/* Select Address */}
 
                     <PostingSection >
-                        <Animated.View style={{
-                            height: TopContainerTranslation
-                            , opacity: TopContainerTranslation.interpolate({
-                                inputRange: [0, startingvalue],
-                                outputRange: [0, 1]
-                            })
-                        }}>
+                       
                             <Heading >Address of sublease </Heading>
                             <InfoText>
                                 Enter your property address
                             </InfoText>
-                        </Animated.View>
+                            <InfoText>
+                                (Don't include apartment number)
+                            </InfoText>
+                       
                         <SearchContainer>
                             <Ionicons name="search-outline" size={20} color='white' />
-                            <SearchInput placeholderTextColor='white' onEndEditing={SelectLocationOutSequence}
-                                onFocus={SelectLocationSequence} value={propertyLocation} onChangeText={(value) => autocomplete(value)} placeholder="Location..." />
+                            <SearchInput placeholderTextColor='white' 
+                                onFocus={SelectLocationSequence} value={propertyLocation} onChangeText={(value) => setpropertyLocation(value)} placeholder="Location..." />
                         </SearchContainer>
                         <Animated.View style={{ width: WIDTH * 0.9, height: HEIGHT * 0.4, borderRadius: 10 }}>
 
-                            {propertyLocation.length != 0 && autocompleteLocation.map((value, index) => (
+                            {/* {propertyLocation.length != 0 && autocompleteLocation.map((value, index) => (
                                 <TouchableHighlight key={value.description + index} >
                                     <View style={{
                                         width: WIDTH * 0.9, height: HEIGHT * 0.08, paddingLeft: WIDTH * 0.025,
@@ -543,16 +714,41 @@ export default function PropertyPostingScreen({ navigation }) {
                                         </Pressable>
                                     </View>
                                 </TouchableHighlight>
-                            ))}
+                            ))} */}
 
                         </Animated.View>
 
                     </PostingSection>
-                    {/* <PostingSection >
-                        <Heading>Location details</Heading>
-                        <InfoText>Please enter address details</InfoText>
 
-                    </PostingSection> */}
+                    {/* This shows the detail of the property location 
+                        Street addr, City, State, Postal Code
+                    */}
+                    <PostingSection >
+                        <Heading>Location details</Heading>
+                        
+                        <LocationDetailContainer>
+                            <LocationDetailName>Street Address</LocationDetailName>
+                            <StreetAddrInput value={propertyLocationNumberStreet} onChangeText={(value)=> {setPropertyLocationNumberStreet(value), setLocationDetailsChanged(true)}}/>
+                        </LocationDetailContainer>
+                        <LocationDetailContainer>
+                            <LocationDetailName>City</LocationDetailName>
+                            <StreetAddrInput value={propertyLocationCity} onChangeText={(value)=> {setPropertyLocationCity(value),setLocationDetailsChanged(true)}}/>
+                        </LocationDetailContainer>
+                        <View style={{flexDirection:'row', justifyContent:'space-between', width: WIDTH*0.9}}>
+                            <LocationDetailContainer>
+                                <LocationDetailName style={{width: '100%'}}>State</LocationDetailName>
+                                <StreetAddrHalfInput value={propertyLocationState} onChangeText={(value)=> {setPropertyLocationState(value), setLocationDetailsChanged(true)}} />
+                                      
+                            </LocationDetailContainer>
+                            <LocationDetailContainer>
+                                <LocationDetailName style={{width: '100%'}}>Postal Code</LocationDetailName>
+                                <StreetAddrHalfInput value={propertyLocationPostalCode} onChangeText={(value)=> {setPropertyLocationPostalCode(value), setLocationDetailsChanged(true)}}/>
+                                      
+                            </LocationDetailContainer>
+                        </View>
+
+
+                    </PostingSection>
 
                     {/* Select Photo Gallery */}
                     <PostingSection>
@@ -724,6 +920,7 @@ export default function PropertyPostingScreen({ navigation }) {
                         </InputContainer>
                     </PostingSection>
 
+                    
                     <PostingSection>
                         <Heading>Property Details</Heading>
                         <InfoText>What would tenants be able to access.</InfoText>
@@ -925,7 +1122,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
                 </Animated.ScrollView>
 
-                <NextContainer style={{ display: scrollviewIndex == 0 || scrollviewIndex == 9 ? 'flex' : 'none' }}>
+                <NextContainer style={{ display: scrollviewIndex == 0 || scrollviewIndex == 10 ? 'flex' : 'none' }}>
                     <ContinueButton hitSlop={WIDTH*0.05} onPress={() => moveScrollView(scrollviewIndex + 1)}>
                         <ContinueText>
                             {scrollviewIndex == 0 ? "Start" : "Review"}
