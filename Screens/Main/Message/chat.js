@@ -119,7 +119,7 @@ export default function ChatScreen({navigation, route}){
             // The current user can receive messages from other users through the onMessageReceived() method of an event handler.
               // console.log("Message was successfully sent")
               if(accessToken != null){
-                fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
+                fetch('https://crib-llc-dev.herokuapp.com/notifications/sendMessage', {
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',
@@ -192,7 +192,7 @@ export default function ChatScreen({navigation, route}){
     }
 
     const getPropertyInfo = async (propId, gc) =>{
-      await fetch('https://crib-llc.herokuapp.com/properties/' + propId, {
+      await fetch('https://crib-llc-dev.herokuapp.com/properties/' + propId, {
         method: 'POST',
         headers: {
           Accept: 'application/json',

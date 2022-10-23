@@ -40,7 +40,7 @@ export default function EditPropertyAvailScreen({navigation, route}){
        
        
         const accessToken = await SecureStorage.getItem("accessToken");
-        fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
+        fetch('https://crib-llc-dev.herokuapp.com/properties/' + route.params.uid, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',

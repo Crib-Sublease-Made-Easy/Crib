@@ -313,7 +313,7 @@ export default function PropertyPostingScreen({ navigation }) {
         if (query != "" && query.length % 2 == 0) {
             var config = {
                 method: 'get',
-                url: `https://crib-llc.herokuapp.com/autocomplete/places/${query}`,
+                url: `https://crib-llc-dev.herokuapp.com/autocomplete/places/${query}`,
             };
             axios(config)
             .then(function (response) {
@@ -422,7 +422,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
        
         if(accessToken != null){
-            fetch('https://crib-llc.herokuapp.com/properties', {
+            fetch('https://crib-llc-dev.herokuapp.com/properties', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -538,7 +538,7 @@ export default function PropertyPostingScreen({ navigation }) {
             let spacelessLocation = name.replaceAll(" ", "+");
             var config = {
                 method: 'get',
-                url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${name}`,
+                url: `https://crib-llc-dev.herokuapp.com/autocomplete/geocoding?address=${name}`,
             };
             axios(config)
             .then(async (locInfo)=> {           

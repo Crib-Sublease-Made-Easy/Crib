@@ -66,7 +66,7 @@ export default function Login_OTP({navigation, route}){
         console.log("AuthyID")
         console.log(route.authy_id);
         let success = false
-        fetch('https://crib-llc.herokuapp.com/users/login', {
+        fetch('https://crib-llc-dev.herokuapp.com/users/login', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -159,7 +159,7 @@ export default function Login_OTP({navigation, route}){
 
     function resendSMS(){
        
-        fetch('https://crib-llc.herokuapp.com/users/OTP/step2', {
+        fetch('https://crib-llc-dev.herokuapp.com/users/OTP/step2', {
             method: 'POST',
             headers: {
               Accept: 'application/json',

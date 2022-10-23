@@ -231,7 +231,7 @@ export default function DiscoverScreen({navigation}){
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
 
-        fetch('https://crib-llc.herokuapp.com/properties/query?page=0' + s, {
+        fetch('https://crib-llc-dev.herokuapp.com/properties/query?page=0' + s, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -290,7 +290,7 @@ export default function DiscoverScreen({navigation}){
         s = s + '&priceLow=0'
 
         if(propertyPage != 0){
-            await fetch('https://crib-llc.herokuapp.com/properties/query?page=' + propertyPage + s, {
+            await fetch('https://crib-llc-dev.herokuapp.com/properties/query?page=' + propertyPage + s, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -338,7 +338,7 @@ export default function DiscoverScreen({navigation}){
         s = s +`&availableFrom=${from}`
         s = s +`&availableTo=${to}`
 
-        fetch(`https://crib-llc.herokuapp.com/properties/pins?${s}` , {
+        fetch(`https://crib-llc-dev.herokuapp.com/properties/pins?${s}` , {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -387,7 +387,7 @@ export default function DiscoverScreen({navigation}){
             let spacelessLocation = locationQueryName.replaceAll(" ", "+");
             var config = {
                 method: 'get',
-                url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${spacelessLocation}`,
+                url: `https://crib-llc-dev.herokuapp.com/autocomplete/geocoding?address=${spacelessLocation}`,
             };
             axios(config)
             .then(async (response)=> {           
@@ -429,7 +429,7 @@ export default function DiscoverScreen({navigation}){
     async function onMarkerClick(item){
         setLoading(true)
         if(item != null && item != undefined){
-            await fetch('https://crib-llc.herokuapp.com/properties/' + item._id, {
+            await fetch('https://crib-llc-dev.herokuapp.com/properties/' + item._id, {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -461,7 +461,7 @@ export default function DiscoverScreen({navigation}){
     async function updateQueryString (loc){
         var config = {
             method: 'get',
-            url: `https://crib-llc.herokuapp.com/autocomplete/reversegeocoding?lat=${loc[0]}&long=${loc[1]}`,
+            url: `https://crib-llc-dev.herokuapp.com/autocomplete/reversegeocoding?lat=${loc[0]}&long=${loc[1]}`,
         };
         await axios(config)
         .then(async (response)=> {           

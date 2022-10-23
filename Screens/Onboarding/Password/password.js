@@ -86,7 +86,7 @@ export default function PasswordScreen({navigation,route}){
         console.log("Tryin to sign up.")
         if(route.params.email != ""){
             console.log("Inside Signup")
-            const res =  await fetch('https://crib-llc.herokuapp.com/users/signup', {
+            const res =  await fetch('https://crib-llc-dev.herokuapp.com/users/signup', {
                 method: 'POST',
                 headers: {
                 Accept: 'application/json',

@@ -253,7 +253,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       setUser(id)
       connectSendbird()
      
-      await fetch('https://crib-llc.herokuapp.com/tokens/accessRefresh', {
+      await fetch('https://crib-llc-dev.herokuapp.com/tokens/accessRefresh', {
         method: 'POST',
         headers: {
           Accept: 'application/json',

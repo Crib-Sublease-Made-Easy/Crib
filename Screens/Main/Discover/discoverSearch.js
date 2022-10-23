@@ -38,7 +38,7 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
     
     var config = {
         method: 'get',
-        url: `https://crib-llc.herokuapp.com/autocomplete/places/${query}`,
+        url: `https://crib-llc-dev.herokuapp.com/autocomplete/places/${query}`,
        
     };
 

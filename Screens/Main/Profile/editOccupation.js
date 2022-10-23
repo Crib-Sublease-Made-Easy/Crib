@@ -32,7 +32,7 @@ export default function EditOccupationScreen({navigation, route}){
 
     async function update(){
         const accessToken = await SecureStorage.getItem("accessToken");
-        fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+        fetch('https://crib-llc-dev.herokuapp.com/users/' + USERID, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',

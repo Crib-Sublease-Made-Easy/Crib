@@ -48,7 +48,7 @@ export default function ProfileEditScreen({navigation, route}){
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("studio.jpg");
         if(USERID != null && accessToken != null){
-            fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+            fetch('https://crib-llc-dev.herokuapp.com/users/' + USERID, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -116,7 +116,7 @@ export default function ProfileEditScreen({navigation, route}){
                     name: 'someName',
                 }); 
                 if( USERID != null && accessToken != null){
-                    fetch('https://crib-llc.herokuapp.com/users/profileImages/' + USERID, {
+                    fetch('https://crib-llc-dev.herokuapp.com/users/profileImages/' + USERID, {
                     method: 'PUT',
                     headers: {
                         Accept: 'application/json',

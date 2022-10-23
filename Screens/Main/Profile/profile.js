@@ -125,7 +125,7 @@ export default function ProfileScreen({navigation}){
             //Get user favorite properties
             fetchFavoriteProperties(accessToken)
             if(accessToken != null && UID != null){
-                fetch('https://crib-llc.herokuapp.com/users/' + UID, {
+                fetch('https://crib-llc-dev.herokuapp.com/users/' + UID, {
                 method: 'GET',
                 headers: {
                 Accept: 'application/json',
@@ -177,7 +177,7 @@ export default function ProfileScreen({navigation}){
     //Funciton: Get user's posted proeprty
     async function fetchPostedProperties(id, token){
       
-            await fetch('https://crib-llc.herokuapp.com/properties/' + id, {
+            await fetch('https://crib-llc-dev.herokuapp.com/properties/' + id, {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -230,7 +230,7 @@ export default function ProfileScreen({navigation}){
 
     //Function: Fetch favorite properties 
     function fetchFavoriteProperties(token){
-        fetch('https://crib-llc.herokuapp.com/users/favorites/all', {
+        fetch('https://crib-llc-dev.herokuapp.com/users/favorites/all', {
             method: 'GET',
             headers: {
             Accept: 'application/json',

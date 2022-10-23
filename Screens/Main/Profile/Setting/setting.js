@@ -95,7 +95,7 @@ export default function SettingScreen({navigation, route}){
   async function getTokens(){
       const accessToken = await SecureStorage.getItem("accessToken");
 
-      fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+      fetch('https://crib-llc-dev.herokuapp.com/users/' + USERID, {
         method: 'GET',
         headers: {
         Accept: 'application/json',

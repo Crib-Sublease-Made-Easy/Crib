@@ -38,7 +38,7 @@ export default function LoginScreen({navigation, route}){
         
         const number = phoneNumber.replace(/[^\d]/g, '');
       
-        await fetch('https://crib-llc.herokuapp.com/users/authy', {
+        await fetch('https://crib-llc-dev.herokuapp.com/users/authy', {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -67,7 +67,7 @@ export default function LoginScreen({navigation, route}){
         console.log("Stepping 2")
         console.log(phoneNumber)
         console.log("PHONE NUMBER", number)
-        await fetch('https://crib-llc.herokuapp.com/users/OTP/step2', {
+        await fetch('https://crib-llc-dev.herokuapp.com/users/OTP/step2', {
             method: 'POST',
             headers: {
             Accept: 'application/json',

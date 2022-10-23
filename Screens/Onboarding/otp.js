@@ -86,7 +86,7 @@ export default function OTPScreen({navigation, route}){
         console.log(code);
         console.log("AuthyID")
         console.log(route.params.authy_id);
-        fetch('https://crib-llc.herokuapp.com/users/OTP/step3', {
+        fetch('https://crib-llc-dev.herokuapp.com/users/OTP/step3', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -203,7 +203,7 @@ export default function OTPScreen({navigation, route}){
 
     function resendSMS(){
        
-        fetch('https://crib-llc.herokuapp.com/users/OTP/step2', {
+        fetch('https://crib-llc-dev.herokuapp.com/users/OTP/step2', {
             method: 'POST',
             headers: {
               Accept: 'application/json',

@@ -90,7 +90,7 @@ export default function PropertyDetailScreen({navigation, route}){
     async function getTokens(){
         const accessToken = await SecureStorage.getItem("accessToken");
         if (USERID != null && accessToken != null){
-            fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+            fetch('https://crib-llc-dev.herokuapp.com/users/' + USERID, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -115,7 +115,7 @@ export default function PropertyDetailScreen({navigation, route}){
     async function fetchProperties(){
         const accessToken = await SecureStorage.getItem("accessToken");
         if(route.params.data != undefined && accessToken != null){
-            await fetch('https://crib-llc.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
+            await fetch('https://crib-llc-dev.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -131,7 +131,7 @@ export default function PropertyDetailScreen({navigation, route}){
             .then(res => res.json()).then( async propertyData =>{
                 if(propertyData.propertyInfo.deleted){
 
-                    // await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
+                    // await fetch('https://crib-llc-dev.herokuapp.com/properties/favorite', {
                     //     method: 'POST',
                     //     headers: {
                     //     Accept: 'application/json',
@@ -175,7 +175,7 @@ export default function PropertyDetailScreen({navigation, route}){
             
             const accessToken = await SecureStorage.getItem("accessToken");
             if(accessToken != null){
-                await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
+                await fetch('https://crib-llc-dev.herokuapp.com/properties/favorite', {
                 method: 'POST',
                 headers: {
                 Accept: 'application/json',

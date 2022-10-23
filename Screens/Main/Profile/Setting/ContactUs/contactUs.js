@@ -24,7 +24,7 @@ export default function ContactUsScreen({navigation, route}){
 
     async function send(){
         const accessToken = await SecureStorage.getItem("accessToken");
-        await fetch('https://crib-llc.herokuapp.com/contact', {
+        await fetch('https://crib-llc-dev.herokuapp.com/contact', {
             method: 'POST',
             headers: {
             Accept: 'application/json',

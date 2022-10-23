@@ -29,7 +29,7 @@ export default function EditEducationScreen({navigation, route}){
     async function update(){
         const accessToken = await SecureStorage.getItem("accessToken");
         console.log("UID" , route.params.uid)
-        fetch('https://crib-llc.herokuapp.com/users/' + route.params.uid, {
+        fetch('https://crib-llc-dev.herokuapp.com/users/' + route.params.uid, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',

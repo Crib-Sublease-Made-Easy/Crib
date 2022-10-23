@@ -60,7 +60,7 @@ export default function EditPropertyScreen({navigation, route}){
         const accessToken = await SecureStorage.getItem("accessToken");
 
         if(route.params.propId != null && route.params.propId != undefined && accessToken != null){
-            fetch('https://crib-llc.herokuapp.com/properties/' + route.params.propId, {
+            fetch('https://crib-llc-dev.herokuapp.com/properties/' + route.params.propId, {
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -159,7 +159,7 @@ export default function EditPropertyScreen({navigation, route}){
             formData.append("changeIdx", index);
            
             if(propID != null && propID != undefined){
-                fetch('https://crib-llc.herokuapp.com/properties/propertyImages/' + propID, {
+                fetch('https://crib-llc-dev.herokuapp.com/properties/propertyImages/' + propID, {
                 method: 'PUT',
                 headers: {
                     Accept: 'application/json',
@@ -202,7 +202,7 @@ export default function EditPropertyScreen({navigation, route}){
     async function deletePropertyRequest(){
         const accessToken = await SecureStorage.getItem("accessToken");
         if(propID != null && propID != undefined && accessToken != null){
-            fetch('https://crib-llc.herokuapp.com/properties/' + propID, {
+            fetch('https://crib-llc-dev.herokuapp.com/properties/' + propID, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
