@@ -676,7 +676,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 587BAF0321F05C9863AC01C5 /* Pods-lighthouse.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = lighthouse/lighthouse.entitlements;
@@ -706,7 +705,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D6E96C3DC6B43D3A03BE223C /* Pods-lighthouse.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = lighthouse/lighthouse.entitlements;

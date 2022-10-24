@@ -64,7 +64,6 @@ import {
 import Easing from 'react-native/Libraries/Animated/Easing';
 import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, GetFAIcons} from '../../../sharedUtils';
 import { SubHeadingText } from '../../Onboarding/Landing/landingStyle';
-import { set } from 'react-native-reanimated';
 
 
 export default function PropertyPostingScreen({ navigation }) {
@@ -148,6 +147,10 @@ export default function PropertyPostingScreen({ navigation }) {
      */
     function moveScrollView(val) {
         console.log("The current page is: " + val);
+        console.log("main addr: " + propertyMainAddr)
+        console.log("secondary addr: " + propertySecondaryAddr)
+        console.log("Street : " + propertyLocationStreet)
+        console.log("latlong : " + latLong[0])
         Keyboard.dismiss()
        
         /**
@@ -195,7 +198,7 @@ export default function PropertyPostingScreen({ navigation }) {
             console.log("The changed address is: " + queryString);
 
             //The complete street Address
-            findLocationDetail(queryString)
+            console.log ("the message is: " + findLocationDetail(queryString));
             setpropertyLocation(queryString)
             setLocationDetailsChanged(false)
            
@@ -562,20 +565,25 @@ export default function PropertyPostingScreen({ navigation }) {
             url: `https://maps.googleapis.com/maps/api/geocode/json?address=${spacelessname}&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
         };
         axios(config)
-        .then(async (locInfo)=> {    
+        .then(async (locInfo)=> {   
+            console.log("LINE 569", locInfo.data); 
+
             if(locInfo.data.status == "ZERO_RESULTS"){
+                console.log("Inside location details and cannot find any results");
                 var config = {
                     method: 'get',
                     url: `https://maps.googleapis.com/maps/api/place/queryautocomplete/json?input=${spacelessname}&country:us&types=address&location=37.76999%2C-122.44696&radius=4000&strictbounds=true&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
                 };
                 axios(config)
                 .then(async (locDetail)=> {
+                    console.log("looping with " , locDetail.data.predictions[0].description.replaceAll(" ", "+"));
                    findLocationDetail(locDetail.data.predictions[0].description.replaceAll(" ", "+"))
                 })
                 .catch(function (error) {
-            
+                    console.log("ZERO_RESULTS CATCH")
                     console.log(error);
-                });
+                    return -1;
+                })
                 
             }
             else{
@@ -583,7 +591,10 @@ export default function PropertyPostingScreen({ navigation }) {
 
                 let streetNumber = "";
                 let streetAddr = "";
-
+                let city = "";
+                let state = "";
+                console.log(locInfo.data.results[0].geometry.location);
+                setLatLong([locInfo.data.results[0].geometry.location.lat,locInfo.data.results[0].geometry.location.lng])
                 locInfo.data.results[0].address_components.forEach(element => {
                     //    console.log(element.types + "    " + element.long_name)
         
@@ -599,10 +610,12 @@ export default function PropertyPostingScreen({ navigation }) {
                     }
                     else if(element.types.indexOf("locality") != -1){
                         // console.log("City: " + element.long_name);
+                        city = element.long_name;
                         setPropertyLocationCity(element.long_name)
                     }
                     else if(element.types.indexOf("administrative_area_level_1") != -1){
                         // console.log("State: " + element.long_name);
+                        state = element.short_name;
                         setPropertyLocationState(element.long_name)
                     }
                     else if(element.types.indexOf("postal_code") != -1){
@@ -612,6 +625,9 @@ export default function PropertyPostingScreen({ navigation }) {
                 });
                 console.log(streetNumber + " " + streetAddr)
                 setPropertyLocationNumberStreet(streetNumber + " " + streetAddr);
+                setpropertyMainAddr(streetNumber + " " + streetAddr);
+                setpropertySecondaryAddr(city + " " + state);
+
 
 
 
@@ -619,10 +635,12 @@ export default function PropertyPostingScreen({ navigation }) {
             
         })
         .catch(function (error) {
-            
+            console.log("address is not right")
             console.log(error);
+            return -1;
         });
         setFetching(false)
+        return 1;
     }
 
     function FindGoogleMapLocationName(){
