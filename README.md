@@ -41,4 +41,4 @@ If you don't use windows:
 3. OEPN ANOTHER terminal, go to the same directory as above and run npx react-native run-ios --simulator='iPhone 12 (15.5)' 
 4. Wait until the simulator pops out and you're good to go.
 
-Message me on slack if you have any problems/questions.
+Message me (Isaac) on slack if you have any problems/questions.
