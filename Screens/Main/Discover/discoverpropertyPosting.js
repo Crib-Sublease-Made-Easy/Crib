@@ -33,6 +33,7 @@ import Lottie from 'lottie-react-native';
 
 
 
+
 FontAwesome.loadFont();
 
 const ImageName = [
@@ -46,6 +47,20 @@ const ImageName = [
 
 const bedroomList = ["Studio", "1" , "2", "3", "4P"]
 const bathroomList = ["1", "2", "3", "4P"]
+
+
+//Posting Pages
+const LANDINGPOSTINGPAGE = 0;
+const PROPTYPEPAGE = 1;
+const PROPADDRESSPAGE = 2;
+const PROPLOCATIONDETAILPAGE = 3;
+const PROPGALLERYPAGE = 4;
+const PROPPRICEPAGE = 5;
+
+
+
+
+
 
 
 
@@ -146,91 +161,124 @@ export default function PropertyPostingScreen({ navigation }) {
      * Input - An index indicating which the NEXT page to scroll to
      */
     function moveScrollView(val) {
-        console.log("The current page is: " + val);
-        console.log("main addr: " + propertyMainAddr)
-        console.log("secondary addr: " + propertySecondaryAddr)
-        console.log("Street : " + propertyLocationStreet)
-        console.log("latlong : " + latLong[0])
+        // console.log("The current page is: " + val);
+        // console.log("main addr: " + propertyMainAddr)
+        // console.log("secondary addr: " + propertySecondaryAddr)
+        // console.log("Street : " + propertyLocationStreet)
+        // console.log("latlong : " + latLong[0])
         Keyboard.dismiss()
        
         /**
          * propertyLocation: address that the user input on page 2
          * findLocationDetail: find components of address withthe given input
          */
-        if(val == 3 && !locationDetailsChanged){
-            //If user didn't input a location
-            console.log("hello")
-            if(propertyLocation== ""){
-                alert("Must enter property location.")
-                return;
-            }
-            findLocationDetail(propertyLocation);
-        }
+        // if(val == 3 && !locationDetailsChanged){
+        //     //If user didn't input a location
+        //     console.log("hello")
+        //     if(propertyLocation== ""){
+        //         alert("Must enter property location.")
+        //         return;
+        //     }
+        //     findLocationDetail(propertyLocation);
+        // }
 
         /**
          * Function - check if the user has changed the recommended address input
          * Input - the locationdetailschanged varaible
          */
-        if(locationDetailsChanged){
-            if(propertyLocationNumberStreet.trim() == ""){
-                alert("Street Address cannot be empty.");
-                return;
-            }
-            else if(propertyLocationCity.trim() == ""){
-                alert("City cannot be empty.");
-                return;
-            }
-            else if(propertyLocationState.trim() == ""){
-                alert("City cannot be empty.");
-                return;
-            }
-            else if(propertyLocationPostalCode.trim() == ""){
-                alert("Postal code be empty.");
-                return;
-            }
-            console.log("User changed the loation details")
-            let queryString = "";
+        // if(locationDetailsChanged){
+        //     if(propertyLocationNumberStreet.trim() == ""){
+        //         alert("Street Address cannot be empty.");
+        //         return;
+        //     }
+        //     else if(propertyLocationCity.trim() == ""){
+        //         alert("City cannot be empty.");
+        //         return;
+        //     }
+        //     else if(propertyLocationState.trim() == ""){
+        //         alert("City cannot be empty.");
+        //         return;
+        //     }
+        //     else if(propertyLocationPostalCode.trim() == ""){
+        //         alert("Postal code be empty.");
+        //         return;
+        //     }
+        //     console.log("User changed the loation details")
+        //     let queryString = "";
             
-            queryString += propertyLocationNumberStreet + " ";
-            queryString += propertyLocationCity + " ";
-            queryString += propertyLocationState + " ";
+        //     queryString += propertyLocationNumberStreet + " ";
+        //     queryString += propertyLocationCity + " ";
+        //     queryString += propertyLocationState + " ";
 
-            console.log("The changed address is: " + queryString);
+        //     console.log("The changed address is: " + queryString);
 
-            //The complete street Address
-            console.log ("the message is: " + findLocationDetail(queryString));
-            setpropertyLocation(queryString)
-            setLocationDetailsChanged(false)
+        //     //The complete street Address
+        //     console.log ("the message is: " + findLocationDetail(queryString));
+        //     setpropertyLocation(queryString)
+        //     setLocationDetailsChanged(false)
            
-        }
+        // }
     
-        if (val < 0) {
+        //When user press return when on landing page
+        if (val < LANDINGPOSTINGPAGE) {
             navigation.goBack();
         }
-        else if(val == 2 && propertyType== ""){
-            alert("Must select a property type.")
-        }
-        else if(val == 4 && (propertyLocationNumberStreet.trim() == "" || propertyLocationCity.trim() == "" || propertyLocationState.trim() == "" ||
-            propertyLocationPostalCode == "")){
-            console.log("Something is wrong");
-            console.log(propertyLocationNumberStreet == "");
-            if(propertyLocationNumberStreet.trim() == ""){
-                alert("Street Address cannot be empty.");
-            }
-            else if(propertyLocationCity.trim() == ""){
-                alert("City cannot be empty.");
-            }
-            else if(propertyLocationState.trim() == ""){
-                alert("City cannot be empty.");
-            }
-            else if(propertyLocationPostalCode.trim() == ""){
-                alert("cannot be empty.");
-            }
-            else{
-                console.log("oops")
+
+        //Test to check if user inputed the property type before going to address page
+        if(val == PROPADDRESSPAGE){
+            if(propertyType == ""){
+                alert("Must select a property type.")
+                return;
             }
         }
-        else if(val == 5 && (propertyBathroomImage == null || propertyBathroomImage == null ||
+        
+        //Test to check if the user input of address is empty before going to location detail
+        if(val == PROPLOCATIONDETAILPAGE){
+            if(propertyLocation.trim() == ""){
+                alert("Must enter property location.")
+                return;
+            }
+
+            //This autofills the location details
+            findLocationDetail(propertyLocation);
+        }
+
+        if(val == PROPGALLERYPAGE && locationDetailsChanged){
+
+            //True if all inputs are non-empty else, return false
+            let result = checkLocationDetails();
+
+            if(!result){
+                return;
+            }
+
+            findFormattedLocation();
+            
+        }
+
+
+
+        // if(val == 4 && (propertyLocationNumberStreet.trim() == "" || propertyLocationCity.trim() == "" || propertyLocationState.trim() == "" ||
+        //     propertyLocationPostalCode == "")){
+        //     console.log("Something is wrong");
+        //     console.log(propertyLocationNumberStreet == "");
+        //     if(propertyLocationNumberStreet.trim() == ""){
+        //         alert("Street Address cannot be empty.");
+        //     }
+        //     else if(propertyLocationCity.trim() == ""){
+        //         alert("City cannot be empty.");
+        //     }
+        //     else if(propertyLocationState.trim() == ""){
+        //         alert("City cannot be empty.");
+        //     }
+        //     else if(propertyLocationPostalCode.trim() == ""){
+        //         alert("cannot be empty.");
+        //     }
+        //     else{
+        //         console.log("oops")
+        //     }
+        // }
+        if(val == 5 && (propertyBathroomImage == null || propertyBathroomImage == null ||
             propertyLivingroomImage == null || propertyKitchenImage == null)){
                 if(propertyBedroomImage == null){
                     alert("Must select Bedroom Image.")
@@ -245,7 +293,7 @@ export default function PropertyPostingScreen({ navigation }) {
                     alert("Must select Livingroom Image.")
                 }
         }
-        else if(val == 6 && (propertyPrice == "" || parseInt(propertyPrice.split("$")[1]) > 10000)){
+        if(val == 6 && (propertyPrice == "" || parseInt(propertyPrice.split("$")[1]) > 10000)){
             if(propertyPrice == ""){
                 alert("Must enter property price.")
             }
@@ -253,10 +301,10 @@ export default function PropertyPostingScreen({ navigation }) {
                 alert("Property price must be less than $10000 / month.")
             }
         }
-        else if(val == 8 && propertydateFrom == null){
+        if(val == 8 && propertydateFrom == null){
             alert("Must enter property availability start date.")
         }
-        else if(val == 8 && propertydateTo == null){
+        if(val == 8 && propertydateTo == null){
             alert("Must enter property availability end date.")
         }
         else {
@@ -275,6 +323,48 @@ export default function PropertyPostingScreen({ navigation }) {
 
     }
 
+    function checkLocationDetails(){
+        if(propertyLocationNumberStreet.trim() == ""){
+            alert("Street Address cannot be empty.");
+            return false;
+        }
+        else if(propertyLocationCity.trim() == ""){
+            alert("City cannot be empty.");
+            return false;
+        }
+        else if(propertyLocationState.trim() == ""){
+            alert("City cannot be empty.");
+            return false;
+        }
+        else if(propertyLocationPostalCode.trim() == ""){
+            alert("Postal code cannot be empty.");
+            return false;
+        }
+        else{
+            return true;
+        }   
+    }
+
+    function findFormattedLocation(){
+        console.log("Finding formatted address")
+        let query = propertyLocationNumberStreet + " " + propertyLocationCity + " " + propertyLocationState;
+        console.log(query)
+        var config = {
+            method: 'get',
+            url: `https://crib-llc-dev.herokuapp.com/autocomplete/geocoding?address=${query}`,
+        };
+        axios(config)
+        .then(async (locInfo)=> {           
+           console.log(locInfo.data)
+
+        })
+        .catch(function (error) {
+            
+            console.log(error);
+        });
+
+    }
+
     function SelectLocationSequence() {
 
         Animated.sequence([
@@ -284,17 +374,6 @@ export default function PropertyPostingScreen({ navigation }) {
                 useNativeDriver: false,
             }),
 
-        ]).start()
-    }
-    function SelectLocationOutSequence() {
-
-        Animated.parallel([
-
-            Animated.spring(TopContainerTranslation, {
-                toValue: HEIGHT * 0.1,
-                bounciness: 1,
-                useNativeDriver: false,
-            }),
         ]).start()
     }
 
