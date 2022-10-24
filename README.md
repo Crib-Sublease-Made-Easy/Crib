@@ -14,6 +14,7 @@ Thats about it! If there are no errors then you are off to a good start!
 
 
 ---------- BEFORE YOU RUN THE SIMULATOR ----------
+
 search the instance of crib-llc and switch it to crib-llc-dev
 
 VSC allows you to search for this instance and change all of it at once. Use the search icon on the ledt and enter crib-llc on the top and 
