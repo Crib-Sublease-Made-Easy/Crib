@@ -14,9 +14,6 @@ import {
     TouchableHighlight
 } from 'react-native';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
 //Icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
