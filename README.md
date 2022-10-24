@@ -4,7 +4,7 @@ Welcome to Crib - Subleasing made easy. Please follow the steps carefully to set
 
 Clone the Front branch to your local machine (steps are as below)
 1. Make a folder locally and name it Crib (or whatever is easiest)
-2. Open the foler in vsc (assuming you use VSC), open a terminal and type in 'git clone https://github.com/isaaclhy13/Crib.git'
+2. Open the foler in vsc (assuming you use VSC), open a terminal and type in 'git clone https://github.com/Crib-Sublease-Made-Easy/Crib.git'
 3. REMEMBER to cd to the Crib directory before procceding, if you enter ls in the terminal, you should see App.js, Screens etc.
 4. In terminal, type yarn
 5. In terminal, type cd ios && pod install && cd ..
