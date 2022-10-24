@@ -31,7 +31,7 @@ If you use a mac:
 1. Open the project in your vsc, then in terminal type in 'npx react-native start' (without the '')
 Assuming you have xcode
 2. Open Xcode, select 'open a project or file'. You should open your local Crib folder, go to the Crib directory, then open ios folder, then select the 
-lighthouse.xcodeproj .
+lighthouse.xcworkspace .
 3. If you use an iphone, conenct your iphone with a cable, go to products tab, select destination, then select your iphone.
 4. Lastly, run build and wait.
 
