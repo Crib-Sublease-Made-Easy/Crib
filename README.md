@@ -41,4 +41,7 @@ If you don't use windows:
 3. OEPN ANOTHER terminal, go to the same directory as above and run npx react-native run-ios --simulator='iPhone 12 (15.5)' 
 4. Wait until the simulator pops out and you're good to go.
 
+5.If you are using the simulator, after the crib application opens, press I/O then toggle connect hardware keyboard under keyboard. You want to use the keyboard inside the phone rather than the hardware keyboard when designing. So you want the connect hardware keyboard option to be unselected. If the keyboard doesn't show up and using the hardware keyboard doesnt work, try toggling that option.
+
+
 Message me (Isaac) on slack if you have any problems/questions.
