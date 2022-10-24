@@ -60,7 +60,6 @@ import {
 import Easing from 'react-native/Libraries/Animated/Easing';
 import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, GetFAIcons} from '../../../sharedUtils';
 import { SubHeadingText } from '../../Onboarding/Landing/landingStyle';
-import { set } from 'react-native-reanimated';
 
 
 export default function PropertyPostingScreen({ navigation }) {
