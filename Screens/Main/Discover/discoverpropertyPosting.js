@@ -12,7 +12,8 @@ import {
     FlatList,
     TouchableOpacity,
     TouchableHighlight,
-    ActivityIndicator
+    ActivityIndicator,
+    Alert
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,8 +31,6 @@ import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from '
 import ImagePicker from 'react-native-image-crop-picker';
 
 import Lottie from 'lottie-react-native';
-
-
 
 
 FontAwesome.loadFont();
@@ -56,14 +55,10 @@ const PROPADDRESSPAGE = 2;
 const PROPLOCATIONDETAILPAGE = 3;
 const PROPGALLERYPAGE = 4;
 const PROPPRICEPAGE = 5;
-
-
-
-
-
-
-
-
+const PROPDESCRIPTIONPAGE = 6;
+const PROPBEDBATHPAGE = 8;
+const PROPAMENITIESPAGE = 9;
+const PROPREVIEWPAGE = 11;
 
 
 import {
@@ -160,64 +155,9 @@ export default function PropertyPostingScreen({ navigation }) {
      * Function - moves the horizontal scrollview to the appropreiate page
      * Input - An index indicating which the NEXT page to scroll to
      */
-    function moveScrollView(val) {
-        // console.log("The current page is: " + val);
-        // console.log("main addr: " + propertyMainAddr)
-        // console.log("secondary addr: " + propertySecondaryAddr)
-        // console.log("Street : " + propertyLocationStreet)
-        // console.log("latlong : " + latLong[0])
+    async function moveScrollView(val) {
+
         Keyboard.dismiss()
-       
-        /**
-         * propertyLocation: address that the user input on page 2
-         * findLocationDetail: find components of address withthe given input
-         */
-        // if(val == 3 && !locationDetailsChanged){
-        //     //If user didn't input a location
-        //     console.log("hello")
-        //     if(propertyLocation== ""){
-        //         alert("Must enter property location.")
-        //         return;
-        //     }
-        //     findLocationDetail(propertyLocation);
-        // }
-
-        /**
-         * Function - check if the user has changed the recommended address input
-         * Input - the locationdetailschanged varaible
-         */
-        // if(locationDetailsChanged){
-        //     if(propertyLocationNumberStreet.trim() == ""){
-        //         alert("Street Address cannot be empty.");
-        //         return;
-        //     }
-        //     else if(propertyLocationCity.trim() == ""){
-        //         alert("City cannot be empty.");
-        //         return;
-        //     }
-        //     else if(propertyLocationState.trim() == ""){
-        //         alert("City cannot be empty.");
-        //         return;
-        //     }
-        //     else if(propertyLocationPostalCode.trim() == ""){
-        //         alert("Postal code be empty.");
-        //         return;
-        //     }
-        //     console.log("User changed the loation details")
-        //     let queryString = "";
-            
-        //     queryString += propertyLocationNumberStreet + " ";
-        //     queryString += propertyLocationCity + " ";
-        //     queryString += propertyLocationState + " ";
-
-        //     console.log("The changed address is: " + queryString);
-
-        //     //The complete street Address
-        //     console.log ("the message is: " + findLocationDetail(queryString));
-        //     setpropertyLocation(queryString)
-        //     setLocationDetailsChanged(false)
-           
-        // }
     
         //When user press return when on landing page
         if (val < LANDINGPOSTINGPAGE) {
@@ -243,7 +183,11 @@ export default function PropertyPostingScreen({ navigation }) {
             findLocationDetail(propertyLocation);
         }
 
-        if(val == PROPGALLERYPAGE && locationDetailsChanged){
+        //Test the input of the location details
+        //If user did not change anything, simply check if the inputs are empty
+        //If user changed any input, then we run geocoding to find the formatted address before going to gallery
+        if(val == PROPGALLERYPAGE){
+            console.log("Verifying Location detail input")
 
             //True if all inputs are non-empty else, return false
             let result = checkLocationDetails();
@@ -251,78 +195,86 @@ export default function PropertyPostingScreen({ navigation }) {
             if(!result){
                 return;
             }
-
-            findFormattedLocation();
-            
+            if(locationDetailsChanged){
+                result = await findFormattedLocation();
+                if(!result){
+                    alert("Address could not be found");
+                    return;
+                }
+            }
         }
 
-
-
-        // if(val == 4 && (propertyLocationNumberStreet.trim() == "" || propertyLocationCity.trim() == "" || propertyLocationState.trim() == "" ||
-        //     propertyLocationPostalCode == "")){
-        //     console.log("Something is wrong");
-        //     console.log(propertyLocationNumberStreet == "");
-        //     if(propertyLocationNumberStreet.trim() == ""){
-        //         alert("Street Address cannot be empty.");
-        //     }
-        //     else if(propertyLocationCity.trim() == ""){
-        //         alert("City cannot be empty.");
-        //     }
-        //     else if(propertyLocationState.trim() == ""){
-        //         alert("City cannot be empty.");
-        //     }
-        //     else if(propertyLocationPostalCode.trim() == ""){
-        //         alert("cannot be empty.");
-        //     }
-        //     else{
-        //         console.log("oops")
-        //     }
-        // }
-        if(val == 5 && (propertyBathroomImage == null || propertyBathroomImage == null ||
-            propertyLivingroomImage == null || propertyKitchenImage == null)){
-                if(propertyBedroomImage == null){
-                    alert("Must select Bedroom Image.")
-                }
-                else if(propertyBathroomImage == null){
-                    alert("Must select Bathrrom Image.")
-                }
-                else if(propertyKitchenImage == null){
-                    alert("Must select Kitchen Image.")
-                }
-                else if(propertyLivingroomImage == null){
-                    alert("Must select Livingroom Image.")
-                }
+        //Test the input of the image gallery before moving to the price page
+        if(val == PROPPRICEPAGE){
+            if(!checkImageGallery()){
+                return;
+            }
         }
-        if(val == 6 && (propertyPrice == "" || parseInt(propertyPrice.split("$")[1]) > 10000)){
-            if(propertyPrice == ""){
+
+        //Test the user input of price before moving to availability page
+        if(val == PROPDESCRIPTIONPAGE){
+            if(propertyPrice.trim() == ""){
                 alert("Must enter property price.")
+                return;
             }
-            else{
+            else if(propertyPrice.trim() >10000){
                 alert("Property price must be less than $10000 / month.")
+                return;
             }
-        }
-        if(val == 8 && propertydateFrom == null){
-            alert("Must enter property availability start date.")
-        }
-        if(val == 8 && propertydateTo == null){
-            alert("Must enter property availability end date.")
-        }
-        else {
-            while(fetching){}
-            setscrollviewIndex(val)
-            
-            propertyAmenities.forEach(element => {
-                console.log(element)
-            });
-            setTimeout(() => {
-                scrollView.current.scrollTo({ x: WIDTH * val });
-                setscrollviewIndex(val)
-            }, 100)
-            return
         }
 
+        //Test the user input of dates before moving to amenities page
+        if(val == PROPBEDBATHPAGE){
+            if(propertydateFrom == null){
+                alert("Must enter property availability start date.")
+                return;
+            }
+            if(propertydateTo == null){
+                alert("Must enter property availability start date.")
+                return;
+            }
+        }
+
+        //Check if user have inputed bedroom and bathroom numbers
+        if(val == PROPAMENITIESPAGE){
+            if(propertyNumBed == ""){
+                alert("Must select bedroom details.")
+                return
+            }
+            else if(propertyNumBath == ""){
+                alert("Must select bathroom details.")
+                return
+            }
+        }
+
+        if(val == PROPREVIEWPAGE){
+            console.log();
+            console.log("Attempting to post property...")
+            console.log("Property type: " + propertyType);
+            console.log("streetAddr   : " + propertyMainAddr);
+            console.log("secondaryTxt : " + propertySecondaryAddr);
+            console.log("latitude     : " + latLong[0]);
+            console.log("longitude    : " + latLong[1]);
+            console.log("description  : " + propertyDescription);
+            console.log("availableFrom: " + propertydateFrom);
+            console.log("availableTo  : " + propertydateTo);
+            console.log("#Beds        : " + propertyNumBed);
+            console.log("#Bath        : " + propertyNumBath);
+            console.log("Amenities    : " + propertyAmenities);
+        }
+       
+        //There are no error in the current page, hence, procced to next page 
+        while(fetching){}
+        setscrollviewIndex(val)
+        
+        setTimeout(() => {
+            scrollView.current.scrollTo({ x: WIDTH * val });
+            setscrollviewIndex(val)
+        }, 100)
+        return
     }
 
+    //Used in moveScrollview to check if any of the location details input is empty 
     function checkLocationDetails(){
         if(propertyLocationNumberStreet.trim() == ""){
             alert("Street Address cannot be empty.");
@@ -333,7 +285,7 @@ export default function PropertyPostingScreen({ navigation }) {
             return false;
         }
         else if(propertyLocationState.trim() == ""){
-            alert("City cannot be empty.");
+            alert("State cannot be empty.");
             return false;
         }
         else if(propertyLocationPostalCode.trim() == ""){
@@ -345,24 +297,54 @@ export default function PropertyPostingScreen({ navigation }) {
         }   
     }
 
-    function findFormattedLocation(){
+    //Used in moveScrollview to check if any of the required image is empty
+    function checkImageGallery(){
+        if(propertyBedroomImage == null){
+            alert("Must select Bedroom Image.")
+            return false;
+        }
+        else if(propertyBathroomImage == null){
+            alert("Must select Bathrrom Image.")
+            return false;
+        }
+        else if(propertyKitchenImage == null){
+            alert("Must select Kitchen Image.")
+            return false;
+        }
+        else if(propertyLivingroomImage == null){
+            alert("Must select Livingroom Image.")
+            return false;
+        }
+        return true
+    }
+
+    async function findFormattedLocation(){
         console.log("Finding formatted address")
+        var successful = false;
         let query = propertyLocationNumberStreet + " " + propertyLocationCity + " " + propertyLocationState;
-        console.log(query)
+        console.log("with" , query)
         var config = {
             method: 'get',
             url: `https://crib-llc-dev.herokuapp.com/autocomplete/geocoding?address=${query}`,
         };
-        axios(config)
-        .then(async (locInfo)=> {           
-           console.log(locInfo.data)
+        await axios(config)
+        .then(async (locInfo)=> {    
+            console.log("Successful in findFormattedLocation")
+            console.log("LOCINFO.DATA ", locInfo.data)
 
+            successful = true;
         })
         .catch(function (error) {
-            
             console.log(error);
+            successful = false;
         });
 
+        if(successful){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     function SelectLocationSequence() {
@@ -425,7 +407,6 @@ export default function PropertyPostingScreen({ navigation }) {
     );
 
     function updateAmenities(name) {
-
         if (propertyAmenities.indexOf(name) != -1) {
             let tempindex = propertyAmenities.indexOf(name);
             setpropertyAmenities([...propertyAmenities.slice(0, tempindex), ...propertyAmenities.slice(tempindex + 1, propertyAmenities.length)])
@@ -437,18 +418,42 @@ export default function PropertyPostingScreen({ navigation }) {
 
     async function postproperty() {
         setLoading(true)
-        console.log("Posting")
+        // console.log();
+        // console.log("Attempting to post property...")
+        // console.log("Property type: " + propertyType);
+        // console.log("streetAddr   : " + propertyMainAddr);
+        // console.log("secondaryTxt : " + propertySecondaryAddr);
+        // console.log("latitude     : " + latLong[0]);
+        // console.log("longitude    : " + latLong[1]);
+        // console.log("description  : " + propertyDescription);
+        // console.log("availableFrom: " + propertydateFrom);
+        // console.log("availableTo  : " + propertydateTo);
+        // console.log("#Beds        : " + propertyNumBed);
+        // console.log("#Bath        : " + propertyNumBath);
         const accessToken = await SecureStorage.getItem("accessToken");
-        console.log(propertyphotoGallery);
-        const postingData = new FormData();
 
-        postingData.append("type", propertyType);                       //String 
-        postingData.append("streetAddr", propertyMainAddr);               //String 
-        postingData.append("secondaryTxt", propertySecondaryAddr);               //String 
+        //Format formdata to send to backend
+        const postingData = new FormData();
+        postingData.append("type", propertyType);                           
+        postingData.append("streetAddr", propertyMainAddr);                 
+        postingData.append("secondaryTxt", propertySecondaryAddr);         
         postingData.append("latitude", latLong[0])
         postingData.append("longitude", latLong[1])
-        //String Array
+        postingData.append("price", propertyPrice.split("$")[1]);                     
+        postingData.append("description", propertyDescription);         
+        postingData.append("availableFrom", propertydateFrom.getTime());        
+        postingData.append("availableTo", propertydateTo.getTime());            
+        postingData.append("bed", propertyNumBed);                      
+        postingData.append("bath", propertyNumBath);                   
+        postingData.append("title", "Name");                    
+        // postingData.append("propertyAmenities", propertyAmenities);     
+        postingData.append("timePosted", new Date())
+        propertyAmenities.forEach(element => {
+            postingData.append("amenities", element);
+        });
+        
 
+        //Hacky way to include images in form data
         var array = propertyBedroomImage.split(".");
 
         postingData.append("propertyImages", {
@@ -487,22 +492,8 @@ export default function PropertyPostingScreen({ navigation }) {
                 name: 'someName',
             });
         }
-
-
-        postingData.append("price", propertyPrice.split("$")[1]);                     //String 
-        postingData.append("description", propertyDescription);         //String 
-        postingData.append("availableFrom", propertydateFrom.getTime());          //String
-        postingData.append("availableTo", propertydateTo.getTime());              //String
-        postingData.append("bed", propertyNumBed);                      //String
-        postingData.append("bath", propertyNumBath);                    //String 
-        postingData.append("title", "Name");                    //String
-        // postingData.append("propertyAmenities", propertyAmenities);     //Array of String 
-        postingData.append("timePosted", new Date())
-        propertyAmenities.forEach(element => {
-            postingData.append("amenities", element);
-        });
-
-       
+        
+        
         if(accessToken != null){
             fetch('https://crib-llc-dev.herokuapp.com/properties', {
                 method: 'POST',
@@ -603,7 +594,6 @@ export default function PropertyPostingScreen({ navigation }) {
             LocationToLatLong(value.description)
         // }
         
-       
     }
 
     function formatPrice(price){
@@ -634,8 +624,6 @@ export default function PropertyPostingScreen({ navigation }) {
         }
     }
 
-    //https://maps.googleapis.com/maps/api/place/queryautocomplete/json?input=${query}&country:us&types=address&location=37.76999%2C-122.44696&radius=4000&strictbounds=true&key=${google_api_key}`
-
     function findLocationDetail(name){
         setFetching(true)
         let spacelessname = name.replaceAll("_","+")
@@ -645,23 +633,22 @@ export default function PropertyPostingScreen({ navigation }) {
         };
         axios(config)
         .then(async (locInfo)=> {   
-            console.log("LINE 569", locInfo.data); 
 
             if(locInfo.data.status == "ZERO_RESULTS"){
-                console.log("Inside location details and cannot find any results");
+                console.log("There are zero results according to user input propertylocation.");
                 var config = {
                     method: 'get',
                     url: `https://maps.googleapis.com/maps/api/place/queryautocomplete/json?input=${spacelessname}&country:us&types=address&location=37.76999%2C-122.44696&radius=4000&strictbounds=true&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
                 };
                 axios(config)
                 .then(async (locDetail)=> {
-                    console.log("looping with " , locDetail.data.predictions[0].description.replaceAll(" ", "+"));
-                   findLocationDetail(locDetail.data.predictions[0].description.replaceAll(" ", "+"))
+                    console.log("Running findLocationDetails again with" , locDetail.data.predictions[0].description.replaceAll(" ", "+"));
+                    findLocationDetail(locDetail.data.predictions[0].description.replaceAll(" ", "+"))
                 })
                 .catch(function (error) {
-                    console.log("ZERO_RESULTS CATCH")
+                    console.log("LINE 661: Can't loop with prediction description becasue user input is wrong")
                     console.log(error);
-                    return -1;
+                    return false;
                 })
                 
             }
