@@ -202,6 +202,27 @@ export default function PropertyPostingScreen({ navigation }) {
                     return;
                 }
             }
+           
+            Alert.alert(
+                'Is this address correct?',
+                propertyLocationNumberStreet+ " " + propertyLocationCity + " " + propertyLocationState, + " " + propertyLocationPostalCode,
+                [
+                  {
+                    text: "No",
+                    onPress: () => console.log("Ask me later pressed")
+                  },
+                  {
+                    text: "Yes",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                  },
+    
+                ]
+            )
+
+            if(!confirmation){
+                return
+            }
         }
 
         //Test the input of the image gallery before moving to the price page
@@ -331,11 +352,11 @@ export default function PropertyPostingScreen({ navigation }) {
         .then(async (locInfo)=> {    
             console.log("Successful in findFormattedLocation")
             console.log("LOCINFO.DATA ", locInfo.data)
-
+            findLocationDetail(query);
             successful = true;
         })
         .catch(function (error) {
-            console.log(error);
+            console.log("findFormattedLocation " , error);
             successful = false;
         });
 
@@ -646,7 +667,7 @@ export default function PropertyPostingScreen({ navigation }) {
                     findLocationDetail(locDetail.data.predictions[0].description.replaceAll(" ", "+"))
                 })
                 .catch(function (error) {
-                    console.log("LINE 661: Can't loop with prediction description becasue user input is wrong")
+                    console.log("Can't loop with prediction description becasue user input is wrong")
                     console.log(error);
                     return false;
                 })

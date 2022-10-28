@@ -92,7 +92,7 @@ export default function Login_OTP({navigation, route}){
         }).then( async data =>{
             console.log(success)
             if(success){
-                console.log("LLLLDLDLDLDLDLDLDLDLDLDLDLDL")
+             
                 console.log("LOGIN_OTP", data)
                 try{
                     OneSignal.disablePush(false);
