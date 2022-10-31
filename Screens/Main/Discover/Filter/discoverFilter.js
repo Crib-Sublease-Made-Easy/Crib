@@ -383,7 +383,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                     <TypeOption key={value.name + "amenitiesfilter"} >
                                         <NameIcon  hitSlop={WIDTH*0.05} onPress={()=>updateAmenities(value.name)}>
                                             {GetFAIconsInBlack(value.name)}
-                                            <PropertyTypeName>{value.name.replaceAll("_", " ")}</PropertyTypeName>
+                                            {/* <PropertyTypeName>{value.name.replaceAll("_", " ")}</PropertyTypeName> */}
                                         </NameIcon>
                                         <Pressable  hitSlop={WIDTH*0.05} onPress={()=>updateAmenities(value.name)}>
                                             <View style={{height:WIDTH*0.055, width:WIDTH*0.055, borderRadius: 5, backgroundColor:filterAmenities.indexOf(value.name) != -1 ? PRIMARYCOLOR : MEDIUMGREY,

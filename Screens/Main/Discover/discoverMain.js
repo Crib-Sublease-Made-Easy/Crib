@@ -5,7 +5,7 @@ import MessageScreen from '../Message/message.js'
 import ProfileScreen from '../Profile/profile';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ROBOTOFONTFAMILY, PRIMARYCOLOR } from '../../../sharedUtils';
+import { ROBOTOFONTFAMILY, PRIMARYCOLOR, FAGetBottomIcons } from '../../../sharedUtils';
 Ionicons.loadFont()
 
 const Tab = createBottomTabNavigator();
@@ -24,11 +24,11 @@ export default function DiscoverTab(){
 
             if (route.name === 'Discover') {
               iconName = focused
-                ? 'home'
+                ? 'Discover'
                 : 'home-outline';
               color = 'PRIMARYCOLOR'
             } else if (route.name === 'Message') {
-              iconName = focused ? 'mail' : 'mail-outline';
+              iconName = focused ? 'Message' : 'mail-outline';
               color = PRIMARYCOLOR
             }
             else if (route.name === 'Profile') {
@@ -37,7 +37,7 @@ export default function DiscoverTab(){
             }
 
             // You can return any component that you like here!
-            return <Ionicons name={iconName} size={30} color={PRIMARYCOLOR} />;
+            return FAGetBottomIcons(iconName);
           },
           tabBarLabelStyle:{
             fontFamily: ROBOTOFONTFAMILY,

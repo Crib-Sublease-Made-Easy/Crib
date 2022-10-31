@@ -7,7 +7,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components/native';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { fab, faBoltLightning, faBottleDroplet, faBottleWater, faBowlFood, faBreadSlice, faBus, faCar, faCaretUp, faCircleNodes, faClosedCaptioning, faCoffee, faCookieBite, faCouch, faDog, faDoorClosed, faDumbbell, faFire, faGripHorizontal, faGripLinesVertical, faHandsWash, faIceCream, faKitchenSet, faMattressPillow, faParking, faPowerOff, faShirt, faSpaghettiMonsterFlying, faStreetView, faSwimmingPool, faTv, faWater, faWifi, faWind, faWindowClose} from '@fortawesome/free-solid-svg-icons'
+import { fab, faBoltLightning, faBottleDroplet, faBottleWater, faBowlFood, faBreadSlice, faBus, faCar, faCaretUp, faCircleNodes, faClosedCaptioning, faCoffee, faCookieBite, faCouch, faDog, faDoorClosed, faDumbbell, faFire, faGlobe, faGripHorizontal, faGripLinesVertical, faHandsWash, faIceCream, faKitchenSet, faMattressPillow, faMessage, faParking, faPowerOff, faShirt, faSpaghettiMonsterFlying, faStreetView, faSwimmingPool, faTv, faWater, faWifi, faWind, faWindowClose} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 //Color 
@@ -192,11 +192,23 @@ export const GetFAIcons = (name) =>{
     else if(name=="Balcony"){
         return <FontAwesomeIcon icon={faWind} color='white'/>
     }
+    else if(name=="Discover"){
+        return <FontAwesomeIcon icon={faGlobe} color='white'/>
+    }
     else{
         return <FontAwesomeIcon icon={faDog} />
     }
 }
 
+export const FAGetBottomIcons = (name) => {
+    if(name=="Discover"){
+        return <FontAwesomeIcon icon={faGlobe} color={PRIMARYCOLOR}/>
+    }
+    if(name=="Message"){
+        return <FontAwesomeIcon icon={faMessage} color={PRIMARYCOLOR}/>
+    }
+
+}
 export const GetFAIconsInBlack = (name) =>{
     if(name=="Pet_Friendly"){
         return <FontAwesomeIcon icon={faDog} color='black'/>
