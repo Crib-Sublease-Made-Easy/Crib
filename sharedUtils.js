@@ -6,9 +6,12 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import styled from 'styled-components/native';
 
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { fab, faBoltLightning, faBottleDroplet, faBottleWater, faBowlFood, faBreadSlice, faBus, faCar, faCaretUp, faCircleNodes, faClosedCaptioning, faCoffee, faCookieBite, faCouch, faDog, faDoorClosed, faDumbbell, faFire, faGlobe, faGripHorizontal, faGripLinesVertical, faHandsWash, faIceCream, faKitchenSet, faMattressPillow, faMessage, faParking, faPowerOff, faShirt, faSpaghettiMonsterFlying, faStreetView, faSwimmingPool, faTv, faWater, faWifi, faWind, faWindowClose} from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, fab, faBackward, faBoltLightning, faBottleDroplet, faBottleWater, faBowlFood, faBreadSlice, faBus, faCalendar, faCar, faCaretUp, faCircleNodes, faClose, faClosedCaptioning, faCoffee, faCookieBite, faCouch, faDog, faDoorClosed, faDumbbell, faFilter, faFire, faGlobe, faGripHorizontal, faGripLinesVertical, faHandsWash, faHeart, faIceCream, faIcons, faKitchenSet, faLocationPin, faMap, faMapLocationDot, faMattressPillow, faMessage, faParking, faPerson, faPowerOff, faSearch, faShirt, faSpaghettiMonsterFlying, faStreetView, faSwimmingPool, faTv, faWater, faWifi, faWind, faWindowClose} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faArrowAltCircleLeft, faCircle, faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 
 //Color 
 export const PRIMARYCOLOR = '#8559E3' //133 89 227
@@ -28,6 +31,8 @@ export const LIGHTGREY = '#E0E0E0'
 export const EXTRALIGHT = '#f5f5f5'
 
 export const GOOGLEBLUE = '#4c8bf5'
+
+
 
 //Dimensions
 export const HEIGHT = Dimensions.get('screen').height;
@@ -195,8 +200,25 @@ export const GetFAIcons = (name) =>{
     else if(name=="Discover"){
         return <FontAwesomeIcon icon={faGlobe} color='white'/>
     }
+    else if(name=="Close"){
+        return <FontAwesomeIcon icon={faClose} color='white'/>
+    }
+    else if(name=="Heart"){
+        return <FontAwesomeIcon icon={faHeart} color='white'/>
+    }
+    else if(name=="Location"){
+        return <FontAwesomeIcon icon={faLocationPin} color='white'/>
+    }
     else{
         return <FontAwesomeIcon icon={faDog} />
+    }
+}
+export const FAGetIconsInPurple = (name) => {
+    if(name=="Search"){
+        return <FontAwesomeIcon icon={faSearch} color={PRIMARYCOLOR}/>
+    }
+    else {
+        return <FontAwesomeIcon icon={faPerson} color={PRIMARYCOLOR}/>
     }
 }
 
@@ -204,10 +226,16 @@ export const FAGetBottomIcons = (name) => {
     if(name=="Discover"){
         return <FontAwesomeIcon icon={faGlobe} color={PRIMARYCOLOR}/>
     }
-    if(name=="Message"){
+    else if(name=="Message"){
         return <FontAwesomeIcon icon={faMessage} color={PRIMARYCOLOR}/>
     }
-
+    else if(name == "Map"){
+        return <FontAwesomeIcon icon={faMap} color={PRIMARYCOLOR}/>
+    }
+    else if(name=="Profile"){
+        return <FontAwesomeIcon icon={faPerson} color={PRIMARYCOLOR}/>
+    }
+   
 }
 export const GetFAIconsInBlack = (name) =>{
     if(name=="Pet_Friendly"){
@@ -290,6 +318,24 @@ export const GetFAIconsInBlack = (name) =>{
     }
     else if(name=="Balcony"){
         return <FontAwesomeIcon icon={faWind} color='black'/>
+    }
+    else if(name=="Search"){
+        return <FontAwesomeIcon icon={faSearch} color='black'/>
+    }
+    else if(name=="Back"){
+        return <FontAwesomeIcon icon={faArrowLeft} color='black'/>
+    }
+    else if(name=="Filter"){
+        return <FontAwesomeIcon icon={faFilter} color='black'/>
+    }
+    else if(name=="Close"){
+        return <FontAwesomeIcon icon={faClose} color='black'/>
+    }
+    else if(name=="Map"){
+        return <FontAwesomeIcon icon={faMapLocationDot} color='black'/>
+    }
+    else if(name=="Calendar"){
+        return <FontAwesomeIcon icon={faCalendar} color='black'/>
     }
     else{
         return <FontAwesomeIcon icon={faDog} />

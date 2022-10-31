@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
+
 import {
   SafeAreaView,
   ScrollView,
@@ -17,7 +18,7 @@ import {
 } from 'react-native';
 
 import styled from 'styled-components/native';
-import { LIGHTGREY, TEXTINPUTBORDERCOLOR, GOOGLEBLUE, PRIMARYCOLOR, DARKGREY, HEIGHT, WIDTH, ROBOTOFONTFAMILY, EXTRALIGHT, MEDIUMGREY } from '../../../sharedUtils';
+import { LIGHTGREY, TEXTINPUTBORDERCOLOR, GOOGLEBLUE, PRIMARYCOLOR, DARKGREY, HEIGHT, WIDTH, ROBOTOFONTFAMILY, EXTRALIGHT, MEDIUMGREY, BottomTabBarHeight } from '../../../sharedUtils';
 
 
 export const MapContainer = styled.View`
@@ -221,6 +222,7 @@ export const SeachIconContainer = styled.View`
   align-items: center;
   justify-content: flex-end
   flex-direction: row
+ 
 `
 
 export const DeleteIconContainer = styled.Pressable`
@@ -262,8 +264,8 @@ export const CustomMarker = styled.Pressable`
 export const SearchHerePressable = styled.Pressable`
   position: absolute;
   align-self: center
-  bottom: ${HEIGHT*0.2}px;
-  
+  bottom: ${HEIGHT*0.25}px; 
+
   padding-horizontal: ${WIDTH*0.03}px
   padding-vertical: ${HEIGHT*0.015}px
   border-radius: ${WIDTH*0.075}px

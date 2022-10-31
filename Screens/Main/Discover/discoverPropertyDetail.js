@@ -13,7 +13,7 @@ import FastImage from 'react-native-fast-image'
 import SecureStorage from 'react-native-secure-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import MapView , { Marker }from 'react-native-maps';
+import MapView , { Marker,PROVIDER_GOOGLE }from 'react-native-maps';
 
 import {UserContext} from '../../../UserContext'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -27,7 +27,7 @@ import { Container, PropertyDescription, CardSectionOne, CardTitle, LocationDist
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
            StickyHeaderContainer,  StickyHeaderIcon} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY } from '../../../sharedUtils';
+import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY, GetFAIcons } from '../../../sharedUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBath, faBed, faEye, faFire, faFireFlameCurved, faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
 
@@ -280,8 +280,8 @@ export default function PropertyDetailScreen({navigation, route}){
                         <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                             <TypeText>{propData.type} for rent</TypeText>
                             {route.params.distance != undefined &&
-                            <View style={{flexDirection:'row'}}>   
-                                <Ionicons name="location"  size={20} style={{marginRight:WIDTH*0.01}}/>
+                            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',  width: WIDTH*0.2}}>   
+                                {GetFAIconsInBlack("Map")}
                                 <TypeText style={{color:'black', fontWeight: '500',}}>{route.params.distance} miles</TypeText>
                             </View>
                         }
@@ -347,12 +347,12 @@ export default function PropertyDetailScreen({navigation, route}){
                         <InfoHeaderText>Availability</InfoHeaderText>
                         <InfoContainer> 
                             <DateContainer>
-                                <Ionicons name='calendar' size={20} />
+                                {GetFAIconsInBlack("Calendar")}
                                 <DateText style={{color:'black', marginLeft: WIDTH*0.025, width: WIDTH*0.15 }}>From    </DateText>
                                 <DateText>{new Date(propData.availableFrom).toDateString()}</DateText>
                             </DateContainer>
                             <DateContainer>
-                                <Ionicons name='calendar' size={20} />
+                                {GetFAIconsInBlack("Calendar")}
                                 <DateText style={{color:'black', marginLeft: WIDTH*0.025,width: WIDTH*0.15 }}>To   </DateText>
                                 <DateText>{new Date(propData.availableTo).toDateString()}</DateText>
                             </DateContainer>
@@ -371,6 +371,7 @@ export default function PropertyDetailScreen({navigation, route}){
                         </InfoHeaderTextAndCenter>
                         <View style={{width: WIDTH*0.9, height: HEIGHT*0.25, borderRadius:25, marginTop: HEIGHT*0.025 }}>
                         <MapView
+                            provider={PROVIDER_GOOGLE}
                             scrollEnabled={false}
                             zoomEnabled={false}
                             rotateEnabled={false}
@@ -424,7 +425,8 @@ export default function PropertyDetailScreen({navigation, route}){
                         {propData.amenities.length != 0 ? propData.amenities.map((value)=>(
                             <AmenitiesItem key={value + "detailamen"}>
                                 {GetFAIconsInBlack(value)}
-                                <AmenitiesText>{value.replaceAll("_"," ")}</AmenitiesText>
+                                {/* <AmenitiesText>{value.replaceAll("_"," ")}</AmenitiesText> */}
+                                <AmenitiesText>{value}</AmenitiesText>
                                
                             </AmenitiesItem>
 
@@ -439,11 +441,11 @@ export default function PropertyDetailScreen({navigation, route}){
                 </ScrollView>
                 <StickyHeaderContainer>
                     < StickyHeaderIcon  hitSlop={WIDTH*0.05} onPress={()=>navigation.goBack()}>
-                        <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
+                        {GetFAIcons("Close")}
                     </ StickyHeaderIcon>
                     { !ownProperty &&
                     < StickyHeaderIcon hitSlop={WIDTH*0.05} onPress={likeProperty}>
-                        <Ionicons  name="heart" size={25} color={ liked ? '#ee88a6' : 'white'}></Ionicons>
+                        {GetFAIcons("Heart")}
                     </ StickyHeaderIcon>
                     }
                     

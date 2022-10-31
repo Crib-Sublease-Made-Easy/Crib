@@ -33,7 +33,7 @@ FontAwesome.loadFont()
 
 
 //Style components 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, DARKGREY, EXTRALIGHT } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, DARKGREY, EXTRALIGHT, GetFAIconsInBlack } from '../../../sharedUtils';
 
 //Custom components
 import {
@@ -102,7 +102,7 @@ export default function DiscoverScreen({navigation}){
     //This controls preview modal open opacity when the location icon in propertycard is pressed
     const opacityTranslation = useRef(new RNAnimated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
-    const [currentLocation, setCurrentLocation] = useState([43.0747,89.3840])
+    const [currentLocation, setCurrentLocation] = useState([43.0747, -89.3840])
     //The location of the user input in string
     const [locationQuery, setlocationQuery] = useState("Search Location ...")
     //The data of the pins to acess a field its pinsData.item.field
@@ -239,7 +239,7 @@ export default function DiscoverScreen({navigation}){
             }
         }) 
         .then(res => res.json()).then(properties =>{
-            console.log("HAPPY", properties)
+            // console.log("HAPPY", properties)
             setFilteredProperties(properties)
 
             properties.forEach(async propData => {
@@ -388,7 +388,8 @@ export default function DiscoverScreen({navigation}){
         if (locationQueryName != ""){
             setlocationQuery(locationQueryName)
             setSearching(false)
-            let spacelessLocation = locationQueryName.replaceAll(" ", "+");
+            // let spacelessLocation = locationQueryName.replaceAll(" ", "+");
+            let spacelessLocation = locationQueryName;
             var config = {
                 method: 'get',
                 url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${spacelessLocation}`,
@@ -560,7 +561,7 @@ export default function DiscoverScreen({navigation}){
                 <SearchContainer  hitSlop={WIDTH*0.05}onPress={()=>setDiscoverSearchVisible(true)}>
                     {/* The search icon on the search outlien */}
                     <SeachIconContainer>
-                        <Ionicons name='search' size={20}  color={DARKGREY} />
+                        {GetFAIconsInBlack("Search")}
                     </SeachIconContainer>
                     
                     {/* Placeholder for locationquerytext selected in discoversearch */}
@@ -571,11 +572,11 @@ export default function DiscoverScreen({navigation}){
                     <DeleteIconContainer hitSlop={WIDTH*0.05} onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
                         {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) || !(dateCompare(new Date(1759190400000), new Date(filterAvailableTo))) || !(dateCompare(new Date(), new Date(filterAvailableFrom)))?
                         <FilterAppliedIconBackground>
-                            <Ionicons name="options-sharp" size={20} />
+                            {GetFAIconsInBlack("Filter")}
                         </FilterAppliedIconBackground>
                         :
                         <NoFilterAppliedIconBackground>
-                            <Ionicons name="options-sharp" size={20} />
+                            {GetFAIconsInBlack("Filter")}
                         </NoFilterAppliedIconBackground>                        
                         }
                     </DeleteIconContainer> 

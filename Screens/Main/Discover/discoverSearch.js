@@ -22,7 +22,7 @@ var axios = require('axios');
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import {PRIMARYCOLOR, WIDTH, HEIGHT, IconPressable, DARKGREY,} from '../../../sharedUtils.js';
+import {PRIMARYCOLOR, WIDTH, HEIGHT, IconPressable, DARKGREY, GetFAIcons, GetFAIconsInBlack, FAGetBottomIcons,} from '../../../sharedUtils.js';
 
 export default function DiscoverSearchScreen({navigation, route, open, close, selectCurrentLocation}){
   const [autocompleteLocation, setautocompleteLocation] = useState([])
@@ -83,7 +83,7 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
           {/* Close() */}
           <CancelContainer style={{justifyContent: 'flex-start'}}>
             <IconPressable  hitSlop={WIDTH*0.05} onPress={leaveDiscoverSearch}>
-              <Ionicons name='arrow-back-outline' size={25} />
+              {GetFAIconsInBlack("Back")}
             </IconPressable>
           </CancelContainer>
 
@@ -96,7 +96,7 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
           <CancelContainer  style={{justifyContent: 'flex-end'}}>
             {locationQuery.trim().length != 0 &&
             <Pressable  hitSlop={WIDTH*0.05}onPress={()=>setLocationQuery("")}>
-              <Ionicons name='close-circle'  color='black' size={25}/>
+              {GetFAIconsInBlack("Close")}
             </Pressable>
             }
           </CancelContainer>
@@ -110,8 +110,8 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
           {autocompleteLocation.length != 0 && autocompleteLocation.map((value, index)=>(
                   <AutocompleteResultItems key={"autocomplete" + value.description + index}  hitSlop={WIDTH*0.05} onPress={()=>pressAutocompleteItem(value.description)}>
 
-                      <Ionicons name="navigate-circle-outline" size={25} color= {PRIMARYCOLOR} style={{width: WIDTH*0.1}}/>
-                      <View>
+                      {FAGetBottomIcons("Map")}
+                      <View style={{marginLeft: WIDTH*0.05}}>
                         <LocationPrimaryText key={value.structured_formatting.main_text}>{value.structured_formatting.main_text}</LocationPrimaryText>
                         <LocationSecondaryText key={value.structured_formatting.secondary_text} >{value.structured_formatting.secondary_text}</LocationSecondaryText>
                       </View>

@@ -32,6 +32,7 @@ export const TopContainer = styled.View`
   justify-content: space-between
   align-items: center
   padding-horizontal: ${WIDTH*0.05}px
+ 
 
 `
 
@@ -51,7 +52,6 @@ export const SearchContainer = styled.TextInput`
   border-color: ${EXTRALIGHT}
   padding-horizontal: ${WIDTH*0.035}px
   
-  elevation: 5
 `
 export const  SearchResultContainer = styled.View`
   height: ${HEIGHT*0.4}px;

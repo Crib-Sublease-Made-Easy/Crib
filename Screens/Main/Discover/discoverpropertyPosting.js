@@ -775,7 +775,8 @@ export default function PropertyPostingScreen({ navigation }) {
                                         }}>
                                             {GetFAIcons(value.name)}
                                             <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                                {"   "}{value.name.replaceAll("_"," ")}
+                                                {/* {"   "}{value.name.replaceAll("_"," ")} */}
+                                                {"   "}{value.name}
                                             </Text>
                                         </Pressable>
 
@@ -872,7 +873,8 @@ export default function PropertyPostingScreen({ navigation }) {
                                     </BedBathLogo>
                                     <BedBathLogo>
                                         <Ionicons name="water-outline" size={30} color='white' ></Ionicons>
-                                        <LocationText>{propertyNumBath.replaceAll("P","+")} bathroom</LocationText>
+                                        {/* <LocationText>{propertyNumBath.replaceAll("P","+")} bathroom</LocationText> */}
+                                        <LocationText>{propertyNumBath} bathroom</LocationText>
                                     </BedBathLogo>
                                 </BedAndBathContainer>
                             </ReviewSectionContainer>

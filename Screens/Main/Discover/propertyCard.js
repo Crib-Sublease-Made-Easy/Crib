@@ -37,7 +37,7 @@ import { FlatList, Gesture, GestureDetector, TouchableOpacity,  } from 'react-na
 import Lottie from 'lottie-react-native';
 
 
-import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, ROBOTOFONTFAMILY, EXTRALIGHT, PRIMARYCOLOR } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, ROBOTOFONTFAMILY, EXTRALIGHT, FAGetIconsInPurple } from '../../../sharedUtils';
 import { SystemMessage } from 'react-native-gifted-chat';
 
 const CardContainer = styled(Pressable)`
@@ -333,8 +333,8 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
           
           <TopBarSlider>
             <Pressable hitSlop={WIDTH*0.05} onPress={toogleCard}
-            style={{paddingVertical: HEIGHT*0.005, paddingHorizontal: WIDTH*0.05, backgroundColor: EXTRALIGHT, borderRadius:20}}>
-              <Ionicons name='map' size={25} color={PRIMARYCOLOR}/>
+            style={{paddingVertical: HEIGHT*0.01, paddingHorizontal: WIDTH*0.05, backgroundColor: EXTRALIGHT, borderRadius:20}}>
+              {FAGetIconsInPurple("Search")}
             </Pressable>
           </TopBarSlider>
         </DragGreyLineContainer>

@@ -25,14 +25,14 @@ export default function DiscoverTab(){
             if (route.name === 'Discover') {
               iconName = focused
                 ? 'Discover'
-                : 'home-outline';
+                : 'Discover';
               color = 'PRIMARYCOLOR'
             } else if (route.name === 'Message') {
-              iconName = focused ? 'Message' : 'mail-outline';
+              iconName = focused ? 'Message' : 'Message';
               color = PRIMARYCOLOR
             }
             else if (route.name === 'Profile') {
-              iconName = focused ? 'person-circle' : 'person-circle-outline';
+              iconName = focused ? 'Profile' : 'Profile';
               color = PRIMARYCOLOR
             }
 
