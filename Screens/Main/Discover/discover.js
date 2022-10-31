@@ -7,6 +7,7 @@ import {
   Image,
   Pressable
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 var axios = require('axios');
 
@@ -62,6 +63,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function DiscoverScreen({navigation}){
+    console.log(useSafeAreaInsets().bottom , "BOTTOM");
+    console.log(useSafeAreaInsets().top , "TOP");
 
     const {sb, USERID, preloadProperties} = useContext(UserContext);
 
@@ -473,11 +476,13 @@ export default function DiscoverScreen({navigation}){
     }
 
     return(
-        <GestureHandlerRootView style={{flex: 1}}>
-
-            <SafeAreaView>
+        
+        <GestureHandlerRootView style={{backgroundColor:'green', flex: 1}}>
+            <SafeAreaView style={{ flex: 1}}>
+                
                 {/* This is the container for the whole map background in discover behind search bar */}
                 {/* Includes the Search Here pressable, map view, markers and preview modal */}
+                
                 <MapContainer>
                     <MapView
                         onRegionChange={(Region)=> setMapCenterLocation([Region.latitude,Region.longitude])}
@@ -555,6 +560,7 @@ export default function DiscoverScreen({navigation}){
                         top: HEIGHT*0.015}}/>
                     </RNAnimated.View>
                 </MapContainer>
+              
                     
                 {/* This sets the container of the search input */}
                 <SearchContainer  hitSlop={WIDTH*0.05}onPress={()=>setDiscoverSearchVisible(true)}>
@@ -582,7 +588,7 @@ export default function DiscoverScreen({navigation}){
                 </SearchContainer>
                 
                 {/* View component to seperate the search bar and the propertycard */}
-                <View style={{width:WIDTH, height:HEIGHT*0.05}}/>
+                {/* <View style={{width:WIDTH, height:HEIGHT*0.05}}/> */}
 
                 {/* Property Cards*/}       
                 <PropertyCard index={0} navigation={navigation} length={pinsData.length} userId={USERID}
@@ -606,7 +612,7 @@ export default function DiscoverScreen({navigation}){
 
                 {/* Search screen when the search bar is pressed */}
                 <DiscoverSearchScreen open={discoverSearchVisible} close={()=> setDiscoverSearchVisible(false)} selectCurrentLocation={selectCurrentLocation}/>
-                
+               
             </SafeAreaView>  
         </GestureHandlerRootView>
     )

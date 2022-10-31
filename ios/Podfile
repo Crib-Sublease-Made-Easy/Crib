@@ -19,6 +19,8 @@ target 'lighthouse' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod 'RNSecureStorage', :path => '../node_modules/react-native-secure-storage'
+
   target 'lighthouseTests' do
     inherit! :complete
     # Pods for testing

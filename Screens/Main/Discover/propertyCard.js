@@ -1,4 +1,7 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import {useSafeAreaInsets } from 'react-native-safe-area-context';
+
 
 import {
     SafeAreaView,
@@ -109,7 +112,6 @@ const OpenMapIconContainer = styled.Pressable`
 `
 
 const DragGreyLineContainer = styled.View`
-  
   width: ${WIDTH}px;
   align-items: center
   background-color:red
@@ -151,6 +153,12 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     searching, currentLocation, loading
    
 }){
+    const bottomTabHeight = useBottomTabBarHeight();
+    console.log(bottomTabHeight)
+    console.log(HEIGHT*0.67)
+    console.log(HEIGHT)
+
+    const topSafeHeightMargin =  useSafeAreaInsets().top;
     const flatListItemOpacity = useRef(new RNAnimated.Value(0)).current;
     const flatlistRef = useRef();
     const [previewing, setPreviewing] = useState(false)
@@ -159,18 +167,18 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
 
     useEffect(()=>{
      
-      if(searching){
-        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:15})
-      }
+      // if(searching){
+      //   translateY.value = withSpring(HEIGHT, {stiffness: 70, mass: 0.3, damping:15})
+      // }
       if(flatlistRefreshing){
-        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
+        translateY.value = withSpring(HEIGHT*0.05, {stiffness: 50, mass: 0.3, damping:15})
         // flatlistRef.current.scrollToIndex({index:0})
       }
      
     }, [searching, flatlistRefreshing,])
 
     // Swipable Bottom Sheet
-    const translateY = useSharedValue(0)
+    const translateY = useSharedValue(HEIGHT*0.05)
     const velocityY = useSharedValue(0)
 
     const context = useSharedValue({y:0})
@@ -181,27 +189,29 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     }).onUpdate((event)=>{
     translateY.value = event.translationY + context.value.y
     
-    translateY.value = Math.max(translateY.value, -HEIGHT*0.005);
+    translateY.value = Math.max(translateY.value, 0);
 
     velocityY.value = event.velocityY;
 
    
     }).onEnd(()=>{
     //console.log(velocityY.value)
+    console.log(translateY)
     if(translateY.value  < HEIGHT*0.35){
+     
       if(Math.abs(velocityY.value) > 1500){
-        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:10})
+        translateY.value = withSpring(0, {stiffness: 70, mass: 0.3, damping:10})
       }
       else{
-        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
+        translateY.value = withSpring(HEIGHT*0.05, {stiffness: 50, mass: 0.3, damping:15})
       }       
     }
     else{
       if(Math.abs(velocityY.value) > 1750){
-        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 70, mass: 0.3, damping:10})
+        translateY.value = withSpring(HEIGHT*0.05, {stiffness: 70, mass: 0.3, damping:10})
       }
       else{
-        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:15})
+        translateY.value = withSpring(HEIGHT*0.6, {stiffness: 70, mass: 0.3, damping:15})
       }
     }
 
@@ -248,16 +258,18 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         setSelectedPin(pinInfo)
         openPreviewCard()
         moveMap(pinInfo.propertyInfo.loc.coordinates[1] - 0.015,pinInfo.propertyInfo.loc.coordinates[0])
-        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 50, mass: 0.3, damping:15})
+        translateY.value = withSpring(HEIGHT*0.6, {stiffness: 50, mass: 0.3, damping:15})
     }
 
     function toogleCard(){
       if(translateY.value > HEIGHT*0.5){
 
-        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
+        translateY.value = withSpring(HEIGHT*0.05, {stiffness: 50, mass: 0.3, damping:15})
       }
       else{
-        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:15})
+        console.log(HEIGHT*0.67)
+        console.log("HEIGHTTTT", HEIGHT - bottomTabHeight)
+        translateY.value = withSpring(HEIGHT - HEIGHT*0.07 - HEIGHT*0.165 - topSafeHeightMargin, {stiffness: 70, mass: 0.3, damping:15})
       }
     }
   
@@ -325,9 +337,10 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
   <GestureDetector  gesture={gesture}>
     
       <Animated.View
-        style={[bottomSheetStyle,{width: WIDTH, height: HEIGHT*0.75, alignItems:'center', borderTopLeftRadius:25, 
+        style={[bottomSheetStyle,{width: WIDTH, height: HEIGHT - bottomTabHeight - topSafeHeightMargin - HEIGHT*0.115, alignItems:'center', borderTopLeftRadius:25, 
         borderTopRightRadius:25,backgroundColor: 'white',
         shadowColor: 'black', shadowRadius: 15,shadowOffset: {width: 0, height: 0},  shadowOpacity: 0.2, elevation: 5,
+        
       }]}>
         <DragGreyLineContainer>
           
