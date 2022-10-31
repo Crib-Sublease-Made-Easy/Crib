@@ -17,7 +17,7 @@ import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from '
 import './onChat'
 var axios = require('axios');
 
-import {PRIMARYCOLOR} from './sharedUtils'
+import { PRIMARYCOLOR } from './sharedUtils'
 
 //User Context
 import { UserContext } from './UserContext.js';
@@ -53,6 +53,7 @@ import ProfileTab from './Screens/Main/Profile/profileMain.js';
 import ProfileEditScreen from './Screens/Main/Profile/profileEdit.js';
 import EditEducationScreen from './Screens/Main/Profile/EditProfile/EditEducation/editEducation.js';
 import EditOccupationScreen from './Screens/Main/Profile/EditProfile/EditOccupation/editOccupation.js';
+import EditPronounsScreen from './Screens/Main/Profile/EditProfile/EditPronouns/editPronouns.js';
 import SettingScreen from './Screens/Main/Profile/Setting/setting.js'
 import ChatScreen from './Screens/Main/Message/chat.js'
 
@@ -94,7 +95,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
 
-  
+
   const appState = useRef(AppState.currentState);
   const [user, setUser] = useState(null)
 
@@ -104,60 +105,62 @@ export default function App() {
 
 
 
-  const sb = new SendBird({ appId: appId});   // The `localCacheEnabled` is optional. The default is false.
+  const sb = new SendBird({ appId: appId });   // The `localCacheEnabled` is optional. The default is false.
 
 
 
-//OneSignal Init Code
-OneSignal.setLogLevel(6, 0);
-OneSignal.setAppId("a979dd6f-dffb-476e-8d0b-bb27863a3c55");
-//END OneSignal Init Code
+  //OneSignal Init Code
+  OneSignal.setLogLevel(6, 0);
+  OneSignal.setAppId("a979dd6f-dffb-476e-8d0b-bb27863a3c55");
+  //END OneSignal Init Code
 
-//Prompt for push on iOS
-OneSignal.promptForPushNotificationsWithUserResponse(async response => {
-  const deviceState = await OneSignal.getDeviceState();
-  console.log(deviceState)
-  try{
-    const cacheOneSignalID = await SecureStorage.getItem("oneSignalUserID");
-    if (deviceState.userId != cacheOneSignalID && deviceState != null){
-      await SecureStorage.setItem("oneSignalUserID", deviceState.userId);
+  //Prompt for push on iOS
+  OneSignal.promptForPushNotificationsWithUserResponse(async response => {
+    const deviceState = await OneSignal.getDeviceState();
+    console.log(deviceState)
+    try {
+      const cacheOneSignalID = await SecureStorage.getItem("oneSignalUserID");
+      if (deviceState.userId != cacheOneSignalID && deviceState != null) {
+        await SecureStorage.setItem("oneSignalUserID", deviceState.userId);
+      }
     }
-  }
-  catch{e=>{
-    console.log(("TRY/CATCH in APP.js SecureStorage.setItem('oneSignalUserID')"))
-    console.log(e)
-  }}
-});
+    catch {
+      e => {
+        console.log(("TRY/CATCH in APP.js SecureStorage.setItem('oneSignalUserID')"))
+        console.log(e)
+      }
+    }
+  });
 
 
 
-//Method for handling notifications opened
-OneSignal.setNotificationOpenedHandler(notification => {
-  console.log("OneSignal: notification opened:", notification);
-});
+  //Method for handling notifications opened
+  OneSignal.setNotificationOpenedHandler(notification => {
+    console.log("OneSignal: notification opened:", notification);
+  });
 
-//Method for handling notifications received while app in foreground
-OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
-  // console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
-  let notification = notificationReceivedEvent.getNotification();
-  // console.log("notification: ", notification);
-  const data = notification.additionalData
-  // console.log("additionalData: ", data);
-  // Complete with null means don't show a notification.
-  console.log("SOMETHING")
-  if(!onChat){
-    console.log("WILL SHOW MSG ")
+  //Method for handling notifications received while app in foreground
+  OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {
+    // console.log("OneSignal: notification will show in foreground:", notificationReceivedEvent);
+    let notification = notificationReceivedEvent.getNotification();
+    // console.log("notification: ", notification);
+    const data = notification.additionalData
+    // console.log("additionalData: ", data);
+    // Complete with null means don't show a notification.
+    console.log("SOMETHING")
+    if (!onChat) {
+      console.log("WILL SHOW MSG ")
 
-    notificationReceivedEvent.complete(notification);
-  } else{
-    console.log("DOES NOT SHOW MSG ")
-    notificationReceivedEvent.complete(null);
-  }
+      notificationReceivedEvent.complete(notification);
+    } else {
+      console.log("DOES NOT SHOW MSG ")
+      notificationReceivedEvent.complete(null);
+    }
 
-});
+  });
 
   useEffect(() => {
-   
+
     cleanup()
     console.log("INITIALIZE APP.JS USEEFFECT")
 
@@ -171,8 +174,8 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
         console.log("App has come to the foreground!");
         refreshAccessToken()
         // connectSendbird()
-      } 
-      else{
+      }
+      else {
         onChat = false
         // disconnectSendbird()
       }
@@ -187,13 +190,13 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
   }, [user])
 
-  async function cleanup(){
-    
+  async function cleanup() {
+
     const launched = await AsyncStorage.getItem("launched")
-   
+
     console.log(launched)
 
-    if (launched == null){
+    if (launched == null) {
       await SecureStorage.removeItem("studio.jpg");
       await SecureStorage.removeItem("accessToken");
       await SecureStorage.removeItem("refreshToken")
@@ -206,12 +209,12 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       await AsyncStorage.setItem("launched", 'true');
 
     }
-    else{
+    else {
       await AsyncStorage.setItem("launched", 'false');
     }
   }
 
-  const disconnectSendbird = async () =>{
+  const disconnectSendbird = async () => {
     const UID = await SecureStorage.getItem("userId");
     if (UID != undefined) {
       await sb.disconnect()
@@ -224,7 +227,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       setUser(UID)
       try {
         console.log("connecting to sendbird")
-     
+
         await sb.connect(UID, function (user, error) {
           if (error) {
             // Handle error.
@@ -232,7 +235,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             console.log(error)
           }
           else {
-            
+
             console.log("sendbird connected")
           }
           // The user is connected to Sendbird server.
@@ -252,7 +255,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     if (rt != undefined) {
       setUser(id)
       connectSendbird()
-     
+
       await fetch('https://crib-llc.herokuapp.com/tokens/accessRefresh', {
         method: 'POST',
         headers: {
@@ -267,17 +270,17 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
           alert(err)
         }
       })
-      
+
       //Prefetch basic info
       const cachedProfilePic = await SecureStorage.getItem("profilePic");
-      if(cachedProfilePic != null){
+      if (cachedProfilePic != null) {
         const success = await Image.prefetch(cachedProfilePic);
         console.log("PREFETCH --- APP.JS --- PROFILEPIC")
       }
 
-       
+
     }
-    else{
+    else {
       console.log("Refresh Token is undefined. User is not logged in.")
     }
   }
@@ -302,219 +305,226 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   return (
 
     <NavigationContainer>
-      <UserContext.Provider value={{ login, logout, sb, USERID: user, preloadProperties: preloadProperties}}>
+      <UserContext.Provider value={{ login, logout, sb, USERID: user, preloadProperties: preloadProperties }}>
 
-          <Stack.Navigator>
+        <Stack.Navigator>
 
-            <Stack.Screen
-              name="DiscoverTabs"
-              component={DiscoverTab}
-              options={{headerShadowVisible: false,cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter, headerShown:false}}
-            />
+          <Stack.Screen
+            name="DiscoverTabs"
+            component={DiscoverTab}
+            options={{ headerShadowVisible: false, cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter, headerShown: false }}
+          />
 
-            <Stack.Screen
-              name="ProfileTabs"
-              component={ProfileTab}
-              options={{ headerShown: false, cardStyleInterpolator: forFade }}
-            />
+          <Stack.Screen
+            name="ProfileTabs"
+            component={ProfileTab}
+            options={{ headerShown: false, cardStyleInterpolator: forFade }}
+          />
 
-            <Stack.Screen
-              name="MessageTabs"
-              component={MessageTab}
-              options={{cardStyleInterpolator: forFade, headerStyle:{backgroundColor:'red'},  }}
-            />
+          <Stack.Screen
+            name="MessageTabs"
+            component={MessageTab}
+            options={{ cardStyleInterpolator: forFade, headerStyle: { backgroundColor: 'red' }, }}
+          />
 
 
-            <Stack.Screen name="PropertyDetail"
-              component={PropertyDetailScreen}
-              options={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS, gestureEnabled: false }}
-              
-            />
-            <Stack.Screen name="PropertyPosting"
-              component={PropertyPostingScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-                gestureEnabled: false 
-              }}
-            />
+          <Stack.Screen name="PropertyDetail"
+            component={PropertyDetailScreen}
+            options={{ headerShown: false, cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS, gestureEnabled: false }}
 
-            <Stack.Screen name="PropertyFilter"
-              component={DiscoverFilterScreen}
-              options={{
-                headerShown: false, presentation: 'transparentModal',
-                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS
-              }}
-            />
-
-            <Stack.Screen name="Setting"
-              component={SettingScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
-            />
-
-            <Stack.Screen name="TermsAndService"
-              component={TermsAndService}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
-            />
-            <Stack.Screen name="Privacy"
-              component={Privacy}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
-            />
-            <Stack.Screen name="Chat"
-              component={ChatScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, 
-              }}
-              
-              
-            />
-            <Stack.Screen name="ChangeNumber"
-              component={ChangeNumberScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
-            />
-            <Stack.Screen name="ChangeEmail"
-              component={ChangeEmailScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
-            />
-
-            <Stack.Screen name="OTPEdit"
-              component={OTPEditScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-              }}
-            />
-            <Stack.Screen name="ProfileEdit"
-              component={ProfileEditScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS, gestureDirection: 'vertical'
-              }}
-            />
-
-            <Stack.Screen name="EditEducation"
-              component={EditEducationScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-              }}
-            />
-            <Stack.Screen name="EditOccupation"
-              component={EditOccupationScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-              }}
-            />
-            <Stack.Screen name="EditAboutMe"
-              component={EditAboutMeScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-              }}
-            />
-            <Stack.Screen name="EditProperty"
-              component={EditPropertyScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-              }}
-            />
-            <Stack.Screen name="EditPropertyType"
-              component={PropTypesScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-              }}
-            />
-            <Stack.Screen name="EditPropertyPrice"
-              component={EditPropertyPriceScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-              }}
-            />
-            <Stack.Screen name="EditPropertyAvail"
-              component={EditPropertyAvailScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-              }}
-            />
-            <Stack.Screen name="EditPropertyDescription"
-              component={EditPropertyDescriptionScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-              }}
-            />
-            <Stack.Screen name="EditPropertyAmenities"
-              component={EditPropertyAmenitiesScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-              }}
-            />
-            <Stack.Screen name="ContactUs"
-              component={ContactUsScreen}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-              }}
-            />
-
-          
-
-            <Stack.Screen name="Landing" component={LandingScreen} options={{ 
-              // headerStyle:{backgroundColor: PRIMARYCOLOR}, headerShadowVisible: false, headerTitle:"",
+          />
+          <Stack.Screen name="PropertyPosting"
+            component={PropertyPostingScreen}
+            options={{
               headerShown: false,
-              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS}} 
-              />
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
+              cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+              gestureEnabled: false
+            }}
+          />
 
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="FirstLastName" component={FirstLastNameScreen} options={{ headerShown: false, }} />
-            <Stack.Screen name="Age" component={AgeScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="Gender" component={GenderScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="ProfilePic" component={ProfilePicScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="Occupation" component={OccupationScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="School" component={SchoolScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="Email" component={EmailScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="Password" component={PasswordScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="PhoneNumber" component={PhoneNumberScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="Login_OTP"
-              component={Login_OTP}
-              options={{
-                headerShown: false,
-                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
-        }}
-            />
+          <Stack.Screen name="PropertyFilter"
+            component={DiscoverFilterScreen}
+            options={{
+              headerShown: false, presentation: 'transparentModal',
+              cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS
+            }}
+          />
 
-            <Stack.Screen name="EmailPassword" component={EmailPasswordScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="otp" component={OTPScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Setting"
+            component={SettingScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+            }}
+          />
 
-          </Stack.Navigator>
-        
+          <Stack.Screen name="TermsAndService"
+            component={TermsAndService}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+            }}
+          />
+          <Stack.Screen name="Privacy"
+            component={Privacy}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+            }}
+          />
+          <Stack.Screen name="Chat"
+            component={ChatScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+
+
+          />
+          <Stack.Screen name="ChangeNumber"
+            component={ChangeNumberScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+            }}
+          />
+          <Stack.Screen name="ChangeEmail"
+            component={ChangeEmailScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+            }}
+          />
+
+          <Stack.Screen name="OTPEdit"
+            component={OTPEditScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+            }}
+          />
+          <Stack.Screen name="ProfileEdit"
+            component={ProfileEditScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS, gestureDirection: 'vertical'
+            }}
+          />
+          <Stack.Screen name="EditPronouns"
+            component={EditPronounsScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          />
+          <Stack.Screen name="EditEducation"
+            component={EditEducationScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          />
+          <Stack.Screen name="EditOccupation"
+            component={EditOccupationScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          />
+          <Stack.Screen name="EditAboutMe"
+            component={EditAboutMeScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          />
+          <Stack.Screen name="EditProperty"
+            component={EditPropertyScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          />
+          <Stack.Screen name="EditPropertyType"
+            component={PropTypesScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          />
+          <Stack.Screen name="EditPropertyPrice"
+            component={EditPropertyPriceScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          />
+          <Stack.Screen name="EditPropertyAvail"
+            component={EditPropertyAvailScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          />
+          <Stack.Screen name="EditPropertyDescription"
+            component={EditPropertyDescriptionScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          />
+          <Stack.Screen name="EditPropertyAmenities"
+            component={EditPropertyAmenitiesScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          />
+          <Stack.Screen name="ContactUs"
+            component={ContactUsScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          />
+
+
+
+          <Stack.Screen name="Landing" component={LandingScreen} options={{
+            // headerStyle:{backgroundColor: PRIMARYCOLOR}, headerShadowVisible: false, headerTitle:"",
+            headerShown: false,
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+          }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="FirstLastName" component={FirstLastNameScreen} options={{ headerShown: false, }} />
+          <Stack.Screen name="Age" component={AgeScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Gender" component={GenderScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="ProfilePic" component={ProfilePicScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Occupation" component={OccupationScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="School" component={SchoolScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Email" component={EmailScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Password" component={PasswordScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="PhoneNumber" component={PhoneNumberScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Login_OTP"
+            component={Login_OTP}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+            }}
+          />
+
+          <Stack.Screen name="EmailPassword" component={EmailPasswordScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="otp" component={OTPScreen} options={{ headerShown: false }} />
+
+        </Stack.Navigator>
+
 
 
       </UserContext.Provider>
