@@ -486,7 +486,7 @@ export default function PropertyPostingScreen({ navigation }) {
                             We make subleasing as easy as possible.
                         </InfoText>
                         
-                            <Lottie source={require('../../../postingfirstpage.json')}  autoPlay={scrollviewIndex == 0 ? true : false} loop style={{width:WIDTH*0.9, height: WIDTH*0.9, }}/>
+                            <Lottie source={require('../../../postingfirstpage.json')}  autoPlay={scrollviewIndex == 0 ? true : false}  style={{width:WIDTH*0.9, height: WIDTH*0.9, }}/>
                        
 
                     </PostingSection>
@@ -910,7 +910,7 @@ export default function PropertyPostingScreen({ navigation }) {
                             <PricePerMonth>{propertyPrice} <Text style={{ fontSize: HEIGHT * 0.025, fontWeight: '500', color: 'white' }}>/ month</Text></PricePerMonth>
                             <ContactTanentButton loading={loading} hitSlop={WIDTH*0.05} onPress={postproperty}>
                             {loading ? 
-                                 <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
+                                 <Lottie source={require('../../../loadingAnim.json')} autoPlay  style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
                             :
                                 <Text style={{ color: 'white', fontWeight: '700' }}>Post</Text>
                             }

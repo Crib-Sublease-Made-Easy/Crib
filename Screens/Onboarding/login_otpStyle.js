@@ -58,6 +58,7 @@ export const SubtitleText = styled.Text`
     margin-top: ${HEIGHT*0.01}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
+    color: black
     
 `
 

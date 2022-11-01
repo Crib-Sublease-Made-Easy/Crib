@@ -5,7 +5,8 @@ import {
     View,
     Dimensions,
     Image,
-    Animated as RNAnimated
+    Animated as RNAnimated,
+    SafeAreaView
 } from 'react-native';
 
 import FastImage from 'react-native-fast-image'
@@ -99,7 +100,7 @@ export default function PropertyDetailScreen({navigation, route}){
             }
             }) 
             .then(res => res.json()).then(async userData =>{
-                if(userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) == -1){
+                if(userData.favoriteProperties?.indexOf(route.params.data.propertyInfo._id) == -1){
                     setLiked(false)
                 }
                 else{
@@ -222,7 +223,7 @@ export default function PropertyDetailScreen({navigation, route}){
       }
 
     return(
-       
+       <SafeAreaView style={{display: 'flex'}}>
         <Container>             
             <PropertyDescription>
     
@@ -231,7 +232,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 bouncesZoom={1}
                 scrollEventThrottle={5}
                 >
-                    {/* <Lottie source={require('../../../ImageLoading.json')} autoPlay loop={2}  style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/> */}
+                    {/* <Lottie source={require('../../../ImageLoading.json')} autoPlay   style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/> */}
 
                     <View style={{height:HEIGHT*0.35, width:WIDTH}}>
                         <FlatList 
@@ -460,6 +461,7 @@ export default function PropertyDetailScreen({navigation, route}){
             </Footer>
 
         </Container>
+        </SafeAreaView>
        
         
     )

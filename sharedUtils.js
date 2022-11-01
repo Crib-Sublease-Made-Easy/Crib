@@ -9,7 +9,7 @@ import styled from 'styled-components/native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faArrowLeft, fab, faBackward, faBoltLightning, faBottleDroplet, faBottleWater, faBowlFood, faBreadSlice, faBus, faCalendar, faCar, faCaretUp, faCircleNodes, faClose, faClosedCaptioning, faCoffee, faCookieBite, faCouch, faDog, faDoorClosed, faDumbbell, faFilter, faFire, faGlobe, faGripHorizontal, faGripLinesVertical, faHandsWash, faHeart, faIceCream, faIcons, faKitchenSet, faLocationPin, faMap, faMapLocationDot, faMattressPillow, faMessage, faParking, faPerson, faPowerOff, faSearch, faShirt, faSpaghettiMonsterFlying, faStreetView, faSwimmingPool, faTv, faWater, faWifi, faWind, faWindowClose} from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, fab, faBackward, faBoltLightning, faBottleDroplet, faBottleWater, faBowlFood, faBreadSlice, faBus, faCalendar, faCar, faCaretUp, faCircleNodes, faClose, faClosedCaptioning, faCoffee, faCookieBite, faCouch, faDog, faDoorClosed, faDumbbell, faFilter, faFire, faGlobe, faGripHorizontal, faGripLinesVertical, faHandsWash, faHeart, faIceCream, faIcons, faKitchenSet, faLocationArrow, faLocationPin, faMap, faMapLocationDot, faMattressPillow, faMessage, faParking, faPerson, faPowerOff, faSearch, faShirt, faSpaghettiMonsterFlying, faStreetView, faSwimmingPool, faTv, faWater, faWifi, faWind, faWindowClose} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowAltCircleLeft, faCircle, faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 
@@ -208,6 +208,9 @@ export const GetFAIcons = (name) =>{
     }
     else if(name=="Location"){
         return <FontAwesomeIcon icon={faLocationPin} color='white'/>
+    }
+    else if(name == "LocationPin"){
+        return <FontAwesomeIcon icon={faLocationArrow} color='white'/>
     }
     else{
         return <FontAwesomeIcon icon={faDog} />
@@ -451,7 +454,7 @@ export const ContinueButton = styled(Pressable)`
     shadow-color: black;
     shadow-radius: 5px;
     shadow-opacity: 0.2;
-    elevation: 5
+    elevation: 2
 `
 //Continue Button Text used in sign up 
 export const ContinueText = styled.Text`

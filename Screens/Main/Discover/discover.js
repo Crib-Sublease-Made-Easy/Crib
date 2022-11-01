@@ -25,15 +25,21 @@ import PropertyCard from './propertyCard';  //The slide up screen that shows all
 
 import SecureStorage from 'react-native-secure-storage'
 
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+
 //Icons
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 FontAwesome.loadFont()
 
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+
+import { faClose} from '@fortawesome/free-solid-svg-icons';
+
 
 //Style components 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, DARKGREY, EXTRALIGHT, GetFAIconsInBlack } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, DARKGREY, EXTRALIGHT, GetFAIconsInBlack, GetFAIcons } from '../../../sharedUtils';
 
 //Custom components
 import {
@@ -59,12 +65,13 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 //React Native Map
 import MapView , { Marker }from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 
 
 export default function DiscoverScreen({navigation}){
 
     const {sb, USERID, preloadProperties} = useContext(UserContext);
-
+    const bottomTabHeight = useBottomTabBarHeight();
     //Method for handling notifications received while app in foreground
     OneSignal.setNotificationOpenedHandler(async notification => {
     // console.log("OneSignal: notification opened:", notification);
@@ -491,6 +498,7 @@ export default function DiscoverScreen({navigation}){
                         initialRegion={{
                         latitude: currentLocation[0], 
                         longitude: currentLocation[1],
+                      
                         latitudeDelta: 0.02,
                         longitudeDelta: 0.02,
                         }}
@@ -526,7 +534,7 @@ export default function DiscoverScreen({navigation}){
                     {/* This is the container for the preview modal/card */}
                     <RNAnimated.View 
                     style={{width:WIDTH*0.9, height: HEIGHT*0.275,backgroundColor:'white', borderRadius:25,
-                    position:'absolute', bottom: HEIGHT*0.17, alignSelf:'center',shadowColor: 'black', shadowRadius: 5,
+                    position:'absolute', bottom: HEIGHT*0.2 + bottomTabHeight, alignSelf:'center',shadowColor: 'black', shadowRadius: 5,
                     shadowOpacity: 0.4, elevation: 5, display: propertyPreviewCard ? 'flex' : 'none',
                     opacity: opacityTranslation.interpolate({
                         inputRange: [0, 1],
@@ -551,9 +559,11 @@ export default function DiscoverScreen({navigation}){
                             </ PreviewBottomContainer> 
                         </Pressable>
                         }
-
-                        <FontAwesome  hitSlop={WIDTH*0.05} onPress={()=>closePreviewCard()} name="times-circle" size={25}  color='white' style={{position: 'absolute', right:WIDTH*0.025,
-                        top: HEIGHT*0.015}}/>
+                        {/* {GetFAIcons("Close")} */}
+                        <Pressable onPress={()=>closePreviewCard()} style={{position: 'absolute', right:WIDTH*0.025,
+                            top: HEIGHT*0.015}}>
+                            <FontAwesomeIcon  hitSlop={WIDTH*0.05} icon={faCircleXmark} size={25}  color='white' />
+                        </Pressable>
                     </RNAnimated.View>
                 </MapContainer>
                     

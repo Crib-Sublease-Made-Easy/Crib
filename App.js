@@ -321,7 +321,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             <Stack.Screen
               name="MessageTabs"
               component={MessageTab}
-              options={{cardStyleInterpolator: forFade, headerStyle:{backgroundColor:'red'},  }}
+              options={{cardStyleInterpolator: forFade,  }}
             />
 
 

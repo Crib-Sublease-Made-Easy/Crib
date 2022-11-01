@@ -62,9 +62,10 @@ export const SearchContainer = styled.Pressable`
 export const SearchContainerPlaceholderText = styled(Text)`
   font-family: ${ROBOTOFONTFAMILY}
   
-  height: ${HEIGHT*0.02}px
+  height: ${HEIGHT*0.03}px
   width: 70% 
   align-items: center
+  align-self: center
   padding-horizontal: ${WIDTH*0.01}px
   color : ${props=>(props.locationQuery == "Search Location ..." ? DARKGREY : 'black')}
 `

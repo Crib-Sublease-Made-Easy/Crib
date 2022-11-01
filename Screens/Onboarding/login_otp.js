@@ -22,7 +22,7 @@ import { Container, Heading, HeadingImageContainer, SubtitleText,
     ModalView, ModalHeaderText, UserNumberText, ModalOptionContainer, ModalOption,
     InputFollowUpContainer} from './login_otpStyle';
 
-import { ContinueButton , ContinueText, } from '../../sharedUtils';
+import { ContinueButton , ContinueText, LIGHTGREY, } from '../../sharedUtils';
 
 import OTPInputField from  './login_otpStyle'
 import { UserContext } from '../../UserContext';
@@ -45,7 +45,6 @@ export default function Login_OTP({navigation, route}){
     const [smsErrorModal, setSMSErrorModal] = useState(false)
     const [laoding, setLoading] = useState(false)
 
-    console.log(route.authy_id)
     const MAX_CODE_LENGTH = 6;
 
     useEffect(()=> {
@@ -58,11 +57,12 @@ export default function Login_OTP({navigation, route}){
 
     async function userLogin(){ 
         
+       
         let oneSignalUserId = await SecureStorage.getItem('oneSignalUserID');
        
       
         console.log("TOKEN")
-        console.log(code);
+        
         console.log("AuthyID")
         console.log(route.authy_id);
         let success = false
@@ -181,29 +181,39 @@ export default function Login_OTP({navigation, route}){
     }
 
     return(
-        <SafeAreaView style={{backgroundColor:'white'}}>
+        <SafeAreaView style={{ flex: 1}}>
             
             <Container>
-            <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
-                <ScrollView>
+            <KeyboardAvoidingView behavior='padding' style={{flex:1, backgroundColor:'white'}}>
+                <ScrollView style={{minHeight: HEIGHT*0.3}}>
                     <HeadingImageContainer>
                         <Heading>Enter OTP</Heading>
                         <SubtitleText>Please enter the one time password sent to you through sms</SubtitleText>
                     </HeadingImageContainer>
                     <InputFollowUpContainer>
-                    <OTPInputField
+                    
+                    {/* <OTPInputField
+                        onPress={()=>Keyboard.emit()}
                         setPinReady={pinReady}
                         code={code}
                         keypad="none"
                         setCode={setCode}
+                        autoFocus
                         maxLength={MAX_CODE_LENGTH}
-                    />
+                    /> */}
+                    <TextInput 
+                    keyboardType = "number-pad"
+                    maxLength={6}
+                    onChangeText={(value) => setCode(value)}
+                    style={{width: WIDTH*0.8, height: HEIGHT*0.05, backgroundColor: LIGHTGREY, alignSelf: 'center',}}>
+
+                    </TextInput>
                     <Pressable onPress={()=>setSMSErrorModal(true)}>
                         <SubtitleText>Didn't recieve SMS?</SubtitleText>
                     </Pressable>
                     </InputFollowUpContainer>
                 </ScrollView>
-                <ContinueButton style={{marginBottom: HEIGHT*0.1}} onPress={()=> login('test')}>
+                <ContinueButton style={{marginBottom: HEIGHT*0.1}} onPress={()=> userLogin()}>
                     <ContinueText>Continue</ContinueText>
                 </ContinueButton>
                 </KeyboardAvoidingView>

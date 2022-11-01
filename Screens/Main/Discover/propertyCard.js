@@ -37,7 +37,7 @@ import { FlatList, Gesture, GestureDetector, TouchableOpacity,  } from 'react-na
 import Lottie from 'lottie-react-native';
 
 
-import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, ROBOTOFONTFAMILY, EXTRALIGHT, FAGetIconsInPurple } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, ROBOTOFONTFAMILY, EXTRALIGHT, FAGetIconsInPurple, GetFAIcons } from '../../../sharedUtils';
 import { SystemMessage } from 'react-native-gifted-chat';
 
 const CardContainer = styled(Pressable)`
@@ -68,7 +68,7 @@ const LocationFont = styled.Text`
   font-weight: 600;
   max-width: ${WIDTH*0.5}px
   font-family: ${ROBOTOFONTFAMILY}
-
+  color: black
   
 `
 const DateFont = styled.Text`
@@ -76,9 +76,7 @@ const DateFont = styled.Text`
     font-size: ${HEIGHT*0.0155}px;
     font-weight: 400;
     font-family: ${ROBOTOFONTFAMILY}
-
-  
-   
+    color: black  
 `
 const PriceFont = styled.Text`
   max-width: ${WIDTH*0.3}px
@@ -112,7 +110,6 @@ const DragGreyLineContainer = styled.View`
   
   width: ${WIDTH}px;
   align-items: center
-  background-color:red
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
 `  
@@ -286,7 +283,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                 />
                 
                   <OpenMapIconContainer hitSlop={WIDTH*0.05} onPress={()=>MoveMapToPin(data.item)}>
-                      <FontAwesome name='location-arrow' size={HEIGHT*0.02} color='white'/>
+                      {GetFAIcons("LocationPin")}
                   </OpenMapIconContainer>
               </PropertyImageContainer>
                
@@ -298,12 +295,11 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                     
                     <PriceFont>${data.item.propertyInfo.price} / month</PriceFont>
                   </LocationAndPrice>
-                  <DateFont>{new Date(data.item.propertyInfo.availableFrom).getDate() + " " +
-                            new Date(data.item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) + " " + 
-                            new Date(data.item.propertyInfo.availableFrom).getFullYear()
-                            }  -  {new Date(data.item.propertyInfo.availableTo).getDate() + " " +
-                            new Date(data.item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })+ " " + 
-                            new Date(data.item.propertyInfo.availableTo).getFullYear()}
+                  <DateFont>{
+                            new Date(data.item.propertyInfo.availableFrom).toLocaleDateString()
+                            }  -  {
+                            new Date(data.item.propertyInfo.availableTo).toLocaleDateString('default', { month: 'short' })
+                            }
                             </DateFont>
                           
                   <DateFont>{Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0]))} miles away</DateFont>
@@ -383,7 +379,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
           </View>
           :
           <View style={{justifyContent:'center', alignItems:'center', marginTop: HEIGHT*0.1}}>
-            <Lottie source={require('../../../noProperties.json')} autoPlay loop={false} style={{width:WIDTH*0.6, height: WIDTH*0.4, }}/>
+            <Lottie source={require('../../../noProperties.json')} autoPlay style={{width:WIDTH*0.6, height: WIDTH*0.4, }}/>
             <DefaultPostFavText>No properties found. Please select a new area or adjust filter options</ DefaultPostFavText>
           </View>
           }   

@@ -19,7 +19,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { HEIGHT, WIDTH, ContinueButton, ContinueText } from '../../sharedUtils';
+import { HEIGHT, WIDTH, ContinueButton, ContinueText, GetFAIconsInBlack } from '../../sharedUtils';
 
 import Lottie from 'lottie-react-native';
 
@@ -34,6 +34,8 @@ export default function LoginScreen({navigation, route}){
     console.log(passedPhoneNumber)
 
     async function signupStep1(){
+
+
         console.log("Stepping 1")
         
         const number = phoneNumber.replace(/[^\d]/g, '');
@@ -138,12 +140,14 @@ export default function LoginScreen({navigation, route}){
     }
 
     return(
-        <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
-            <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
+        <SafeAreaView style={{flex: 1,  height:HEIGHT, width:WIDTH}} >
+            <KeyboardAvoidingView 
+           
+            behavior='padding' style={{flex:1, backgroundColor:'white'}}>
             <Header>
                 <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
                    
-                    <Ionicons name='arrow-back-outline' size={25} />
+                    {GetFAIconsInBlack("Back")}
                 </Pressable>
             </Header>
                 
@@ -151,7 +155,7 @@ export default function LoginScreen({navigation, route}){
 
             </ProgressBarContainer>
            
-            <ScrollView scrollEnabled={false}>
+            <ScrollView scrollEnabled={false} style={{backgroundColor:'white', minHeight: HEIGHT*0.4}}>
                 <TitleText>Login with your phone number</TitleText>
                 <SubtitleText>We will send you a one time password to verify your number</SubtitleText>
                 <TextInputContainer>

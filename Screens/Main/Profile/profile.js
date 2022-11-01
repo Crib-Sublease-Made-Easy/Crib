@@ -394,7 +394,7 @@ export default function ProfileScreen({navigation}){
                                 //When user have no property
                                 <Pressable style={{width:WIDTH, height:'100%', alignItems:'center', justifyContent:'center'}}
                                     onPress={toPostProperty}>
-                                    <Lottie source={require('../../../subleaseProperties.json')} autoPlay loop={20}  style={{width:WIDTH*0.6, height: WIDTH*0.6, }}/>
+                                    <Lottie source={require('../../../subleaseProperties.json')} autoPlay style={{width:WIDTH*0.6, height: WIDTH*0.6, }}/>
                                     {/* <Pressable style={{width:WIDTH*0.5, height:HEIGHT*0.06, borderRadius:30,
                                     backgroundColor: PRIMARYCOLOR, justifyContent:'center', alignItems:'center'}}>
                                         <Text style={{color:'white', fontSize:HEIGHT*0.0175, fontWeight:'500'}}>Start Sublease</Text>
