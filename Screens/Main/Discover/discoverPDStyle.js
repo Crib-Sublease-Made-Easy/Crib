@@ -7,15 +7,15 @@ const PRIMARYGREY = '#5e5d5d'
 export const ImageStyle= {position:'absolute', width:WIDTH, height:HEIGHT*0.35,}
 
 export const Container = styled.View`
-  height: ${HEIGHT}px;
-  width: ${WIDTH}px;
+ 
   backgroundColor: white
   position: relative
 `
 
 export const PropertyDescription = styled.View`
-    height: ${HEIGHT*0.875}px;
+    height: ${HEIGHT*0.9}px;
     width: ${WIDTH}px;
+    background-color: white
     position: relative
 `
 
@@ -27,6 +27,7 @@ export const CardTitle = styled.Text`
     font-weight: 600;
     width: ${WIDTH*0.9}px;
     font-family: ${ROBOTOFONTFAMILY}
+    color: black
    
 `
 export const CardSectionOne = styled.View`
@@ -49,6 +50,7 @@ export const LocationText = styled.Text`
     font-size: ${HEIGHT*0.0175}px;
     font-weight: 500;
     color: ${DARKGREY}
+
 `
 
 export const AmenitiesText = styled.Text`
@@ -108,6 +110,7 @@ export const InfoHeaderText = styled.Text`
     width: ${WIDTH*0.5}px;
     text-align: left
     font-family: ${ROBOTOFONTFAMILY}
+    color: black
 `
 
 export const InfoText = styled.Text`
@@ -125,6 +128,7 @@ export const DescriptionText = styled.Text`
     font-weight: 400;
     width: ${WIDTH*0.8}px;
     marginTop: ${HEIGHT*0.05}px;
+    color: black
 `
 
 export const AmenitiesItem = styled.View`
@@ -136,19 +140,19 @@ export const AmenitiesItem = styled.View`
 `
 
 export const Footer = styled.View`
-    width: ${WIDTH}px;
-    height: ${HEIGHT*0.125}px;
-    justify-content: space-around;
-    align-items: center
-    flex-direction: row
-    padding-bottom: ${HEIGHT*0.02}px;
-    borderTopWidth: 1px;
-    borderTopColor: #E0E0E0;
+width: ${WIDTH}px;
+padding-vertical: ${HEIGHT*0.01}px;
+justify-content: space-around;
+align-items: center
+flex-direction: row
+borderTopWidth: 1px;
+borderTopColor: #E0E0E0;
 
 `
 export const PricePerMonth = styled.Text`
     font-size: ${HEIGHT*0.025}px;
     font-weight: 700;
+    color: black
 `
 export const ContactTanentButton = styled(Pressable)`
     width: ${WIDTH*0.4}px;
@@ -157,6 +161,7 @@ export const ContactTanentButton = styled(Pressable)`
     border-radius: 30px;
     justify-content: center;
     align-items: center;
+    
 `
 
 export const TenantInfoContainer = styled.View`
@@ -176,6 +181,7 @@ font-size: ${HEIGHT*0.0225}px;
 font-weight: 500;
 align-self: center
 font-family: ${ROBOTOFONTFAMILY}
+color: black
 
 `
 
@@ -258,6 +264,7 @@ export const BedNumberText = styled.Text`
     
     font-size: ${HEIGHT*0.03}px;
     margin-left: ${WIDTH*0.01}px
+    color: black
 `
 
 export const BedroomNameText = styled.Text`
@@ -268,6 +275,7 @@ export const BedroomNameText = styled.Text`
     align-self: center
     font-weight: 400
     font-family: ${ROBOTOFONTFAMILY}
+    color: black
 `
 
 export const InfoHeaderTextAndCenter = styled.View`
@@ -288,7 +296,7 @@ export const StickyHeaderContainer = styled.View`
 `
 
 export const StickyHeaderIcon = styled.Pressable`
-    backgroundColor: rgba(43,43,43,0.8) 
+    backgroundColor:rgba(43,43,43,0.8)
     justifyContent: center
     alignItems: center
     width:${WIDTH*0.1}px 

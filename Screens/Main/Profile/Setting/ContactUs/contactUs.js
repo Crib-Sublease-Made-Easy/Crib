@@ -9,7 +9,7 @@ import {
 
 import SecureStorage from 'react-native-secure-storage'
 
-import { HEIGHT, WIDTH, HeaderContainer, Header,BackButtonContainer,ResetButtonContainer, NameContainer } from '../../../../../sharedUtils';
+import { HEIGHT, WIDTH, HeaderContainer, Header,BackButtonContainer,ResetButtonContainer, NameContainer, GetFAIconWithColor } from '../../../../../sharedUtils';
 
 import { RowContainer,CategoryName, TitleContainer,DescriptionInput  } from './contactusStyle';
 
@@ -58,7 +58,7 @@ export default function ContactUsScreen({navigation, route}){
             <HeaderContainer>
                 <BackButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                        <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+                        {GetFAIconWithColor("ArrowLeft", "black")}
                     </Pressable>
                 </BackButtonContainer>
                 <NameContainer>
@@ -66,7 +66,7 @@ export default function ContactUsScreen({navigation, route}){
                 </NameContainer>
                 <ResetButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={send}>
-                        <Ionicons name='checkmark' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+                        {GetFAIconWithColor("Check", "black")}
                     </Pressable>
                 </ResetButtonContainer>
             </HeaderContainer>

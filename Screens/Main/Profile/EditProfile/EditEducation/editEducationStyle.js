@@ -39,6 +39,7 @@ export const ResetButtonContainer = styled.View`
 export const Header = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     font-weight: 500;
+    color: black
 `
 
 export const RowContainer = styled.View`
@@ -51,6 +52,7 @@ export const CategoryName = styled.Text`
     font-size: ${HEIGHT*0.0175}px
     padding-vertical: ${HEIGHT*0.01}px
     font-weight: 500
+    color: black
 `
 
 export const PhoneNumberContainer = styled.TextInput`

@@ -20,7 +20,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 
 import { UserContext } from '../../../UserContext';
 
-import {WIDTH, EXTRALIGHT } from '../../../sharedUtils';
+import {WIDTH, EXTRALIGHT, GetFAIconWithColor } from '../../../sharedUtils';
 
 import {
 HeaderContainer, 
@@ -183,7 +183,7 @@ export default function ProfileEditScreen({navigation, route}){
                 <HeaderContainer>
                     <BackButtonContainer>
                         <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.navigate("Profile")}>
-                            <Ionicons name='close-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+                            {GetFAIconWithColor('Close', 'black')}
                         </Pressable>
                     </BackButtonContainer>
                     <NameContainer>
@@ -209,14 +209,14 @@ export default function ProfileEditScreen({navigation, route}){
                 <CategoryName>Education</CategoryName>
                 <RowContainer onPress={()=> navigation.navigate("EditEducation", {uid: USERID })}>
                     <RowName>{school}</RowName>
-                    <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+                    {GetFAIconWithColor("ArrowRight", 'black')}
                 </RowContainer>
 
                 {/* Change Occupation*/}
                 <CategoryName>Occupation</CategoryName>
                 <RowContainer onPress={()=> navigation.navigate("EditOccupation")}>
                     <RowName>{occupation}</RowName>
-                    <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+                    {GetFAIconWithColor("ArrowRight", 'black')}
                 </RowContainer>
             </ScrollView>
         </SafeAreaView>

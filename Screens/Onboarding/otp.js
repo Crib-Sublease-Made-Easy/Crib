@@ -34,6 +34,7 @@ const WIDTH = Dimensions.get('screen').width;
 const PRIMARYCOLOR = '#8559E3'
 
 import Modal from "react-native-modal";
+import { LIGHTGREY } from '../../sharedUtils';
 
 
 export default function OTPScreen({navigation, route}){
@@ -196,7 +197,9 @@ export default function OTPScreen({navigation, route}){
             profilePic: route.params.profilePic,
             school: route.params.school,
             email: route.params.email,
-            password: route.params.password, }}]}
+            password: route.params.password,
+            backAgain: true
+        }}]}
             
         )
     }
@@ -228,20 +231,31 @@ export default function OTPScreen({navigation, route}){
             
             <Container>
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
-                <ScrollView>
+                <ScrollView style={{minHeight: HEIGHT*0.5}}>
+                    <Pressable onPress={()=> navigation.navigate("DiscoverTabs")} style={{flexDirection:'row', width: WIDTH*0.8, alignSelf:'center', justifyContent:'flex-end'}}>
+                      
+                      <Text style={{color: 'black', fontSize: HEIGHT*0.02, textAlign:'right'}}>Exit</Text>
+                    </Pressable>
                     <HeadingImageContainer>
                         <Heading>Enter OTP</Heading>
                         <SubtitleText>Please enter the one time password sent to you through sms</SubtitleText>
                         <Image source={require('../../assets/otp.jpg')} style={{ height: HEIGHT*0.15, width: HEIGHT*0.2, alignSelf: 'center', }}/>
                     </HeadingImageContainer>
                     
-                    <OTPInputField
+                    {/* <OTPInputField
                         setPinReady={pinReady}
                         code={code}
                         keypad="none"
                         setCode={setCode}
                         maxLength={MAX_CODE_LENGTH}
-                    />
+                    /> */}
+                    <TextInput 
+                    keyboardType = "number-pad"
+                    maxLength={6}
+                    onChangeText={(value) => setCode(value)}
+                    style={{width: WIDTH*0.8, height: HEIGHT*0.05, marginTop: HEIGHT*0.05, paddingLeft: WIDTH*0.025, backgroundColor: LIGHTGREY, alignSelf: 'center',}}>
+
+                    </TextInput>
                     <Pressable onPress={()=>setSMSErrorModal(true)}>
                         <SubtitleText>Didn't recieve SMS?</SubtitleText>
                     </Pressable>

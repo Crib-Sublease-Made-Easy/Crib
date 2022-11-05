@@ -152,7 +152,7 @@ export default function Login_OTP({navigation, route}){
       }
     function backToLogin(){
         navigation.reset(
-            {index: 0 , routes: [{ name: 'Login'}]}
+            {index: 0 , routes: [{ name: 'Login', params: {backAgain: true}}]}
             
         )
     }
@@ -185,7 +185,10 @@ export default function Login_OTP({navigation, route}){
             
             <Container>
             <KeyboardAvoidingView behavior='padding' style={{flex:1, backgroundColor:'white'}}>
-                <ScrollView style={{minHeight: HEIGHT*0.3}}>
+                <ScrollView style={{minHeight: HEIGHT*0.5}}>
+                    <Pressable onPress={()=> navigation.navigate("DiscoverTabs")} style={{flexDirection:'row', width: WIDTH*0.8, alignSelf:'center', justifyContent:'flex-end'}}>
+                      <Text style={{color: 'black', fontSize: HEIGHT*0.02, padding: WIDTH*0.02}}>Exit</Text>
+                    </Pressable>
                     <HeadingImageContainer>
                         <Heading>Enter OTP</Heading>
                         <SubtitleText>Please enter the one time password sent to you through sms</SubtitleText>
@@ -205,7 +208,7 @@ export default function Login_OTP({navigation, route}){
                     keyboardType = "number-pad"
                     maxLength={6}
                     onChangeText={(value) => setCode(value)}
-                    style={{width: WIDTH*0.8, height: HEIGHT*0.05, backgroundColor: LIGHTGREY, alignSelf: 'center',}}>
+                    style={{width: WIDTH*0.8, height: HEIGHT*0.05, backgroundColor: LIGHTGREY, alignSelf: 'center', paddingLeft: WIDTH*0.025413}}>
 
                     </TextInput>
                     <Pressable onPress={()=>setSMSErrorModal(true)}>

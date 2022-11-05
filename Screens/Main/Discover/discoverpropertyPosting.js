@@ -58,7 +58,7 @@ import {
     ContinueText, MaxText
 } from './discoverPropertyPostingStyle';
 import Easing from 'react-native/Libraries/Animated/Easing';
-import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, GetFAIcons} from '../../../sharedUtils';
+import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, GetFAIcons, GetFAIconWithColor} from '../../../sharedUtils';
 import { SubHeadingText } from '../../Onboarding/Landing/landingStyle';
 
 
@@ -345,6 +345,7 @@ export default function PropertyPostingScreen({ navigation }) {
                 },1500)
             })
             .catch(e => {
+                console.log("ERROR --- DISCOVERPOSTING -- POSTPROPERTY")
                 alert(e)
             })
         }
@@ -439,7 +440,6 @@ export default function PropertyPostingScreen({ navigation }) {
     async function LocationToLatLong(name){
         const accessToken = await SecureStorage.getItem("accessToken");
         if(accessToken != null && name != null && name != undefined){
-            let spacelessLocation = name.replaceAll(" ", "+");
             var config = {
                 method: 'get',
                 url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${name}`,
@@ -458,18 +458,18 @@ export default function PropertyPostingScreen({ navigation }) {
 
    
     return (
-        <SafeAreaView style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0 }} >
-            <TouchableOpacity disabled={loading} style={{paddingLeft:WIDTH*0.05}} onPress={()=>navigation.navigate("Profile")}>
+        <SafeAreaView style={{ width: WIDTH, height: HEIGHT, padding: 0 }} >
+            <TouchableOpacity disabled={loading} style={{paddingLeft:WIDTH*0.05, marginTop: HEIGHT*0.05}} onPress={()=>navigation.navigate("Profile")}>
                 <Text style={{color: DARKGREY, fontWeight:'500'}}>Cancel Posting</Text>
             </TouchableOpacity>
             <ModalView>
                 <ButtonContainer>
                     <Pressable disabled={loading} onPress={() => moveScrollView(scrollviewIndex - 1)} style={{ width: WIDTH * 0.1 }}>
-                        <Ionicons name="arrow-back" size={30} color='white'></Ionicons>
+                        {GetFAIconWithColor('ArrowLeft', 'white')}
                     </Pressable>
                     <Pressable style={{ display: scrollviewIndex == 10 || scrollviewIndex == 9 || scrollviewIndex == 0 ? 'none' : 'flex', }}
                          hitSlop={WIDTH*0.05} onPress={() => moveScrollView(scrollviewIndex + 1)}>
-                        <Ionicons name="checkmark-outline" size={30} color={PRIMARYCOLOR}></Ionicons>
+                        {GetFAIconWithColor('ArrowRight', `${PRIMARYCOLOR}`)}
                     </Pressable>
                 </ButtonContainer>
                 <Animated.ScrollView keyboardShouldPersistTaps={'handled'}
@@ -520,8 +520,8 @@ export default function PropertyPostingScreen({ navigation }) {
                             </InfoText>
                         </Animated.View>
                         <SearchContainer>
-                            <Ionicons name="search-outline" size={20} color='white' />
-                            <SearchInput placeholderTextColor='white' onEndEditing={SelectLocationOutSequence}
+                            {GetFAIconWithColor("Search", 'white')}
+                            <SearchInput numberOfLines={1} placeholderTextColor='white' onEndEditing={SelectLocationOutSequence}
                                 onFocus={SelectLocationSequence} value={propertyLocation} onChangeText={(value) => autocomplete(value)} placeholder="Location..." />
                         </SearchContainer>
                         <Animated.View style={{ width: WIDTH * 0.9, height: HEIGHT * 0.4, borderRadius: 10 }}>
@@ -532,7 +532,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                         width: WIDTH * 0.9, height: HEIGHT * 0.08, paddingLeft: WIDTH * 0.025,
                                         alignItems: 'center', flexDirection: 'row',
                                     }}>
-                                        <Ionicons name="location-outline" size={25} color={LIGHTGREY} />
+                                        {GetFAIconWithColor("Map", 'white')}
                                         <Pressable style={{ width: WIDTH * 0.8, marginLeft: WIDTH * 0.025 }} hitSlop={WIDTH*0.05} onPress={() => moveOn(value)}>
                                             <Text style={{ color: 'white', fontSize: HEIGHT * 0.015 }}>{value.structured_formatting.main_text}</Text>
                                             <Text style={{ color: LIGHTGREY, fontSize: HEIGHT * 0.015 }}>{value.structured_formatting.secondary_text}</Text>
@@ -555,7 +555,7 @@ export default function PropertyPostingScreen({ navigation }) {
                         <Heading>Image Gallery</Heading>
                         <InfoText>Please upload images of your property. </InfoText>
                         <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: HEIGHT * 0.02 }}>
-                            {
+                                {
                                 ImageName.map((value) => (
                                     <ImageSelectionContainer key={"Image" + value.name}>
                                         <Subheading>{value.name}</Subheading>
@@ -621,7 +621,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
                                 <RowContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenFrom(true)}>
                                     <DateCategoryName>Available From</DateCategoryName>
-                                    <Ionicons name="shuffle" size={20} color='white' />
+                                    {GetFAIconWithColor("Calendar", 'white')}
                                     <RowValueContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenFrom(true)} >
                                         <DateSelectPressable  hitSlop={WIDTH*0.05} onPress={() => setOpenFrom(true)}>
                                         {
@@ -631,12 +631,12 @@ export default function PropertyPostingScreen({ navigation }) {
                                             <Text style={{ alignSelf: 'center', color: 'white' }}>{propertydateFrom.getMonth()%12 + 1}-{propertydateFrom.getDate()}-{propertydateFrom.getFullYear()}</Text>
                                         }
                                         </DateSelectPressable>
-                                        <Ionicons name='chevron-forward-outline' size={25} color='white' style={{ paddingLeft: WIDTH * 0.05 }} />
+                                        {GetFAIconWithColor("ArrowRight", 'white')}
                                     </RowValueContainer>
                                 </RowContainer>
                                 <RowContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenTo(true)}>
                                     <DateCategoryName>Available To</DateCategoryName>
-                                    <Ionicons name="shuffle" size={20} color='white' />
+                                    {GetFAIconWithColor("Calendar", 'white')}
                                     <RowValueContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenTo(true)}>
                                         <DateSelectPressable  hitSlop={WIDTH*0.05} onPress={() => setOpenTo(true)}>
                                             {
@@ -646,7 +646,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                                 <Text style={{ alignSelf: 'center', color: 'white' }}>{propertydateTo.getMonth()%12 +1}-{propertydateTo.getDate()}-{propertydateTo.getFullYear()}</Text>
                                             }
                                         </DateSelectPressable>
-                                        <Ionicons name='chevron-forward-outline' size={25} color='white' style={{ paddingLeft: WIDTH * 0.05 }} />
+                                        {GetFAIconWithColor("ArrowRight", 'white')}
                                     </RowValueContainer>
                                 </RowContainer>
                             </DateSelectContainer>
@@ -725,7 +725,9 @@ export default function PropertyPostingScreen({ navigation }) {
                         <InfoText>What would tenants be able to access.</InfoText>
                         <RowContainerCol>
                             <CategoryName>Bedroom</CategoryName>
-                            <Ionicons name='bed-outline' color='white' size={25} style={{ paddingVertical: HEIGHT * 0.015 }} />
+                            <View style={{paddingVertical: HEIGHT*0.02}}>
+                                {GetFAIconWithColor("Bed", 'white')}
+                            </View>
                             <BedroomContaienr>
                                 {bedroomList.map((value) => (
                                     <BedroomItemContainer hitSlop={WIDTH*0.05} onPress={() => setpropertyNumBed(value)} userInput={propertyNumBed} value={value}
@@ -738,7 +740,9 @@ export default function PropertyPostingScreen({ navigation }) {
 
                         <RowContainerCol>
                             <CategoryName>Bathroom</CategoryName>
-                            <Ionicons name='water-outline' color='white' size={25} style={{ paddingVertical: HEIGHT * 0.015 }} />
+                            <View style={{paddingVertical: HEIGHT*0.02}}>
+                                {GetFAIconWithColor("Bath", 'white')}
+                            </View>
                             <BedroomContaienr>
                                 {bathroomList.map((value) => (
                                     <BedroomItemContainer hitSlop={WIDTH*0.05} onPress={() => setpropertyNumBath(value)} userInput={propertyNumBath} value={value}
@@ -761,26 +765,38 @@ export default function PropertyPostingScreen({ navigation }) {
                         </InfoText>
                         <InputContainer >
                             <Subheading>Amenities</Subheading>
-                            <ScrollView style={{height:HEIGHT*0.5}}>
+                            <ScrollView>
                             <AmenitiesContainer>
                                 
                                 {amenitiesList.map((value, index) => (
-                                    <View key={value.name + index + 'view'} style={{
-                                        minWidth: WIDTH * 0.35, width: value.name.length * 0.03 * WIDTH, height: HEIGHT * 0.055, justifyContent: 'center',
-                                        paddingRight: WIDTH * 0.03
-                                    }}>
-                                        <Pressable key={value.name + 'pressable'} hitSlop={WIDTH*0.05} onPress={() => updateAmenities(value.name)} style={{
-                                            borderWidth: 3, borderColor: propertyAmenities.indexOf(value.name) == -1 ? value.color : '#0085FF', height: HEIGHT * 0.045,
-                                            borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
-                                        }}>
-                                            {GetFAIcons(value.name)}
-                                            <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                                {/* {"   "}{value.name.replaceAll("_"," ")} */}
-                                                {"   "}{value.name}
-                                            </Text>
-                                        </Pressable>
+                                    // <View key={value.name + index + 'view'} style={{
+                                    //     minWidth: WIDTH * 0.35, width: value.name.length * 0.03 * WIDTH, height: HEIGHT * 0.055, justifyContent: 'center',
+                                    //     paddingRight: WIDTH * 0.03
+                                    // }}>
+                                    //     <Pressable key={value.name + 'pressable'} hitSlop={WIDTH*0.05} onPress={() => updateAmenities(value.name)} style={{
+                                    //         borderWidth: 3, borderColor: propertyAmenities.indexOf(value.name) == -1 ? value.color : '#0085FF', height: HEIGHT * 0.045,
+                                    //         borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
+                                    //     }}>
+                                    //         {GetFAIcons(value.name)}
+                                    //         <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
+                                    //             {/* {"   "}{value.name.replaceAll("_"," ")} */}
+                                    //             {"   "}{value.name}
+                                    //         </Text>
+                                    //     </Pressable>
 
-                                    </View>
+                                    // </View>
+                                    <Pressable onPress={() => updateAmenities(value.name)} key={value.name + index + 'view'} style={{paddingVertical: HEIGHT*0.02, width:WIDTH*0.9,alignSelf:'center',justifyContent:'space-between'
+                                    , alignItems:'center', flexDirection:'row', paddingHorizontal: WIDTH*0.03}}>
+                                        <Pressable onPress={() => updateAmenities(value.name)} style={{flexDirection:'row', alignItems:'center'}}>
+                                            {GetFAIconWithColor(`${value.name}`, "white")}
+                                            <Text style={{color:'white', marginLeft: WIDTH*0.025}}>{value.name.replace("_", " ")}</Text>
+
+                                        </Pressable>
+                                        <Pressable onPress={() => updateAmenities(value.name)} style={{padding: WIDTH*0.012, 
+                                            backgroundColor: propertyAmenities.indexOf(value.name) == -1 ? DARKGREY : PRIMARYCOLOR , borderRadius:3}}>
+                                            {GetFAIconWithColor("Check", "white")}
+                                        </Pressable>
+                                    </Pressable>
                                 ))}
                                 
                             </AmenitiesContainer>
@@ -851,7 +867,7 @@ export default function PropertyPostingScreen({ navigation }) {
                             <ReviewSectionContainer>
                                 <ReviewHeading>Location</ReviewHeading>
                                 <ReviewLocationContainer>
-                                    <Ionicons name='location-outline' size={20} color='white' />
+                                    {GetFAIconWithColor("Map", 'white')}
                                     <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{propertyLocation}</ReviewInfoText>
                                 </ReviewLocationContainer>
 
@@ -863,7 +879,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                 <SubHeadingText style={{ marginTop: HEIGHT * 0.025 }} >Tenant will have access to: </SubHeadingText>
                                 <BedAndBathContainer>
                                     <BedBathLogo>
-                                        <Ionicons name="bed-outline" size={30} color='white'></Ionicons>
+                                        {GetFAIconWithColor("Bed", 'white')}
                                         <LocationText>
                                             {
                                                 propertyNumBed == "Studio" ? "Studio" : propertyNumBed + ' bedroom'
@@ -872,7 +888,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                         </LocationText>
                                     </BedBathLogo>
                                     <BedBathLogo>
-                                        <Ionicons name="water-outline" size={30} color='white' ></Ionicons>
+                                    {GetFAIconWithColor("Bath", 'white')}
                                         {/* <LocationText>{propertyNumBath.replaceAll("P","+")} bathroom</LocationText> */}
                                         <LocationText>{propertyNumBath} bathroom</LocationText>
                                     </BedBathLogo>
@@ -889,7 +905,7 @@ export default function PropertyPostingScreen({ navigation }) {
                                     {propertydateFrom != null &&
                                         <ReviewInfoText>From {propertydateFrom.getMonth()}-{propertydateFrom.getDate()}-{propertydateFrom.getFullYear()}</ReviewInfoText>
                                     }
-                                    <Ionicons name='shuffle-outline' size={20} color='white' />
+                                    {GetFAIconWithColor("Calendar", 'white')}
                                     {propertydateTo != null &&
                                         <ReviewInfoText>To {propertydateTo.getMonth()}-{propertydateTo.getDate()}-{propertydateTo.getFullYear()}</ReviewInfoText>
                                     }
@@ -900,7 +916,8 @@ export default function PropertyPostingScreen({ navigation }) {
                                 {propertyAmenities.map((value) => (
                                     <ReviewLocationContainer key={"amenities" + value}>
                                         {GetFAIcons(value)}
-                                        <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{value.replaceAll("_", " ")}</ReviewInfoText>
+                                        {/* <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{value.replaceAll("_", " ")}</ReviewInfoText> */}
+                                        <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{value}</ReviewInfoText>
                                     </ReviewLocationContainer>
                                 ))}
                             </ReviewSectionContainer>
@@ -919,6 +936,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
 
                     </PostingSection>
+                
 
 
                 </Animated.ScrollView>

@@ -487,7 +487,7 @@ export default function DiscoverScreen({navigation}){
     return(
         <GestureHandlerRootView style={{flex: 1}}>
 
-            <SafeAreaView>
+            <SafeAreaView style={{paddingTop: HEIGHT*0.01}}>
                 {/* This is the container for the whole map background in discover behind search bar */}
                 {/* Includes the Search Here pressable, map view, markers and preview modal */}
                 <MapContainer>
@@ -550,10 +550,10 @@ export default function DiscoverScreen({navigation}){
 
                             <PreviewBottomContainer >
                                 <PreviewLocationText>{selectedPin.propertyInfo.loc.secondaryTxt}</PreviewLocationText>
-                                <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).getDate() + " " +
-                                        new Date(selectedPin.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
-                                        }  -  {new Date(selectedPin.propertyInfo.availableTo).getDate() + " " +
-                                        new Date(selectedPin.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}</PreviewPriceText>
+                                <PreviewPriceText>{
+                                        new Date(selectedPin.propertyInfo.availableFrom).toLocaleDateString() 
+                                        }  -  {
+                                        new Date(selectedPin.propertyInfo.availableTo).toLocaleDateString()}</PreviewPriceText>
                                 
                                 <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
                             </ PreviewBottomContainer> 
@@ -571,22 +571,22 @@ export default function DiscoverScreen({navigation}){
                 <SearchContainer  hitSlop={WIDTH*0.05}onPress={()=>setDiscoverSearchVisible(true)}>
                     {/* The search icon on the search outlien */}
                     <SeachIconContainer>
-                        {GetFAIconsInBlack("Search")}
+                        <Ionicons name='search' size={20}  color={DARKGREY} />
                     </SeachIconContainer>
                     
                     {/* Placeholder for locationquerytext selected in discoversearch */}
                     
-                    <SearchContainerPlaceholderText locationQuery={locationQuery}> {locationQuery}</SearchContainerPlaceholderText>
+                    <SearchContainerPlaceholderText numberOfLines={1}  locationQuery={locationQuery}> {locationQuery}</SearchContainerPlaceholderText>
 
                     {/* This is the icon for filters when locationquery is not empty  */}
                     <DeleteIconContainer hitSlop={WIDTH*0.05} onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
                         {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) || !(dateCompare(new Date(1759190400000), new Date(filterAvailableTo))) || !(dateCompare(new Date(), new Date(filterAvailableFrom)))?
                         <FilterAppliedIconBackground>
-                            {GetFAIconsInBlack("Filter")}
+                            <Ionicons name="options-sharp" size={20} />
                         </FilterAppliedIconBackground>
                         :
                         <NoFilterAppliedIconBackground>
-                            {GetFAIconsInBlack("Filter")}
+                            <Ionicons name="options-sharp" size={20} color='black'/>
                         </NoFilterAppliedIconBackground>                        
                         }
                     </DeleteIconContainer> 

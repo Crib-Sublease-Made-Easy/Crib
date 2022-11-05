@@ -282,6 +282,7 @@ export const PropertyDescriptionInput = styled.TextInput`
     margin-top: ${HEIGHT*0.02}px;
     padding-horizontal: ${HEIGHT*0.02}px;
     padding-vertical: ${HEIGHT*0.02}px;
+    textAlignVertical: top
 `
 
 export const Divider = styled.View`
@@ -340,14 +341,13 @@ export const ReviewPropertyDescriptionInput = styled.TextInput`
 `
 export const Footer = styled.View`
     width: ${WIDTH}px;
-    height: ${HEIGHT*0.125}px;
+    padding-vertical: ${HEIGHT*0.015}px;
     justify-content: space-around;
     align-items: center
     flex-direction: row
-    padding-bottom: ${HEIGHT*0.02}px;
+    margin-bottom: ${HEIGHT*0.1}px
     borderTopWidth: 1px;
     borderTopColor: #E0E0E0;
-
 `
 export const ContactTanentButton = styled(Pressable)`
     width: ${WIDTH*0.4}px;

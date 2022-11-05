@@ -15,39 +15,40 @@ const Tab = createBottomTabNavigator();
 export default function DiscoverTab(){
     return(
 
-    <Tab.Navigator 
+      <Tab.Navigator 
+     
+      screenOptions={({ route }) => ({
+        lazy: false,
+        tabBarShowLabel: false,
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+         
+          if (route.name === 'Discover') {
+            iconName = focused
+              ? 'home'
+              : 'home-outline';
+            color = 'PRIMARYCOLOR'
+          } else if (route.name === 'Message') {
+            iconName = focused ? 'mail' : 'mail-outline';
+            color = PRIMARYCOLOR
+          }
+          else if (route.name === 'Profile') {
+            iconName = focused ? 'person-circle' : 'person-circle-outline';
+            color = PRIMARYCOLOR
+          }
+
+          // You can return any component that you like here!
+          return <Ionicons name={iconName} size={30} color={PRIMARYCOLOR} />;
+        },
+        // tabBarLabelStyle:{
+        //   fontFamily: ROBOTOFONTFAMILY,
+        //   fontWeight: '500',
+        //   color: PRIMARYCOLOR
+        // },
+        headerShown: false,
         
-        screenOptions={({ route }) => ({
-          lazy: false,
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
-            if (route.name === 'Discover') {
-              iconName = focused
-                ? 'Discover'
-                : 'Discover';
-              color = 'PRIMARYCOLOR'
-            } else if (route.name === 'Message') {
-              iconName = focused ? 'Message' : 'Message';
-              color = PRIMARYCOLOR
-            }
-            else if (route.name === 'Profile') {
-              iconName = focused ? 'Profile' : 'Profile';
-              color = PRIMARYCOLOR
-            }
-
-            // You can return any component that you like here!
-            return FAGetBottomIcons(iconName);
-          },
-          tabBarLabelStyle:{
-            fontFamily: ROBOTOFONTFAMILY,
-            fontWeight: '500',
-            color: PRIMARYCOLOR
-          },
-          headerShown: false,
-          
-        })}
-      >
+      })}
+    >
         
         <Tab.Screen name="Discover" component={DiscoverScreen}
         options={({ route }) => ({

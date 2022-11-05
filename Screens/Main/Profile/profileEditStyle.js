@@ -40,12 +40,14 @@ export const ResetButtonContainer = styled.View`
 export const Header = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     font-weight: 500;
+    color: black
 `
 export const NameText = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     width: ${WIDTH*0.9}px
     font-weight: 500;
     text-align:center
+    color: black
 `
 
 export const TopContainer = styled.View`
@@ -103,6 +105,7 @@ export const CategoryName = styled.Text`
     font-weight: 500
     width: ${WIDTH*0.9}px;
     align-self: center
+    color: black
 `
 
 export const AboutMeInput = styled.TextInput`
@@ -127,6 +130,7 @@ export const TextInputPressable = styled.Pressable`
 export const RowName = styled.Text`
     font-size: ${HEIGHT*0.015}px
     color: ${DARKGREY}
+    color: black
 `
 
 export const FavPropertyCard = styled.Pressable`

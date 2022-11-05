@@ -92,6 +92,7 @@ export const ModalHeaderText = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     padding-left:${WIDTH*0.05}px;
     padding-left: ${WIDTH*0.05}px
+    color: black
 `
 
 export const UserNumberText = styled.Text`

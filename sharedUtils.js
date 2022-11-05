@@ -9,7 +9,7 @@ import styled from 'styled-components/native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faArrowLeft, fab, faBackward, faBoltLightning, faBottleDroplet, faBottleWater, faBowlFood, faBreadSlice, faBus, faCalendar, faCar, faCaretUp, faCircleNodes, faClose, faClosedCaptioning, faCoffee, faCookieBite, faCouch, faDog, faDoorClosed, faDumbbell, faFilter, faFire, faGlobe, faGripHorizontal, faGripLinesVertical, faHandsWash, faHeart, faIceCream, faIcons, faKitchenSet, faLocationArrow, faLocationPin, faMap, faMapLocationDot, faMattressPillow, faMessage, faParking, faPerson, faPowerOff, faSearch, faShirt, faSpaghettiMonsterFlying, faStreetView, faSwimmingPool, faTv, faWater, faWifi, faWind, faWindowClose} from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faArrowRight, fab, faBackward, faBath, faBed, faBoltLightning, faBottleDroplet, faBottleWater, faBowlFood, faBox, faBreadSlice, faBuilding, faBus, faCalendar, faCar, faCaretUp, faCheck, faCircleArrowRight, faCircleArrowUp, faCircleNodes, faClose, faClosedCaptioning, faCoffee, faCookieBite, faCouch, faDog, faDoorClosed, faDoorOpen, faDumbbell, faFilter, faFire, faGear, faGears, faGlobe, faGripHorizontal, faGripLinesVertical, faHandsWash, faHeart, faHouse, faIceCream, faIcons, faImage, faKitchenSet, faLocationArrow, faLocationPin, faMap, faMapLocationDot, faMattressPillow, faMessage, faMugHot, faParking, faPen, faPerson, faPlateWheat, faPowerOff, faQuestionCircle, faSearch, faShirt, faSpaghettiMonsterFlying, faStreetView, faSwimmingPool, faTemperature0, faTrain, faTrainSubway, faTv, faUser, faWater, faWifi, faWind, faWindowClose} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faArrowAltCircleLeft, faCircle, faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 
@@ -212,6 +212,7 @@ export const GetFAIcons = (name) =>{
     else if(name == "LocationPin"){
         return <FontAwesomeIcon icon={faLocationArrow} color='white'/>
     }
+    
     else{
         return <FontAwesomeIcon icon={faDog} />
     }
@@ -227,17 +228,27 @@ export const FAGetIconsInPurple = (name) => {
 
 export const FAGetBottomIcons = (name) => {
     if(name=="Discover"){
-        return <FontAwesomeIcon icon={faGlobe} color={PRIMARYCOLOR}/>
+        return <FontAwesomeIcon icon={faGlobe} color={PRIMARYCOLOR} />
+    }
+    else if(name=="DiscoverOutline"){
+        return <FontAwesomeIcon icon={faGlobe} color={MEDIUMGREY}/>
     }
     else if(name=="Message"){
         return <FontAwesomeIcon icon={faMessage} color={PRIMARYCOLOR}/>
+    }
+    else if(name=="MessageOutline"){
+        return <FontAwesomeIcon icon={faMessage} color={MEDIUMGREY}/>
     }
     else if(name == "Map"){
         return <FontAwesomeIcon icon={faMap} color={PRIMARYCOLOR}/>
     }
     else if(name=="Profile"){
-        return <FontAwesomeIcon icon={faPerson} color={PRIMARYCOLOR}/>
+        return <FontAwesomeIcon icon={faUser} color={PRIMARYCOLOR} />
     }
+    else if(name=="ProfileOutline"){
+        return <FontAwesomeIcon icon={faUser} color={MEDIUMGREY}/>
+    }
+    
    
 }
 export const GetFAIconsInBlack = (name) =>{
@@ -394,6 +405,142 @@ export const GetAmenitiesIcon = (name) =>{
     }
 }
 
+export const GetFAIconWithColor = (name, color) => {
+    if (name=="Profile"){
+        return <FontAwesomeIcon icon={faPen} color={color}/>
+    }
+    else if (name=="Home"){
+        return <FontAwesomeIcon icon={faHouse} color={color}/>
+    }
+    else if (name=="Heart"){
+        return <FontAwesomeIcon icon={faHeart} color={color}/>
+    }
+    else if (name=="Setting"){
+        return <FontAwesomeIcon icon={faGear} color={color}/>
+    }
+    else if(name=="Close"){
+        return <FontAwesomeIcon icon={faClose} color={color}/>
+    }
+    else if(name=="ArrowRight"){
+        return <FontAwesomeIcon icon={faArrowRight} color={color}/>
+    }
+    else if(name=="ArrowLeft"){
+        return <FontAwesomeIcon icon={faArrowLeft} color={color}/>
+    }
+    else if(name=="Check"){
+        return <FontAwesomeIcon icon={faCheck} color={color}/>
+    }
+    else if(name=="Search"){
+        return <FontAwesomeIcon icon={faSearch} color={color}/>
+    }
+    else if(name=="Map"){
+        return <FontAwesomeIcon icon={faMapLocationDot} color={color}/>
+    }
+    else if(name=="Image"){
+        return <FontAwesomeIcon icon={faImage} color={color}/>
+    }
+    else if(name=="Bed"){
+        return <FontAwesomeIcon icon={faBed} color={color}/>
+    }
+    else if(name=="Bath"){
+        return <FontAwesomeIcon icon={faBath} color={color}/>
+    }
+    else if(name=="Kitchen"){
+        return <FontAwesomeIcon icon={faKitchenSet} color={color}/>
+    }
+    else if(name=="LivingRoom"){
+        return <FontAwesomeIcon icon={faCouch} color={color}/>
+    }
+    else if(name=="Calendar"){
+        return <FontAwesomeIcon icon={faCalendar} color={color}/>
+    }
+    else if(name=="Pet_Friendly"){
+        return <FontAwesomeIcon icon={faDog} color={color}/>
+    }
+    else if(name=="Garages"){
+        return <FontAwesomeIcon icon={faCar} color={color}/>
+    }
+    else if(name=="Swimming_Pool"){
+        return <FontAwesomeIcon icon={faSwimmingPool} color={color}/>
+    }
+    else if(name=="Wifi"){
+        return <FontAwesomeIcon icon={faWifi} color={color}/>
+    }
+    else if(name=="Gym"){
+        return <FontAwesomeIcon icon={faDumbbell} color={color}/>
+    }
+    else if(name=="Washer_Dryer"){
+        return <FontAwesomeIcon icon={faShirt} color={color}/>
+    }
+    else if(name=="Gated_Access"){
+        return <FontAwesomeIcon icon={faDoorClosed} color={color}/>
+    }
+    else if(name=="Public_Transportation"){
+        return <FontAwesomeIcon icon={faTrainSubway} color={color}/>
+    }
+    else if(name=="Heating_Cooling"){
+        return <FontAwesomeIcon icon={faTemperature0} color={color}/>
+    }
+    else if(name=="Microwave"){
+        return <FontAwesomeIcon icon={faBowlFood} color={color}/>
+    }
+    else if(name=="Grill"){
+        return <FontAwesomeIcon icon={faFire} color={color}/>
+    }
+    else if(name=="TV"){
+        return <FontAwesomeIcon icon={faTv} color={color}/>
+    }
+    else if(name=="Fridge"){
+        return <FontAwesomeIcon icon={faIceCream} color={color}/>
+    }
+    else if(name=="Couch"){
+        return <FontAwesomeIcon icon={faBed} color={color}/>
+    }
+    else if(name=="Mattress"){
+        return <FontAwesomeIcon icon={faBed} color={color}/>
+    }
+    else if(name=="Oven"){
+        return <FontAwesomeIcon icon={faCookieBite} color={color}/>
+    }
+    else if(name=="Coffee_Maker"){
+        return <FontAwesomeIcon icon={faMugHot} color={color}/>
+    }
+    else if(name=="Toaster"){
+        return <FontAwesomeIcon icon={faBreadSlice} color={color}/>
+    }
+    else if(name=="Dishes"){
+        return <FontAwesomeIcon icon={faPlateWheat} color={color}/>
+    }
+    else if(name=="Pots_Pans"){
+        return <FontAwesomeIcon icon={faKitchenSet} color={color}/>
+    }
+    else if(name=="Utilities_Included"){
+        return <FontAwesomeIcon icon={faBoltLightning} color={color}/>
+    }
+    else if(name=="Walkin_Closet"){
+        return <FontAwesomeIcon icon={faBox} color={color}/>
+    }
+    else if(name == "Option"){
+        return <FontAwesomeIcon icon={faQuestionCircle} color={color}/>
+    }
+    else if(name == "Exit"){
+        return <FontAwesomeIcon icon={faDoorOpen} color={color}/>
+    }
+    else if(name == "Send"){
+        return <FontAwesomeIcon icon={faCircleArrowUp} color={color} size={30}/>
+    }
+    else if(name == "Building"){
+        return <FontAwesomeIcon icon={faBuilding} color={color}/>
+    }
+    else if(name == "Studio"){
+        return <FontAwesomeIcon icon={faCouch} color={color}/>
+    }
+    else {
+        return <FontAwesomeIcon icon={faClose} color={color}/>
+    }
+    
+}
+
 export const HeaderContainer = styled.View`
     width: ${WIDTH}px;
     height: ${HEIGHT*0.05}px;
@@ -403,6 +550,7 @@ export const HeaderContainer = styled.View`
     border-bottom-width: 0.5px;
     border-color: #E0E0E0
     align-self:center
+    
 `
 
 export const BackButtonContainer = styled.View`
@@ -431,12 +579,14 @@ export const ResetButtonContainer = styled.View`
 export const Header = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     font-weight: 500;
+    color: black
 `
 
 export const ProgressText = styled.Text`
     width: ${WIDTH*0.9}px;
     text-align: center;
     align-self: center
+    color: black
     
 `
 
@@ -455,6 +605,7 @@ export const ContinueButton = styled(Pressable)`
     shadow-radius: 5px;
     shadow-opacity: 0.2;
     elevation: 2
+    color: black
 `
 //Continue Button Text used in sign up 
 export const ContinueText = styled.Text`

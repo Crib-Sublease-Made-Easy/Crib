@@ -10,7 +10,7 @@ import { User } from 'realm';
 import { UserContext } from '../../../UserContext';
 
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, GetFAIconWithColor} from '../../../../sharedUtils';
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -30,7 +30,7 @@ export default function ChangeNumberScreen({navigation}){
             <HeaderContainer>
                 <BackButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                        <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+                        {GetFAIconWithColor("ArrowLeft", "black")}
                     </Pressable>
                 </BackButtonContainer>
                 <NameContainer>

@@ -19,7 +19,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, ContinueText, ProgressText, DARKGREY, MEDIUMGREY, GOOGLEBLUE, SignUpHeader } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, ContinueText, ProgressText, DARKGREY, MEDIUMGREY, GOOGLEBLUE, SignUpHeader, GetFAIconWithColor } from '../../../sharedUtils';
 
 import Lottie from 'lottie-react-native';
 
@@ -208,17 +208,26 @@ export default function PhoneNumberScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
             <SignUpHeader>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
-                   
-                    <Ionicons name='arrow-back-outline' size={25} />
-                </Pressable>
+                
+                    {
+                    route.params.backAgain? 
+                    <Pressable onPress={()=> navigation.navigate("DiscoverTabs")} style={{flexDirection:'row', justifyContent:'center'}}>
+                      
+                        <Text style={{color: 'black', fontSize: HEIGHT*0.02, padding: WIDTH*0.02}}>Exit</Text>
+                    </Pressable>
+                    :
+                    <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                     {GetFAIconWithColor("ArrowLeft", "black")}
+                    </Pressable>
+                    }
+               
             </SignUpHeader>
                 
             <ProgressBarContainer>
                 <ProgressText>Step  8 / 9</ProgressText>
             </ProgressBarContainer>
            
-            <ScrollView scrollEnabled={false}>
+            <ScrollView scrollEnabled={false} style={{minHeight: HEIGHT*0.45}}>
                 <TitleText>Enter your phone number</TitleText>
                 <SubtitleText>We will send you a one time password</SubtitleText>
                 <TextInputContainer>
@@ -228,14 +237,14 @@ export default function PhoneNumberScreen({navigation, route}){
                     
                 </TextInputContainer>
                 <FollowUpContainer>
-                    <Pressable onPress={()=> setAgreement(!agreement)}>
-                        <Ionicons size={25} name={'checkbox'} color={agreement ? PRIMARYCOLOR : MEDIUMGREY} />
+                    <Pressable onPress={()=> setAgreement(!agreement)} style={{padding: WIDTH*0.01, borderRadius: 5, backgroundColor: agreement ? PRIMARYCOLOR : MEDIUMGREY}}>
+                        {GetFAIconWithColor("Check", "white")}
                     </Pressable>
                     <FollowUpText>I agree to Crib <Text onPress={()=>navigation.navigate('TermsAndService')} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Terms and Services</Text>.</FollowUpText>
                 </FollowUpContainer>
                 <FollowUpContainer>
-                    <Pressable onPress={()=> setPrivacyAgreement(!privacyagreement)}>
-                        <Ionicons size={25} name={'checkbox'} color={privacyagreement ? PRIMARYCOLOR : MEDIUMGREY} />
+                    <Pressable onPress={()=> setPrivacyAgreement(!privacyagreement)} style={{padding: WIDTH*0.01, borderRadius: 5, backgroundColor: privacyagreement ? PRIMARYCOLOR : MEDIUMGREY}}>
+                    {GetFAIconWithColor("Check", "white")}
                     </Pressable>
                     <FollowUpText>I agree to Crib <Text onPress={()=>navigation.navigate('Privacy')} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Privacy Policy</Text>.</FollowUpText>
                 </FollowUpContainer>

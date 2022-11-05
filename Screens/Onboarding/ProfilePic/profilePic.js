@@ -28,7 +28,7 @@ const TEXTINPUTBORDERCOLOR = '#989898'
 
 import { Header, TitleText, SubtitleText, ProgressBarContainer, ProfilePicContainer, } from './profilePicStyle';
 
-import { ContinueButton, ContinueText, ProgressText, SignUpHeader } from '../../../sharedUtils';
+import { ContinueButton, ContinueText, DARKGREY, GetFAIconWithColor, ProgressText, SignUpHeader } from '../../../sharedUtils';
 import ImagePicker from 'react-native-image-crop-picker';
 
 export default function ProfilePicScreen({navigation, route}){
@@ -50,6 +50,7 @@ export default function ProfilePicScreen({navigation, route}){
                 profilePic: profilePic
             })
         }
+
     }
 
     function SelectProfilePic(){
@@ -75,7 +76,7 @@ export default function ProfilePicScreen({navigation, route}){
             <SignUpHeader>
                 <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
-                    <Ionicons name='arrow-back-outline' size={25} />
+                    {GetFAIconWithColor("ArrowLeft", "black")}
                 </Pressable>
             </SignUpHeader>
             <ProgressBarContainer>

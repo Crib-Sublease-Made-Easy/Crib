@@ -10,7 +10,7 @@ import { User } from 'realm';
 
 import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../../sharedUtils'
+import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, GetFAIconWithColor} from '../../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
@@ -55,7 +55,7 @@ export default function EditEducationScreen({navigation, route}){
           <HeaderContainer>
                 <BackButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                        <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+                        {GetFAIconWithColor("ArrowLeft", "black")}
                     </Pressable>
                 </BackButtonContainer>
                 <NameContainer>
@@ -63,7 +63,7 @@ export default function EditEducationScreen({navigation, route}){
                 </NameContainer>
                 <ResetButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
-                        <Ionicons name='checkmark' size={25} style={{paddingHorizontal:WIDTH*0.02}} color='black'/>
+                        {GetFAIconWithColor("Check", "black")}
                     </Pressable>
                 </ResetButtonContainer>
             </HeaderContainer>

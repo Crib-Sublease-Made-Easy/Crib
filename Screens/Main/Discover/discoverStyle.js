@@ -61,13 +61,13 @@ export const SearchContainer = styled.Pressable`
 `
 export const SearchContainerPlaceholderText = styled(Text)`
   font-family: ${ROBOTOFONTFAMILY}
-  
-  height: ${HEIGHT*0.03}px
-  width: 70% 
+  overflow: hidden
+  width: ${WIDTH*0.6}px
   align-items: center
   align-self: center
   padding-horizontal: ${WIDTH*0.01}px
   color : ${props=>(props.locationQuery == "Search Location ..." ? DARKGREY : 'black')}
+  
 `
 
 
@@ -200,12 +200,13 @@ export const PreviewNameText = styled.Text`
   height: ${HEIGHT*0.04}px;
   font-weight: 400
   width: ${WIDTH*0.6}px
+  color: black
 ` 
 export const PreviewPriceText = styled.Text`
   width: ${WIDTH*0.9}px
   padding-horizontal: ${WIDTH*0.025}px
   font-size: ${HEIGHT*0.014}px;
-  color: ${DARKGREY}
+  color: black
 
 `
 export const PreviewLocationText = styled.Text`
@@ -215,6 +216,7 @@ export const PreviewLocationText = styled.Text`
   max-height: ${HEIGHT*0.06}px;
   padding-horizontal: ${WIDTH*0.025}px
   overflow: hidden
+  color: black
   
 `
 

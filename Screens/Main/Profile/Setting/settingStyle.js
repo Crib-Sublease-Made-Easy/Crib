@@ -41,6 +41,7 @@ export const ResetButtonContainer = styled.View`
 export const Header = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     font-weight: 500;
+    color: black
 `
 
 export const CategoryContainer = styled.View`
@@ -56,6 +57,7 @@ export const CategoryContainer = styled.View`
 export const CategoryName = styled.Text`
     font-size: ${HEIGHT*0.0175}px
     font-weight: 500
+    color: black
 `
 
 export const RowContainer = styled.Pressable`
@@ -68,11 +70,13 @@ export const RowContainer = styled.Pressable`
 `
 export const RowName = styled.Text`
     font-size: ${HEIGHT*0.0175}px
+    color: black
 `
 export const RowValueContainer = styled.Pressable`
     justify-content: space-between;
     flex-direction: row;
-    align-items: center;
+   
+   
 `
 
 export const RowValueText = styled.Text`

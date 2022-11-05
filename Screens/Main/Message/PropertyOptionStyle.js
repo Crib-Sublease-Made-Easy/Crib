@@ -21,4 +21,5 @@ export const RowName = styled.Text`
     font-weight: 400
     width: ${WIDTH*0.8}px
     text-align: left
+    color: black
 `

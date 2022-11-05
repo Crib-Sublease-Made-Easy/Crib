@@ -46,6 +46,7 @@ export const ResetButtonContainer = styled.View`
 export const Header = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     font-weight: 500;
+    color: black
 `
 
 export const InputForm = styled.View`
@@ -80,6 +81,7 @@ export const InputNameContainer = styled.View`
 export const InputName = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     font-weight: 600;
+    color: black
 `
 export const InputOptionContainer = styled.View`
     width: ${WIDTH*0.9}px;
@@ -108,6 +110,7 @@ export const PropertyTypeName = styled.Text`
     font-size: ${HEIGHT*0.0175}px;
     font-weight: 400;
     margin-left: ${WIDTH*0.025}px
+    color: black
 `
 
 
@@ -144,6 +147,7 @@ export const PriceRangeText = styled.Text`
     font-size: ${HEIGHT*0.0175}px;
     color: ${PRIMARYGREY};
     font-weight: 500;
+    
    
 `
 

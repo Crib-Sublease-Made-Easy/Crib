@@ -11,7 +11,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { WIDTH, HEIGHT, OnlyLetters, ProgressText, ContinueButton, ContinueText, SignUpHeader } from '../../../sharedUtils';
+import { WIDTH, HEIGHT, OnlyLetters, ProgressText, ContinueButton, ContinueText, SignUpHeader, GetFAIconWithColor } from '../../../sharedUtils';
 
 import { Header, ProgressBarContainer, TitleText, GeneralTextInput, 
     TextInputContainer,} from './firstLastNameStyle';
@@ -61,7 +61,7 @@ export default function FirstLastNameScreen({navigation, route}){
             <SignUpHeader>
                 <Pressable style={{height:'50%', width:'50%'}} onPress={backToLanding}>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
-                    <Ionicons name='arrow-back-outline' size={25} />
+                    {GetFAIconWithColor("ArrowLeft", 'black')}
                 </Pressable>
             </SignUpHeader>
             
@@ -69,7 +69,7 @@ export default function FirstLastNameScreen({navigation, route}){
                 <ProgressText>Step  1 / 9</ProgressText>
             </ProgressBarContainer>
 
-            <ScrollView scrollEnabled={false}>
+            <ScrollView scrollEnabled={false} style={{minHeight: HEIGHT*0.4}}>
                 <TitleText>Tell us a bit about youself ...</TitleText>
                 <TextInputContainer>
                     <GeneralTextInput value={firstName} onChangeText={(value)=>setFirstName(value)} placeholder="First Name"  />

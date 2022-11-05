@@ -28,7 +28,7 @@ const PRIMARYCOLOR = '#4050B5'
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header} from '../../../sharedUtils'
+import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header, GetFAIconWithColor} from '../../../sharedUtils'
 
 import { MessageInput, MessageContainer, SendButton } from './chatStyle';
 
@@ -85,18 +85,18 @@ export default function ChatScreen({navigation, route}){
     }
 
 
-    const assignRecipient = () =>{
-      if(channel != null && channel.members.length == 2){
-        if(channel.members[0].userId == USERID){
-          console.log("INSIDEEEE")
-          setRecipient(channel.members[1].nickname)
-        }else{
-          setRecipient(channel.members[0].nickname)
-        }
-      } else{
-        deletedChat(channel)
-      }
-    }
+    // const assignRecipient = () =>{
+    //   if(channel != null && channel.members.length == 2){
+    //     if(channel.members[0].userId == USERID){
+    //       console.log("INSIDEEEE")
+    //       setRecipient(channel.members[1].nickname)
+    //     }else{
+    //       setRecipient(channel.members[0].nickname)
+    //     }
+    //   } else{
+    //     deletedChat(channel)
+    //   }
+    // }
     const onSend = useCallback(async (messages = []) => {
       setSending(true)
       const accessToken = await SecureStorage.getItem("accessToken");
@@ -287,11 +287,11 @@ export default function ChatScreen({navigation, route}){
         navigation.goBack()
     }
     return(
-    <SafeAreaView style={{backgroundColor:'white', flex:1}}>
+    <SafeAreaView style={{backgroundColor:'white',flex: 1, paddingBottom: HEIGHT*0.035}}>
     <HeaderContainer>
           <BackButtonContainer>
               <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} hitSlop={WIDTH*0.05} onPress={()=> { onChat=false, navigation.goBack()}}>
-                  <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+                  {GetFAIconWithColor("ArrowLeft", 'black')}
               </Pressable>
           </BackButtonContainer>
           <NameContainer>
@@ -320,7 +320,7 @@ export default function ChatScreen({navigation, route}){
               <MessageInput multiline value={typingText} onChangeText={(value)=> setTypingText(value)} placeholder="Enter a message ..." />
             
               <TouchableOpacity disabled={sending} hitSlop={WIDTH*0.05} onPress={()=> typingText != "" && props.onSend({text: typingText})}>
-                <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
+                {GetFAIconWithColor('Send','#24a2fe')}
               </TouchableOpacity>
               
           </MessageContainer>
@@ -337,7 +337,7 @@ export default function ChatScreen({navigation, route}){
       />  
       
       }
-    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(fgalse)} leaveChat={leaveChat} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
+    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} leaveChat={leaveChat} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
     </SafeAreaView>
     )
 }

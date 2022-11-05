@@ -19,7 +19,7 @@ Ionicons.loadFont()
 
 import { RowContainer, RowName } from './PropertyOptionStyle';
 
-import { WIDTH, HEIGHT, HeaderContainer, Header, BackButtonContainer, NameContainer, PRIMARYCOLOR, MEDIUMGREY, DARKGREY,  } from '../../../sharedUtils';
+import { WIDTH, HEIGHT, HeaderContainer, Header, BackButtonContainer, NameContainer, PRIMARYCOLOR, MEDIUMGREY, DARKGREY, GetFAIconWithColor,  } from '../../../sharedUtils';
 export default function PropertyOptionsModal({navigation,close, visible ,viewProp, leaveChat}){
     return(
         <SafeAreaView>
@@ -30,7 +30,7 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                 <HeaderContainer>
                     <BackButtonContainer>
                         <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} hitSlop={WIDTH*0.05} onPress={()=> close()}>
-                            <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+                            {GetFAIconWithColor("ArrowLeft", "black")}
                         </Pressable>
                     </BackButtonContainer>
                     <NameContainer>

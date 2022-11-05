@@ -28,7 +28,7 @@ import { Container, PropertyDescription, CardSectionOne, CardTitle, LocationDist
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
            StickyHeaderContainer,  StickyHeaderIcon} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY, GetFAIcons } from '../../../sharedUtils';
+import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY, GetFAIcons, GetFAIconWithColor } from '../../../sharedUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBath, faBed, faEye, faFire, faFireFlameCurved, faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
 
@@ -186,7 +186,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 }) 
                 .then(res => res.json()).then(async message =>{
                     // console.log(message)
-                    console.log("hello")
+                    
                     await AsyncStorage.removeItem("favoriteProperties");
                 
                     setLiked(!liked)
@@ -194,6 +194,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 .catch(e=>{
                     alert(e)
                 })
+                console.log("hello")
             }
         }
         else{
@@ -223,7 +224,7 @@ export default function PropertyDetailScreen({navigation, route}){
       }
 
     return(
-       <SafeAreaView style={{display: 'flex'}}>
+       <SafeAreaView style={{ backgroundColor:'white'}}>
         <Container>             
             <PropertyDescription>
     
@@ -231,6 +232,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 showsVerticalScrollIndicator={false} 
                 bouncesZoom={1}
                 scrollEventThrottle={5}
+                style={{backgroundColor:'white'}}
                 >
                     {/* <Lottie source={require('../../../ImageLoading.json')} autoPlay   style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/> */}
 
@@ -442,25 +444,29 @@ export default function PropertyDetailScreen({navigation, route}){
                 </ScrollView>
                 <StickyHeaderContainer>
                     < StickyHeaderIcon  hitSlop={WIDTH*0.05} onPress={()=>navigation.goBack()}>
-                        {GetFAIcons("Close")}
+                        <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
                     </ StickyHeaderIcon>
                     { !ownProperty &&
                     < StickyHeaderIcon hitSlop={WIDTH*0.05} onPress={likeProperty}>
-                        {GetFAIcons("Heart")}
+                        <Ionicons  name="heart" size={25} color={ liked ? '#ee88a6' : 'white'}></Ionicons>
                     </ StickyHeaderIcon>
                     }
                     
                 </StickyHeaderContainer>
-            </PropertyDescription>
-            <Footer>
+                <Footer>
                     <PricePerMonth>${propData.price} <Text style={{fontSize: HEIGHT*0.025, fontWeight:'500'}}>/ month</Text></PricePerMonth>
                 
                     <ContactTanentButton disabled={ownProperty} ownProperty={ownProperty} hitSlop={WIDTH*0.05} onPress={()=>createConversation()}>
                         <Text style={{color:'white', fontWeight:'700'}}>Contact Tenant</Text>
                     </ContactTanentButton>
-            </Footer>
+                </Footer>
+            </PropertyDescription>
+            
 
         </Container>
+
+       
+        
         </SafeAreaView>
        
         

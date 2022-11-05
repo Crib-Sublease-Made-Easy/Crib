@@ -18,7 +18,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, SignUpHeader, MEDIUMGREY, ContinueButton, ContinueText, ProgressText } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, SignUpHeader, MEDIUMGREY, ContinueButton, ContinueText, ProgressText, GetFAIconWithColor } from '../../../sharedUtils';
 
 
 const GENDERS = [
@@ -56,7 +56,7 @@ export default function GenderScreen({navigation, route}){
             <SignUpHeader>
                 <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
-                    <Ionicons name='arrow-back-outline' size={25} />
+                    {GetFAIconWithColor("ArrowLeft", "black")}
                 </Pressable>
             </SignUpHeader>
                 
@@ -74,8 +74,8 @@ export default function GenderScreen({navigation, route}){
                       
                         <GenderName>{value.name}</GenderName>
                         </View>
-                        <Pressable onPress={()=>setGender(value.name)}>
-                            <Ionicons name='checkbox' size={25} color={ gender == value.name ? PRIMARYCOLOR : MEDIUMGREY}/>
+                        <Pressable onPress={()=>setGender(value.name)} style={{padding: WIDTH*0.01, backgroundColor: gender==value.name ? PRIMARYCOLOR : MEDIUMGREY, borderRadius:5}}>
+                           {GetFAIconWithColor("Check", "white")}
                         </Pressable>
                     </GenderRowContainer>
                     ))}

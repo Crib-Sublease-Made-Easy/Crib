@@ -44,6 +44,7 @@ export const NameText = styled.Text`
     width: ${WIDTH*0.9}px
     font-weight: 500;
     text-align:center
+    color: black
 `
 
 export const OccupationText = styled.Text`
@@ -77,7 +78,6 @@ export const PostContainer = styled.Pressable`
     width: ${WIDTH*0.35}px;
     height: ${HEIGHT*0.05}px
     border-radius: 25px;
-    // background-color: ${props=>props.tabPressed == "Posted" ? 'rgba(133, 89, 227, 0.5)' : 'white'}
     justify-content: center;
     align-items:center
     flex-direction: row
@@ -86,7 +86,6 @@ export const FavContainer = styled.Pressable`
     width: ${WIDTH*0.35}px;
     height: ${HEIGHT*0.05}px
     border-radius: 25px;
-    // background-color: ${props=>props.tabPressed == "Fav" ? 'rgba(133, 89, 227, 0.5)' : 'white'}
     justify-content: center;
     align-items:center
     flex-direction: row
@@ -119,6 +118,7 @@ export const PropertyName = styled.Text`
   font-size: ${HEIGHT*0.0175}px;
   padding-vertical: ${HEIGHT*0.005}px
   font-weight: 500;
+  color: black
 `
 export const DatePriceText = styled.Text`
   fontSize: ${HEIGHT*0.015}px;
@@ -216,12 +216,14 @@ export const FavPropertyCardContent = styled.Pressable`
 export const FavPropertyCardName = styled.Text`
   font-size: ${HEIGHT*0.015}px;
   font-weight: 500
+  color: black
 `
 
 export const FavPropertyCardDateText = styled.Text`
   font-size: ${HEIGHT*0.015}px;
   color: ${DARKGREY}
   font-weight: 400
+  
 `
 export const FavPropertyCardDateContainer = styled.View`
   padding-vertical: ${HEIGHT*0.01}px
@@ -229,6 +231,7 @@ export const FavPropertyCardDateContainer = styled.View`
   justify-content: space-between;
   align-items: center
   flex-direction: row
+  
 `
 export const HeaderIndividualContainer = styled.View`
   
@@ -253,6 +256,7 @@ export const RowItemName = styled.Text`
   margin-left: ${WIDTH*0.05}px
   font-size: ${HEIGHT*0.0175}px
   font-weight: 500
+  color: black
 `
 
 export const ProfileHeading = styled.Text`
@@ -261,6 +265,7 @@ export const ProfileHeading = styled.Text`
   font-size: ${HEIGHT*0.03}px
   padding-vertical: ${HEIGHT*0.025}px
   align-self: center
+  color: black
 `
 export const NoUserViewContainer = styled.View`
   background-color: white;

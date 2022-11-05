@@ -36,6 +36,7 @@ export const TitleText = styled.Text`
     font-weight: 500;
     width: ${WIDTH*0.9}px
     padding-left: ${WIDTH*0.1}px
+    color: black
     
 `
 
@@ -46,6 +47,7 @@ export const GeneralTextInput = styled.TextInput`
     padding-left: ${WIDTH*0.025}px
     border-color: ${TEXTINPUTBORDERCOLOR}
     align-self: center   
+    color: black
 `
 
 export const SubtitleText = styled.Text`
@@ -53,6 +55,7 @@ export const SubtitleText = styled.Text`
     margin-top: ${HEIGHT*0.025}px
     font-size: ${HEIGHT*0.02}px;
     align-self: center
+    color: black
     
 `
 
@@ -86,6 +89,7 @@ export const ContinueText = styled.Text`
 `
 export const DatePlaceHolder = styled.Text`
     font-size:${HEIGHT*0.03}px;
+    color: black
     
    
 `

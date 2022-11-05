@@ -13,7 +13,7 @@ import {
 
 import { createBottomTabNavigator,  } from '@react-navigation/bottom-tabs';
 
-import { PRIMARYCOLOR } from '../../../sharedUtils';
+import { FAGetBottomIcons, PRIMARYCOLOR, ROBOTOFONTFAMILY } from '../../../sharedUtils';
 import DiscoverScreen from '../Discover/discover';
 import MessageScreen from '../Message/message.js';
 import ProfileScreen from '../Profile/profile';
@@ -33,7 +33,7 @@ export default function ProfileTab(){
 
     return(
 
-    <Tab.Navigator 
+      <Tab.Navigator 
         screenOptions={({ route }) => ({
           lazy: false,
           tabBarIcon: ({ focused, color, size }) => {

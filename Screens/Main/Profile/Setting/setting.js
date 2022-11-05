@@ -10,7 +10,7 @@ import { UserContext } from '../../../../UserContext';
 
 import SecureStorage from 'react-native-secure-storage'
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, GetFAIconWithColor, MEDIUMGREY} from '../../../../sharedUtils';
 
 import OneSignal from 'react-native-onesignal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -73,7 +73,7 @@ export default function SettingScreen({navigation, route}){
     }
 
     const toggleNotification = async () => {
-
+      console.log("hello")
       //Prompt for push on iOS
       if(!notificationsEnabled){
         OneSignal.disablePush(false);
@@ -130,7 +130,7 @@ export default function SettingScreen({navigation, route}){
       <HeaderContainer>
             <BackButtonContainer>
                 <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                    <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}} />
+                    {GetFAIconWithColor("ArrowLeft", 'black')}
                 </Pressable>
             </BackButtonContainer>
             <NameContainer>
@@ -154,24 +154,20 @@ export default function SettingScreen({navigation, route}){
           <RowName>Email</RowName>
           <RowValueContainer onPress={()=>navigation.navigate("ChangeEmail", {email: userData.email})}>
             <RowValueText>{userData.email}</RowValueText>
-            <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+            {/* {GetFAIconWithColor("ArrowRight", 'black')} */}
           </RowValueContainer>
         </RowContainer>
 
         {/* Notification settings */}
-        <CategoryContainer>
+        {/* <CategoryContainer>
           <CategoryName>Notifications</CategoryName>
-        </CategoryContainer>
-        <RowContainer>
+        </CategoryContainer> */}
+        {/* <RowContainer>
           <RowName>All Notifications</RowName>
-          <Switch
-            trackColor={{ false: "#767577", true: PRIMARYCOLOR }}
-            thumbColor={ notificationsEnabled ? 'white': "#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={()=> toggleNotification()}
-            value={notificationsEnabled}
-          />
-        </RowContainer>
+          <Pressable onPress={() => toggleNotification()} style={{padding: WIDTH*0.01, backgroundColor: notificationsEnabled ? PRIMARYCOLOR : MEDIUMGREY, borderRadius: 5}}>
+            {GetFAIconWithColor("Check", "white")}
+          </Pressable>
+        </RowContainer> */}
       
 
         <CategoryContainer>
@@ -180,15 +176,15 @@ export default function SettingScreen({navigation, route}){
         
         <RowContainer  onPress={() => navigation.navigate('TermsAndService')}>
           <RowName>Terms and Services</RowName>
-          <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+          {GetFAIconWithColor("ArrowRight", "black")}
         </RowContainer>
         <RowContainer onPress={() => navigation.navigate('Privacy')}>
           <RowName>Privacy</RowName>
-          <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+          {GetFAIconWithColor("ArrowRight", "black")}
         </RowContainer>
         <RowContainer onPress={()=> navigation.navigate("ContactUs", {email: userData.email})}>
           <RowName>Contact Us</RowName>
-          <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+          {GetFAIconWithColor("ArrowRight", "black")}
         </RowContainer>
         
         <CategoryContainer>

@@ -12,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
   
-import { HEIGHT, WIDTH, ContainsSpace, ContinueButton, ContinueText, ProgressText, SignUpHeader, } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, ContainsSpace, ContinueButton, ContinueText, ProgressText, SignUpHeader, GetFAIconWithColor, } from '../../../sharedUtils';
 
 
 import {Header, ProgressBarContainer, SubtitleText, TitleText, 
@@ -63,7 +63,7 @@ export default function EmailScreen({navigation, route}){
             <SignUpHeader>
                 <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
-                    <Ionicons name='arrow-back-outline' size={25} />
+                   {GetFAIconWithColor("ArrowLeft", 'black')}
                 </Pressable>
             </SignUpHeader>
                 
@@ -71,7 +71,7 @@ export default function EmailScreen({navigation, route}){
                 <ProgressText>Step  7 / 9</ProgressText>
             </ProgressBarContainer>
            
-            <ScrollView>
+            <ScrollView style={{minHeight: HEIGHT*0.4}}>
                 <TitleText>What is your email?</TitleText>
                 <SubtitleText>We will keep you updated </SubtitleText>
                 <TextInputContainer>

@@ -27,6 +27,7 @@ export const TitleText = styled.Text`
     font-weight: 400;
     width: ${WIDTH*0.7}px
     padding-left: ${WIDTH*0.1}px
+    color: black
     
 `
 
@@ -41,7 +42,7 @@ export const GeneralTextInput = styled.TextInput`
     padding-left: ${WIDTH*0.025}px
     border-color: ${TEXTINPUTBORDERCOLOR}
     align-self: center   
-    
+    color: black
     font-size: ${HEIGHT*0.02}px
 `
 

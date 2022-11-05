@@ -6,7 +6,7 @@ import {
   Pressable,
 } from 'react-native';
 
-import { MEDIUMGREY,HEIGHT, WIDTH, amenitiesList, GetFAIconsInBlack, PRIMARYCOLOR, PROPERTIESTYPES, DEFAULTTYPE, DEFAULTPRICE, DEFAULTAVAILABLEFROM, DEFAULTAVAILABLETO, DEFAULTBEDROOM, DEFAULTDISTANCE, DEFAULTAMENITIES, DEFAULTBATHROOM} from '../../../../sharedUtils';
+import { MEDIUMGREY,HEIGHT, WIDTH, amenitiesList, GetFAIconsInBlack, PRIMARYCOLOR, PROPERTIESTYPES, DEFAULTTYPE, DEFAULTPRICE, DEFAULTAVAILABLEFROM, DEFAULTAVAILABLETO, DEFAULTBEDROOM, DEFAULTDISTANCE, DEFAULTAMENITIES, DEFAULTBATHROOM, GetFAIconWithColor} from '../../../../sharedUtils';
 
 import Modal from "react-native-modal";
 import Slider from '@react-native-community/slider';
@@ -193,7 +193,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                 <HeaderContainer>
                     <BackButtonContainer>
                         <Pressable hitSlop={WIDTH*0.05} style={{height:'50%', width:'50%', alignItems:'center'}} onPress={checkResetAndBack}>
-                            <Ionicons name='arrow-back-outline' size={25} />
+                            {GetFAIconWithColor("ArrowLeft", "black")}
                         </Pressable>
                     </BackButtonContainer>
                     <NameContainer>
@@ -213,7 +213,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                             {PROPERTIESTYPES.map((value)=>(
                                 <TypeOption key={value.type + value.icon} >
                                     <NameIcon hitSlop={WIDTH*0.05} onPress={()=>{value.type == filterType ? setfilterType("") : setfilterType(value.type)}}>
-                                        <FontAwesome name={value.icon} size={20} />
+                                        <FontAwesome name={value.icon} size={20} color='black'/>
                                         <PropertyTypeName>{value.type}</PropertyTypeName>
                                     </NameIcon>
                                     <Pressable hitSlop={WIDTH*0.05} onPress={()=>{value.type == filterType ? setfilterType("") : setfilterType(value.type)}}>
@@ -383,7 +383,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                     <TypeOption key={value.name + "amenitiesfilter"} >
                                         <NameIcon  hitSlop={WIDTH*0.05} onPress={()=>updateAmenities(value.name)}>
                                             {GetFAIconsInBlack(value.name)}
-                                            {/* <PropertyTypeName>{value.name.replaceAll("_", " ")}</PropertyTypeName> */}
+                                            <PropertyTypeName>{value.name.replace("_", " ").replace("_", " ")}</PropertyTypeName>
                                         </NameIcon>
                                         <Pressable  hitSlop={WIDTH*0.05} onPress={()=>updateAmenities(value.name)}>
                                             <View style={{height:WIDTH*0.055, width:WIDTH*0.055, borderRadius: 5, backgroundColor:filterAmenities.indexOf(value.name) != -1 ? PRIMARYCOLOR : MEDIUMGREY,

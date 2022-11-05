@@ -145,17 +145,22 @@ export default function LoginScreen({navigation, route}){
            
             behavior='padding' style={{flex:1, backgroundColor:'white'}}>
             <Header>
+                {route.backAgain? 
+                <Pressable onPress={()=> navigation.navigate("DiscoverTabs")} style={{flexDirection:'row', width: WIDTH*0.8, alignSelf:'center', justifyContent:'flex-end'}}>
+                    <Text style={{color: 'black', fontSize: HEIGHT*0.02, padding: WIDTH*0.02}}>Exit</Text>
+                </Pressable>
+                :
                 <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
-                   
                     {GetFAIconsInBlack("Back")}
                 </Pressable>
+                }
             </Header>
                 
             <ProgressBarContainer>
 
             </ProgressBarContainer>
            
-            <ScrollView scrollEnabled={false} style={{backgroundColor:'white', minHeight: HEIGHT*0.4}}>
+            <ScrollView scrollEnabled={false} style={{backgroundColor:'white', minHeight: HEIGHT*0.45608}}>
                 <TitleText>Login with your phone number</TitleText>
                 <SubtitleText>We will send you a one time password to verify your number</SubtitleText>
                 <TextInputContainer>

@@ -63,7 +63,7 @@ SignupText,
 PostedFavContainer
 } from './profileStyle';
 
-import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, DARKGREY } from '../../../sharedUtils';
+import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, DARKGREY, GetFAIconWithColor } from '../../../sharedUtils';
 
 
 export default function ProfileScreen({navigation}){
@@ -334,11 +334,11 @@ export default function ProfileScreen({navigation}){
                 {/* The Edit Profie, Post a Property and Share a Crib function */}
                 <View>
                     <RowContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>    
-                        <Ionicons name="create"  size={25} color={GOOGLEBLUE}/>
+                        {GetFAIconWithColor('Profile', 'blue')}
                         <RowItemName>Edit Profile</RowItemName>
                     </RowContainer>
                     <RowContainer onPress={()=> toPostProperty()}>    
-                        <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
+                        {GetFAIconWithColor('Home', `${PRIMARYCOLOR}`)}
                         <RowItemName>Post a property</RowItemName>
                     </RowContainer>
                     {/* <RowContainer onPress={()=> onShare()}>    
@@ -363,7 +363,7 @@ export default function ProfileScreen({navigation}){
                     </SlidingContainer>
 
                     {/* Horizontal scrollview for posted and favorite property */}
-                    <ScrollView ref={scrollviewRef} horizontal snapToAlignment='start' snapToInterval={WIDTH} decelerationRate='fast'
+                    <ScrollView ref={scrollviewRef} showsHorizontalScrollIndicator= {false} horizontal snapToAlignment='start' snapToInterval={WIDTH} decelerationRate='fast'
                         style={{width:WIDTH, maxHeight:HEIGHT*0.45, }} scrollEnabled={false}>
                         {/* This is the View of posted property */}
                         <View style={{ width:WIDTH, alignItems:'center' , paddingVertical: HEIGHT*0.02}}>
@@ -417,7 +417,7 @@ export default function ProfileScreen({navigation}){
                                 //When there exist at least 1 fav prop
                                 <ScrollView contentContainerStyle={{alignSelf:'center'}}
                                 style={{alignSelf:'center', width: WIDTH, paddingTop: HEIGHT*0.01}} showsVerticalScrollIndicator={false}>
-                                    {favoriteProperties.map((item, index)=>(
+                                    {favoriteProperties?.map((item, index)=>(
                                     <FavPropertyCard key={item.propertyInfo._id + index}>
                                         <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
                                         <FastImage source={{uri: item.propertyInfo.imgList[0], priority: FastImage.priority.low}} 
@@ -427,13 +427,15 @@ export default function ProfileScreen({navigation}){
                                             <FavPropertyCardName>{item.propertyInfo.loc.secondaryTxt}</FavPropertyCardName>
                                             <FavPropertyCardDateContainer>
                                                 <FavPropertyCardDateText>
-                                                    {new Date(item.propertyInfo.availableFrom).getDate() + " " +
-                                                    new Date(item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) }
+                                                    {
+                                                    new Date(item.propertyInfo.availableFrom).toLocaleDateString() }
                                                 </FavPropertyCardDateText>
-                                                <Ionicons name="arrow-forward-outline" size={15} color={DARKGREY}/>
+                                                <View style={{paddingHorizontal: WIDTH*0.02}}>
+                                                {GetFAIconWithColor("ArrowRight", "black")}
+                                                </View>
                                                 <FavPropertyCardDateText>
-                                                {new Date(item.propertyInfo.availableTo).getDate() + " " +
-                                                    new Date(item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' }) }
+                                                {
+                                                    new Date(item.propertyInfo.availableTo).toLocaleDateString() }
                                                 </FavPropertyCardDateText>
                                             </FavPropertyCardDateContainer>
                                             <FavPropertyCardName>$ {item.propertyInfo.price}</FavPropertyCardName>
