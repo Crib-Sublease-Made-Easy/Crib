@@ -26,7 +26,7 @@ import { Container, Heading, SignupForm, ButtonText, StandardButtonStyle, Standa
 import OTPInputField from  './otpStyle'
 import { UserContext } from '../../UserContext';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
@@ -60,7 +60,7 @@ export default function OTPScreen({navigation, route}){
 
     async function signupStep3(){ 
         setLoading(true)
-        let oneSignalUserId = await SecureStorage.getItem('oneSignalUserID');
+        let oneSignalUserId = await EncryptedStorage.getItem('oneSignalUserID');
         const formData = new FormData();
 
         formData.append("firstName", route.params.firstName);                     
@@ -138,12 +138,12 @@ export default function OTPScreen({navigation, route}){
                     //Create sendbird user here with userid
                     //store user info in
 
-                    await SecureStorage.setItem("accessToken", data.token.accessToken)
-                    await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
-                    await SecureStorage.setItem("userId", data.createdUser._id)
-                    await SecureStorage.setItem("firstName", data.createdUser.firstName)
-                    await SecureStorage.setItem("lastName", data.createdUser.lastName)
-                    await SecureStorage.setItem("refreshToken", data.token.refreshToken)
+                    await EncryptedStorage.setItem("accessToken", data.token.accessToken)
+                    await EncryptedStorage.setItem("profilePic", data.createdUser.profilePic)
+                    await EncryptedStorage.setItem("userId", data.createdUser._id)
+                    await EncryptedStorage.setItem("firstName", data.createdUser.firstName)
+                    await EncryptedStorage.setItem("lastName", data.createdUser.lastName)
+                    await EncryptedStorage.setItem("refreshToken", data.token.refreshToken)
                   
 
 
@@ -162,7 +162,7 @@ export default function OTPScreen({navigation, route}){
         })
     }
   const connectSendbird = async () => {
-    const UID = await SecureStorage.getItem("userId");
+    const UID = await EncryptedStorage.getItem("userId");
     if (UID != undefined) {
       try {
         console.log("connecting to sendbird")

@@ -8,8 +8,7 @@ import {
 } from 'react-native';
 import { User } from 'realm';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
-
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../../sharedUtils'
 
@@ -48,7 +47,7 @@ export default function ChangeEmailScreen({navigation, route}){
         }
         else{
             console.log(route.params.propID)
-            const accessToken = await SecureStorage.getItem("accessToken");
+            const accessToken = await EncryptedStorage.getItem("accessToken");
             fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
                 method: 'PUT',
                 headers: {

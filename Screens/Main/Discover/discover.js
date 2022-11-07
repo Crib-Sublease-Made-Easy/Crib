@@ -23,7 +23,7 @@ import DiscoverFilterScreen from './Filter/discoverFilter'; //onPress Search Fil
 
 import PropertyCard from './propertyCard';  //The slide up screen that shows all properties
 
-import SecureStorage from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
@@ -79,7 +79,7 @@ export default function DiscoverScreen({navigation}){
         navigation.navigate("Message")
     });
     const connectSendbird = async () => {
-        const UID = await SecureStorage.getItem("userId");
+        const UID = await EncryptedStorage.getItem("userId");
         if (UID != undefined) {
           try {
             console.log("connecting to sendbird")

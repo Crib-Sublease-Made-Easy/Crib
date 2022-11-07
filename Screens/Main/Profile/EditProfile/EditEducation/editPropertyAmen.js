@@ -18,7 +18,7 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY, amenities
 
 import { RowContainer, CategoryName, AmenitiesContainer } from './editPropertyAmenStyle';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -43,7 +43,7 @@ export default function EditPropertyAmenitiesScreen({navigation, route}){
     async function update(){
        
        
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
             method: 'PUT',
             headers: {

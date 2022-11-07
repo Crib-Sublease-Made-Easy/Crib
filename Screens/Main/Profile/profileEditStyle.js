@@ -3,31 +3,26 @@ import styled from 'styled-components/native';
 import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, DARKGREY, EXTRALIGHT, GOOGLEBLUE } from '../../../sharedUtils'
 export const HeaderContainer = styled.View`
     width: ${WIDTH}px;
-    height: ${HEIGHT*0.05}px;
-    
+    padding-vertical: ${HEIGHT*0.02}px
+    padding-horizontal: ${WIDTH*0.05}px
     flex-direction: row;
     border-bottom-width: 0.5px;
     border-color: #E0E0E0
     align-self:center
     aling-items: center
+    justify-content: space-between
 `
 
 export const BackButtonContainer = styled.View`
-    padding-left: ${WIDTH*0.025}px
-    width: ${WIDTH*0.25}px;
-    height: 100%
+    width: ${WIDTH*0.2}px
     justify-content: center;
-    align-items:flex-start;
-
 `
 
 export const NameContainer = styled.View`
-    width: ${WIDTH*0.5}px;
     justify-content: center;
     align-items:center
-    height: 100%
- 
-  `
+    align-self: center
+`
 
 export const ResetButtonContainer = styled.View`
     width: ${WIDTH*0.25}px;

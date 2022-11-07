@@ -17,7 +17,7 @@ import {
 import { Header, ProgressBarContainer, TitleText, GeneralTextInput, ContinueButton, ContinueText,
     TextInputContainer, SubtitleText } from './passwordStyle';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+    import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {UserContext} from '../../../UserContext'
 
@@ -124,8 +124,8 @@ export default function PasswordScreen({navigation,route}){
                     // Handle error.
                 }
                 try{
-                    await SecureStorage.setItem("userId", data.createdUser._id)
-                    await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
+                    await EncryptedStorage.setItem("userId", data.createdUser._id)
+                    await EncryptedStorage.setItem("profilePic", data.createdUser.profilePic)
                 }
                 catch{e=>{
                     console.log(e)

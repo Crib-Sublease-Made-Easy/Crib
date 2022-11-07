@@ -12,7 +12,7 @@ import {
   Dimensions,
   Image
 } from 'react-native';
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import './onChat'
 var axios = require('axios');
@@ -118,13 +118,13 @@ OneSignal.promptForPushNotificationsWithUserResponse(async response => {
   const deviceState = await OneSignal.getDeviceState();
   console.log(deviceState)
   try{
-    const cacheOneSignalID = await SecureStorage.getItem("oneSignalUserID");
+    const cacheOneSignalID = await EncryptedStorage.getItem("oneSignalUserID");
     if (deviceState.userId != cacheOneSignalID && deviceState != null){
-      await SecureStorage.setItem("oneSignalUserID", deviceState.userId);
+      await EncryptedStorage.setItem("oneSignalUserID", deviceState.userId);
     }
   }
   catch{e=>{
-    console.log(("TRY/CATCH in APP.js SecureStorage.setItem('oneSignalUserID')"))
+    console.log(("TRY/CATCH in APP.js EncryptedStorage.setItem('oneSignalUserID')"))
     console.log(e)
   }}
 });
@@ -194,14 +194,14 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     console.log(launched)
 
     if (launched == null){
-      await SecureStorage.removeItem("studio.jpg");
-      await SecureStorage.removeItem("accessToken");
-      await SecureStorage.removeItem("refreshToken")
-      await SecureStorage.removeItem("firstName");
-      await SecureStorage.removeItem("lastName");
-      await SecureStorage.removeItem("email");
-      await SecureStorage.removeItem("userId");
-      await SecureStorage.removeItem("profilePic");
+      await EncryptedStorage.removeItem("studio.jpg");
+      await EncryptedStorage.removeItem("accessToken");
+      await EncryptedStorage.removeItem("refreshToken")
+      await EncryptedStorage.removeItem("firstName");
+      await EncryptedStorage.removeItem("lastName");
+      await EncryptedStorage.removeItem("email");
+      await EncryptedStorage.removeItem("userId");
+      await EncryptedStorage.removeItem("profilePic");
       await AsyncStorage.clear()
       await AsyncStorage.setItem("launched", 'true');
 
@@ -212,14 +212,14 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   }
 
   const disconnectSendbird = async () =>{
-    const UID = await SecureStorage.getItem("userId");
+    const UID = await EncryptedStorage.getItem("userId");
     if (UID != undefined) {
       await sb.disconnect()
       console.log("Sendbird Disconnected")
     }
   }
   const connectSendbird = async () => {
-    const UID = await SecureStorage.getItem("userId");
+    const UID = await EncryptedStorage.getItem("userId");
     if (UID != undefined) {
       setUser(UID)
       try {
@@ -246,8 +246,8 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   }
 
   const refreshAccessToken = async () => {
-    const rt = await SecureStorage.getItem("refreshToken");
-    const id = await SecureStorage.getItem("userId");
+    const rt = await EncryptedStorage.getItem("refreshToken");
+    const id = await EncryptedStorage.getItem("userId");
 
     if (rt != undefined) {
       setUser(id)
@@ -262,14 +262,14 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
         }
       }).then(async e => e.json()).then(async (response) => {
         try {
-          await SecureStorage.setItem("accessToken", response.accessToken)
+          await EncryptedStorage.setItem("accessToken", response.accessToken)
         } catch (err) {
           alert(err)
         }
       })
       
       //Prefetch basic info
-      const cachedProfilePic = await SecureStorage.getItem("profilePic");
+      const cachedProfilePic = await EncryptedStorage.getItem("profilePic");
       if(cachedProfilePic != null){
         const success = await Image.prefetch(cachedProfilePic);
         console.log("PREFETCH --- APP.JS --- PROFILEPIC")

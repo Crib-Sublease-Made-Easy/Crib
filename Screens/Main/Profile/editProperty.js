@@ -12,7 +12,7 @@ import {
   Alert
 } from 'react-native';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY} from '../../../../sharedUtils'
 
@@ -57,7 +57,7 @@ export default function EditPropertyScreen({navigation, route}){
 
     async function getTokens(){
         console.log("refresh")
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
 
         if(route.params.propId != null && route.params.propId != undefined && accessToken != null){
             fetch('https://crib-llc.herokuapp.com/properties/' + route.params.propId, {
@@ -141,7 +141,7 @@ export default function EditPropertyScreen({navigation, route}){
 
     async function SelectPropPic(index){
        
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         ImagePicker.openPicker({
             width: 300,
             height: 300,
@@ -200,7 +200,7 @@ export default function EditPropertyScreen({navigation, route}){
           );
     }
     async function deletePropertyRequest(){
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         if(propID != null && propID != undefined && accessToken != null){
             fetch('https://crib-llc.herokuapp.com/properties/' + propID, {
             method: 'DELETE',

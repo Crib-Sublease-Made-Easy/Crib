@@ -6,7 +6,7 @@ Pressable,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
-import SecureStorage from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -55,7 +55,7 @@ export default function ProfileEditScreen({navigation, route}){
     
     // Get user inforamtion 
     async function getTokens(){
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
        
         fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
             method: 'GET',
@@ -116,7 +116,7 @@ export default function ProfileEditScreen({navigation, route}){
     //Function cahnge profile pic
     async function SelectProfilePic(){
         try{
-            const accessToken = await SecureStorage.getItem("accessToken");
+            const accessToken = await EncryptedStorage.getItem("accessToken");
             ImagePicker.openPicker({
                 width: 300,
                 height: 300,
@@ -150,7 +150,7 @@ export default function ProfileEditScreen({navigation, route}){
                         setProfilePic(data.profilePic)
                         try{
                             await AsyncStorage.setItem("profilePic", data.profilePic)
-                            let firstName = await SecureStorage.getItem("firstName")
+                            let firstName = await EncryptedStorage.getItem("firstName")
                             const ll = await sb.updateCurrentUserInfo(firstName,data.profilePic)
                         }
                         catch{e=>{
@@ -181,14 +181,17 @@ export default function ProfileEditScreen({navigation, route}){
             <ScrollView>
                 {/* Header EditProfile */}
                 <HeaderContainer>
-                    <BackButtonContainer>
-                        <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.navigate("Profile")}>
-                            {GetFAIconWithColor('Close', 'black')}
+                    <BackButtonContainer style={{alignItems: 'flex-start'}}>
+                        <Pressable onPress={()=> navigation.navigate("Profile")} >
+                            <Ionicons name='close-outline' size={25}  color='black'/>
                         </Pressable>
                     </BackButtonContainer>
                     <NameContainer>
                         <Header>Edit Profile</Header>
                     </NameContainer> 
+                    <BackButtonContainer >
+                        
+                    </BackButtonContainer>
                 </HeaderContainer>
                 
                 {/* This is for select profile pic and tap */}

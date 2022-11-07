@@ -26,7 +26,8 @@ import { Router } from 'express';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 FontAwesome.loadFont()
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 import { PropertyDescription } from '../../../Discover/discoverPDStyle';
 
 
@@ -36,7 +37,7 @@ export default function EditPropertyDescriptionScreen({navigation, route}){
 
     async function update(){
     
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
             method: 'PUT',
             headers: {

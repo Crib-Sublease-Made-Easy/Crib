@@ -7,7 +7,7 @@ import {
   View
 } from 'react-native';
 
-import SecureStorage from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { HEIGHT, WIDTH, HeaderContainer, Header,BackButtonContainer,ResetButtonContainer, NameContainer, GetFAIconWithColor } from '../../../../../sharedUtils';
 
@@ -23,7 +23,7 @@ export default function ContactUsScreen({navigation, route}){
     const [description, setDescription] = useState("")
 
     async function send(){
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         await fetch('https://crib-llc.herokuapp.com/contact', {
             method: 'POST',
             headers: {

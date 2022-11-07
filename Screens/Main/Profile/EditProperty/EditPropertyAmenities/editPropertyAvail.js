@@ -25,7 +25,8 @@ import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContai
 
 import { RowContainer, CategoryName, DateContainer } from './editPropertyAvailStyle';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -39,7 +40,7 @@ export default function EditPropertyAvailScreen({navigation, route}){
     async function update(){
        
        
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
             method: 'PUT',
             headers: {

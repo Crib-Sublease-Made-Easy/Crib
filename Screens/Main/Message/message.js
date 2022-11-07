@@ -15,7 +15,7 @@ import {
   AppState
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -68,12 +68,12 @@ export default function MessageScreen({navigation, route}){
       };
 
     const getFirstName = async()  => {
-        const firstName = await SecureStorage.getItem("firstName");
+        const firstName = await EncryptedStorage.getItem("firstName");
         setFirstName(firstName)
     }
     const fetchConvos = useCallback(async() => {
 
-        const refreshToken = await SecureStorage.getItem("refreshToken");
+        const refreshToken = await EncryptedStorage.getItem("refreshToken");
 
         if(refreshToken != undefined){
        

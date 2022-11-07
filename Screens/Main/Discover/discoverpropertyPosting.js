@@ -21,7 +21,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import DatePicker from 'react-native-date-picker'
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import ImagePicker from 'react-native-image-crop-picker';
 
@@ -217,7 +217,7 @@ export default function PropertyPostingScreen({ navigation }) {
         if (query != "" && query.length % 2 == 0) {
             var config = {
                 method: 'get',
-                url: `https://crib-llc.herokuapp.com/autocomplete/places/${query}`,
+                url: `https://-dev.herokuapp.com/autocomplete/places/${query}`,
             };
             axios(config)
             .then(function (response) {
@@ -260,7 +260,7 @@ export default function PropertyPostingScreen({ navigation }) {
     async function postproperty() {
         setLoading(true)
         console.log("Posting")
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         console.log(propertyphotoGallery);
         const postingData = new FormData();
 
@@ -326,7 +326,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
        
         if(accessToken != null){
-            fetch('https://crib-llc.herokuapp.com/properties', {
+            fetch('https://crib-llc-dev.herokuapp.com/properties', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -337,7 +337,7 @@ export default function PropertyPostingScreen({ navigation }) {
             })
             .then((response) => response.json()).then( async data => {
                 console.log("RESPONSE", data)
-                await SecureStorage.removeItem("postedProperty")
+                await EncryptedStorage.removeItem("postedProperty")
                 setTimeout(()=>{
                     navigation.goBack()
                     setLoading(false)
@@ -438,11 +438,11 @@ export default function PropertyPostingScreen({ navigation }) {
     }
 
     async function LocationToLatLong(name){
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         if(accessToken != null && name != null && name != undefined){
             var config = {
                 method: 'get',
-                url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${name}`,
+                url: `https://crib-llc-dev.herokuapp.com/autocomplete/geocoding?address=${name}`,
             };
             axios(config)
             .then(async (locInfo)=> {           

@@ -11,7 +11,8 @@ import {
 
 import FastImage from 'react-native-fast-image'
 
-import SecureStorage from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import MapView , { Marker,PROVIDER_GOOGLE }from 'react-native-maps';
@@ -62,7 +63,7 @@ export default function PropertyDetailScreen({navigation, route}){
     const createConversation = async () =>{
 
         //Check if the user is signed in or not
-        const rt  = SecureStorage.getItem("refressToken");
+        const rt  = EncryptedStorage.getItem("refressToken");
 
         if(rt != null){
 
@@ -89,7 +90,7 @@ export default function PropertyDetailScreen({navigation, route}){
     }
 
     async function getTokens(){
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         if (USERID != null && accessToken != null){
             fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
             method: 'GET',
@@ -114,7 +115,7 @@ export default function PropertyDetailScreen({navigation, route}){
     }
 
     async function fetchProperties(){
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         if(route.params.data != undefined && accessToken != null){
             await fetch('https://crib-llc.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
             method: 'POST',
@@ -167,11 +168,11 @@ export default function PropertyDetailScreen({navigation, route}){
     async function likeProperty(){
         console.log("Liking")
 
-        const refreshToken = await SecureStorage.getItem("refreshToken");
+        const refreshToken = await EncryptedStorage.getItem("refreshToken");
 
         if(refreshToken != undefined){
             
-            const accessToken = await SecureStorage.getItem("accessToken");
+            const accessToken = await EncryptedStorage.getItem("accessToken");
             if(accessToken != null){
                 await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
                 method: 'POST',

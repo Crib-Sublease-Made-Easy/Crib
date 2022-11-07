@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -46,7 +46,7 @@ export default function ProfileEditScreen({navigation, route}){
     },[navigation])
     
     async function getTokens(){
-        const accessToken = await SecureStorage.getItem("studio.jpg");
+        const accessToken = await EncryptedStorage.getItem("studio.jpg");
         if(USERID != null && accessToken != null){
             fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
             method: 'GET',
@@ -99,7 +99,7 @@ export default function ProfileEditScreen({navigation, route}){
 
     async function SelectProfilePic(){
         try{
-            const accessToken = await SecureStorage.getItem("accessToken");
+            const accessToken = await EncryptedStorage.getItem("accessToken");
             ImagePicker.openPicker({
                 width: 300,
                 height: 300,

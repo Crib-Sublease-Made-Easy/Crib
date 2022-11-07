@@ -323,5 +323,5 @@ export const StyledView = styled.View`
   background-color: black;
   flex: 1;
   padding-bottom: ${({ insets }) => insets.bottom}px;
-  padding-top: ${({ insets }) => insets.top}px;
+  padding-top: ${HEIGHT*0.02}px
 `;

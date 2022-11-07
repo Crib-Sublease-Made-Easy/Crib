@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { UserContext } from '../../../UserContext';
 
-import SecureStorage from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -116,9 +116,9 @@ export default function ProfileScreen({navigation}){
     //Retrieve user info for display and cache for later use
     async function getTokens(){
        
-        const accessToken = await SecureStorage.getItem("accessToken");
-        const refreshToken = await SecureStorage.getItem("refreshToken");
-        const UID = await SecureStorage.getItem("userId")
+        const accessToken = await EncryptedStorage.getItem("accessToken");
+        const refreshToken = await EncryptedStorage.getItem("refreshToken");
+        const UID = await EncryptedStorage.getItem("userId")
 
         if(refreshToken != undefined){
             
@@ -305,7 +305,7 @@ export default function ProfileScreen({navigation}){
         scrollviewRef.current.scrollTo({x:WIDTH})
     }
     return(
-        <StyledView style={{backgroundColor:'white', flex: 1}} insets={insets}>
+        <StyledView style={{backgroundColor:'white', flex: 1, }} insets={insets}>
             {/* Check if user is logged in and show differnt page*/}
             {USERID != null ? 
             
@@ -334,11 +334,11 @@ export default function ProfileScreen({navigation}){
                 {/* The Edit Profie, Post a Property and Share a Crib function */}
                 <View>
                     <RowContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>    
-                        {GetFAIconWithColor('Profile', 'blue')}
+                        <Ionicons name="create"  size={25} color={GOOGLEBLUE}/>
                         <RowItemName>Edit Profile</RowItemName>
                     </RowContainer>
                     <RowContainer onPress={()=> toPostProperty()}>    
-                        {GetFAIconWithColor('Home', `${PRIMARYCOLOR}`)}
+                        <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
                         <RowItemName>Post a property</RowItemName>
                     </RowContainer>
                     {/* <RowContainer onPress={()=> onShare()}>    

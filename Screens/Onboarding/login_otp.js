@@ -27,7 +27,7 @@ import { ContinueButton , ContinueText, LIGHTGREY, } from '../../sharedUtils';
 import OTPInputField from  './login_otpStyle'
 import { UserContext } from '../../UserContext';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -58,7 +58,7 @@ export default function Login_OTP({navigation, route}){
     async function userLogin(){ 
         
        
-        let oneSignalUserId = await SecureStorage.getItem('oneSignalUserID');
+        let oneSignalUserId = await EncryptedStorage.getItem('oneSignalUserID');
        
       
         console.log("TOKEN")
@@ -96,12 +96,12 @@ export default function Login_OTP({navigation, route}){
                 console.log("LOGIN_OTP", data)
                 try{
                     OneSignal.disablePush(false);
-                    await SecureStorage.setItem("accessToken", data.token.accessToken)
-                    await SecureStorage.setItem("profilePic", data.loggedIn.profilePic)
-                    await SecureStorage.setItem("userId", data.loggedIn._id)
-                    await SecureStorage.setItem("firstName", data.loggedIn.firstName)
-                    await SecureStorage.setItem("lastName", data.loggedIn.lastName)
-                    await SecureStorage.setItem("refreshToken", data.token.refreshToken)
+                    await EncryptedStorage.setItem("accessToken", data.token.accessToken)
+                    await EncryptedStorage.setItem("profilePic", data.loggedIn.profilePic)
+                    await EncryptedStorage.setItem("userId", data.loggedIn._id)
+                    await EncryptedStorage.setItem("firstName", data.loggedIn.firstName)
+                    await EncryptedStorage.setItem("lastName", data.loggedIn.lastName)
+                    await EncryptedStorage.setItem("refreshToken", data.token.refreshToken)
                    
 
 
@@ -127,7 +127,7 @@ export default function Login_OTP({navigation, route}){
     }
 
     const connectSendbird = async () => {
-        const UID = await SecureStorage.getItem("userId");
+        const UID = await EncryptedStorage.getItem("userId");
         if (UID != undefined) {
           try {
             console.log("connecting to sendbird")

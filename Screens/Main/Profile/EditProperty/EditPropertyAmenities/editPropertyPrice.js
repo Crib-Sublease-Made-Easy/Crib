@@ -23,7 +23,7 @@ Ionicons.loadFont()
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 FontAwesome.loadFont()
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 
 const flatListTypes =
@@ -44,7 +44,7 @@ export default function EditPropertyPriceScreen({navigation, route}){
     async function update(){
        
         console.log(route.params.propID)
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
             method: 'PUT',
             headers: {

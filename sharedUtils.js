@@ -543,14 +543,10 @@ export const GetFAIconWithColor = (name, color) => {
 
 export const HeaderContainer = styled.View`
     width: ${WIDTH}px;
-    height: ${HEIGHT*0.05}px;
-    border-top-right-radius: 20px;
-    border-top-left-radius: 20px;
     flex-direction: row;
     border-bottom-width: 0.5px;
     border-color: #E0E0E0
-    align-self:center
-    
+    align-self:center 
 `
 
 export const BackButtonContainer = styled.View`
@@ -626,4 +622,32 @@ export const SignUpHeader = styled.View`
   justify-content: flex-start;
   align-self: center
   flex-direction: row 
+`
+
+export const EditPagesHeaderContainer = styled.View`
+    width: ${WIDTH}px;
+    padding-vertical: ${HEIGHT*0.015}px
+    padding-horizontal: ${WIDTH*0.05}px
+    flex-direction: row;
+    border-bottom-width: 0.5px;
+    border-color: #E0E0E0
+    align-self:center
+    aling-items: center
+    justify-content: space-between
+`
+
+export const EditPageBackButtonContainer = styled.View`
+    width: ${WIDTH*0.2}px
+    justify-content: center;
+`
+export const EditPageForwardButtonContainer = styled.View`
+    width: ${WIDTH*0.2}px
+    justify-content: center;
+    align-items: flex-end
+`
+
+export const EditPageNameContainer = styled.View`
+    justify-content: center;
+    align-items:center
+    align-self: center
 `

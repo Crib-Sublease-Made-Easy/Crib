@@ -17,7 +17,8 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 import {GiftedChat, Actions, Bubble , InputToolbar, Send} from 'react-native-gifted-chat';
 import { ifIphoneX , getBottomSpace} from 'react-native-iphone-x-helper'
 
@@ -99,7 +100,7 @@ export default function ChatScreen({navigation, route}){
     // }
     const onSend = useCallback(async (messages = []) => {
       setSending(true)
-      const accessToken = await SecureStorage.getItem("accessToken");
+      const accessToken = await EncryptedStorage.getItem("accessToken");
 
       const params = new sb.UserMessageParams();
       params.message = messages[0].text;

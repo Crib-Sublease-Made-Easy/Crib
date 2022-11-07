@@ -9,12 +9,12 @@ import {
 import { User } from 'realm';
 
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, GetFAIconWithColor} from '../../../../../sharedUtils'
+import { HEIGHT, WIDTH, EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer} from '../../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { UserContext } from '../../../../../UserContext'
 
@@ -31,7 +31,7 @@ export default function EditOccupationScreen({navigation, route}){
     
 
     async function update(){
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
             method: 'PUT',
             headers: {
@@ -56,21 +56,21 @@ export default function EditOccupationScreen({navigation, route}){
 
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
-          <HeaderContainer>
-                <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                        {GetFAIconWithColor("ArrowLeft", "black")}
+            <EditPagesHeaderContainer>
+                <EditPageBackButtonContainer>
+                    <Pressable onPress={()=> navigation.goBack()} >
+                        <Ionicons name='arrow-back-outline' size={25} color='black'/>
                     </Pressable>
-                </BackButtonContainer>
-                <NameContainer>
+                </EditPageBackButtonContainer>
+                <EditPageNameContainer>
                     <Header>Change Occupation</Header>
-                </NameContainer>
-                <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
-                        {GetFAIconWithColor("Check", "black")}
+                </EditPageNameContainer> 
+                <EditPageForwardButtonContainer>
+                    <Pressable onPress={update}>
+                        <Ionicons name='checkmark-outline' size={25} color='black'/>
                     </Pressable>
-                </ResetButtonContainer>
-            </HeaderContainer>
+                </EditPageForwardButtonContainer>
+            </EditPagesHeaderContainer>
 
             <View style={{width:WIDTH, height: HEIGHT*0.03}}/>
             <RowContainer>

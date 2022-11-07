@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import { UserContext } from '../../../../UserContext';
 
-import SecureStorage from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, GetFAIconWithColor, MEDIUMGREY} from '../../../../sharedUtils';
+import {GetFAIconWithColor, EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer} from '../../../../sharedUtils';
 
 import OneSignal from 'react-native-onesignal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -49,14 +49,14 @@ export default function SettingScreen({navigation, route}){
     const logout =  async() => {
       disconnectSendbird()
       OneSignal.disablePush(true);
-      await SecureStorage.removeItem("studio.jpg");
-      await SecureStorage.removeItem("accessToken");
-      await SecureStorage.removeItem("refreshToken")
-      await SecureStorage.removeItem("firstName");
-      await SecureStorage.removeItem("lastName");
-      await SecureStorage.removeItem("email");
-      await SecureStorage.removeItem("userId");
-      await SecureStorage.removeItem("profilePic");
+      await EncryptedStorage.removeItem("studio.jpg");
+      await EncryptedStorage.removeItem("accessToken");
+      await EncryptedStorage.removeItem("refreshToken")
+      await EncryptedStorage.removeItem("firstName");
+      await EncryptedStorage.removeItem("lastName");
+      await EncryptedStorage.removeItem("email");
+      await EncryptedStorage.removeItem("userId");
+      await EncryptedStorage.removeItem("profilePic");
       await AsyncStorage.clear()
       await login(null)
       navigation.reset(
@@ -65,7 +65,7 @@ export default function SettingScreen({navigation, route}){
     }
 
     const disconnectSendbird = async () =>{
-      const UID = await SecureStorage.getItem("userId");
+      const UID = await EncryptedStorage.getItem("userId");
       if (UID != undefined) {
         await sb.disconnect()
         console.log("Sendbird Disconnected")
@@ -93,7 +93,7 @@ export default function SettingScreen({navigation, route}){
     }
   }
   async function getTokens(){
-      const accessToken = await SecureStorage.getItem("accessToken");
+      const accessToken = await EncryptedStorage.getItem("accessToken");
 
       fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
         method: 'GET',
@@ -127,17 +127,19 @@ export default function SettingScreen({navigation, route}){
 
   return(
     <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
-      <HeaderContainer>
-            <BackButtonContainer>
-                <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                    {GetFAIconWithColor("ArrowLeft", 'black')}
-                </Pressable>
-            </BackButtonContainer>
-            <NameContainer>
-                <Header>Settings</Header>
-            </NameContainer>
-          
-        </HeaderContainer>
+      <EditPagesHeaderContainer>
+          <EditPageBackButtonContainer>
+              <Pressable onPress={()=> navigation.goBack()} >
+                  <Ionicons name='arrow-back-outline' size={25} color='black'/>
+              </Pressable>
+          </EditPageBackButtonContainer>
+          <EditPageNameContainer>
+              <Header>Settings</Header>
+          </EditPageNameContainer> 
+          <EditPageForwardButtonContainer>
+              
+          </EditPageForwardButtonContainer>
+      </EditPagesHeaderContainer>
 
         
         <CategoryContainer>
