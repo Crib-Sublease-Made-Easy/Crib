@@ -622,6 +622,7 @@ export const SignUpHeader = styled.View`
   justify-content: flex-start;
   align-self: center
   flex-direction: row 
+  align-items:center
 `
 
 export const EditPagesHeaderContainer = styled.View`

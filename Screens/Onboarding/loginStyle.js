@@ -24,10 +24,11 @@ import { MEDIUMGREY } from '../../sharedUtils';
 
 export const Header = styled.View`
   width: ${WIDTH*0.9}px
-  height: ${HEIGHT*0.05}px
+  height: ${HEIGHT*0.065}px
   justify-content: center;
   align-items: flex-start;
   align-self: center
+  
 `
 
 export const ProgressBarContainer = styled.View`
