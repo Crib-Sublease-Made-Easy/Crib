@@ -19,6 +19,7 @@ export const DescriptionInput = styled.TextInput`
     padding-top: ${HEIGHT*0.01}px;
     padding-horizontal: ${HEIGHT*0.02}px;
     align-self:center
+    textAlignVertical: top
 `
 export const RowContainer = styled.View`
     padding-vertical: ${HEIGHT*0.02}px
@@ -30,4 +31,5 @@ export const CategoryName = styled.Text`
     font-size: ${HEIGHT*0.0175}px
     padding-vertical: ${HEIGHT*0.01}px
     font-weight: 500
+    color: black
 `

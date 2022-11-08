@@ -29,7 +29,8 @@ const PRIMARYCOLOR = '#4050B5'
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header, GetFAIconWithColor} from '../../../sharedUtils'
+import { HeaderContainer, BackButtonContainer,  NameContainer, Header, GetFAIconWithColor,
+  EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer} from '../../../sharedUtils'
 
 import { MessageInput, MessageContainer, SendButton } from './chatStyle';
 
@@ -289,23 +290,22 @@ export default function ChatScreen({navigation, route}){
     }
     return(
     <SafeAreaView style={{backgroundColor:'white',flex: 1, paddingBottom: HEIGHT*0.035}}>
-    <HeaderContainer>
-          <BackButtonContainer>
-              <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} hitSlop={WIDTH*0.05} onPress={()=> { onChat=false, navigation.goBack()}}>
-                  {GetFAIconWithColor("ArrowLeft", 'black')}
-              </Pressable>
-          </BackButtonContainer>
-          <NameContainer>
-            <Header>{recipient}</Header>
-          </NameContainer>
-             
-         
-          <ChatImageSettingContainer>
-              <Pressable hitSlop={WIDTH*0.05} onPress={()=> setOptionsModal(true)}>
-                <Ionicons name="ellipsis-horizontal" size={25} />
-              </Pressable>
-          </ChatImageSettingContainer>
-    </HeaderContainer>
+      <EditPagesHeaderContainer>
+                <EditPageBackButtonContainer>
+                    <Pressable  onPress={()=> { onChat=false, navigation.goBack()}} >
+                        <Ionicons name='arrow-back-outline' size={25} color='black'/>
+                    </Pressable>
+                </EditPageBackButtonContainer>
+                <EditPageNameContainer>
+                    <Header>{recipient}</Header>
+                </EditPageNameContainer> 
+                <EditPageForwardButtonContainer>
+                  <Pressable hitSlop={WIDTH*0.05} onPress={()=> setOptionsModal(true)}>
+                    <Ionicons name="ellipsis-horizontal" size={25} />
+                  </Pressable>
+                </EditPageForwardButtonContainer>
+        </EditPagesHeaderContainer>
+    
 
     {loading ?
       <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />

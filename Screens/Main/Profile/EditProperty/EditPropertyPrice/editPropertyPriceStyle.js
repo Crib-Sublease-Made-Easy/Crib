@@ -20,6 +20,7 @@ export const CategoryName = styled.Text`
     font-size: ${HEIGHT*0.0175}px
     padding-vertical: ${HEIGHT*0.01}px
     font-weight: 500
+    color: black
 `
 export const PriceContainer = styled.TextInput`
     width: ${WIDTH*0.9}px;
@@ -27,6 +28,7 @@ export const PriceContainer = styled.TextInput`
     height: ${HEIGHT*0.05}px
     padding-left: ${WIDTH*0.025}px
     border-radius: 10px
+    color: black
 `
 export const FollowUpContainer = styled.View`
     padding-vertical: ${HEIGHT*0.01}px

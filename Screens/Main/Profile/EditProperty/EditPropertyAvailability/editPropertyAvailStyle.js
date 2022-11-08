@@ -20,6 +20,7 @@ export const CategoryName = styled.Text`
     font-size: ${HEIGHT*0.0175}px
     padding-vertical: ${HEIGHT*0.01}px
     font-weight: 500
+    color: black
 `
 
 export const DateContainer = styled.Pressable`

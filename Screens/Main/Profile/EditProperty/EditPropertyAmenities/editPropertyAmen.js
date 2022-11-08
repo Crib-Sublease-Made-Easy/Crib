@@ -12,9 +12,10 @@ import {
   ScrollView
 } from 'react-native';
 
-import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header, GetFAIcons,} from '../../../../../sharedUtils'
+import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header, GetFAIcons,
+    EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer, GetFAIconsInBlack} from '../../../../../sharedUtils'
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY, amenitiesList,GetAmenitiesIcon} from '../../../../../sharedUtils'
+import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY, amenitiesList, GetFAIconWithColor} from '../../../../../sharedUtils'
 
 import { RowContainer, CategoryName, AmenitiesContainer } from './editPropertyAmenStyle';
 
@@ -71,41 +72,39 @@ export default function EditPropertyAmenitiesScreen({navigation, route}){
 
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:'white'}}>
-            <HeaderContainer>
-                <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                        <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+            <EditPagesHeaderContainer>
+                <EditPageBackButtonContainer>
+                    <Pressable onPress={()=> navigation.goBack()} >
+                        <Ionicons name='arrow-back-outline' size={25} color='black'/>
                     </Pressable>
-                </BackButtonContainer>
-                <NameContainer>
+                </EditPageBackButtonContainer>
+                <EditPageNameContainer>
                     <Header>Edit Amenities</Header>
-                </NameContainer>
-                <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update} >
-                        <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
+                </EditPageNameContainer> 
+                <EditPageForwardButtonContainer>
+                    <Pressable onPress={update}>
+                        <Ionicons name='checkmark-outline' size={25}color={PRIMARYCOLOR}/>
                     </Pressable>
-                </ResetButtonContainer>
-            </HeaderContainer>
+                </EditPageForwardButtonContainer>
+            </EditPagesHeaderContainer>
             <RowContainer>
                 <CategoryName>Property Amenities</CategoryName>
                 <ScrollView style={{height:HEIGHT*0.75}}>
                 <AmenitiesContainer>
+               
                 {amenitiesList.map((value, index) => (
-                    <View key={value.name + index + 'view'} style={{
-                        minWidth: WIDTH * 0.35, width: value.name.length * 0.03 * WIDTH, height: HEIGHT * 0.055, justifyContent: 'center',
-                        paddingRight: WIDTH * 0.03
-                    }}>
-                        <Pressable key={value.name + 'pressable'} onPress={() => updateAmenities(value.name)} style={{
-                            borderWidth: 3, borderColor: propertyAmenities.indexOf(value.name) == -1 ? value.color : '#0085FF', height: HEIGHT * 0.045,
-                            borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
-                        }}>
-                            <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                {GetFAIcons(value.name)}
-                                {"   "}{value.name.replaceAll("_"," ")}
-                            </Text>
+                                   
+                    <Pressable onPress={() => updateAmenities(value.name)} key={value.name + index + 'view'} style={{paddingVertical: HEIGHT*0.02, width:WIDTH*0.9,alignSelf:'center',justifyContent:'space-between'
+                    , alignItems:'center', flexDirection:'row', paddingHorizontal: WIDTH*0.03}}>
+                        <Pressable onPress={() => updateAmenities(value.name)} style={{flexDirection:'row', alignItems:'center'}}>
+                            {GetFAIconsInBlack(value.name)}
+                            <Text style={{color: 'black', marginLeft: WIDTH*0.025}}>{value.name.replace("_", " ").replace("_", " ")}</Text>
                         </Pressable>
-
-                    </View>
+                        <Pressable onPress={() => updateAmenities(value.name)} style={{padding: WIDTH*0.012, 
+                            backgroundColor: propertyAmenities.indexOf(value.name) == -1 ? DARKGREY : PRIMARYCOLOR , borderRadius:3}}>
+                            {GetFAIconWithColor("Check", "white")}
+                        </Pressable>
+                    </Pressable>
                 ))}
                 </AmenitiesContainer>
                 </ScrollView>

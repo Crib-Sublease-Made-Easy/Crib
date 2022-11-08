@@ -14,7 +14,8 @@ import {
 
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY} from '../../../../sharedUtils'
+import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY,
+    EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer, Header} from '../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
@@ -24,7 +25,7 @@ FontAwesome.loadFont()
 import ImagePicker from 'react-native-image-crop-picker';
 
 
-import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
+import { HeaderContainer, BackButtonContainer, NameContainer, ResetButtonContainer,
     HeaderImageContainer, PropertyPhotoContainer, PhotoContainer, RowContainer, RowName, CategoryName,
     DatePriceText, DeleteContainer,DeleteText } from './editPropertyStyle';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -72,7 +73,7 @@ export default function EditPropertyScreen({navigation, route}){
             setPropAPIData(propData) 
 
             //Set the default varaibles 
-            if(route.params.propertyData.type == undefined || propType != propData.propertyInfo.type){
+            if(route.params.propertyData.type == undefined || propType != propData?.propertyInfo?.type){
                 console.log("UPDATE --- API --- propType")
                 setPropType(propData.propertyInfo.type)
             }
@@ -221,21 +222,20 @@ export default function EditPropertyScreen({navigation, route}){
     return(
       
         <SafeAreaView style={{flex:1, backgroundColor:'white'}} >
-            <HeaderContainer>
-                <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                        <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+            <EditPagesHeaderContainer>
+                <EditPageBackButtonContainer>
+                    <Pressable onPress={()=> navigation.goBack()} >
+                        <Ionicons name='arrow-back-outline' size={25} color='black'/>
                     </Pressable>
-                </BackButtonContainer>
-                <NameContainer>
+                </EditPageBackButtonContainer>
+                <EditPageNameContainer>
                     <Header>Edit Property</Header>
-                </NameContainer>
-                {/* <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} >
-                        <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
-                    </Pressable>
-                </ResetButtonContainer> */}
-            </HeaderContainer>
+                </EditPageNameContainer> 
+                <EditPageForwardButtonContainer>
+                
+                </EditPageForwardButtonContainer>
+            </EditPagesHeaderContainer>
+           
         <ScrollView scrollEnabled={false}>
             {/* <HeaderImageContainer>
                 <Image key={"defaultPropPic"} source={{ uri: headerImage}}
@@ -293,40 +293,38 @@ export default function EditPropertyScreen({navigation, route}){
             <CategoryName>Location</CategoryName>
             <RowContainer>
                 <RowName>{propLocation}</RowName>
-                {/* <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/> */}
             </RowContainer>
             <CategoryName>Type</CategoryName>
             <RowContainer onPress={()=>navigation.navigate("EditPropertyType", {type: propPrice, uid: propID, propertyData: route.params.propertyData })}>
                 <RowName>{propType}</RowName>
-                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}} color='black'/>
             </RowContainer>
             <CategoryName>Price</CategoryName>
             <RowContainer onPress={()=>navigation.navigate("EditPropertyPrice", {price: propPrice, uid: propID, propertyData: route.params.propertyData})}>
                 <RowName>$ {propPrice}</RowName>
-                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}} color='black'/>
             </RowContainer>
             <CategoryName>Availability</CategoryName>
             <RowContainer onPress={()=> navigation.navigate("EditPropertyAvail",{from: propDateFrom, to: propDateTo, uid: propID, propertyData: route.params.propertyData})}>
                 <DatePriceText>
-                    {new Date(propDateFrom).getUTCMonth()% 12 + 1}- 
-                    {new Date(propDateFrom).getFullYear()}
+                
+                    {new Date(propDateFrom).toLocaleDateString()}
                     {" "} to {" "}
-                    {new Date(propDateTo).getUTCMonth() % 12 + 1}- 
-                    {new Date(propDateTo).getFullYear()}
+                    {new Date(propDateTo).toLocaleDateString()}
                 </DatePriceText>
-                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}} color='black'/>
             </RowContainer>
             <CategoryName>Description</CategoryName>
             <RowContainer onPress={()=> navigation.navigate("EditPropertyDescription",{description: propDescription, uid:propID, propertyData: route.params.propertyData})}>
                 <RowName>{propDescription}</RowName>
-                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}} color='black'/>
             </RowContainer>
             <CategoryName>Amenities</CategoryName>
             <RowContainer  onPress={()=> navigation.navigate("EditPropertyAmenities",{amenities: propAmen, uid: propID, propertyData: route.params.propertyData})}>
                 <RowName>
                     Select Amenities
                 </RowName>
-                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+                <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}} color='black'/>
             </RowContainer>
             
         </ScrollView>

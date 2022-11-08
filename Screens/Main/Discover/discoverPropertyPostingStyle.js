@@ -338,6 +338,7 @@ export const ReviewPropertyDescriptionInput = styled.TextInput`
     padding-left: ${HEIGHT*0.02}px;
     padding-top: ${HEIGHT*0.02}px;
     color: white
+    textAlignVertical: top
 `
 export const Footer = styled.View`
     width: ${WIDTH}px;

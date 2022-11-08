@@ -14,7 +14,8 @@ import {
 
 import DatePicker from 'react-native-date-picker'
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY} from '../../../../../sharedUtils'
+import { HEIGHT, WIDTH, PRIMARYCOLOR, 
+    EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer} from '../../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
@@ -35,7 +36,6 @@ export default function EditPropertyAvailScreen({navigation, route}){
     console.log(new Date(route.params.from))
 
     async function update(){
-       
        
         const accessToken = await EncryptedStorage.getItem("accessToken");
         fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
@@ -62,34 +62,34 @@ export default function EditPropertyAvailScreen({navigation, route}){
     
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
-        <HeaderContainer>
-            <BackButtonContainer>
-                <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                    <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+        <EditPagesHeaderContainer>
+            <EditPageBackButtonContainer>
+                <Pressable onPress={()=> navigation.goBack()} >
+                    <Ionicons name='arrow-back-outline' size={25} color='black'/>
                 </Pressable>
-            </BackButtonContainer>
-            <NameContainer>
-                <Header>Edit Availability</Header>
-            </NameContainer>
-            <ResetButtonContainer>
-                <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
-                    <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
+            </EditPageBackButtonContainer>
+            <EditPageNameContainer>
+                <Header>Property Availability</Header>
+            </EditPageNameContainer> 
+            <EditPageForwardButtonContainer>
+                <Pressable onPress={update}>
+                    <Ionicons name='checkmark-outline' size={25}color={PRIMARYCOLOR}/>
                 </Pressable>
-            </ResetButtonContainer>
-        </HeaderContainer>
+            </EditPageForwardButtonContainer>
+        </EditPagesHeaderContainer>
         <RowContainer>
             <CategoryName>Available From</CategoryName>
             <DateContainer onPress={()=>setOpenFrom(true)}>
-                <Text>
-                    {availFrom.getDate().toString() + " " + availFrom.toLocaleString("en-US", { month: "short" }).toString() + " " + availFrom.getFullYear().toString()}
+                <Text style={{color:'black'}}>
+                {availFrom.toDateString()}
                 </Text>
             </DateContainer>
         </RowContainer>
         <RowContainer >
             <CategoryName>Available To</CategoryName>
             <DateContainer onPress={()=>setOpenTo(true)}>
-                <Text>
-                {availTo.getDate().toString() + " " + availTo.toLocaleString("en-US", { month: "short" }).toString() + " " + availTo.getFullYear().toString()}
+                <Text style={{color:'black'}}>
+                    {availTo.toDateString()}
                 </Text>
             </DateContainer>
         </RowContainer>

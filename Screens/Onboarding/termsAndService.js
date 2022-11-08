@@ -11,7 +11,7 @@ import {
 import { User } from 'realm';
 
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, GetFAIconWithColor} from '../../sharedUtils'
+import { HEIGHT, GetFAIconWithColor, EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer} from '../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
@@ -26,16 +26,19 @@ export default function TermsAndService({navigation, route}){
 
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
-          <HeaderContainer>
-                <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                        {GetFAIconWithColor("ArrowLeft", "black")}
+            <EditPagesHeaderContainer>
+                <EditPageBackButtonContainer>
+                    <Pressable onPress={()=> navigation.goBack()} >
+                        <Ionicons name='arrow-back-outline' size={25} color='black'/>
                     </Pressable>
-                </BackButtonContainer>
-                <NameContainer>
-                    <Header>Terms and Service</Header>
-                </NameContainer>
-            </HeaderContainer>
+                </EditPageBackButtonContainer>
+                <EditPageNameContainer>
+                    <Header>Terms and Services</Header>
+                </EditPageNameContainer> 
+                <EditPageForwardButtonContainer>
+                   
+                </EditPageForwardButtonContainer>
+            </EditPagesHeaderContainer>
 
             <ScrollView style={{flex:1, paddingTop: HEIGHT*0.025}}>
             <RowContainer>

@@ -147,9 +147,12 @@ export default function PropertyPostingScreen({ navigation }) {
                     alert("Must select Livingroom Image.")
                 }
         }
-        else if(val == 5 && (propertyPrice == "" || parseInt(propertyPrice.split("$")[1]) > 10000)){
+        else if(val == 5 && (propertyPrice == "" || propertyPrice == 0 || parseInt(propertyPrice.split("$")[1]) > 10000)){
             if(propertyPrice == ""){
                 alert("Must enter property price.")
+            }
+            else if(propertyPrice == 0){
+                alert("Property price cannot be $0.")
             }
             else{
                 alert("Property price must be less than $10000 / month.")
@@ -217,7 +220,7 @@ export default function PropertyPostingScreen({ navigation }) {
         if (query != "" && query.length % 2 == 0) {
             var config = {
                 method: 'get',
-                url: `https://-dev.herokuapp.com/autocomplete/places/${query}`,
+                url: `https://crib-llc-dev.herokuapp.com/autocomplete/places/${query}`,
             };
             axios(config)
             .then(function (response) {
@@ -326,7 +329,8 @@ export default function PropertyPostingScreen({ navigation }) {
 
        
         if(accessToken != null){
-            fetch('https://crib-llc-dev.herokuapp.com/properties', {
+
+            fetch('https://crib-llc.herokuapp.com/properties', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -336,7 +340,7 @@ export default function PropertyPostingScreen({ navigation }) {
                 body: postingData,
             })
             .then((response) => response.json()).then( async data => {
-                console.log("RESPONSE", data)
+               
                 await EncryptedStorage.removeItem("postedProperty")
                 setTimeout(()=>{
                     navigation.goBack()
@@ -346,6 +350,8 @@ export default function PropertyPostingScreen({ navigation }) {
             })
             .catch(e => {
                 console.log("ERROR --- DISCOVERPOSTING -- POSTPROPERTY")
+               
+                setLoading(false)
                 alert(e)
             })
         }
@@ -769,22 +775,7 @@ export default function PropertyPostingScreen({ navigation }) {
                             <AmenitiesContainer>
                                 
                                 {amenitiesList.map((value, index) => (
-                                    // <View key={value.name + index + 'view'} style={{
-                                    //     minWidth: WIDTH * 0.35, width: value.name.length * 0.03 * WIDTH, height: HEIGHT * 0.055, justifyContent: 'center',
-                                    //     paddingRight: WIDTH * 0.03
-                                    // }}>
-                                    //     <Pressable key={value.name + 'pressable'} hitSlop={WIDTH*0.05} onPress={() => updateAmenities(value.name)} style={{
-                                    //         borderWidth: 3, borderColor: propertyAmenities.indexOf(value.name) == -1 ? value.color : '#0085FF', height: HEIGHT * 0.045,
-                                    //         borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
-                                    //     }}>
-                                    //         {GetFAIcons(value.name)}
-                                    //         <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                    //             {/* {"   "}{value.name.replaceAll("_"," ")} */}
-                                    //             {"   "}{value.name}
-                                    //         </Text>
-                                    //     </Pressable>
-
-                                    // </View>
+                                   
                                     <Pressable onPress={() => updateAmenities(value.name)} key={value.name + index + 'view'} style={{paddingVertical: HEIGHT*0.02, width:WIDTH*0.9,alignSelf:'center',justifyContent:'space-between'
                                     , alignItems:'center', flexDirection:'row', paddingHorizontal: WIDTH*0.03}}>
                                         <Pressable onPress={() => updateAmenities(value.name)} style={{flexDirection:'row', alignItems:'center'}}>

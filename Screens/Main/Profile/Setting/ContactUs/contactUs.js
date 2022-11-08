@@ -9,7 +9,8 @@ import {
 
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-import { HEIGHT, WIDTH, HeaderContainer, Header,BackButtonContainer,ResetButtonContainer, NameContainer, GetFAIconWithColor } from '../../../../../sharedUtils';
+import { HEIGHT, WIDTH, HeaderContainer, Header,BackButtonContainer,ResetButtonContainer, NameContainer, GetFAIconWithColor,
+    EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer } from '../../../../../sharedUtils';
 
 import { RowContainer,CategoryName, TitleContainer,DescriptionInput  } from './contactusStyle';
 
@@ -55,21 +56,22 @@ export default function ContactUsScreen({navigation, route}){
 
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
-            <HeaderContainer>
-                <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                        {GetFAIconWithColor("ArrowLeft", "black")}
+            <EditPagesHeaderContainer>
+                <EditPageBackButtonContainer>
+                    <Pressable onPress={()=> navigation.goBack()} >
+                        <Ionicons name='arrow-back-outline' size={25} color='black'/>
                     </Pressable>
-                </BackButtonContainer>
-                <NameContainer>
+                </EditPageBackButtonContainer>
+                <EditPageNameContainer>
                     <Header>Contact Us</Header>
-                </NameContainer>
-                <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={send}>
-                        {GetFAIconWithColor("Check", "black")}
+                </EditPageNameContainer> 
+                <EditPageForwardButtonContainer>
+                    <Pressable onPress={send} >
+                        <Ionicons name='checkmark-outline' size={25} color='black'/>
                     </Pressable>
-                </ResetButtonContainer>
-            </HeaderContainer>
+                </EditPageForwardButtonContainer>
+            </EditPagesHeaderContainer>
+           
             <RowContainer>
                 <CategoryName>Title</CategoryName>
                 <TitleContainer onChangeText={(value)=> setTitle(value)} value={title} />

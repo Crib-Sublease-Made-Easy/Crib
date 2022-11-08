@@ -16,7 +16,8 @@ import styled from 'styled-components/native';
 
 
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY} from '../../../../../sharedUtils'
+import { HEIGHT, WIDTH, PRIMARYCOLOR,
+    EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer} from '../../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
@@ -42,10 +43,16 @@ export default function EditPropertyPriceScreen({navigation, route}){
     const [propertyPrice, setPropertyPrice] = useState(route.params.price.toString())
     const [propertyPriceNego,setPropertyPriceNego ] = useState(false)
 
-    console.log(route.params.propertyData)
     async function update(){
        
-        console.log(route.params.propID)
+        if(propertyPrice.split("$")[1] > 10000){
+            alert("Property Price cannot be greater than $10000.")
+        }
+        else if(propertyPrice.split("$")[1] == undefined){
+            //Checks if the property price is 0
+            alert("Invalid property price.")
+        }
+        else{
         const accessToken = await EncryptedStorage.getItem("accessToken");
         fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
             method: 'PUT',
@@ -67,6 +74,9 @@ export default function EditPropertyPriceScreen({navigation, route}){
             .catch(e => {
                 console.log(e)
             })
+
+        }
+        
     }
 
     function formatPrice(price){
@@ -79,21 +89,22 @@ export default function EditPropertyPriceScreen({navigation, route}){
 
     return(
     <SafeAreaView style={{flex: 1, backgroundColor:'white'}}>
-        <HeaderContainer>
-            <BackButtonContainer>
-                <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                    <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+        <EditPagesHeaderContainer>
+            <EditPageBackButtonContainer>
+                <Pressable onPress={()=> navigation.goBack()} >
+                    <Ionicons name='arrow-back-outline' size={25} color='black'/>
                 </Pressable>
-            </BackButtonContainer>
-            <NameContainer>
-                <Header>Edit Price</Header>
-            </NameContainer>
-            <ResetButtonContainer>
-                <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update} >
-                    <Ionicons name='checkmark-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
+            </EditPageBackButtonContainer>
+            <EditPageNameContainer>
+                <Header>Property Price</Header>
+            </EditPageNameContainer> 
+            <EditPageForwardButtonContainer>
+                <Pressable onPress={update}>
+                    <Ionicons name='checkmark-outline' size={25}color={PRIMARYCOLOR}/>
                 </Pressable>
-            </ResetButtonContainer>
-        </HeaderContainer>
+            </EditPageForwardButtonContainer>
+        </EditPagesHeaderContainer>
+    
         <RowContainer>
             <CategoryName>Property Price</CategoryName>
             <PriceContainer autoFocus onChangeText={(value)=> setPropertyPrice(value)}  placeholder={"$" + route.params.price.toString()}

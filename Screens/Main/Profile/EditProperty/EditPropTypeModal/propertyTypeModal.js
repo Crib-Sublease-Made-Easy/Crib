@@ -17,7 +17,8 @@ import styled from 'styled-components/native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY} from '../../../../../sharedUtils'
+import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY, Header,
+    EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer} from '../../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
@@ -31,7 +32,6 @@ const flatListTypes =
 { name: "Studio", image: require('../../../../../assets/room.jpg'), description: "Open-styled apartment" }
 ]
 
-import { HeaderContainer, BackButtonContainer, NameContainer, ResetButtonContainer , Header} from './propTypeModalStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function PropTypesScreen({navigation, route}){
@@ -84,21 +84,22 @@ export default function PropTypesScreen({navigation, route}){
 
     return(
        <SafeAreaView style={{flex: 1, backgroundColor:'white'}}>
-            <HeaderContainer>
-                <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.navigate("EditProperty",{propertyData: route.params.propertyData})}>
-                        <Ionicons name='close-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+            <EditPagesHeaderContainer>
+                <EditPageBackButtonContainer>
+                    <Pressable onPress={()=> navigation.navigate("EditProperty",{propertyData: route.params.propertyData})} >
+                        <Ionicons name='arrow-back-outline' size={25} color='black'/>
                     </Pressable>
-                </BackButtonContainer>
-                <NameContainer>
+                </EditPageBackButtonContainer>
+                <EditPageNameContainer>
                     <Header>Property Type</Header>
-                </NameContainer>
-                <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
-                        <Ionicons name='checkmark-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
+                </EditPageNameContainer> 
+                <EditPageForwardButtonContainer>
+                    <Pressable onPress={update}>
+                        <Ionicons name='checkmark-outline' size={25}color={PRIMARYCOLOR}/>
                     </Pressable>
-                </ResetButtonContainer>
-            </HeaderContainer>
+                </EditPageForwardButtonContainer>
+            </EditPagesHeaderContainer>
+           
 
             <View style={{ marginTop: HEIGHT * 0.015, width:WIDTH, alignSelf:'center',  }}>
                 <FlatList style={{paddingVertical: HEIGHT*0.025}} key={() => flatListTypes.name} data={flatListTypes} renderItem={renderItem} />

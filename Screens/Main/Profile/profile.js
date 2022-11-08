@@ -376,11 +376,11 @@ export default function ProfileScreen({navigation}){
                                         <PropertyName>{postedProperties.propertyInfo.loc.streetAddr}</PropertyName>
                                         <DatePriceText>{postedProperties.propertyInfo.loc.secondaryTxt}</DatePriceText>
                                         <DatePriceText>
-                                            {new Date(postedProperties.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' })} {""}
-                                            {new Date(postedProperties.propertyInfo.availableFrom).getFullYear()}
+                                            {new Date(postedProperties.propertyInfo.availableFrom).toLocaleDateString('default', { month: 'short' })} {""}
+                                           
                                             {" "} - {" "}
-                                            {new Date(postedProperties.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })} {""}
-                                            {new Date(postedProperties.propertyInfo.availableTo).getFullYear()}
+                                            {new Date(postedProperties.propertyInfo.availableTo).toLocaleDateString('default', { month: 'short' })} {""}
+                                           
                                         </DatePriceText>
                                         <PriceEditContainer>
                                             <PropertyName style={{color:'black'}}>${postedProperties.propertyInfo.price} / month</PropertyName>

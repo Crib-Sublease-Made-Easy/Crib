@@ -29,7 +29,8 @@ import { Container, PropertyDescription, CardSectionOne, CardTitle, LocationDist
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
            StickyHeaderContainer,  StickyHeaderIcon} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY, GetFAIcons, GetFAIconWithColor } from '../../../sharedUtils';
+import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, 
+    EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer } from '../../../sharedUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBath, faBed, faEye, faFire, faFireFlameCurved, faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
 
@@ -430,7 +431,7 @@ export default function PropertyDetailScreen({navigation, route}){
                             <AmenitiesItem key={value + "detailamen"}>
                                 {GetFAIconsInBlack(value)}
                                 {/* <AmenitiesText>{value.replaceAll("_"," ")}</AmenitiesText> */}
-                                <AmenitiesText>{value}</AmenitiesText>
+                                <AmenitiesText>{value.replace("_", " ").replace("_"," ")}</AmenitiesText>
                                
                             </AmenitiesItem>
 

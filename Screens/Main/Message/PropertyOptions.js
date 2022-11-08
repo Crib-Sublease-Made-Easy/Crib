@@ -19,7 +19,8 @@ Ionicons.loadFont()
 
 import { RowContainer, RowName } from './PropertyOptionStyle';
 
-import { WIDTH, HEIGHT, HeaderContainer, Header, BackButtonContainer, NameContainer, PRIMARYCOLOR, MEDIUMGREY, DARKGREY, GetFAIconWithColor,  } from '../../../sharedUtils';
+import { WIDTH, HEIGHT, HeaderContainer, Header, BackButtonContainer, NameContainer, PRIMARYCOLOR, GetFAIconWithColor, 
+    EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer } from '../../../sharedUtils';
 export default function PropertyOptionsModal({navigation,close, visible ,viewProp, leaveChat}){
     return(
         <SafeAreaView>
@@ -27,17 +28,20 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
             backdropTransitionOutTiming={0} hideModalContentWhileAnimating
             isVisible={visible} style={{padding:0, margin: 0, justifyContent:'flex-end', }}>
                 <View style={{width: WIDTH, height: HEIGHT*0.3, backgroundColor:'white', borderTopLeftRadius: 15, borderTopRightRadius: 15}}>
-                <HeaderContainer>
-                    <BackButtonContainer>
-                        <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} hitSlop={WIDTH*0.05} onPress={()=> close()}>
-                            {GetFAIconWithColor("ArrowLeft", "black")}
+                <EditPagesHeaderContainer>
+                    <EditPageBackButtonContainer>
+                        <Pressable onPress={()=> close()} >
+                            <Ionicons name='arrow-back-outline' size={25} color='black'/>
                         </Pressable>
-                    </BackButtonContainer>
-                    <NameContainer>
-                        <Header>Options</Header>
-                    </NameContainer>
-                   
-                </HeaderContainer>
+                    </EditPageBackButtonContainer>
+                    <EditPageNameContainer>
+                        <Header>Terms and Services</Header>
+                    </EditPageNameContainer> 
+                    <EditPageForwardButtonContainer>
+                    
+                    </EditPageForwardButtonContainer>
+                </EditPagesHeaderContainer>
+               
                 <RowContainer hitSlop={WIDTH*0.025} onPress={()=> {close(), viewProp()}}>
                     <Ionicons name='home' size={25}  style={{paddingLeft: WIDTH*0.05}} color={PRIMARYCOLOR}/>
                     <RowName>View Property</RowName>

@@ -395,7 +395,7 @@ export default function DiscoverScreen({navigation}){
         if (locationQueryName != ""){
             setlocationQuery(locationQueryName)
             setSearching(false)
-            // let spacelessLocation = locationQueryName.replaceAll(" ", "+");
+            
             let spacelessLocation = locationQueryName;
             var config = {
                 method: 'get',

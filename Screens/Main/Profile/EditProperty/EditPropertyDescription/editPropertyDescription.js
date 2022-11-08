@@ -11,7 +11,8 @@ import {
   FlatList
 } from 'react-native';
 
-import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header,} from '../../../../../sharedUtils'
+import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header,
+    EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer} from '../../../../../sharedUtils'
 
 import DatePicker from 'react-native-date-picker'
 
@@ -62,21 +63,21 @@ export default function EditPropertyDescriptionScreen({navigation, route}){
     return(
         <SafeAreaView style={{flex:1}}>
             
-            <HeaderContainer>
-                <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                        <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+            <EditPagesHeaderContainer>
+                <EditPageBackButtonContainer>
+                    <Pressable onPress={()=> navigation.goBack()} >
+                        <Ionicons name='arrow-back-outline' size={25} color='black'/>
                     </Pressable>
-                </BackButtonContainer>
-                <NameContainer>
-                    <Header>Edit Property</Header>
-                </NameContainer>
-                <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
-                        <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
+                </EditPageBackButtonContainer>
+                <EditPageNameContainer>
+                    <Header>Property Description</Header>
+                </EditPageNameContainer> 
+                <EditPageForwardButtonContainer>
+                    <Pressable onPress={update}>
+                        <Ionicons name='checkmark-outline' size={25}color={PRIMARYCOLOR}/>
                     </Pressable>
-                </ResetButtonContainer>
-            </HeaderContainer>
+                </EditPageForwardButtonContainer>
+            </EditPagesHeaderContainer>
             <RowContainer >
                 <CategoryName>Property Description</CategoryName>
                 <DescriptionInput multiline value={description} onChangeText={(value)=>setDescription(value)}>
