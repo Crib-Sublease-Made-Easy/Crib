@@ -4,7 +4,7 @@ import {
   Switch,
   Pressable,
   Animated,
-  View
+  View, Alert
 } from 'react-native';
 import { User } from 'realm';
 
@@ -54,11 +54,33 @@ export default function EditOccupationScreen({navigation, route}){
         })
     }
 
+    function handleBack() {
+      if (!occupation) {
+        navigation.goBack();
+      } else {
+        Alert.alert(
+            'Do you want to save changes before leaving?',
+            null,
+            [
+              {
+                text: 'No',
+                style: 'cancel',
+                onPress: navigation.goBack
+              },
+              {
+                text: 'Save',
+                onPress: update
+              }
+            ]
+        )
+      }
+    }
+
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
           <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
+                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={handleBack}>
                         <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>
