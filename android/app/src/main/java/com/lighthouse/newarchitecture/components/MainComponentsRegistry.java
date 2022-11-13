@@ -1,4 +1,4 @@
-package com.lighthouse.newarchitecture.components;
+package com.Crib.SubleasingMadeEasy.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

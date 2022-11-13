@@ -1,4 +1,4 @@
-package com.lighthouse.newarchitecture.modules;
+package com.Crib.SubleasingMadeEasy.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
