@@ -27,7 +27,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 
 import Lottie from 'lottie-react-native';
 
-
+import DropdownAlert from 'react-native-dropdownalert';
 
 FontAwesome.loadFont();
 
@@ -63,7 +63,6 @@ import { SubHeadingText } from '../../Onboarding/Landing/landingStyle';
 
 
 export default function PropertyPostingScreen({ navigation }) {
-
     const flatListdata =
         [{ name: "Room", image: require('../../../assets/room.jpg'), description: "Shared public space" },
         { name: "House", image: require('../../../assets/house.jpg'), description: "Entire House" },
@@ -113,7 +112,6 @@ export default function PropertyPostingScreen({ navigation }) {
 
     function moveScrollView(val) {
        
-        console.log(propertyPrice)
         Keyboard.dismiss()
         if (val < 0) {
             navigation.goBack();
@@ -125,7 +123,6 @@ export default function PropertyPostingScreen({ navigation }) {
             alert("Must enter property location.")
         }
         else if(val == 3 && !locationPressed){
-            console.log("hello")
             setpropertyLocation(autocompleteLocation[0].description)
             setpropertyMainAddr(autocompleteLocation[0].structured_formatting.main_text)
             setpropertySecondaryAddr(autocompleteLocation[0].structured_formatting.secondary_text)
@@ -167,9 +164,7 @@ export default function PropertyPostingScreen({ navigation }) {
         else {
             setscrollviewIndex(val)
             
-            propertyAmenities.forEach(element => {
-                console.log(element)
-            });
+          
             setTimeout(() => {
                 scrollView.current.scrollTo({ x: WIDTH * val });
                 setscrollviewIndex(val)
@@ -220,7 +215,7 @@ export default function PropertyPostingScreen({ navigation }) {
         if (query != "" && query.length % 2 == 0) {
             var config = {
                 method: 'get',
-                url: `https://crib-llc-dev.herokuapp.com/autocomplete/places/${query}`,
+                url: `https://crib-llc.herokuapp.com/autocomplete/places/${query}`,
             };
             axios(config)
             .then(function (response) {
@@ -262,9 +257,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
     async function postproperty() {
         setLoading(true)
-        console.log("Posting")
         const accessToken = await EncryptedStorage.getItem("accessToken");
-        console.log(propertyphotoGallery);
         const postingData = new FormData();
 
         postingData.append("type", propertyType);                       //String 
@@ -345,14 +338,13 @@ export default function PropertyPostingScreen({ navigation }) {
                 setTimeout(()=>{
                     navigation.goBack()
                     setLoading(false)
-                    console.log(data)
                 },1500)
             })
             .catch(e => {
                 console.log("ERROR --- DISCOVERPOSTING -- POSTPROPERTY")
-               
+                alert("Error! Please try again later.")
                 setLoading(false)
-                alert(e)
+                navigation.goBack();
             })
         }
         else{
@@ -362,7 +354,6 @@ export default function PropertyPostingScreen({ navigation }) {
     }
 
     async function selectGallery(name) {
-        console.log(name)
         ImagePicker.openPicker({
             width: 600,
             height: 600,
@@ -370,7 +361,6 @@ export default function PropertyPostingScreen({ navigation }) {
             compressImageQuality: 0.7
             
           }).then(image => {
-            console.log(image.path)
             if (name == "Bedroom") {
                 setPropertyBedroomImage(image.path);
             }
@@ -417,8 +407,6 @@ export default function PropertyPostingScreen({ navigation }) {
     }
 
     function moveOn(value) {
-        console.log("fefefwewf", value.description)
-        console.log("II", value)
         setLocationPressed(true)
         Keyboard.dismiss()
         // if(value.results == undefined){
@@ -448,7 +436,7 @@ export default function PropertyPostingScreen({ navigation }) {
         if(accessToken != null && name != null && name != undefined){
             var config = {
                 method: 'get',
-                url: `https://crib-llc-dev.herokuapp.com/autocomplete/geocoding?address=${name}`,
+                url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${name}`,
             };
             axios(config)
             .then(async (locInfo)=> {           
@@ -706,7 +694,6 @@ export default function PropertyPostingScreen({ navigation }) {
                                         alert("Available to date cannot be before available from date")
                                     }
                                     else if(date.getTime() > 1759176355615){
-                                        console.log(propertydateTo)
                                         alert("Cannot schdeul too far in advance.")
                                     }
                                     else if(propertydateFrom != null && date.getTime() < propertydateFrom.getTime()+50000000){
@@ -940,6 +927,13 @@ export default function PropertyPostingScreen({ navigation }) {
                     </ContinueButton>
                 </NextContainer>
             </ModalView>
+            <DropdownAlert
+                ref={(ref) => {
+                if (ref) {
+                    dropDownAlertRef = ref;
+                }
+                }}
+            />
         </SafeAreaView>
     )
 

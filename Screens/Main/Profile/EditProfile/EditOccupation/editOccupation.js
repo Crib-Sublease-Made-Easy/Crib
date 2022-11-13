@@ -45,8 +45,6 @@ export default function EditOccupationScreen({navigation, route}){
         })
         .then((response) => response.json()).then(data => {
             
-            console.log(data)
-
             navigation.navigate('ProfileEdit', {userData:data})
         })
         .catch(e => {

@@ -57,7 +57,6 @@ export default function EditPropertyScreen({navigation, route}){
 
 
     async function getTokens(){
-        console.log("refresh")
         const accessToken = await EncryptedStorage.getItem("accessToken");
         const UID = await EncryptedStorage.getItem("userId");
 
@@ -129,7 +128,6 @@ export default function EditPropertyScreen({navigation, route}){
             else{
                 console.log("UPDATE --- PARAMS --- propImg")
             }
-            //console.log(propData.propertyInfo.imgList)
 
         })
         .catch(e=>{
@@ -169,7 +167,6 @@ export default function EditPropertyScreen({navigation, route}){
             .then(res => res.json()).then(async data=>{
                 setPropImg([...propImg.slice(0, index),data.propertyImage,...propImg.slice(index + 1),])
                 await AsyncStorage.removeItem('postedProperty')
-                console.log(data)
             })
             .catch((error) => {
                 console.log(error)

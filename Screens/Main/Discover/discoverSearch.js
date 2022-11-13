@@ -30,7 +30,6 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
 
   //Fucntion: Generates the autocomplete locations suggestions for users to press
   function autocomplete(query){
-    // console.log(query)
     if(query == ""){
         setautocompleteLocation([])
     }

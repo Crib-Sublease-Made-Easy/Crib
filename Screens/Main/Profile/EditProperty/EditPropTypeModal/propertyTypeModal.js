@@ -36,10 +36,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function PropTypesScreen({navigation, route}){
     const [propertyTypes, setPropertyTypes] = useState(route.params.type)
-    console.log(route.params.propertyData)
     async function update(){
-        console.log(propertyTypes)
-        console.log(route.params.uid)
        
         const accessToken = await EncryptedStorage.getItem("accessToken");
         
@@ -55,8 +52,6 @@ export default function PropTypesScreen({navigation, route}){
             })
         })
             .then((response) => response.json()).then(async data => {
-                console.log("Update type reponse")
-                console.log(data)
                 await AsyncStorage.removeItem('postedProperty')
                 navigation.navigate('EditProperty',{propertyData: route.params.propertyData})
             })

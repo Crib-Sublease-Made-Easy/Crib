@@ -166,11 +166,7 @@ export default function ProfileScreen({navigation}){
                     alert(e)
                 })
             }
-            else{
-                console.log("hello")
-                console.log(accessToken)
-                console.log(UID)
-            }
+           
         }
         
     }
@@ -240,7 +236,6 @@ export default function ProfileScreen({navigation}){
             }
         }).then(res => res.json()).then(async data =>{
             //data.properties get the list of all properties
-            // console.log("DATA", JSON.stringify(data))
             const tempFavProp = await AsyncStorage.getItem("favoriteProperties");
             // console.log("TEMPDATA", tempFavProp)
 
@@ -417,7 +412,7 @@ export default function ProfileScreen({navigation}){
                                 //When there exist at least 1 fav prop
                                 <ScrollView contentContainerStyle={{alignSelf:'center'}}
                                 style={{alignSelf:'center', width: WIDTH, paddingTop: HEIGHT*0.01}} showsVerticalScrollIndicator={false}>
-                                    {favoriteProperties?.map((item, index)=>(
+                                    {favoriteProperties.length != 0 && favoriteProperties?.map((item, index)=>(
                                     <FavPropertyCard key={item.propertyInfo._id + index}>
                                         <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
                                         <FastImage source={{uri: item.propertyInfo.imgList[0], priority: FastImage.priority.low}} 

@@ -6,12 +6,6 @@ const PRIMARYGREY = '#5e5d5d'
 
 export const ImageStyle= {position:'absolute', width:WIDTH, height:HEIGHT*0.35,}
 
-export const Container = styled.View`
- 
-  backgroundColor: white
-  position: relative
-`
-
 export const PropertyDescription = styled.View`
     height: ${HEIGHT*0.9}px;
     width: ${WIDTH}px;
@@ -20,45 +14,132 @@ export const PropertyDescription = styled.View`
 `
 
 export const CardTitle = styled.Text`   
-
-    max-height: ${HEIGHT*0.075}px
+   
     font-size: ${HEIGHT*0.03}px;
-    margin-top: ${HEIGHT*0.025}px
-    font-weight: 600;
-    width: ${WIDTH*0.9}px;
-    font-family: ${ROBOTOFONTFAMILY}
+    font-weight: 700;
     color: black
-   
 `
-export const CardSectionOne = styled.View`
-   
-    padding-vertical: ${HEIGHT*0.02}px
+export const Section = styled.View`
+    padding-vertical: ${HEIGHT*0.03}px
     width:${WIDTH*0.9}px
     align-self:center
+    border-top-width: 1px;
+    border-color: #E0E0E0
 `
-export const LocationDistanceContainer = styled.View`
-    width: ${WIDTH*0.9}px;
-    flex-direction: row
-    align-items: center;
-    
-    padding-vertical: ${HEIGHT*0.01}px
-  
-   
+export const TypeLocationFavoriteContainer = styled.View`
+    flex-direction: row;
+    justify-content: space-between
+`
+export const TypeLocationContainer = styled.View`
+
+`
+export const FavoriteContainer = styled.View`
+    align-items: center
+    justify-content: center
 `
 export const LocationText = styled.Text`
-    font-family: ${ROBOTOFONTFAMILY}
     font-size: ${HEIGHT*0.0175}px;
-    font-weight: 500;
-    color: ${DARKGREY}
+    font-weight: 600;
+    margin-top: ${HEIGHT*0.01}px
+    color: black
+`
 
+export const BedBathDateContainer = styled.View`
+    padding-vertical: ${HEIGHT*0.03}px
+`
+
+export const BedBathText = styled.Text`
+    font-weight: 400;
+    color: black
+    font-size: ${HEIGHT*0.0175}px;
+    padding-top: ${HEIGHT*0.005}px
+`
+
+export const DescriptionText = styled.Text`
+    color: black   
+    font-size: ${HEIGHT*0.0175}px;
+`
+
+export const RowContainer = styled.View`
+    flex-direction: row
+    justify-content: space-between
+    align-items: center
+`
+
+export const ShowOnMapPressable = styled.Pressable`
+    padding-horizontal: ${WIDTH*0.015}px
+    padding-vertical: ${HEIGHT*0.0075}px
+    background-color: ${PRIMARYCOLOR}
+    border-radius: 5px
+`
+
+export const ShowOnMapText = styled.Text`
+    color: white;
+    font-size: ${HEIGHT*0.015}px;
+    font-weight: 600;
+`
+
+
+export const DistanceText = styled.Text`
+    font-size: ${HEIGHT*0.0175}px;
+    font-weight: 600;
+    color: black
+`
+
+export const Subheading = styled.Text`
+    font-size: ${HEIGHT*0.02}px;
+    font-weight: 600;
+    color: black
+`
+
+export const TenantInformationContainer = styled.View`
+    flex-direction: row
+    padding-top: ${HEIGHT*0.02}px
+`
+
+export const TenantProfileImageContainr = styled.View`
+    justify-content: center;
+    align-items: center
+
+`
+
+export const TenantNameScollOccupationContainer = styled.View`
+    padding-left: ${WIDTH*0.02}px
+    justify-content: center
+`
+
+export const TenantNameText = styled.Text`
+    font-size: ${HEIGHT*0.0175}px;
+    color: black
+    align-text: left
+    padding-vertical: ${HEIGHT*0.002}px
+`
+
+export const AmenitiesContainer = styled.View`
+    padding-vertical: ${HEIGHT*0.01}px
 `
 
 export const AmenitiesText = styled.Text`
     font-size: ${HEIGHT*0.0175}px;
     font-weight: 400;
     color: black
-    margin-left: ${WIDTH*0.025}px
+    margin-left: ${WIDTH*0.03}px
 `
+
+export const SubleaseDetailsText = styled.Text`
+    font-size: ${HEIGHT*0.0175}px;
+    font-weight: 600;
+    color: black
+`
+
+export const LocationDistanceContainer = styled.View`
+    width: ${WIDTH*0.9}px;
+    flex-direction: row
+    align-items: center;
+    padding-vertical: ${HEIGHT*0.01}px
+`
+
+
 export const BedAndBathContainer = styled.View`
     margin-top: ${HEIGHT*0.025}px
     padding-vertical: ${HEIGHT*0.015}px
@@ -102,14 +183,10 @@ export const InfoContainer = styled.View`
 
 `
 export const InfoHeaderText = styled.Text`
-    
-    
-   
     font-size: ${HEIGHT*0.021}px;
     font-weight: 500;
     width: ${WIDTH*0.5}px;
     text-align: left
-    font-family: ${ROBOTOFONTFAMILY}
     color: black
 `
 
@@ -123,13 +200,7 @@ export const InfoText = styled.Text`
 
 `
 
-export const DescriptionText = styled.Text`
-    font-size: ${HEIGHT*0.02}px;
-    font-weight: 400;
-    width: ${WIDTH*0.8}px;
-    marginTop: ${HEIGHT*0.05}px;
-    color: black
-`
+
 
 export const AmenitiesItem = styled.View`
    
@@ -176,14 +247,7 @@ export const TenantInfoContainer = styled.View`
     padding-horizontal:${HEIGHT*0.01}px
 `
 
-export const TenantNameText = styled.Text`
-font-size: ${HEIGHT*0.0225}px;
-font-weight: 500;
-align-self: center
-font-family: ${ROBOTOFONTFAMILY}
-color: black
 
-`
 
 export const TenantInfo = styled.View`
     font-family: ${ROBOTOFONTFAMILY}
@@ -209,10 +273,6 @@ export const CardSectionFive = styled.View`
 
 `
 
-export const RowContainer = styled.View`
-    padding-vertical: ${HEIGHT*0.01}
-    width: ${WIDTH*0.9}px
-`
 
 export const DateContainer = styled.View`
     
@@ -227,19 +287,9 @@ export const DateText = styled.Text`
     font-family: ${ROBOTOFONTFAMILY}
 `
 
-export const DescriptionContainer = styled.Text`
-   
-    width: ${WIDTH*0.9}px;
-    color: ${PRIMARYGREY}
-    align-self: center
-    border-radius: 10px
-    margin-top : ${HEIGHT*0.02}px
-    font-family: ${ROBOTOFONTFAMILY}
-    
-`
+
 
 export const TypeText = styled.Text`
-    font-family: ${ROBOTOFONTFAMILY}
     font-size: ${HEIGHT*0.02}px;
     align-self: center;
     text-align: left
@@ -285,7 +335,7 @@ export const InfoHeaderTextAndCenter = styled.View`
 `
 
 export const StickyHeaderContainer = styled.View`
-    height: ${HEIGHT*0.105}px
+    height: ${HEIGHT*0.075}px
     width: ${WIDTH}px
     position: absolute
     align-items: flex-end
@@ -303,3 +353,4 @@ export const StickyHeaderIcon = styled.Pressable`
     height: ${WIDTH*0.1}px
     borderRadius: ${WIDTH*0.05 }px
 `
+

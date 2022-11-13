@@ -33,7 +33,6 @@ export default function EditPropertyAvailScreen({navigation, route}){
     const [availTo, setAvailTo] = useState( new Date(route.params.to))
     const [openFrom, setOpenFrom] = useState(false);
     const [openTo, setOpenTo] = useState(false)
-    console.log(new Date(route.params.from))
 
     async function update(){
        
@@ -51,8 +50,6 @@ export default function EditPropertyAvailScreen({navigation, route}){
             })
         })
             .then((response) => response.json()).then(data => {
-                console.log("Update type reponse")
-                console.log(data)
                 navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
             })
             .catch(e => {

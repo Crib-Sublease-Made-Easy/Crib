@@ -46,7 +46,6 @@ export default function ChangeEmailScreen({navigation, route}){
             alert("Please enter a valid email.")
         }
         else{
-            console.log(route.params.propID)
             const accessToken = await EncryptedStorage.getItem("accessToken");
             fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
                 method: 'PUT',
@@ -60,8 +59,6 @@ export default function ChangeEmailScreen({navigation, route}){
                 })
             })
             .then((response) => response.json()).then(data => {
-                console.log("Update type reponse")
-                console.log(data)
                 navigation.goBack()
             })
             .catch(e => {

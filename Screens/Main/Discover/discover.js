@@ -27,6 +27,8 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
+import DropdownAlert from 'react-native-dropdownalert';
+
 //Icons
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -82,7 +84,6 @@ export default function DiscoverScreen({navigation}){
         const UID = await EncryptedStorage.getItem("userId");
         if (UID != undefined) {
           try {
-            console.log("connecting to sendbird")
          
             await sb.connect(UID, function (user, error) {
               if (error) {
@@ -106,6 +107,7 @@ export default function DiscoverScreen({navigation}){
 
     //Reference to the MapView
     const mapRef = useRef(null)
+    let dropDownAlertRef = useRef();
     //This controls preview modal open opacity when the location icon in propertycard is pressed
     const opacityTranslation = useRef(new RNAnimated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
@@ -212,7 +214,7 @@ export default function DiscoverScreen({navigation}){
     }
 
     //Load initial properties
-    const loadProperty = useCallback(()=> {
+    const loadProperty = useCallback(async ()=> {
         setPropertyPage(1)
         setRetrieveMore(true)
         setLoading(true)
@@ -238,7 +240,7 @@ export default function DiscoverScreen({navigation}){
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
 
-        fetch('https://crib-llc.herokuapp.com/properties/query?page=0' + s, {
+        await fetch('https://crib-llc.herokuapp.com/properties/query?page=0' + s, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -254,7 +256,6 @@ export default function DiscoverScreen({navigation}){
                 let imgList = propData.propertyInfo.imgList
                 imgList.forEach(async element => {
                     const success = await Image.prefetch(element)
-                    console.log(success)
                 });
 
                 
@@ -264,8 +265,9 @@ export default function DiscoverScreen({navigation}){
             
         })
         .catch(e=>{
+            dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
             console.log("ERROR --- DISCOVER --- loadProperty")
-            alert(e)
+            setLoading(false)
         })
        
         setTimeout(()=>{
@@ -316,13 +318,14 @@ export default function DiscoverScreen({navigation}){
                 setFilteredProperties([...filteredProperties,...properties])
             })
             .catch(e=>{
+                dropDownAlertRef.alertWithType('error', 'Error', "Could not load more properties, please try again later");
                 console.log("ERROR --- DISCOVER --- loadMoreProperties")
-                alert(e)
+                
             })   
         }   
     }
 
-    function retrieveAllPins(lat, long, distance, price, bed, bath, type, amens, from, to ){
+    async function retrieveAllPins(lat, long, distance, price, bed, bath, type, amens, from, to ){
         setPropertyPreviewCard(false)
         let s = "";
         if(type != ""){
@@ -349,7 +352,7 @@ export default function DiscoverScreen({navigation}){
         s = s +`&availableFrom=${from}`
         s = s +`&availableTo=${to}`
 
-        fetch(`https://crib-llc.herokuapp.com/properties/pins?${s}` , {
+        await fetch(`https://crib-llc.herokuapp.com/properties/pins?${s}` , {
             method: 'GET',
             headers: {
             Accept: 'application/json',
@@ -365,8 +368,9 @@ export default function DiscoverScreen({navigation}){
             }
         })
         .catch(e=>{
+            dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
             console.log("ERROR --- DISCOVER --- retrieveAllPins")
-            alert(e)
+           
         })
     }
 
@@ -403,7 +407,6 @@ export default function DiscoverScreen({navigation}){
             };
             axios(config)
             .then(async (response)=> {           
-                console.log(JSON.stringify(response))
                 let lat = response.data.lat;
                 let long = response.data.lng;
                 setCurrentLocation([lat,long])
@@ -456,8 +459,8 @@ export default function DiscoverScreen({navigation}){
                 moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
             })
             .catch(e=>{
+                dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
                 console.log("ERROR --- DISCOVER --- onMarkerClick")
-                alert(e)
             })
         }
         
@@ -488,6 +491,7 @@ export default function DiscoverScreen({navigation}){
         <GestureHandlerRootView style={{flex: 1}}>
 
             <SafeAreaView style={{paddingTop: HEIGHT*0.01}}>
+            
                 {/* This is the container for the whole map background in discover behind search bar */}
                 {/* Includes the Search Here pressable, map view, markers and preview modal */}
                 <MapContainer>
@@ -618,6 +622,13 @@ export default function DiscoverScreen({navigation}){
                 {/* Search screen when the search bar is pressed */}
                 <DiscoverSearchScreen open={discoverSearchVisible} close={()=> setDiscoverSearchVisible(false)} selectCurrentLocation={selectCurrentLocation}/>
                 
+                <DropdownAlert
+                    ref={(ref) => {
+                    if (ref) {
+                        dropDownAlertRef = ref;
+                    }
+                    }}
+                />
             </SafeAreaView>  
         </GestureHandlerRootView>
     )

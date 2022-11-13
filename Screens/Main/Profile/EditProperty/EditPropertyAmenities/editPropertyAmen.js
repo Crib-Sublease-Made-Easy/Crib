@@ -60,8 +60,6 @@ export default function EditPropertyAmenitiesScreen({navigation, route}){
             })
         })
             .then((response) => response.json()).then(async data => {
-                console.log("Update type reponse")
-                console.log(data)
                 await AsyncStorage.removeItem('postedProperty')
                 navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
             })

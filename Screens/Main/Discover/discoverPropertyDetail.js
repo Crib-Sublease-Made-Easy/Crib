@@ -3,10 +3,10 @@ import {
     ScrollView,
     Text,
     View,
-    Dimensions,
     Image,
     Animated as RNAnimated,
-    SafeAreaView
+    SafeAreaView,
+    Pressable
 } from 'react-native';
 
 import FastImage from 'react-native-fast-image'
@@ -21,23 +21,23 @@ import {UserContext} from '../../../UserContext'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { Container, PropertyDescription, CardSectionOne, CardTitle, LocationDistanceContainer,
+import Lottie from 'lottie-react-native';
+
+
+import {PropertyDescription, Section, CardTitle, LocationDistanceContainer,
         LocationText, BedAndBathContainer, CardSectionTwo, InfoHeaderText,
             InfoContainer, InfoText, AmenitiesItem, Footer,
             PricePerMonth, ContactTanentButton, TenantInfoContainer, TenantInfo, ProfileImageContainer,
-           DateContainer, DateText, DescriptionContainer, AmenitiesText, TypeText, BedContainer,
+           DateContainer, DateText,DescriptionText, AmenitiesText, TypeText, BedContainer,
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
-           StickyHeaderContainer,  StickyHeaderIcon} from './discoverPDStyle'
+           StickyHeaderContainer,  StickyHeaderIcon,  TypeLocationFavoriteContainer,
+           TypeLocationContainer,FavoriteContainer, BedBathDateContainer, BedBathText, DistanceText, RowContainer, ShowOnMapPressable, ShowOnMapText, TenantInformationContainer, TenantProfileImageContainr, TenantNameScollOccupationContainer, Subheading, AmenitiesContainer } from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, 
-    EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer } from '../../../sharedUtils';
+import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, HEIGHT, WIDTH} from '../../../sharedUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBath, faBed, faEye, faFire, faFireFlameCurved, faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
 
-const HEIGHT = Dimensions.get('screen').height;
-const WIDTH = Dimensions.get('screen').width;
-
-
+import DropdownAlert from 'react-native-dropdownalert';
 
 export default function PropertyDetailScreen({navigation, route}){
     useEffect(()=>{
@@ -51,6 +51,7 @@ export default function PropertyDetailScreen({navigation, route}){
       return unsubscribe
     }, [])
     
+    let dropDownAlertRef = useRef();
     const flatListRef = useRef(null)
     const [propData, setPropData] = useState(route.params.data.propertyInfo);
     const postedUserData = route.params.data.userInfo;
@@ -63,6 +64,7 @@ export default function PropertyDetailScreen({navigation, route}){
     
     const createConversation = async () =>{
 
+
         //Check if the user is signed in or not
         const rt  = EncryptedStorage.getItem("refressToken");
 
@@ -72,7 +74,6 @@ export default function PropertyDetailScreen({navigation, route}){
             sb.GroupChannel.createChannelWithUserIds(userIds, true, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
                 if (error) {
                     // Handle error.
-                    console.log("Failed To Create Channel")
                     console.log(error)
                     alert("You are currently engaged in a conversation with this user")
                 } else {
@@ -110,7 +111,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 }
             })
             .catch(e=>{
-                alert(e)
+                dropDownAlertRef.alertWithType('error', 'Authentication Error', "Please try again later.");
             })
         }   
     }
@@ -145,14 +146,14 @@ export default function PropertyDetailScreen({navigation, route}){
                         })
                         }) 
                         .catch(e=>{
-                            alert(e)
+                            dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
                     })
-                    alert("Property is deleted.")
+                    alert("Post deleted.")
                     navigation.goBack()
                 }
             })
             .catch(e=>{
-                alert(e)
+                dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
             })
         }
         
@@ -167,7 +168,6 @@ export default function PropertyDetailScreen({navigation, route}){
     }, []);
 
     async function likeProperty(){
-        console.log("Liking")
 
         const refreshToken = await EncryptedStorage.getItem("refreshToken");
 
@@ -188,15 +188,12 @@ export default function PropertyDetailScreen({navigation, route}){
                 }) 
                 .then(res => res.json()).then(async message =>{
                     // console.log(message)
-                    
                     await AsyncStorage.removeItem("favoriteProperties");
-                
                     setLiked(!liked)
                 })
                 .catch(e=>{
-                    alert(e)
+                    dropDownAlertRef.alertWithType('error', 'Error favoriting property', "Please try again later.");
                 })
-                console.log("hello")
             }
         }
         else{
@@ -226,224 +223,142 @@ export default function PropertyDetailScreen({navigation, route}){
       }
 
     return(
-       <SafeAreaView style={{ backgroundColor:'white'}}>
-        <Container>             
-            <PropertyDescription>
+       <SafeAreaView style={{ backgroundColor:'white', flex: 1}}>
+            
     
-                <ScrollView 
-                showsVerticalScrollIndicator={false} 
-                bouncesZoom={1}
-                scrollEventThrottle={5}
-                style={{backgroundColor:'white'}}
-                >
-                    {/* <Lottie source={require('../../../ImageLoading.json')} autoPlay   style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/> */}
+        <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        bouncesZoom={1}
+        scrollEventThrottle={5}
+        style={{backgroundColor:'white'}}
+        >
+            <Lottie source={require('../../../ImageLoading.json')} autoPlay   style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/>
 
-                    <View style={{height:HEIGHT*0.35, width:WIDTH}}>
-                        <FlatList 
-                        onScroll={onScroll}
-                        horizontal 
-                        style={{position:'absolute', width:WIDTH, height:HEIGHT*0.35, overflow:'hidden'}}
-                        data={route.params.data.propertyInfo.imgList}
-                        ref={flatListRef}
-                        renderItem={({item})=>(
-                           
-                            <View style={{width:WIDTH, height:HEIGHT*0.35,justifyContent:'center'}}>
-                                <FastImage 
-                                source={{
-                                    uri: item,
-                                    priority: FastImage.priority.high,
-                                }} 
-                                style={{width:'100%', height:'100%', 
-                                }}/>
-                            </View>
-                        )}
-                        snapToAlignment="center"
-                        decelerationRate={"fast"}
-                        showsHorizontalScrollIndicator={false}
-                        bounces={false}
-                        snapToInterval={WIDTH}
+            {/* Property image slider container */}
+            <View style={{height:HEIGHT*0.35, width:WIDTH}}>
+                <FlatList 
+                    onScroll={onScroll}
+                    horizontal 
+                    snapToAlignment="center"
+                    decelerationRate={"fast"}
+                    showsHorizontalScrollIndicator={false}
+                    bounces={false}
+                    snapToInterval={WIDTH}
+                    style={{position:'absolute', width:WIDTH, height:HEIGHT*0.35, overflow:'hidden'}}
+                    data={route.params.data.propertyInfo.imgList}
+                    ref={flatListRef}
+                    renderItem={({item})=>(
                         
-                        />
-                            
-                            {/* <Image style={ImageStyle} source={{uri: data.imgList[0]}}/> */}
-                        <View style={{width: WIDTH, height: HEIGHT*0.02, position:'absolute', bottom:HEIGHT*0.03, flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
-                            {propData.imgList.map((data, index)=>(
-                                <View key={"img"+ index} style={{marginLeft:WIDTH*0.02, marginRight:WIDTH*0.02, height:HEIGHT*0.012, width:HEIGHT*0.012, 
-                                borderRadius:HEIGHT*0.006,backgroundColor: flatlistIndex == index ? PRIMARYCOLOR : 'white' }}>
-                                </View>
-                            ))
-
-                            }
-
+                        <View style={{width:WIDTH, height:HEIGHT*0.35,justifyContent:'center'}}>
+                            <FastImage 
+                            source={{
+                                uri: item,
+                                priority: FastImage.priority.high,
+                            }} 
+                            style={{width:'100%', height:'100%', 
+                            }}/>
                         </View>
+                    )}
+                />
+                                
+                {/* Property image page indicator */}
+                <View style={{width: WIDTH, height: HEIGHT*0.02, position:'absolute', bottom:HEIGHT*0.03, flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+                    {propData.imgList.map((data, index)=>(
+                        <View key={"img"+ index} style={{marginLeft:WIDTH*0.02, marginRight:WIDTH*0.02, height:HEIGHT*0.012, width:HEIGHT*0.012, 
+                        borderRadius:HEIGHT*0.006,backgroundColor: flatlistIndex == index ? PRIMARYCOLOR : 'white' }}>
+                        </View>
+                    ))}
+                </View>                        
+            </View>
+            
+            {/* This section includes the type, location, bed, bath, date and description */}
+            <Section>
+                {/* This is the container that contains type, location and the favorite button */}
+                <TypeLocationFavoriteContainer>
+                    <TypeLocationContainer>
+                        <CardTitle>{propData.type} for rent</CardTitle>
+                        <LocationText>{propData.loc.secondaryTxt}  •  UW - Madison</LocationText>
+                    </TypeLocationContainer>
 
+                    <FavoriteContainer>
+                        <Ionicons  name="heart" size={30} color={ liked ? '#ee88a6' : LIGHTGREY}/>
+                    </FavoriteContainer>
+                </TypeLocationFavoriteContainer>
+                
+                {/* Container that contains the bed and bath count also the date */}
+                <BedBathDateContainer>
+                    <BedBathText>{propData.bed} Bed  •  {propData.bath} Bath</BedBathText>
+                    <BedBathText>
+                        {new Date(propData.availableFrom).toDateString().split(" ")[1]} {new Date(propData.availableFrom).toDateString().split(" ")[3] + "  "} -  
+                        {"  " + new Date(propData.availableTo).toDateString().split(" ")[1]} {new Date(propData.availableTo).toDateString().split(" ")[3]}
+                    </BedBathText>
+                </BedBathDateContainer>
 
-                        
+                <DescriptionText>{propData.description}</DescriptionText>
+            </Section>   
+                 
+                    {/* {route.params.distance != undefined &&
+                    <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',  width: WIDTH*0.2}}>   
+                        {GetFAIconsInBlack("Map")}
+                        <TypeText style={{color:'black', fontWeight: '500',}}>{route.params.distance} miles</TypeText>
                     </View>
-                    
-                    <CardSectionOne>
-                        <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                            <TypeText>{propData.type} for rent</TypeText>
-                            {route.params.distance != undefined &&
-                            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',  width: WIDTH*0.2}}>   
-                                {GetFAIconsInBlack("Map")}
-                                <TypeText style={{color:'black', fontWeight: '500',}}>{route.params.distance} miles</TypeText>
-                            </View>
-                        }
-                       </View>
-                        <CardTitle>{propData.loc.streetAddr}</CardTitle>
-                        <LocationDistanceContainer>
-                            <LocationText>{propData.loc.secondaryTxt}</LocationText>
-                        </LocationDistanceContainer>
+                    } */}
+            
+            {/* This section shows the distance from searched location and the show on map pressable */}
+            <Section>  
+                <RowContainer>
+                    <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>3 miles</DistanceText> from search location</DistanceText>
+                    <ShowOnMapPressable>
+                        <ShowOnMapText>
+                            Show on map
+                        </ShowOnMapText>
+                    </ShowOnMapPressable>
+                </RowContainer>
+            </Section>
 
-                        <BedAndBathContainer>
-                            <BedContainer>
-                                <BedTopContainer>
-                              
-                                <FontAwesomeIcon icon={faBed} size={30}/>
-                                
-                                    {/* <BedNumberText>{propData.bed.replace("P","+")}</BedNumberText> */}
-                                </BedTopContainer>
-                                {propData.bed == "Studio" ?
-                                    <BedroomNameText>Studio</BedroomNameText>
-                                    :
-                                    <BedroomNameText>{propData.bed.replace("P","+")} Bedroom</BedroomNameText>
-                                }
-                            </BedContainer>
-                            <BedContainer>
-                                <BedTopContainer>
-                                    <FontAwesomeIcon icon={faBath} size={30}/>
-                                    {/* <BedNumberText>{propData.bath.replace("P","+")}</BedNumberText> */}
-                                </BedTopContainer>
-                                <BedroomNameText>{propData.bath.replace("P","+")} Bathroom</BedroomNameText>
-                            </BedContainer>
-                            <BedContainer>
-                                <BedTopContainer>
-                                <FontAwesomeIcon icon={faFireFlameSimple} size={30}/>
-                                    {/* <BedNumberText>
-                                    {
-                                    propData.numberOfViews < 1000 ?
-                                    propData.numberOfViews 
-                                    :
-                                    Math.round(propData.numberOfViews/1000) + "K"
-                                    }
-                                    </BedNumberText> */}
-                                </BedTopContainer>
-                                <BedroomNameText>{
-                                    propData.numberOfViews < 1000 ?
-                                    propData.numberOfViews 
-                                    :
-                                    Math.round(propData.numberOfViews/1000) + "K"
-                                    } Views</BedroomNameText>
-                            </BedContainer>
-                          
-                        </BedAndBathContainer>
-                    </CardSectionOne>   
-                    <CardSectionOne>   
-                    <InfoHeaderText>Description</InfoHeaderText>
-                        <DescriptionContainer>
+            {/* This is the tenant information. Seperated to left and right */}
+            <Section>
+                <Subheading>Tenant Information:</Subheading>
+                <TenantInformationContainer>
+                    <TenantProfileImageContainr>
+                        <Image source={{uri:postedUserData.profilePic}} style={{height:WIDTH*0.2, width:WIDTH*0.2, borderRadius:WIDTH*0.1, backgroundColor:LIGHTGREY,  }}/>
+                    </TenantProfileImageContainr>
+                    <TenantNameScollOccupationContainer>
+                        <TenantNameText style={{fontWeight: '500'}}>{postedUserData.firstName} {postedUserData.lastName}</TenantNameText>
+                        <TenantNameText>{postedUserData.school} </TenantNameText>
+                        <TenantNameText>{postedUserData.occupation}</TenantNameText>
+                    </TenantNameScollOccupationContainer>
+                </TenantInformationContainer>
+
+            </Section>
+
+            <Section>
+                <Subheading>Amenities ({propData.amenities.length})</Subheading>
+                <AmenitiesContainer>
+                    {propData.amenities.length != 0 ? 
+                    propData.amenities.map((value)=>(
+                    <AmenitiesItem key={value + "detailamen"}>
+                        {GetFAIconsInBlack(value)}
+                        {/* <AmenitiesText>{value.replaceAll("_"," ")}</AmenitiesText> */}
+                        <AmenitiesText>{value.replace("_", " ").replace("_"," ")}</AmenitiesText>
                         
-                            {propData.description}
+                    </AmenitiesItem>
+
+                    ))
+                    :
+                    <InfoText>No amenities listed ...</InfoText>
                         
-                        </DescriptionContainer>
-                    </CardSectionOne>
-                    <CardSectionTwo>
-                     
-                        <InfoHeaderText>Availability</InfoHeaderText>
-                        <InfoContainer> 
-                            <DateContainer>
-                                {GetFAIconsInBlack("Calendar")}
-                                <DateText style={{color:'black', marginLeft: WIDTH*0.025, width: WIDTH*0.15 }}>From    </DateText>
-                                <DateText>{new Date(propData.availableFrom).toDateString()}</DateText>
-                            </DateContainer>
-                            <DateContainer>
-                                {GetFAIconsInBlack("Calendar")}
-                                <DateText style={{color:'black', marginLeft: WIDTH*0.025,width: WIDTH*0.15 }}>To   </DateText>
-                                <DateText>{new Date(propData.availableTo).toDateString()}</DateText>
-                            </DateContainer>
-                                
-                        </InfoContainer>
-                       
-                    </CardSectionTwo>
-
-                    <CardSectionTwo>
-                        <InfoHeaderTextAndCenter>
-                            <InfoHeaderText>Location</InfoHeaderText>
-                            {/* <View style={{flexDirection:'row', alignItems:'flex-start', justifyContent:'center'}}>
-                                <Ionicons name="locate" size={20} />
-                                <Text>Center</Text>
-                            </View> */}
-                        </InfoHeaderTextAndCenter>
-                        <View style={{width: WIDTH*0.9, height: HEIGHT*0.25, borderRadius:25, marginTop: HEIGHT*0.025 }}>
-                        <MapView
-                            provider={PROVIDER_GOOGLE}
-                            scrollEnabled={false}
-                            zoomEnabled={false}
-                            rotateEnabled={false}
-                            style={{flex:1, position:'relative', borderRadius:10}}
-                            initialRegion={{
-                            latitude: route.params.currentLocation == undefined ? propData.loc.coordinates[1] : (propData.loc.coordinates[1] +route.params.currentLocation[0])/2, 
-                            longitude: route.params.currentLocation == undefined ? propData.loc.coordinates[0] : (propData.loc.coordinates[0]+ route.params.currentLocation[1]) /2,
-                            latitudeDelta: route.params.currentLocation == undefined ? 0.03 : getMapView(propData.loc.coordinates[1], propData.loc.coordinates[0], route.params.currentLocation[0], route.params.currentLocation[1]),
-                            longitudeDelta: route.params.currentLocation == undefined ? 0.03 : getMapView(propData.loc.coordinates[1], propData.loc.coordinates[0], route.params.currentLocation[0], route.params.currentLocation[1])
-                            }}
-                        >
-                            <Marker
-                            pinColor='green'
-                            title='Destination'
-                            coordinate={{latitude: propData.loc.coordinates[1], longitude: propData.loc.coordinates[0]}}
-                            ></Marker>
-                            {route.params.currentLocation != undefined &&
-                            <Marker
-                            title='Search Location'
-                            coordinate={{latitude: route.params.currentLocation[0], longitude: route.params.currentLocation[1]}}
-                            ></Marker>
-                            }
-                        </MapView>
-                        </View>
-                    </CardSectionTwo>
-                    
-                    
-                    <CardSectionTwo>
-                        <InfoHeaderText>Tenant Information</InfoHeaderText>
-                        <TenantInfoContainer>
-                            <ProfileImageContainer>
-                                <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.1, width:HEIGHT*0.1, borderRadius:20, backgroundColor:LIGHTGREY}}/>
-                            </ProfileImageContainer>
-                            <TenantInfo>
-                                <TenantNameText style={{width: WIDTH*0.6}}>{postedUserData.firstName} {postedUserData.lastName}</TenantNameText>
-                                <View>
-                                {postedUserData.school != "" && 
-                                    <InfoText>{postedUserData.school}</InfoText>
-                                }
-                                {postedUserData.occupation != "" && 
-                                    <InfoText>{postedUserData.occupation}</InfoText>
-                                }
-                                </View>
-                            </TenantInfo>
-                        </TenantInfoContainer>
-                    </CardSectionTwo>
-                  
-                    <CardSectionOne>
-                        <InfoHeaderText>Amenities ({propData.amenities.length})</InfoHeaderText>
-                        <View style={{marginTop: HEIGHT*0.025}}>
-                        {propData.amenities.length != 0 ? propData.amenities.map((value)=>(
-                            <AmenitiesItem key={value + "detailamen"}>
-                                {GetFAIconsInBlack(value)}
-                                {/* <AmenitiesText>{value.replaceAll("_"," ")}</AmenitiesText> */}
-                                <AmenitiesText>{value.replace("_", " ").replace("_"," ")}</AmenitiesText>
-                               
-                            </AmenitiesItem>
-
-                        ))
-                        :
-                        <InfoText>No amenities listed ...</InfoText>
-                    
                     }
-                    </View>
-                    </CardSectionOne>
-                    
-                </ScrollView>
+                </AmenitiesContainer>
+
+            </Section>  
+            {/* This is the section for sublease details */}
+            <Section>
+                <Subheading>Sublease details</Subheading>
+                <LocationText>Security </LocationText>
+            </Section>      
+        </ScrollView>
+
                 <StickyHeaderContainer>
                     < StickyHeaderIcon  hitSlop={WIDTH*0.05} onPress={()=>navigation.goBack()}>
                         <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
@@ -462,11 +377,15 @@ export default function PropertyDetailScreen({navigation, route}){
                         <Text style={{color:'white', fontWeight:'700'}}>Contact Tenant</Text>
                     </ContactTanentButton>
                 </Footer>
-            </PropertyDescription>
+          
             
-
-        </Container>
-
+        <DropdownAlert
+            ref={(ref) => {
+            if (ref) {
+                dropDownAlertRef = ref;
+            }
+            }}
+        />
        
         
         </SafeAreaView>

@@ -45,7 +45,6 @@ export default function MessageScreen({navigation, route}){
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
             onChat = false
-            console.log("FOCUSSSSSS")       
             fetchConvos()
             getFirstName()
             
@@ -62,8 +61,6 @@ export default function MessageScreen({navigation, route}){
     const channelHandler = new sb.ChannelHandler();
     
     channelHandler.onChannelChanged = channel => {
-        console.log("rEFRESH")
-
         fetchConvos()
       };
 
@@ -93,7 +90,6 @@ export default function MessageScreen({navigation, route}){
                         return item.members.length == 2;
                       });
                     setConvoList(gcs)
-                    console.log(groupChannels)
                 });
             }
         }

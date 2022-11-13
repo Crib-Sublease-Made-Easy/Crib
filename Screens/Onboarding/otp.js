@@ -47,7 +47,6 @@ export default function OTPScreen({navigation, route}){
     const [smsErrorModal, setSMSErrorModal] = useState(false)
     const [laoding, setLoading] = useState(false)
 
-    console.log(route.params.authy_id)
     const MAX_CODE_LENGTH = 6;
 
     useEffect(()=> {
@@ -83,10 +82,6 @@ export default function OTPScreen({navigation, route}){
             name: 'someName',
         });
 
-        console.log("TOKEN")
-        console.log(code);
-        console.log("AuthyID")
-        console.log(route.params.authy_id);
         fetch('https://crib-llc.herokuapp.com/users/OTP/step3', {
             method: 'POST',
             headers: {
@@ -109,7 +104,6 @@ export default function OTPScreen({navigation, route}){
                 //The USER_ID below should be unique to your Sendbird application.
                 try {
                     console.log("connecting to sendbird")
-                    console.log()
                     sb.connect(data.createdUser._id, function(user, error) {
                         if (error) {
                             // Handle error.
@@ -132,7 +126,6 @@ export default function OTPScreen({navigation, route}){
                 } catch (err) {
                     // Handle error.
                 }
-                console.log("OTP",data)
                 try{
                     OneSignal.disablePush(false);
                     //Create sendbird user here with userid
@@ -165,8 +158,6 @@ export default function OTPScreen({navigation, route}){
     const UID = await EncryptedStorage.getItem("userId");
     if (UID != undefined) {
       try {
-        console.log("connecting to sendbird")
-        console.log("UID", UID)
      
         sb.connect(UID, function (user, error) {
           if (error) {
@@ -218,7 +209,6 @@ export default function OTPScreen({navigation, route}){
         })
         .then(res => res.json()).then(data =>{
             console.log("STEP2");
-            console.log(data);
             if(data.response.success != true){
                 alert("invalid in step 2.")
             }

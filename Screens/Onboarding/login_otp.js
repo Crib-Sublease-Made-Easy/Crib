@@ -59,12 +59,7 @@ export default function Login_OTP({navigation, route}){
         
        
         let oneSignalUserId = await EncryptedStorage.getItem('oneSignalUserID');
-       
-      
-        console.log("TOKEN")
-        
-        console.log("AuthyID")
-        console.log(route.authy_id);
+    
         let success = false
         fetch('https://crib-llc.herokuapp.com/users/login', {
             method: 'POST',
@@ -90,10 +85,8 @@ export default function Login_OTP({navigation, route}){
             
             return res.json()
         }).then( async data =>{
-            console.log(success)
             if(success){
-                console.log("LLLLDLDLDLDLDLDLDLDLDLDLDLDL")
-                console.log("LOGIN_OTP", data)
+              
                 try{
                     OneSignal.disablePush(false);
                     await EncryptedStorage.setItem("accessToken", data.token.accessToken)
@@ -130,7 +123,6 @@ export default function Login_OTP({navigation, route}){
         const UID = await EncryptedStorage.getItem("userId");
         if (UID != undefined) {
           try {
-            console.log("connecting to sendbird")
          
             sb.connect(UID, function (user, error) {
               if (error) {

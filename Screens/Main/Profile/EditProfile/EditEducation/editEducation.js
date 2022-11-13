@@ -28,7 +28,6 @@ export default function EditEducationScreen({navigation, route}){
     
     async function update(){
         const accessToken = await EncryptedStorage.getItem("accessToken");
-        console.log("UID" , route.params.uid)
         fetch('https://crib-llc.herokuapp.com/users/' + route.params.uid, {
             method: 'PUT',
             headers: {
@@ -41,8 +40,6 @@ export default function EditEducationScreen({navigation, route}){
             })
         })
         .then((response) => response.json()).then(data => {
-            console.log("Update education reponse")
-            console.log(data)
             navigation.navigate('ProfileEdit',{userData:data,})
         })
         .catch(e => {

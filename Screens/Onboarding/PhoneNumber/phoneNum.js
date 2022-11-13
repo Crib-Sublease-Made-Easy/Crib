@@ -34,11 +34,8 @@ export default function PhoneNumberScreen({navigation, route}){
     const [agreement, setAgreement] = useState(false)
     const [privacyagreement, setPrivacyAgreement] = useState(false)
     
-    console.log(passedPhoneNumber)
     async function signupStep1(){
         console.log("Stepping 1")
-        console.log("PHONENUMBER  ", passedPhoneNumber);
-        console.log("EMAIL  ", route.params.email);
         fetch('https://crib-llc.herokuapp.com/users/OTP/step1', {
             method: 'POST',
             headers: {
@@ -52,7 +49,6 @@ export default function PhoneNumberScreen({navigation, route}){
         }) 
         .then(res => res.json()).then(data =>{
             console.log("STEP1");
-            console.log(data);
             if(data.error != undefined){
                 if(data.error.error_code == 60027){
                     alert("Invalid Email Address")
@@ -76,7 +72,6 @@ export default function PhoneNumberScreen({navigation, route}){
     }
     function signupStep2(id){
         console.log("STEP2");
-        console.log("ID", id)
         fetch('https://crib-llc.herokuapp.com/users/OTP/step2', {
             method: 'POST',
             headers: {
@@ -89,7 +84,6 @@ export default function PhoneNumberScreen({navigation, route}){
         })
         .then(res => res.json()).then(data =>{
             console.log("STEP2 in data");
-            console.log(data);
             if(data.response.success != true){
                 alert("invalid in step 2.")
             }
@@ -147,7 +141,6 @@ export default function PhoneNumberScreen({navigation, route}){
                     alert("Account with phone number exist, please login.")
                     navigation.reset({index: 0 , routes: [{ name: 'ProfileTabs'}]})
                 }
-                console.log(data)
             }).catch(e=>
                 console.log(e)
             )
@@ -166,7 +159,6 @@ export default function PhoneNumberScreen({navigation, route}){
         }
        else{
             setLoading(true)
-            console.log("Will sign up")
             signupStep1()
        }
 

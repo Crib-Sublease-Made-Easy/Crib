@@ -57,8 +57,6 @@ export default function EditPropertyAmenitiesScreen({navigation, route}){
             })
         })
             .then((response) => response.json()).then(data => {
-                console.log("Update type reponse")
-                console.log(data)
                 navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
             })
             .catch(e => {

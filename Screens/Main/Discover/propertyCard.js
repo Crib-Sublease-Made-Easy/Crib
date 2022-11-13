@@ -1,18 +1,7 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
 
 import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    useColorScheme,
     View,
-    Dimensions,
-    Button,
-    Keyboard,
-    TextInput,
-    Image,
     ActivityIndicator,
     Pressable,
     Animated as RNAnimated,
@@ -38,41 +27,31 @@ import Lottie from 'lottie-react-native';
 
 
 import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, ROBOTOFONTFAMILY, EXTRALIGHT, FAGetIconsInPurple, GetFAIcons, GetFAIconWithColor, PRIMARYCOLOR } from '../../../sharedUtils';
-import { SystemMessage } from 'react-native-gifted-chat';
 
 const CardContainer = styled(Pressable)`
   width: ${WIDTH*0.9}px
+  height: ${WIDTH}px
   align-self: center;
   border-radius: 15px;
-  padding-vertical: ${HEIGHT*0.01}px
 `
 
 
 const PropertyInfoContainer = styled.View`
-  width: ${WIDTH*0.875}px;
-  justify-content:space-around
+  width: ${WIDTH*0.9}px;
+  height: ${WIDTH*0.2}px;
+  padding-top: ${HEIGHT*0.01}px
   align-self: center
-  padding-top: ${HEIGHT*0.01}px;
-  padding-left: ${WIDTH*0.001}px
-  
+  justify-content: space-around
 `
-
-const LocationAndPrice = styled.View`
-  flexDirection: row;
-  width: 100%;
-  justifyContent: space-between
-`
-
 const LocationFont = styled.Text`
-  font-size: ${HEIGHT*0.0175}px;
+  font-size: ${HEIGHT*0.017}px;
   font-weight: 600;
-  max-width: ${WIDTH*0.5}px
-  font-family: ${ROBOTOFONTFAMILY}
+ 
+  
   color: black
   
 `
 const DateFont = styled.Text`
-    margin-top: ${HEIGHT*0.01}px;
     font-size: ${HEIGHT*0.0155}px;
     font-weight: 400;
     font-family: ${ROBOTOFONTFAMILY}
@@ -83,9 +62,7 @@ const PriceFont = styled.Text`
   justify-content: center;
   font-size: ${HEIGHT*0.0175}px;
   color: black
-  font-weight: 500;
-  font-family: ${ROBOTOFONTFAMILY}
-
+  font-weight: 600;
 `
 
 const PropertyImageContainer = styled.View`
@@ -107,33 +84,15 @@ const OpenMapIconContainer = styled.Pressable`
 `
 
 const DragGreyLineContainer = styled.View`
-  
+  height: ${HEIGHT*0.07}px
   width: ${WIDTH}px;
   align-items: center
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
-`  
-// const DragGreyLine = styled.View`
-//   height: ${HEIGHT*0.004}px;
-//   width: ${WIDTH*0.25}px;
-//   border-radius: 15px;
-//   background-color: ${MEDIUMGREY}
-// `
-
-const TopBarSlider = styled.View`
-  width: ${WIDTH}px
   justify-content: center
-  align-items: center
-  height: ${HEIGHT*0.07}px
-  shadow-color: ${LIGHTGREY} 
-  shadow-offset: 0 ${HEIGHT*0.01}px
-  shadowRadius: 5px
-  shadowOpacity: 0.2
-  backgroundColor: white
-  border-top-left-radius: 25px
-  border-top-right-radius: 25px
-`
 
+  background-color: white
+`  
 
 const DefaultPostFavText = styled.Text`
     color: ${DARKGREY};
@@ -141,6 +100,25 @@ const DefaultPostFavText = styled.Text`
     font-size: ${HEIGHT*0.015}px;
     width: ${WIDTH*0.6}px
     text-align: center
+`
+
+const NumberOfPropertiesText = styled.Text`
+  font-size: ${HEIGHT*0.015}px;
+  font-weight: 600
+  color: black
+`
+
+const DatePriceContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  width: ${WIDTH*0.9}px
+  align-items: center
+`
+
+const BedBathNumberText = styled.Text`
+  font-size: ${HEIGHT*0.0155}px;
+  font-weight: 400;
+  color: black
 `
 
 export default function PropertyCard({navigation, setSelectedPin, loadMoreProperties,
@@ -184,9 +162,8 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
 
    
     }).onEnd(()=>{
-    //console.log(velocityY.value)
     if(translateY.value  < HEIGHT*0.35){
-      if(Math.abs(velocityY.value) > 1500){
+      if(Math.abs(velocityY.value) > 1200){
         translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:10})
       }
       else{
@@ -248,17 +225,6 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         translateY.value = withSpring(HEIGHT*0.67, {stiffness: 50, mass: 0.3, damping:15})
     }
 
-    function toogleCard(){
-      if(translateY.value > HEIGHT*0.5){
-
-        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
-      }
-      else{
-        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:15})
-      }
-    }
-  
-
     const renderCards = (data, index) =>{
 
         return(
@@ -268,7 +234,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
             inputRange:[0,1],
             outputRange:[0,1]
           })}}>
-            <CardContainer hitSlop={WIDTH*0.05}
+            <CardContainer
             onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId, incrementViewCount : true, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0])), currentLocation: currentLocation})} >
                
               <PropertyImageContainer >
@@ -277,7 +243,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                   uri: data.item.propertyInfo.imgList[0],
                   priority: FastImage.priority.high,
                 }} 
-                style={{width:WIDTH*0.9, height:WIDTH*0.6, borderRadius:15, backgroundColor:LIGHTGREY,
+                style={{width:WIDTH*0.9, height:WIDTH*0.8, borderRadius:15, backgroundColor:LIGHTGREY,
                 opacity: 1,
                 }}
                 />
@@ -286,28 +252,31 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                       {GetFAIcons("LocationPin")}
                   </OpenMapIconContainer>
               </PropertyImageContainer>
+
+              <PropertyInfoContainer>
+                <LocationFont>{data.item.propertyInfo.type} in {data.item.propertyInfo.loc.secondaryTxt}</LocationFont>
+
+                <DatePriceContainer>
+                  <BedBathNumberText>{data.item.propertyInfo.bed} Bed   {data.item.propertyInfo.bath} Bath</BedBathNumberText>
+
+                </DatePriceContainer>
+
+                <DatePriceContainer>
+                
+
+                <DateFont>{
+                  // "Flexible  " +   
+                  new Date(data.item.propertyInfo.availableFrom).getMonth() + "/" +new Date(data.item.propertyInfo.availableFrom).getFullYear()
+                  }  -  {
+                  new Date(data.item.propertyInfo.availableTo).getMonth() + "/" +new Date(data.item.propertyInfo.availableTo).getFullYear()
+                  }
+                </DateFont>
+
+                <PriceFont>${data.item.propertyInfo.price} / month</PriceFont>
+
+                </DatePriceContainer>
+              </PropertyInfoContainer>   
                
-                <PropertyInfoContainer>
-                   
-                  <LocationAndPrice>
-                  
-                    <LocationFont>{data.item.propertyInfo.loc.secondaryTxt}</LocationFont>
-                    
-                    <PriceFont>${data.item.propertyInfo.price} / month</PriceFont>
-                  </LocationAndPrice>
-                  <DateFont>{
-                            new Date(data.item.propertyInfo.availableFrom).toLocaleDateString()
-                            }  -  {
-                            new Date(data.item.propertyInfo.availableTo).toLocaleDateString('default', { month: 'short' })
-                            }
-                            </DateFont>
-                          
-                  <DateFont>{Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0]))} miles away</DateFont>
-            
-                </PropertyInfoContainer>   
-              
-                    <View style={{backgroundColor:'white'}}></View>
-              
             </CardContainer>
           </RNAnimated.View>
          
@@ -321,67 +290,66 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
   <GestureDetector  gesture={gesture}>
     
       <Animated.View
-        style={[bottomSheetStyle,{width: WIDTH, height: HEIGHT*0.75, alignItems:'center', borderTopLeftRadius:25, 
+        style={[bottomSheetStyle,{width: WIDTH, height: HEIGHT*0.76, alignItems:'center', borderTopLeftRadius:25, 
         borderTopRightRadius:25,backgroundColor: 'white',
         shadowColor: 'black', shadowRadius: 15,shadowOffset: {width: 0, height: 0},  shadowOpacity: 0.2, elevation: 5,
       }]}>
+
+        {/* This is the  top part of the slider*/}
         <DragGreyLineContainer>
-          
-          <TopBarSlider>
-            <Pressable hitSlop={WIDTH*0.05} onPress={toogleCard}
-            style={{paddingVertical: HEIGHT*0.01, paddingHorizontal: WIDTH*0.05, backgroundColor: EXTRALIGHT, borderRadius:20}}>
-              <Ionicons name='map' size={20} color={PRIMARYCOLOR}/>
-            </Pressable>
-          </TopBarSlider>
+          <NumberOfPropertiesText>
+            173 subleases found
+          </NumberOfPropertiesText>
         </DragGreyLineContainer>
-        {/* {flatlistRefreshing ?
+        
+        {flatlistRefreshing ?
         <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />
-        : */
+        : 
         filteredPropertiesData.length != 0 ?
        
           <FlatList
-          onEndReachedThreshold = {0.4}
-          ItemSeparatorComponent={() => {
-            return (
-              <View style={{width: WIDTH*0.9, height: HEIGHT*0.03}}>
+            onEndReachedThreshold = {0.4}
+            ItemSeparatorComponent={() => {
+              return (
+                <View style={{width: WIDTH*0.9, height: HEIGHT*0.03}}>
 
-              </View>
-            )
-          }
-            
-          }
-          onEndReached={()=>{
-              loadMoreProperties()
-          }
-          }
-          ListFooterComponent={()=>{
-            return(
-              <View style={{height:HEIGHT*0.05}}></View>
-            )
-          }}
-          bounces = {true}
-          style={{paddingBottom: HEIGHT*0.1}}
-          onLayout={handleFlatlistOpacity}
-          scrollEnabled={!previewing}
-          showsVerticalScrollIndicator={false}
-          ref={flatlistRef}
-          data = {filteredPropertiesData}
-        
-          // key={propertiesData}
-          keyExtractor={(item, index) => String(index)}
-          renderItem={(item, index)=>renderCards(item, index)}
-          />
-         
-          :
-          loading ?
-          <View>
+                </View>
+              )
+            }
+              
+            }
+            onEndReached={()=>{
+                loadMoreProperties()
+            }
+            }
+            ListFooterComponent={()=>{
+              return(
+                <View style={{height:HEIGHT*0.05}}></View>
+              )
+            }}
+            bounces = {true}
+            style={{paddingBottom: HEIGHT*0.1}}
+            onLayout={handleFlatlistOpacity}
+            scrollEnabled={!previewing}
+            showsVerticalScrollIndicator={false}
+            ref={flatlistRef}
+            data = {filteredPropertiesData}
+          
+            // key={propertiesData}
+            keyExtractor={(item, index) => String(index)}
+            renderItem={(item, index)=>renderCards(item, index)}
+            />
+          
+            :
+            loading ?
+            <View>
 
-          </View>
-          :
-          <View style={{justifyContent:'center', alignItems:'center', marginTop: HEIGHT*0.1}}>
-            <Lottie source={require('../../../noProperties.json')} autoPlay style={{width:WIDTH*0.6, height: WIDTH*0.4, }}/>
-            <DefaultPostFavText>No properties found. Please select a new area or adjust filter options</ DefaultPostFavText>
-          </View>
+            </View>
+            :
+            <View style={{justifyContent:'center', alignItems:'center', marginTop: HEIGHT*0.1}}>
+              <Lottie source={require('../../../noProperties.json')} autoPlay style={{width:WIDTH*0.6, height: WIDTH*0.4, }}/>
+              <DefaultPostFavText>No properties found. Please select a new area or adjust filter options</ DefaultPostFavText>
+            </View>
           }   
         </Animated.View>
     

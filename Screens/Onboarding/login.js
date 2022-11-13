@@ -31,12 +31,8 @@ export default function LoginScreen({navigation, route}){
     const [phoneNumber, setPhoneNumber] = useState("")
     const [passedPhoneNumber, setPassedPhoneNumber]= useState("")
     const [loading, setLoading] = useState(false)
-    console.log(passedPhoneNumber)
 
     async function signupStep1(){
-
-
-        console.log("Stepping 1")
         
         const number = phoneNumber.replace(/[^\d]/g, '');
       
@@ -51,7 +47,6 @@ export default function LoginScreen({navigation, route}){
             })
         }) 
         .then(res => res.json()).then(async data =>{
-            console.log(" DATA 1", data)
             if(data.authy_id != undefined){
                 // navigation.navigate('Login_OTP')
                 signupStep2(data.authy_id, number)
@@ -66,9 +61,7 @@ export default function LoginScreen({navigation, route}){
     }
 
     async function signupStep2(authy_id, number){
-        console.log("Stepping 2")
-        console.log(phoneNumber)
-        console.log("PHONE NUMBER", number)
+     
         await fetch('https://crib-llc.herokuapp.com/users/OTP/step2', {
             method: 'POST',
             headers: {
@@ -96,12 +89,12 @@ export default function LoginScreen({navigation, route}){
     
 
     function checkInput(){
+        console.log(passedPhoneNumber)
         if(passedPhoneNumber.length != 10){
             alert("Phone number is invalid")
         }
        else{
             setLoading(true)
-            console.log("Will sign up")
             signupStep1()
        }
 
@@ -122,7 +115,7 @@ export default function LoginScreen({navigation, route}){
         setPassedPhoneNumber(value)
         // clean the input for any non-digit values.
         let number = value.replace(/[^\d]/g, '');
-        setPassedPhoneNumber(number)
+        setPassedPhoneNumber(number.substring(0,10))
         // phoneNumberLength is used to know when to apply our formatting for the phone number
         const phoneNumberLength = number.length;
       

@@ -40,7 +40,7 @@ export const WIDTH = Dimensions.get('screen').width;
 
 // export const  = 'NotoSerif'
 //Progress Bar
-export const ROBOTOFONTFAMILY= 'Roboto-Regular'
+export const ROBOTOFONTFAMILY= 'Roboto'
 
 export const ProgressBarCapacity = styled.View`
     width: ${WIDTH*0.8}px;

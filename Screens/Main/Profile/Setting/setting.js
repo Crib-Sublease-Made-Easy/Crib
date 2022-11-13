@@ -73,7 +73,6 @@ export default function SettingScreen({navigation, route}){
     }
 
     const toggleNotification = async () => {
-      console.log("hello")
       //Prompt for push on iOS
       if(!notificationsEnabled){
         OneSignal.disablePush(false);

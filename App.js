@@ -2,14 +2,6 @@ import * as React from 'react';
 import { useState, useRef, useEffect, createContext } from 'react';
 import {
   AppState,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  Dimensions,
   Image
 } from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -81,8 +73,6 @@ import { createSharedElementStackNavigator } from 'react-navigation-shared-eleme
 import { CardStyleInterpolators } from '@react-navigation/stack';
 
 
-
-
 import SendBird from 'sendbird'
 
 const Stack = createSharedElementStackNavigator();
@@ -91,6 +81,7 @@ const appId = '58220273-043E-4162-AFFC-B4035FD78760';
 import OneSignal from 'react-native-onesignal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import DropdownAlert from 'react-native-dropdownalert';
 
 export default function App() {
 
@@ -116,7 +107,7 @@ OneSignal.setAppId("a979dd6f-dffb-476e-8d0b-bb27863a3c55");
 //Prompt for push on iOS
 OneSignal.promptForPushNotificationsWithUserResponse(async response => {
   const deviceState = await OneSignal.getDeviceState();
-  console.log(deviceState)
+  // console.log(deviceState)
   try{
     const cacheOneSignalID = await EncryptedStorage.getItem("oneSignalUserID");
     if (deviceState.userId != cacheOneSignalID && deviceState != null){
@@ -144,16 +135,11 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   const data = notification.additionalData
   // console.log("additionalData: ", data);
   // Complete with null means don't show a notification.
-  console.log("SOMETHING")
   if(!onChat){
-    console.log("WILL SHOW MSG ")
-
     notificationReceivedEvent.complete(notification);
   } else{
-    console.log("DOES NOT SHOW MSG ")
     notificationReceivedEvent.complete(null);
   }
-
 });
 
   useEffect(() => {
@@ -178,7 +164,6 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       }
 
       appState.current = nextAppState;
-      console.log("AppState", appState.current);
     });
 
     return () => {
@@ -278,7 +263,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
        
     }
     else{
-      console.log("Refresh Token is undefined. User is not logged in.")
+
     }
   }
   const login = (name) => {

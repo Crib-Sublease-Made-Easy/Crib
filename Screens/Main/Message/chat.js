@@ -172,7 +172,6 @@ export default function ChatScreen({navigation, route}){
 
         if(groupChannel != null && groupChannel.members.length == 2){
           if(groupChannel.members[0].userId == USERID){
-            console.log("INSIDEEEE")
             setRecipient(groupChannel.members[1].nickname)
           }else{
             setRecipient(groupChannel.members[0].nickname)
@@ -194,8 +193,6 @@ export default function ChatScreen({navigation, route}){
     }
 
     const getPropertyInfo = async (propId, gc) =>{
-      console.log("getpropertyinfo" , propId)
-      console.log("getpropertyinfo" , gc)
       await fetch('https://crib-llc.herokuapp.com/properties/' + propId, {
         method: 'POST',
         headers: {
@@ -291,20 +288,20 @@ export default function ChatScreen({navigation, route}){
     return(
     <SafeAreaView style={{backgroundColor:'white',flex: 1, paddingBottom: HEIGHT*0.035}}>
       <EditPagesHeaderContainer>
-                <EditPageBackButtonContainer>
-                    <Pressable  onPress={()=> { onChat=false, navigation.goBack()}} >
-                        <Ionicons name='arrow-back-outline' size={25} color='black'/>
-                    </Pressable>
-                </EditPageBackButtonContainer>
-                <EditPageNameContainer>
-                    <Header>{recipient}</Header>
-                </EditPageNameContainer> 
-                <EditPageForwardButtonContainer>
-                  <Pressable hitSlop={WIDTH*0.05} onPress={()=> setOptionsModal(true)}>
-                    <Ionicons name="ellipsis-horizontal" size={25} />
-                  </Pressable>
-                </EditPageForwardButtonContainer>
-        </EditPagesHeaderContainer>
+        <EditPageBackButtonContainer>
+            <Pressable  onPress={()=> { onChat=false, navigation.goBack()}} >
+                <Ionicons name='arrow-back-outline' size={25} color='black'/>
+            </Pressable>
+        </EditPageBackButtonContainer>
+        <EditPageNameContainer>
+            <Header>{recipient}</Header>
+        </EditPageNameContainer> 
+        <EditPageForwardButtonContainer>
+          <Pressable hitSlop={WIDTH*0.05} onPress={()=> setOptionsModal(true)}>
+            <Ionicons name="ellipsis-horizontal" size={25} />
+          </Pressable>
+        </EditPageForwardButtonContainer>
+      </EditPagesHeaderContainer>
     
 
     {loading ?

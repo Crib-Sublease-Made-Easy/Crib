@@ -6,7 +6,9 @@ import {
   Pressable,
 } from 'react-native';
 
-import { MEDIUMGREY,HEIGHT, WIDTH, amenitiesList, GetFAIconsInBlack, PRIMARYCOLOR, PROPERTIESTYPES, DEFAULTTYPE, DEFAULTPRICE, DEFAULTAVAILABLEFROM, DEFAULTAVAILABLETO, DEFAULTBEDROOM, DEFAULTDISTANCE, DEFAULTAMENITIES, DEFAULTBATHROOM, GetFAIconWithColor} from '../../../../sharedUtils';
+import { MEDIUMGREY,HEIGHT, WIDTH, amenitiesList, GetFAIconsInBlack, PRIMARYCOLOR, PROPERTIESTYPES, DEFAULTTYPE, DEFAULTPRICE, 
+    DEFAULTAVAILABLEFROM, DEFAULTAVAILABLETO, DEFAULTBEDROOM, DEFAULTDISTANCE, DEFAULTAMENITIES, DEFAULTBATHROOM, GetFAIconWithColor,
+    EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer} from '../../../../sharedUtils';
 
 import Modal from "react-native-modal";
 import Slider from '@react-native-community/slider';
@@ -49,12 +51,17 @@ Ionicons.loadFont()
 const BEDROOMTYPES = ["Studio","1" ,"2", "3", "4P"];
 const BATHROOMTYPES = ["1", "2", "3", "4P"];
 
+import DropdownAlert from 'react-native-dropdownalert';
+
+
 export default function DiscoverFilterScreen({navigation, currentLocation, open, close, setFilteredProperties, retrieveAllPins
     ,filterType, setfilterType, filterDistance, setfilterDistance, filterBedroom, setfilterBedroom,filterBathroom, setfilterBathroom
     ,filterPriceHigher, setfilterPriceHigher, filterAmenities, setfilterAmenities, setRetrieveMore, filterPreviewValue, setfilterPreviewValue, 
     filterPreviewDistanceValue, setfilterPreviewDistanceValue, filterAvailableFrom, setfilterAvailableFrom,
     filterAvailableTo, setfilterAvailableTo, loadProperty, setFlatlistRefreshingTrue, setFlatlistRefreshingFalse
 }){
+
+    
     //When sliding the slides in select, the page doesnt move around
     const [scrollEnabled, setscrollEnabled] = useState(true)
     //Indicate if user pressed reset, if yes then load property with default values
@@ -79,19 +86,16 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     //Add and remove amenities from fitleramn list 
     function updateAmenities(name) {
         if (filterAmenities.indexOf(name) != -1) {
-            console.log("deleting")
             let tempindex = filterAmenities.indexOf(name);
             setfilterAmenities([...filterAmenities.slice(0, tempindex), ...filterAmenities.slice(tempindex + 1, filterAmenities.length)])
         }
         else {
-            console.log("adding")
             setfilterAmenities(prev => [...prev, name]);
         }
     }
 
     //Function to set all filter back to default
     function resetFilter(){
-        console.log("resettin")
         setfilterType(DEFAULTTYPE)
         setfilterPriceHigher(DEFAULTPRICE)
         setfilterAvailableFrom(DEFAULTAVAILABLEFROM)
@@ -140,7 +144,6 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
             }
             }) 
             .then(res => res.json()).then(properties =>{
-                console.log("filtered properties is:")
                 if(properties.propertiesFound != 'none'){
                     setFilteredProperties([...properties])
                 } else{
@@ -161,15 +164,12 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
 
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!NEED TO CHECK!!!!!!!!!!!!!!!!!!!!!!!!!!
     async function checkResetAndBack(){
-        console.log(reset)
-        console.log("closing")
         if(reset){
             setReset(false)
             retrieveAllPins(currentLocation[0], currentLocation[1], DEFAULTDISTANCE, DEFAULTPRICE, DEFAULTBEDROOM, DEFAULTBATHROOM, DEFAULTTYPE, DEFAULTAMENITIES,DEFAULTAVAILABLEFROM.getTime(), DEFAULTAVAILABLETO.getTime())
             loadProperty()
         }
         else{
-            console.log("Normal back")
             // console.log("savedtype"  ,savedType)
             // setfilterType(savedType)
             // setfilterPriceHigher(savedPriceHigher)
@@ -190,16 +190,19 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
        
         <Modal visible={open} animationType='slide' style={{flex: 1, backgroundColor:'white', margin: 0}}>
             <SafeAreaView style={{flex: 1}}>
-                <HeaderContainer>
-                    <BackButtonContainer>
-                        <Pressable hitSlop={WIDTH*0.05} style={{height:'50%', width:'50%', alignItems:'center'}} onPress={checkResetAndBack}>
-                            {GetFAIconWithColor("ArrowLeft", "black")}
-                        </Pressable>
-                    </BackButtonContainer>
-                    <NameContainer>
-                        <Header>Filter</Header>
-                    </NameContainer>
-                </HeaderContainer>
+                
+            <EditPagesHeaderContainer>
+                <EditPageBackButtonContainer>
+                    <Pressable  onPress={checkResetAndBack}>
+                        <Ionicons name='arrow-back-outline' size={25} color='black'/>
+                    </Pressable>
+                </EditPageBackButtonContainer>
+                <EditPageNameContainer>
+                    <Header>Filter</Header>
+                </EditPageNameContainer> 
+                <EditPageForwardButtonContainer/>
+            </EditPagesHeaderContainer>
+                
                 <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={scrollEnabled}>
                     {/* All the inputs for the filter */}
                     <InputForm>
