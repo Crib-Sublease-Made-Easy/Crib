@@ -412,7 +412,7 @@ export default function ProfileScreen({navigation}){
                                 //When there exist at least 1 fav prop
                                 <ScrollView contentContainerStyle={{alignSelf:'center'}}
                                 style={{alignSelf:'center', width: WIDTH, paddingTop: HEIGHT*0.01}} showsVerticalScrollIndicator={false}>
-                                    {favoriteProperties.length != 0 && favoriteProperties?.map((item, index)=>(
+                                    {favoriteProperties != undefined && favoriteProperties.length != 0 && favoriteProperties.map((item, index)=>(
                                     <FavPropertyCard key={item.propertyInfo._id + index}>
                                         <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
                                         <FastImage source={{uri: item.propertyInfo.imgList[0], priority: FastImage.priority.low}} 

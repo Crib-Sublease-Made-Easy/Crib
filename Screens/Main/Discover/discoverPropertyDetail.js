@@ -6,7 +6,6 @@ import {
     Image,
     Animated as RNAnimated,
     SafeAreaView,
-    Pressable
 } from 'react-native';
 
 import FastImage from 'react-native-fast-image'
@@ -15,27 +14,25 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import MapView , { Marker,PROVIDER_GOOGLE }from 'react-native-maps';
-
 import {UserContext} from '../../../UserContext'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
 import Lottie from 'lottie-react-native';
 
+// styles specific to this page
+import 
+{
+Section, CardTitle,LocationText, InfoText, AmenitiesItem, Footer, PricePerMonth, ContactTanentButton,
+DescriptionText, AmenitiesText, TenantNameText, StickyHeaderContainer,  StickyHeaderIcon, TypeLocationFavoriteContainer,
+TypeLocationContainer,FavoriteContainer, BedBathDateContainer, BedBathText, DistanceText, RowContainer, 
+TenantInformationContainer, TenantProfileImageContainr, TenantNameScollOccupationContainer, Subheading, AmenitiesContainer,
+SubleaseDetailsText, SubleaseDetailsValueText 
+} from './discoverPDStyle'
 
-import {PropertyDescription, Section, CardTitle, LocationDistanceContainer,
-        LocationText, BedAndBathContainer, CardSectionTwo, InfoHeaderText,
-            InfoContainer, InfoText, AmenitiesItem, Footer,
-            PricePerMonth, ContactTanentButton, TenantInfoContainer, TenantInfo, ProfileImageContainer,
-           DateContainer, DateText,DescriptionText, AmenitiesText, TypeText, BedContainer,
-           BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
-           StickyHeaderContainer,  StickyHeaderIcon,  TypeLocationFavoriteContainer,
-           TypeLocationContainer,FavoriteContainer, BedBathDateContainer, BedBathText, DistanceText, RowContainer, ShowOnMapPressable, ShowOnMapText, TenantInformationContainer, TenantProfileImageContainr, TenantNameScollOccupationContainer, Subheading, AmenitiesContainer } from './discoverPDStyle'
+
 import { FlatList } from 'react-native-gesture-handler';
-import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, HEIGHT, WIDTH} from '../../../sharedUtils';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faBath, faBed, faEye, faFire, faFireFlameCurved, faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
+import { LIGHTGREY , PRIMARYCOLOR, GetFAIconsInBlack, HEIGHT, WIDTH} from '../../../sharedUtils';
 
 import DropdownAlert from 'react-native-dropdownalert';
 
@@ -203,29 +200,10 @@ export default function PropertyDetailScreen({navigation, route}){
         
     }
 
- 
-    function getMapView(lat1,lon1,lat2,lon2) {
-        var R = 6371; // Radius of the earth in km
-        var dLat = deg2rad(lat2-lat1);  // deg2rad below
-        var dLon = deg2rad(lon2-lon1); 
-        var a = 
-          Math.sin(dLat/2) * Math.sin(dLat/2) +
-          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-          Math.sin(dLon/2) * Math.sin(dLon/2)
-          ; 
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-        var d = R * c; // Distance in km
-        return ((d+1) * 0.621371) / 69 ; //km to miles
-      }
-      
-      function deg2rad(deg) {
-        return deg * (Math.PI/180)
-      }
 
     return(
        <SafeAreaView style={{ backgroundColor:'white', flex: 1}}>
             
-    
         <ScrollView 
         showsVerticalScrollIndicator={false} 
         bouncesZoom={1}
@@ -281,7 +259,10 @@ export default function PropertyDetailScreen({navigation, route}){
                     </TypeLocationContainer>
 
                     <FavoriteContainer>
-                        <Ionicons  name="heart" size={30} color={ liked ? '#ee88a6' : LIGHTGREY}/>
+                     { !ownProperty &&
+                        <Ionicons  name="heart" size={30} color={ liked ? '#ee88a6' : LIGHTGREY}
+                        onPress={likeProperty}/>
+                     }
                     </FavoriteContainer>
                 </TypeLocationFavoriteContainer>
                 
@@ -293,26 +274,24 @@ export default function PropertyDetailScreen({navigation, route}){
                         {"  " + new Date(propData.availableTo).toDateString().split(" ")[1]} {new Date(propData.availableTo).toDateString().split(" ")[3]}
                     </BedBathText>
                 </BedBathDateContainer>
-
+                {propData.description == "" ?
+                null
+                :
                 <DescriptionText>{propData.description}</DescriptionText>
+                }
+                
             </Section>   
-                 
-                    {/* {route.params.distance != undefined &&
-                    <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',  width: WIDTH*0.2}}>   
-                        {GetFAIconsInBlack("Map")}
-                        <TypeText style={{color:'black', fontWeight: '500',}}>{route.params.distance} miles</TypeText>
-                    </View>
-                    } */}
             
             {/* This section shows the distance from searched location and the show on map pressable */}
             <Section>  
+               
+                <Subheading>Sublease details</Subheading>
                 <RowContainer>
-                    <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>3 miles</DistanceText> from search location</DistanceText>
-                    <ShowOnMapPressable>
-                        <ShowOnMapText>
-                            Show on map
-                        </ShowOnMapText>
-                    </ShowOnMapPressable>
+                <Ionicons  name="pin" size={20} color='black' style={{paddingRight: WIDTH*0.02}}></Ionicons>
+
+
+                    <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>3 miles</DistanceText> away from search location</DistanceText>
+                   
                 </RowContainer>
             </Section>
 
@@ -325,13 +304,18 @@ export default function PropertyDetailScreen({navigation, route}){
                     </TenantProfileImageContainr>
                     <TenantNameScollOccupationContainer>
                         <TenantNameText style={{fontWeight: '500'}}>{postedUserData.firstName} {postedUserData.lastName}</TenantNameText>
+                        {postedUserData.school != "" &&
                         <TenantNameText>{postedUserData.school} </TenantNameText>
+                        }
+                        {postedUserData.occupation != "" &&
                         <TenantNameText>{postedUserData.occupation}</TenantNameText>
+                        }
                     </TenantNameScollOccupationContainer>
                 </TenantInformationContainer>
 
             </Section>
 
+            {/* Section for amenities  */}
             <Section>
                 <Subheading>Amenities ({propData.amenities.length})</Subheading>
                 <AmenitiesContainer>
@@ -355,28 +339,26 @@ export default function PropertyDetailScreen({navigation, route}){
             {/* This is the section for sublease details */}
             <Section>
                 <Subheading>Sublease details</Subheading>
-                <LocationText>Security </LocationText>
+                <SubleaseDetailsText>Security deposit:  <SubleaseDetailsValueText>$1500</SubleaseDetailsValueText></SubleaseDetailsText>
+                <SubleaseDetailsText>Gas, water and electric:  <SubleaseDetailsValueText>$40 / month</SubleaseDetailsValueText></SubleaseDetailsText>
+                <SubleaseDetailsText>Parking:  <SubleaseDetailsValueText>$200 / month</SubleaseDetailsValueText></SubleaseDetailsText>
+
             </Section>      
         </ScrollView>
 
-                <StickyHeaderContainer>
-                    < StickyHeaderIcon  hitSlop={WIDTH*0.05} onPress={()=>navigation.goBack()}>
-                        <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
-                    </ StickyHeaderIcon>
-                    { !ownProperty &&
-                    < StickyHeaderIcon hitSlop={WIDTH*0.05} onPress={likeProperty}>
-                        <Ionicons  name="heart" size={25} color={ liked ? '#ee88a6' : 'white'}></Ionicons>
-                    </ StickyHeaderIcon>
-                    }
-                    
-                </StickyHeaderContainer>
-                <Footer>
-                    <PricePerMonth>${propData.price} <Text style={{fontSize: HEIGHT*0.025, fontWeight:'500'}}>/ month</Text></PricePerMonth>
-                
-                    <ContactTanentButton disabled={ownProperty} ownProperty={ownProperty} hitSlop={WIDTH*0.05} onPress={()=>createConversation()}>
-                        <Text style={{color:'white', fontWeight:'700'}}>Contact Tenant</Text>
-                    </ContactTanentButton>
-                </Footer>
+        <StickyHeaderContainer>
+            < StickyHeaderIcon  hitSlop={WIDTH*0.05} onPress={()=>navigation.goBack()}>
+                <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
+            </ StickyHeaderIcon>
+            
+        </StickyHeaderContainer>
+        <Footer>
+            <PricePerMonth>${propData.price} <Text style={{fontWeight:'400'}}>/ month</Text></PricePerMonth>
+        
+            <ContactTanentButton disabled={ownProperty} ownProperty={ownProperty} onPress={()=>createConversation()}>
+                <Text style={{color:'white', fontWeight:'700'}}>Contact Tenant</Text>
+            </ContactTanentButton>
+        </Footer>
           
             
         <DropdownAlert

@@ -22,7 +22,7 @@ var axios = require('axios');
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import {PRIMARYCOLOR, WIDTH, HEIGHT, IconPressable, DARKGREY, GetFAIcons, GetFAIconsInBlack, FAGetBottomIcons,} from '../../../sharedUtils.js';
+import {WIDTH, HEIGHT, IconPressable, DARKGREY, GetFAIconsInBlack, FAGetBottomIcons, PRIMARYCOLOR} from '../../../sharedUtils.js';
 
 export default function DiscoverSearchScreen({navigation, route, open, close, selectCurrentLocation}){
   const [autocompleteLocation, setautocompleteLocation] = useState([])
@@ -81,9 +81,7 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
         <TopContainer>
           {/* Close() */}
           <CancelContainer style={{justifyContent: 'flex-start'}}>
-            <IconPressable  hitSlop={WIDTH*0.05} onPress={leaveDiscoverSearch}>
-              {GetFAIconsInBlack("Back")}
-            </IconPressable>
+              <Ionicons name='arrow-back-outline' color='black' size={25} onPress={leaveDiscoverSearch}/>
           </CancelContainer>
 
           {/* Search Input that allows user to input query */}
@@ -94,9 +92,7 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
           {/* If user input is not empty then can clear with this button */}
           <CancelContainer  style={{justifyContent: 'flex-end'}}>
             {locationQuery.trim().length != 0 &&
-            <Pressable  hitSlop={WIDTH*0.05}onPress={()=>setLocationQuery("")}>
-              {GetFAIconsInBlack("Close")}
-            </Pressable>
+              <Ionicons name='close-circle'  color='black' size={22} onPress={()=>setLocationQuery("")}/>
             }
           </CancelContainer>
         </TopContainer>
@@ -107,12 +103,12 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
 
           <View style={{marginTop: HEIGHT*0.025}}>
           {autocompleteLocation.length != 0 && autocompleteLocation.map((value, index)=>(
-                  <AutocompleteResultItems key={"autocomplete" + value.description + index}  hitSlop={WIDTH*0.05} onPress={()=>pressAutocompleteItem(value.description)}>
+                  <AutocompleteResultItems key={"autocomplete" + value.description + index} onPress={()=>pressAutocompleteItem(value.description)}>
 
-                      {FAGetBottomIcons("Map")}
-                      <View style={{marginLeft: WIDTH*0.05}}>
-                        <LocationPrimaryText key={value.structured_formatting.main_text}>{value.structured_formatting.main_text}</LocationPrimaryText>
-                        <LocationSecondaryText key={value.structured_formatting.secondary_text} >{value.structured_formatting.secondary_text}</LocationSecondaryText>
+                      <Ionicons name="navigate-circle-outline" size={25} color= {PRIMARYCOLOR} style={{width: WIDTH*0.1}}/>
+                      <View style={{marginLeft: WIDTH*0.015}}>
+                        <LocationPrimaryText numberOfLines={1} key={value.structured_formatting.main_text}>{value.structured_formatting.main_text}</LocationPrimaryText>
+                        <LocationSecondaryText numberOfLines={1} key={value.structured_formatting.secondary_text} >{value.structured_formatting.secondary_text}</LocationSecondaryText>
                       </View>
                   </AutocompleteResultItems>
           ))}

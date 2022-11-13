@@ -45,7 +45,7 @@ export const LocationText = styled.Text`
 `
 
 export const BedBathDateContainer = styled.View`
-    padding-vertical: ${HEIGHT*0.03}px
+    padding-top: ${HEIGHT*0.03}px
 `
 
 export const BedBathText = styled.Text`
@@ -57,12 +57,13 @@ export const BedBathText = styled.Text`
 
 export const DescriptionText = styled.Text`
     color: black   
+    margin-top: ${HEIGHT*0.03}px
     font-size: ${HEIGHT*0.0175}px;
 `
 
 export const RowContainer = styled.View`
+    margin-top: ${HEIGHT*0.02}px
     flex-direction: row
-    justify-content: space-between
     align-items: center
 `
 
@@ -104,7 +105,7 @@ export const TenantProfileImageContainr = styled.View`
 `
 
 export const TenantNameScollOccupationContainer = styled.View`
-    padding-left: ${WIDTH*0.02}px
+    padding-left: ${WIDTH*0.05}px
     justify-content: center
 `
 
@@ -116,7 +117,7 @@ export const TenantNameText = styled.Text`
 `
 
 export const AmenitiesContainer = styled.View`
-    padding-vertical: ${HEIGHT*0.01}px
+    margin-top: ${HEIGHT*0.02}px
 `
 
 export const AmenitiesText = styled.Text`
@@ -128,8 +129,15 @@ export const AmenitiesText = styled.Text`
 
 export const SubleaseDetailsText = styled.Text`
     font-size: ${HEIGHT*0.0175}px;
-    font-weight: 600;
+    font-weight: 400;
     color: black
+    margin-top: ${HEIGHT*0.015}px
+`
+export const SubleaseDetailsValueText = styled.Text`
+    font-size: ${HEIGHT*0.0175}px;
+    font-weight: 500;
+    color: black
+    
 `
 
 export const LocationDistanceContainer = styled.View`
@@ -212,7 +220,7 @@ export const AmenitiesItem = styled.View`
 
 export const Footer = styled.View`
 width: ${WIDTH}px;
-padding-vertical: ${HEIGHT*0.01}px;
+padding-vertical: ${HEIGHT*0.015}px;
 justify-content: space-around;
 align-items: center
 flex-direction: row
@@ -221,7 +229,7 @@ borderTopColor: #E0E0E0;
 
 `
 export const PricePerMonth = styled.Text`
-    font-size: ${HEIGHT*0.025}px;
+    font-size: ${HEIGHT*0.02}px;
     font-weight: 700;
     color: black
 `
@@ -229,7 +237,7 @@ export const ContactTanentButton = styled(Pressable)`
     width: ${WIDTH*0.4}px;
     height: ${HEIGHT*0.06}px;
     background-color: ${props=>(props.ownProperty? MEDIUMGREY : PRIMARYCOLOR)};
-    border-radius: 30px;
+    border-radius: 15px;
     justify-content: center;
     align-items: center;
     
@@ -258,7 +266,6 @@ export const TenantInfo = styled.View`
 `
 
 export const ProfileImageContainer = styled.View`
-    
     justify-content: center
 `
 

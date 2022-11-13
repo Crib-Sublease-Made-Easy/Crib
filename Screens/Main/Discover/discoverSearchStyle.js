@@ -26,14 +26,12 @@ const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
 export const TopContainer = styled.View`
-  height: ${HEIGHT*0.065}px;
+  padding-vertical: ${HEIGHT*0.01}px
   width: ${WIDTH}px;
   flex-direction: row
   justify-content: space-between
   align-items: center
   padding-horizontal: ${WIDTH*0.05}px
- 
-
 `
 
 export const CancelContainer = styled.View`
@@ -47,11 +45,8 @@ export const SearchContainer = styled.TextInput`
   height: 100%
   width: 80%
   background-color: white
-  
-  border-radius: 25px
-  border-color: ${EXTRALIGHT}
   padding-horizontal: ${WIDTH*0.035}px
-  
+  color: black
 `
 export const  SearchResultContainer = styled.View`
   height: ${HEIGHT*0.4}px;
@@ -64,6 +59,7 @@ export const SearchResultTitle = styled.Text`
   font-weight: 600;
   width: ${WIDTH}px;
   padding-horizontal: ${WIDTH*0.05}px
+  color: black
 `
 
 export const AutocompleteResultItems = styled.Pressable`
