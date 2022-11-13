@@ -1,4 +1,4 @@
-package com.lighthouse.newarchitecture;
+package com.Crib.SubleasingMadeEasy.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.lighthouse.BuildConfig;
-import com.lighthouse.newarchitecture.components.MainComponentsRegistry;
-import com.lighthouse.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.Crib.SubleasingMadeEasy.BuildConfig;
+import com.Crib.SubleasingMadeEasy.newarchitecture.components.MainComponentsRegistry;
+import com.Crib.SubleasingMadeEasy.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
