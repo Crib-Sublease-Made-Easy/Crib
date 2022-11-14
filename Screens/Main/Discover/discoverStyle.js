@@ -46,14 +46,13 @@ export const PlaceholderLogoTextContainer  = styled.Text`
 export const SearchContainer = styled.Pressable`
   height: ${HEIGHT*0.065}px
   width: ${WIDTH*0.9}px
-  marginLeft: ${WIDTH*0.05}px
   shadowColor: black
   shadowRadius: 10px
   shadowOpacity: 0.32
   shadowOffset: 0 0
   elevation: 7
   backgroundColor: white
-
+  align-self: center
   borderRadius: 30px
 
   flex-direction: row;
@@ -166,23 +165,23 @@ export const ClosePreviewPressable = styled.Pressable`
 `
 
 export const  PreviewBottomContainer = styled.Pressable`
-  padding-vertical: ${HEIGHT*0.02}px
+  padding-vertical: ${HEIGHT*0.0125}px
   height: ${HEIGHT*0.1}px;
   width: ${WIDTH*0.9}px;
-  padding-horizontal: ${WIDTH*0.02}px;
-  padding-top: ${HEIGHT*0.01}px
+  padding-horizontal: ${WIDTH*0.05}px;
   align-self:center
   justify-content: space-around
-  
-
- 
 `
-export const  PreviewTopContainer = styled.View`
-  height:${HEIGHT*0.175}px;
+export const PreviewTopContainer = styled.View`
+  height:${HEIGHT*0.2}px;
   width: ${WIDTH*0.9}px
- 
- 
 `
+
+export const DatePriceContainer = styled.View`
+  flex-direction: row
+  justify-content: space-between
+`
+
 
 export const PreviewCards = styled.Pressable`
   width: ${WIDTH*0.9}px;
@@ -202,19 +201,21 @@ export const PreviewNameText = styled.Text`
   width: ${WIDTH*0.6}px
   color: black
 ` 
-export const PreviewPriceText = styled.Text`
-  width: ${WIDTH*0.9}px
-  padding-horizontal: ${WIDTH*0.025}px
-  font-size: ${HEIGHT*0.014}px;
+export const PreviewdetailsText = styled.Text`
+  font-size: ${HEIGHT*0.015}px;
   color: black
-
 `
+export const PreviewPriceText = styled. Text`
+  font-size: ${HEIGHT*0.015}px;
+  color: black
+  font-weight: 600
+`
+
+
 export const PreviewLocationText = styled.Text`
   font-size: ${HEIGHT*0.015}px;
   font-weight: 500
   width: ${WIDTH*0.9}px
-  max-height: ${HEIGHT*0.06}px;
-  padding-horizontal: ${WIDTH*0.025}px
   overflow: hidden
   color: black
   

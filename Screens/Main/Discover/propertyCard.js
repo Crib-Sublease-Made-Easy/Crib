@@ -248,7 +248,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
                 }}
                 />
                 
-                  <OpenMapIconContainer hitSlop={WIDTH*0.05} onPress={()=>MoveMapToPin(data.item)}>
+                  <OpenMapIconContainer onPress={()=>MoveMapToPin(data.item)}>
                       {GetFAIcons("LocationPin")}
                   </OpenMapIconContainer>
               </PropertyImageContainer>
@@ -347,7 +347,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
             </View>
             :
             <View style={{justifyContent:'center', alignItems:'center', marginTop: HEIGHT*0.1}}>
-              <Lottie source={require('../../../noProperties.json')} autoPlay style={{width:WIDTH*0.6, height: WIDTH*0.4, }}/>
+              <Lottie source={require('../../../noProperties.json')} autoPlay loop={false} style={{width:WIDTH*0.6, height: WIDTH*0.4, }}/>
               <DefaultPostFavText>No properties found. Please select a new area or adjust filter options</ DefaultPostFavText>
             </View>
           }   

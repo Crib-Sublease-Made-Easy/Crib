@@ -253,106 +253,106 @@ export const FAGetBottomIcons = (name) => {
 }
 export const GetFAIconsInBlack = (name) =>{
     if(name=="Pet_Friendly"){
-        return <FontAwesomeIcon icon={faDog} color='black'/>
+        return <FontAwesomeIcon icon={faDog} color='black' size={20}/>
     }
     else if(name=="Garages"){
-        return <FontAwesomeIcon icon={faCar} color='black'/>
+        return <FontAwesomeIcon icon={faCar} color='black'size={20} />
     }
     else if(name=="Swimming_Pool"){
-        return <FontAwesomeIcon icon={faSwimmingPool} color='black'/>
+        return <FontAwesomeIcon icon={faSwimmingPool} color='black' size={20}/>
     }
     else if(name=="Wifi"){
-        return <FontAwesomeIcon icon={faWifi} color='black'/>
+        return <FontAwesomeIcon icon={faWifi} color='black' size={20}/>
     }
     else if(name=="Gym"){
-        return <FontAwesomeIcon icon={faDumbbell} color='black'/>
+        return <FontAwesomeIcon icon={faDumbbell} color='black' size={20}/>
     }
     else if(name=="Washer_Dryer"){
-        return <FontAwesomeIcon icon={faWater} color='black'/>
+        return <FontAwesomeIcon icon={faWater} color='black' size={20}/>
     }
     else if(name=="Gated_Access"){
-        return <FontAwesomeIcon icon={faDoorClosed} color='black'/>
+        return <FontAwesomeIcon icon={faDoorClosed} color='black' size={20}/>
     }
     else if(name=="Public_Transportation"){
-        return <FontAwesomeIcon icon={faBus} color='black'/>
+        return <FontAwesomeIcon icon={faBus} color='black' size={20}/>
     }
     else if(name=="Heating_Cooling"){
-        return <FontAwesomeIcon icon={faFire} color='black'/>
+        return <FontAwesomeIcon icon={faFire} color='black' size={20}/>
     }
     else if(name=="Microwave"){
-        return <FontAwesomeIcon icon={faBowlFood} color='black'/>
+        return <FontAwesomeIcon icon={faBowlFood} color='black' size={20}/>
     }
     else if(name=="Grill"){
-        return <FontAwesomeIcon icon={faGripHorizontal} color='black'/>
+        return <FontAwesomeIcon icon={faGripHorizontal} color='black' size={20}/>
     }
     else if(name=="TV"){
-        return <FontAwesomeIcon icon={faTv} color='black'/>
+        return <FontAwesomeIcon icon={faTv} color='black' size={20}/>
     }
     else if(name=="Fridge"){
-        return <FontAwesomeIcon icon={faBottleWater} color='black'/>
+        return <FontAwesomeIcon icon={faBottleWater} color='black' size={20}/>
     }
     else if(name=="Couch"){
-        return <FontAwesomeIcon icon={faCouch} color='black'/>
+        return <FontAwesomeIcon icon={faCouch} color='black' size={20}/>
     }
     else if(name=="Mattress"){
-        return <FontAwesomeIcon icon={faMattressPillow} color='black'/>
+        return <FontAwesomeIcon icon={faMattressPillow} color='black' size={20}/>
     }
     else if(name=="Oven"){
-        return <FontAwesomeIcon icon={faCookieBite} color='black'/>
+        return <FontAwesomeIcon icon={faCookieBite} color='black' size={20}/>
     }
     else if(name=="Coffee_Maker"){
-        return <FontAwesomeIcon icon={faCoffee} color='black'/>
+        return <FontAwesomeIcon icon={faCoffee} color='black' size={20}/>
     }
-    else if(name=="Toaster"){
-        return <FontAwesomeIcon icon={faBreadSlice} color='black'/>
+    else if(name=="Toaster"){ 
+        return <FontAwesomeIcon icon={faBreadSlice} color='black' size={20}/>
     }
     else if(name=="Dishes"){
-        return <FontAwesomeIcon icon={faBottleDroplet} color='black'/>
+        return <FontAwesomeIcon icon={faBottleDroplet} color='black' size={20}/>
     }
     else if(name=="Pots_Pans"){
-        return <FontAwesomeIcon icon={faKitchenSet} color='black'/>
+        return <FontAwesomeIcon icon={faKitchenSet} color='black' size={20}/>
     }
     else if(name=="Utilities_Included"){
-        return <FontAwesomeIcon icon={faPowerOff} color='black'/>
+        return <FontAwesomeIcon icon={faPowerOff} color='black' size={20}/>
     }
     else if(name=="Walkin_Closet"){
-        return <FontAwesomeIcon icon={faClosedCaptioning} color='black'/>
+        return <FontAwesomeIcon icon={faClosedCaptioning} color='black' size={20}/>
     }
     else if(name=="Iron"){
-        return <FontAwesomeIcon icon={faCircleNodes} color='black'/>
+        return <FontAwesomeIcon icon={faCircleNodes} color='black' size={20}/>
     }
     else if(name=="Freezer"){
-        return <FontAwesomeIcon icon={faIceCream} color='black'/>
+        return <FontAwesomeIcon icon={faIceCream} color='black' size={20}/>
     }
     else if(name=="Street_Parking"){
-        return <FontAwesomeIcon icon={faStreetView} color='black'/>
+        return <FontAwesomeIcon icon={faStreetView} color='black' size={20}/>
     }
     else if(name=="Parking_on_Premises"){
-        return <FontAwesomeIcon icon={faParking} color='black'/>
+        return <FontAwesomeIcon icon={faParking} color='black' size={20}/>
     }
     else if(name=="Balcony"){
-        return <FontAwesomeIcon icon={faWind} color='black'/>
+        return <FontAwesomeIcon icon={faWind} color='black' size={20}/>
     }
     else if(name=="Search"){
-        return <FontAwesomeIcon icon={faSearch} color='black'/>
+        return <FontAwesomeIcon icon={faSearch} color='black' size={20}/>
     }
     else if(name=="Back"){
-        return <FontAwesomeIcon icon={faArrowLeft} color='black'/>
+        return <FontAwesomeIcon icon={faArrowLeft} color='black' size={20}/>
     }
     else if(name=="Filter"){
-        return <FontAwesomeIcon icon={faFilter} color='black'/>
+        return <FontAwesomeIcon icon={faFilter} color='black' size={20}/>
     }
     else if(name=="Close"){
-        return <FontAwesomeIcon icon={faClose} color='black'/>
+        return <FontAwesomeIcon icon={faClose} color='black' size={20}/>
     }
     else if(name=="Map"){
-        return <FontAwesomeIcon icon={faMapLocationDot} color='black'/>
+        return <FontAwesomeIcon icon={faMapLocationDot} color='black' size={20}/>
     }
     else if(name=="Calendar"){
-        return <FontAwesomeIcon icon={faCalendar} color='black'/>
+        return <FontAwesomeIcon icon={faCalendar} color='black' size={20}/>
     }
     else{
-        return <FontAwesomeIcon icon={faDog} />
+        return <FontAwesomeIcon icon={faDog} size={20}/>
     }
 }
 

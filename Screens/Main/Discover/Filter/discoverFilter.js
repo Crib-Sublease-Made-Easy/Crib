@@ -37,9 +37,13 @@ AmenitiesContainer,
 NameIcon, 
 DateInputPressable, 
 Footer, 
-ResetText, 
+ResetText,
+ResetButtonContainer,
 ApplyButton, 
-ApplyText
+ApplyText,
+Section,
+DateText,
+IndividualAmenitiesContainer
 } from './discoverFilterStyle';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -58,7 +62,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     ,filterType, setfilterType, filterDistance, setfilterDistance, filterBedroom, setfilterBedroom,filterBathroom, setfilterBathroom
     ,filterPriceHigher, setfilterPriceHigher, filterAmenities, setfilterAmenities, setRetrieveMore, filterPreviewValue, setfilterPreviewValue, 
     filterPreviewDistanceValue, setfilterPreviewDistanceValue, filterAvailableFrom, setfilterAvailableFrom,
-    filterAvailableTo, setfilterAvailableTo, loadProperty, setFlatlistRefreshingTrue, setFlatlistRefreshingFalse
+    filterAvailableTo, setfilterAvailableTo, loadProperty, setFlatlistRefreshingTrue, setFlatlistRefreshingFalse,
 }){
 
     
@@ -206,8 +210,9 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                 <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={scrollEnabled}>
                     {/* All the inputs for the filter */}
                     <InputForm>
+
                         {/* Filter Type */}
-                        <InputSectionCol>
+                        <Section style={{borderTopWidth: 0}}>
                             <InputNameContainer>
                                 <InputName>Type</InputName>
                             </InputNameContainer>
@@ -215,20 +220,20 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                             <TypeContainer>
                             {PROPERTIESTYPES.map((value)=>(
                                 <TypeOption key={value.type + value.icon} >
-                                    <NameIcon hitSlop={WIDTH*0.05} onPress={()=>{value.type == filterType ? setfilterType("") : setfilterType(value.type)}}>
+                                    <NameIcon onPress={()=>{value.type == filterType ? setfilterType("") : setfilterType(value.type)}}>
                                         <FontAwesome name={value.icon} size={20} color='black'/>
                                         <PropertyTypeName>{value.type}</PropertyTypeName>
                                     </NameIcon>
-                                    <Pressable hitSlop={WIDTH*0.05} onPress={()=>{value.type == filterType ? setfilterType("") : setfilterType(value.type)}}>
-                                    <Ionicons name='checkbox' size={25} color={value.type == filterType ? PRIMARYCOLOR : MEDIUMGREY}/>
-                                </Pressable>
+                                    <Pressable hitSlop={WIDTH*0.025} onPress={()=>{value.type == filterType ? setfilterType("") : setfilterType(value.type)}}>
+                                        <Ionicons name='checkbox' size={25} color={value.type == filterType ? PRIMARYCOLOR : MEDIUMGREY}/>
+                                    </Pressable>
                                 </TypeOption>
                             ))}
                             </TypeContainer>
-                        </InputSectionCol>
+                        </Section>
             
                         {/* Filter Price */}
-                        <PriceInputSection>
+                        <Section style={{paddingBottom: 0}}>
                             <InputSection style={{borderBottomWidth: 0}}>
                                 <InputNameContainer>
                                         <InputName>Max Budget</InputName>
@@ -240,33 +245,36 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                             {/* Cannot use style in slider so put slider in view component */}
                             <View style={{alignItems:'center'}}>
                                 <Slider
-                                    style={{width: WIDTH*0.8, height: HEIGHT*0.1}}
+                                    style={{width: WIDTH*0.8, height: HEIGHT*0.1, }}
                                     value={filterPriceHigher}
                                     onValueChange={(value)=> setfilterPreviewValue(value)}
                                     onValuesChangeStart={()=> setscrollEnabled(false)}
                                     onValuesChangeFinish={()=> setscrollEnabled(true)}
                                     onSlidingComplete={(value)=> setfilterPriceHigher(value)}
+                                    thumbTintColor='black'
+                                
                                     minimumValue={0}
                                     maximumValue={10000}
                                     step={100}
                                     minimumTrackTintColor={PRIMARYCOLOR}
                                     maximumTrackTintColor={MEDIUMGREY}
+                                    
                                 />
                             </View>
-                        </PriceInputSection>
+                        </Section>
 
-                        <InputSectionCol>
+                        <Section>
                             <InputNameContainer>
                                 <InputName>Available From</InputName>
                             </InputNameContainer>
-                            <DateInputPressable  hitSlop={WIDTH*0.05} onPress={()=>setOpenFrom(true)}>
-                                <PropertyTypeName>{filterAvailableFrom.toDateString()}</PropertyTypeName>
+                            <DateInputPressable onPress={()=>setOpenFrom(true)}>
+                                <DateText>{filterAvailableFrom.toDateString()}</DateText>
                             </DateInputPressable>
                             <InputNameContainer>
-                                <InputName>Available To</InputName>
+                                <InputName>To</InputName>
                             </InputNameContainer>
-                            <DateInputPressable  hitSlop={WIDTH*0.05} onPress={()=>setOpenTo(true)}>
-                                <PropertyTypeName>{filterAvailableTo.toDateString()}</PropertyTypeName>
+                            <DateInputPressable style={{marginBottom: 0}} onPress={()=>setOpenTo(true)}>
+                                <DateText>{filterAvailableTo.toDateString()}</DateText>
                             </DateInputPressable>
 
                             {/* Avaialble from datepicekr */}
@@ -317,10 +325,10 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                     setOpenTo(false)
                                 }}
                             />
-                        </InputSectionCol>
+                        </Section>
 
                         {/* Filter Distance  */}
-                        <PriceInputSection>
+                        <Section style={{paddingBottom: 0}}>
                             <InputSection style={{borderBottomWidth: 0}}>
                                 <InputNameContainer>
                                         <InputName>Max Distance</InputName>
@@ -344,38 +352,38 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                 maximumTrackTintColor={MEDIUMGREY}
                             />
                             </View>
-                        </PriceInputSection>
+                        </Section>
 
                         {/* Filter Bedroom  */}
-                        <InputSectionCol>
+                        <Section>
                             <InputNameContainer>
-                                <InputName>Bedrooms</InputName>
+                                <InputName>Beds</InputName>
                             </InputNameContainer>
                             <InputOptionContainer>
                             {BEDROOMTYPES.map((value, index)=>(
-                                <BedroomOptions  key={"bedroomOption" + value  + index}  hitSlop={WIDTH*0.05} onPress={()=> value == filterBedroom ? setfilterBedroom("") : setfilterBedroom(value)} inputValue={filterBedroom} value={value}>   
+                                <BedroomOptions index={index} key={"bedroomOption" + value  + index}  hitSlop={WIDTH*0.05} onPress={()=> value == filterBedroom ? setfilterBedroom("") : setfilterBedroom(value)} inputValue={filterBedroom} value={value}>   
                                     <BedroomOptionsText value={value} inputValue={filterBedroom}>{value.replace("P","+")}</BedroomOptionsText>
                                 </BedroomOptions>
                             ))}
                             </InputOptionContainer>
-                        </InputSectionCol>
+                        </Section>
 
                         {/* Bathroom Section, bathroom stores as 4P not 4+ so need to change */}
-                        <InputSectionCol>
+                        <Section>
                             <InputNameContainer>
                                 <InputName>Bathrooms</InputName>
                             </InputNameContainer>
                             <InputOptionContainer>
                             {BATHROOMTYPES.map((value, index)=>(
-                                <BedroomOptions key={"bathroomOption" + value + index} onPress={()=> value == filterBathroom ? setfilterBathroom("") : setfilterBathroom(value)} inputValue={filterBathroom} value={value}>   
+                                <BedroomOptions index={index} key={"bathroomOption" + value + index} onPress={()=> value == filterBathroom ? setfilterBathroom("") : setfilterBathroom(value)} inputValue={filterBathroom} value={value}>   
                                     <BedroomOptionsText value={value} inputValue={filterBathroom}>{value.replace("P","+")}</BedroomOptionsText>
                                 </BedroomOptions>
                             ))}
                             </InputOptionContainer>
-                        </InputSectionCol>
+                        </Section>
 
                         {/* Filter Amenities */}
-                        <InputSectionCol style={{borderBottomWidth: 0}}>
+                        <Section style={{borderBottomWidth: 0}}>
                             <InputNameContainer>
                                 <InputName>Amenities</InputName>
                             </InputNameContainer>
@@ -383,33 +391,34 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                             <AmenitiesContainer>
                                 {amenitiesList.map((value, index)=>(
                                 
-                                    <TypeOption key={value.name + "amenitiesfilter"} >
+                                    <IndividualAmenitiesContainer index={index} key={value.name + "amenitiesfilter"}>
                                         <NameIcon  hitSlop={WIDTH*0.05} onPress={()=>updateAmenities(value.name)}>
                                             {GetFAIconsInBlack(value.name)}
                                             <PropertyTypeName>{value.name.replace("_", " ").replace("_", " ")}</PropertyTypeName>
                                         </NameIcon>
-                                        <Pressable  hitSlop={WIDTH*0.05} onPress={()=>updateAmenities(value.name)}>
-                                            <View style={{height:WIDTH*0.055, width:WIDTH*0.055, borderRadius: 5, backgroundColor:filterAmenities.indexOf(value.name) != -1 ? PRIMARYCOLOR : MEDIUMGREY,
+                                        {/* <Pressable  hitSlop={WIDTH*0.025} onPress={()=>updateAmenities(value.name)}>
+                
+                                            <View style={{ borderRadius: 5, backgroundColor:filterAmenities.indexOf(value.name) != -1 ? PRIMARYCOLOR : MEDIUMGREY,
                                             justifyContent:'center',alignItems:'center'}}>
-                                                <Ionicons name='checkmark' size={15} color='white'/>
+                                                <Ionicons name='checkmark' size={25} color='white'/>
                                             </View>
+                                        </Pressable> */}
+                                        <Pressable hitSlop={WIDTH*0.025} onPress={()=>updateAmenities(value.name)}>
+                                            <Ionicons name='checkbox' size={25} color={filterAmenities.indexOf(value.name) != -1 ? PRIMARYCOLOR : MEDIUMGREY}/>
                                         </Pressable>
-                                    </TypeOption>
+                                    </IndividualAmenitiesContainer>
                                 
                                 ))}
                             </AmenitiesContainer>
-
-                            {/* Padding in the bottom so the amenities list dont touch the bottom */}
-                            <View style={{width:WIDTH, height: HEIGHT*0.025}}/>
-                        </InputSectionCol>
+                        </Section>
 
                     </InputForm>
                 </ScrollView>
 
                 <Footer>
-                    <Pressable  hitSlop={WIDTH*0.05} onPress={resetFilter}>
+                    <ResetButtonContainer onPress={resetFilter}>
                         <ResetText>Reset</ResetText>
-                    </Pressable>
+                    </ResetButtonContainer>
 
                     <ApplyButton  hitSlop={WIDTH*0.05} onPress={filter}>
                         <ApplyText>Apply Filter</ApplyText>

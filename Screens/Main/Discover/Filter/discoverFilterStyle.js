@@ -3,9 +3,15 @@ import {Pressable, Text} from 'react-native';
 import styled from 'styled-components/native';
 import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, EXTRALIGHT, MEDIUMGREY, DARKGREY } from '../../../../sharedUtils';
 
-const PRIMARYGREY = '#5e5d5d'
 
-
+export const Section = styled.View`
+    padding-vertical: ${HEIGHT*0.04}px
+    width: ${WIDTH*0.9}px
+    align-self: center
+    border-top-width: 1px;
+    border-color: ${LIGHTGREY}
+   
+`
 
 
 export const HeaderContainer = styled.View`
@@ -34,14 +40,6 @@ export const NameContainer = styled.View`
     align-items:center
  
   `
-
-export const ResetButtonContainer = styled.View`
-    width: ${WIDTH*0.25}px;
-    padding-right: ${WIDTH*0.025}px
-    height: 100%
-    justify-content: center;
-    align-items:flex-end;
-`
 
 export const Header = styled.Text`
     font-size: ${HEIGHT*0.02}px;
@@ -73,7 +71,6 @@ export const InputSectionCol = styled.View`
 
 export const InputNameContainer = styled.View`
    
-    height: ${HEIGHT*0.075}px;
     justify-content: center;
     
 `
@@ -85,9 +82,9 @@ export const InputName = styled.Text`
 `
 export const InputOptionContainer = styled.View`
     width: ${WIDTH*0.9}px;
-    padding-bottom: ${HEIGHT*0.015}px
+    margin-top: ${HEIGHT*0.03}px
     flex-direction: row;
-    justify-content: space-around
+    
     align-items: center
     align-self: center
 `
@@ -95,14 +92,16 @@ export const InputOptionContainer = styled.View`
 export const BedroomOptions = styled(Pressable)`
     padding-horizontal: ${WIDTH*0.05}px
     padding-vertical: ${HEIGHT*0.007}px
-    background-color: ${props=>(props.value == props.inputValue ? PRIMARYCOLOR : LIGHTGREY)}
-    
+    background-color: ${props=>(props.value == props.inputValue ? PRIMARYCOLOR : 'white')}
+    border-width: 1.5px
+    border-color: ${LIGHTGREY}
+    margin-left: ${props=>(props.index == 0 ? 0 :WIDTH*0.03)}px
     border-radius: 10px
 `
 
 export const BedroomOptionsText = styled(Text)`
     font-size: ${HEIGHT*0.0175}px;
-    font-weight: 400
+    font-weight: 500
     color: ${props=>(props.value == props.inputValue ? 'white' : 'black')}
 `
 
@@ -121,12 +120,11 @@ export const TypeContainer = styled.View`
 
 export const TypeOption = styled.Pressable`
     width: ${WIDTH*0.9}px;
-    height: ${HEIGHT*0.055}px
+    margin-top: ${HEIGHT*0.02}px
     flex-direction: row;
     justify-content: space-between;
     align-self: center
-    align-items: center
-   
+    align-items: center   
 `
 
 export const InputPressableContainer = styled.Pressable`
@@ -134,21 +132,16 @@ export const InputPressableContainer = styled.Pressable`
 `
 
 export const InputPriceRangeContainer = styled.View`
-    width: ${WIDTH*0.525}px;
-    height: ${HEIGHT*0.075}px;
     justify-content: flex-end;
     align-items: center
     flex-direction: row
-   
 `
 
 export const PriceRangeText = styled.Text`
    
     font-size: ${HEIGHT*0.0175}px;
-    color: ${PRIMARYGREY};
+    color: black
     font-weight: 500;
-    
-   
 `
 
 export const PriceInputSection = styled.View`
@@ -167,7 +160,10 @@ export const AmenitiesInputSection = styled.View`
 `
 
 export const IndividualAmenitiesContainer = styled.View`
-    
+    width: ${WIDTH*0.9}px
+    flex-direction: row
+    justify-content: space-between
+    padding-vertical: ${HEIGHT*0.01}px
 `
 export const DoneContainer = styled.View`
    
@@ -216,7 +212,7 @@ export const ReviewInfoText = styled.Text`
 `
 export const AmenitiesContainer = styled.Text`
     width: ${WIDTH*0.9}px;
-    
+    margin-top: ${HEIGHT*0.02}px
    
 `
 export const NameIcon = styled.Pressable`
@@ -227,16 +223,27 @@ export const DateInputPressable = styled.Pressable`
     width: ${WIDTH*0.9}px;
     height: ${HEIGHT*0.05}px
     border-radius: 10px;
-    background-color: ${EXTRALIGHT}
+    border-color: ${MEDIUMGREY}
+    border-width: 2px
     justify-content: center
     padding-left: ${WIDTH*0.025}px
+    margin-top: ${HEIGHT*0.02}px
+    margin-bottom: ${HEIGHT*0.02}px
+`
+
+export const DateText = styled.Text`
+    font-size: ${HEIGHT*0.0175}px;
+    font-weight: 400;
+    margin-left: ${WIDTH*0.025}px
+    color: black
 `
 
 export const Footer = styled.View`
     height: ${HEIGHT*0.1}px
     width: ${WIDTH}px
+    padding-horizontal: ${WIDTH*0.05}px
     backgroundColor: white
-    padding-horizontal: ${WIDTH*0.1}px
+    align-self: center
     flex-direction: row;
     justify-content: space-between;
     align-items: center
@@ -247,23 +254,27 @@ export const Footer = styled.View`
 
 export const ResetText = styled.Text`
     font-size: ${HEIGHT*0.02}px;
-    color: ${DARKGREY}
-    font-weight: 300
-    textDecorationLine: underline
+    color: black
+    font-weight: 500
 `
 
 export const ApplyButton = styled.Pressable`
-    width: ${WIDTH*0.35}px;
+    width: ${WIDTH*0.425}px;
     height: ${HEIGHT*0.06}px;
-    border-radius: 25px;
+    border-radius: 10px;
     background-color: ${PRIMARYCOLOR};
     justify-content: center;
     align-items: center
-    shadow-offset: 0 0
-    shadow-color: black;
-    shadow-radius: 5px;
-    shadow-opacity: 0.2;
-    elevation: 5
+    
+`
+export const ResetButtonContainer = styled.View`
+    width: ${WIDTH*0.425}px;
+    height: ${HEIGHT*0.06}px;
+    border-radius: 10px;
+    background-color: #f2f0f0
+    justify-content: center;
+    align-items: center
+    
 `
 
 export const ApplyText = styled.Text`

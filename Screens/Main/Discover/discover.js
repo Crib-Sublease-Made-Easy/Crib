@@ -50,7 +50,7 @@ import {
     MapContainer, 
     PreviewTopContainer, 
     PreviewBottomContainer,
-    PreviewPriceText, 
+    PreviewdetailsText, 
     PreviewLocationText, 
     SeachIconContainer,
     DeleteIconContainer, 
@@ -58,7 +58,9 @@ import {
     SearchHerePressable, 
     SearchHereText,
     FilterAppliedIconBackground,
-    NoFilterAppliedIconBackground
+    NoFilterAppliedIconBackground,
+    DatePriceContainer,
+    PreviewPriceText
 } from './discoverStyle';
 
 //Gesture Handler to control propertycard
@@ -537,9 +539,9 @@ export default function DiscoverScreen({navigation}){
 
                     {/* This is the container for the preview modal/card */}
                     <RNAnimated.View 
-                    style={{width:WIDTH*0.9, height: HEIGHT*0.275,backgroundColor:'white', borderRadius:25,
+                    style={{width:WIDTH*0.9, height: HEIGHT*0.3,backgroundColor:'white', borderRadius:15,
                     position:'absolute', bottom: HEIGHT*0.2 + bottomTabHeight, alignSelf:'center',shadowColor: 'black', shadowRadius: 5,
-                    shadowOpacity: 0.4, elevation: 5, display: propertyPreviewCard ? 'flex' : 'none',
+                    shadowOpacity: 0.4, elevation: 10, display: propertyPreviewCard ? 'flex' : 'none',
                     opacity: opacityTranslation.interpolate({
                         inputRange: [0, 1],
                         outputRange: [0, 1],
@@ -548,31 +550,43 @@ export default function DiscoverScreen({navigation}){
                         {selectedPin != undefined && selectedPin != "" &&
                         <Pressable disabled={loading}  hitSlop={WIDTH*0.05} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0]))})}}>
                             <PreviewTopContainer>
-                                <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
-                                borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
+                                <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:15, 
+                                borderTopRightRadius:15, backgroundColor: LIGHTGREY, }}/>
                             </PreviewTopContainer>
 
-                            <PreviewBottomContainer >
+                            <PreviewBottomContainer>
                                 <PreviewLocationText>{selectedPin.propertyInfo.loc.secondaryTxt}</PreviewLocationText>
-                                <PreviewPriceText>{
-                                        new Date(selectedPin.propertyInfo.availableFrom).toLocaleDateString() 
-                                        }  -  {
-                                        new Date(selectedPin.propertyInfo.availableTo).toLocaleDateString()}</PreviewPriceText>
+                                <PreviewdetailsText>{selectedPin.propertyInfo.bed} Bed  •  {selectedPin.propertyInfo.bath} Bath</PreviewdetailsText>
+                                <DatePriceContainer>
+                                    <PreviewdetailsText>
+                                        {
+                                            new Date(selectedPin.propertyInfo.availableFrom).toDateString().split(" ")[1] + " " +
+                                            new Date(selectedPin.propertyInfo.availableFrom).toDateString().split(" ")[3]
+                                        }  
+                                        {"  "}-{"  "}
+                                        {
+                                            new Date(selectedPin.propertyInfo.availableTo).toDateString().split(" ")[1] + " " +
+                                            new Date(selectedPin.propertyInfo.availableTo).toDateString().split(" ")[3]
+                                        }
+                                    </PreviewdetailsText>
+
+                                    <PreviewPriceText>${selectedPin.propertyInfo.price} / month</PreviewPriceText>
+
+                                </DatePriceContainer>
                                 
-                                <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
                             </ PreviewBottomContainer> 
                         </Pressable>
                         }
                         {/* {GetFAIcons("Close")} */}
                         <Pressable onPress={()=>closePreviewCard()} style={{position: 'absolute', right:WIDTH*0.025,
                             top: HEIGHT*0.015}}>
-                            <FontAwesomeIcon  hitSlop={WIDTH*0.05} icon={faCircleXmark} size={25}  color='white' />
+                            <Ionicons name='close-circle'  color='rgba(0,0,0,0.7)' size={30}/>
                         </Pressable>
                     </RNAnimated.View>
                 </MapContainer>
                     
                 {/* This sets the container of the search input */}
-                <SearchContainer  hitSlop={WIDTH*0.05}onPress={()=>setDiscoverSearchVisible(true)}>
+                <SearchContainer  onPress={()=>setDiscoverSearchVisible(true)}>
                     {/* The search icon on the search outlien */}
                     <SeachIconContainer>
                         <Ionicons name='search' size={20}  color={DARKGREY} />
@@ -583,7 +597,7 @@ export default function DiscoverScreen({navigation}){
                     <SearchContainerPlaceholderText numberOfLines={1}  locationQuery={locationQuery}> {locationQuery}</SearchContainerPlaceholderText>
 
                     {/* This is the icon for filters when locationquery is not empty  */}
-                    <DeleteIconContainer hitSlop={WIDTH*0.05} onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
+                    <DeleteIconContainer hitSlop={WIDTH*0.05} onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', alignItems: 'flex-end' }} >
                         {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) || !(dateCompare(new Date(1759190400000), new Date(filterAvailableTo))) || !(dateCompare(new Date(), new Date(filterAvailableFrom)))?
                         <FilterAppliedIconBackground>
                             <Ionicons name="options-sharp" size={20} />
