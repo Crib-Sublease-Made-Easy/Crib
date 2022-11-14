@@ -267,7 +267,7 @@ export const ApplyButton = styled.Pressable`
     align-items: center
     
 `
-export const ResetButtonContainer = styled.View`
+export const ResetButtonContainer = styled.Pressable`
     width: ${WIDTH*0.425}px;
     height: ${HEIGHT*0.06}px;
     border-radius: 10px;

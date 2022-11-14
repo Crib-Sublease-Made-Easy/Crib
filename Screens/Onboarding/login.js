@@ -19,7 +19,8 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { HEIGHT, WIDTH, ContinueButton, ContinueText, GetFAIconsInBlack } from '../../sharedUtils';
+import { HEIGHT, WIDTH, ContinueButton, ContinueText,
+EditPagesHeaderContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer, EditPageNameContainer} from '../../sharedUtils';
 
 import Lottie from 'lottie-react-native';
 
@@ -137,17 +138,17 @@ export default function LoginScreen({navigation, route}){
             <KeyboardAvoidingView 
            
             behavior='padding' style={{flex:1, backgroundColor:'white'}}>
-            <Header>
-                {route.backAgain? 
-                <Pressable onPress={()=> navigation.navigate("DiscoverTabs")} style={{flexDirection:'row', width: WIDTH*0.8, alignSelf:'center', justifyContent:'flex-end'}}>
-                    <Text style={{color: 'black', fontSize: HEIGHT*0.02, padding: WIDTH*0.02}}>Exit</Text>
-                </Pressable>
-                :
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
-                    {GetFAIconsInBlack("Back")}
-                </Pressable>
-                }
-            </Header>
+            <EditPagesHeaderContainer style={{borderBottomWidth: 0}}>
+                <EditPageBackButtonContainer>
+                    <Pressable  onPress={()=>navigation.goBack()}>
+                        <Ionicons name='arrow-back-outline' size={25} color='black'/>
+                    </Pressable>
+                </EditPageBackButtonContainer>
+                <EditPageNameContainer>
+                    
+                </EditPageNameContainer> 
+                <EditPageForwardButtonContainer/>
+            </EditPagesHeaderContainer>
                 
             <ProgressBarContainer>
 

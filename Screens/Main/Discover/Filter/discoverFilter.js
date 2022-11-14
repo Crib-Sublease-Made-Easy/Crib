@@ -251,7 +251,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                     onValuesChangeStart={()=> setscrollEnabled(false)}
                                     onValuesChangeFinish={()=> setscrollEnabled(true)}
                                     onSlidingComplete={(value)=> setfilterPriceHigher(value)}
-                                    thumbTintColor='black'
+                                    thumbTintColor='#bd9eff'
                                 
                                     minimumValue={0}
                                     maximumValue={10000}
@@ -345,6 +345,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                 onValuesChangeStart={()=> setscrollEnabled(false)}
                                 onValuesChangeFinish={()=> setscrollEnabled(true)}
                                 onSlidingComplete={(value)=> setfilterDistance(value)}
+                                thumbTintColor='#bd9eff'
                                 minimumValue={0}
                                 maximumValue={DEFAULTDISTANCE}
                                 step={5}

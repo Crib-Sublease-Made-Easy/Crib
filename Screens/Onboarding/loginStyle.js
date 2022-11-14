@@ -23,11 +23,15 @@ import { MEDIUMGREY } from '../../sharedUtils';
 
 
 export const Header = styled.View`
-  width: ${WIDTH*0.9}px
-  height: ${HEIGHT*0.065}px
-  justify-content: center;
-  align-items: flex-start;
-  align-self: center
+    width: ${WIDTH}px;
+    padding-vertical: ${HEIGHT*0.015}px
+    padding-horizontal: ${WIDTH*0.05}px
+    flex-direction: row;
+    border-bottom-width: 0.5px;
+    border-color: #E0E0E0
+    align-self:center
+    aling-items: center
+    justify-content: space-between
   
 `
 
