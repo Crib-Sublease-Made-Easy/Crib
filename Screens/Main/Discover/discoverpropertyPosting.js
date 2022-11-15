@@ -340,8 +340,13 @@ export default function PropertyPostingScreen({ navigation }) {
                 body: postingData,
             })
             .then((response) => response.json()).then( async data => {
-               
-                await EncryptedStorage.removeItem("postedProperty")
+                try{
+                    await EncryptedStorage.removeItem("postedProperty")
+                }
+                catch{
+                    
+                }
+                
                 setTimeout(()=>{
                     navigation.goBack()
                     setLoading(false)
