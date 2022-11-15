@@ -142,10 +142,7 @@ export default OTPInputField = ({setPinReady, code, setCode, maxLength}) => {
                 keyboardType="number-pad"
                 returnKeyType="done"
                 ref={textInputRef}
-                onBlur={handleBlur}
-                autoFocus
-                
-                
+                onBlur={handleBlur}            
             />
         </OTPInputSection>
     )

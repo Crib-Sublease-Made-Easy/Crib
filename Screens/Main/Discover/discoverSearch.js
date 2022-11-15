@@ -88,7 +88,7 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
           </CancelContainer>
 
           {/* Search Input that allows user to input query */}
-          <SearchContainer placeholderTextColor={DARKGREY} value={locationQuery} autoFocus placeholder="Search Location ..." onChangeText={(value)=>autocomplete(value)}
+          <SearchContainer placeholderTextColor={DARKGREY} value={locationQuery} placeholder="Search Location ..." onChangeText={(value)=>autocomplete(value)}
           onSubmitEditing={()=>{autocompleteLocation.length != 0 &&  pressAutocompleteItem(autocompleteLocation[0].description) }}
           />
 

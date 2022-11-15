@@ -107,7 +107,7 @@ export default function EditPropertyPriceScreen({navigation, route}){
     
         <RowContainer>
             <CategoryName>Property Price</CategoryName>
-            <PriceContainer autoFocus onChangeText={(value)=> setPropertyPrice(value)}  placeholder={"$" + route.params.price.toString()}
+            <PriceContainer  onChangeText={(value)=> setPropertyPrice(value)}  placeholder={"$" + route.params.price.toString()}
             value={formatPrice(propertyPrice)} placeholderTextColor='black' keyboardType='number-pad'/>
         </RowContainer>
         
