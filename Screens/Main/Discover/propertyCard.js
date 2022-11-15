@@ -321,7 +321,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
   <GestureDetector  gesture={gesture}>
     
       <Animated.View
-        style={[bottomSheetStyle,{width: WIDTH, height: HEIGHT*0.75, alignItems:'center', borderTopLeftRadius:25, 
+        style={[bottomSheetStyle,{width: WIDTH, height: HEIGHT*0.78, alignItems:'center', borderTopLeftRadius:25, 
         borderTopRightRadius:25,backgroundColor: 'white',
         shadowColor: 'black', shadowRadius: 15,shadowOffset: {width: 0, height: 0},  shadowOpacity: 0.2, elevation: 5,
       }]}>
