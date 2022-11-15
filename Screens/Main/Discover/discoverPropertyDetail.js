@@ -63,10 +63,11 @@ export default function PropertyDetailScreen({navigation, route}){
 
 
         //Check if the user is signed in or not
-        const rt  = EncryptedStorage.getItem("refressToken");
+        const rt  = await EncryptedStorage.getItem("refressToken");
 
+        //Check if user is signed in
         if(rt != null){
-
+            console.log("SBBBB", rt)
             var userIds = [USERID, propData.postedBy]
             sb.GroupChannel.createChannelWithUserIds(userIds, true, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
                 if (error) {

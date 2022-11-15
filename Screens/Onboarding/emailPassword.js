@@ -58,7 +58,7 @@ export default function EmailPasswordScreen({navigation, route}){
                     <Heading>Sign up</Heading>
                     <Image source={require('../../assets/passwordPic.jpg')} style={{ height: HEIGHT*0.2, width: HEIGHT*0.2, alignSelf: 'center'}}/>
                 </HeadingImageContainer>
-                <TextInput value={email} onChangeText={value => setEmail(value)} autoFocus={true} style={StandardInputStyle} placeholder='Email'></TextInput>
+                <TextInput value={email} onChangeText={value => setEmail(value)} style={StandardInputStyle} placeholder='Email'></TextInput>
                 <TextInput value={password} onChangeText={value => setPassword(value)} style={StandardInputStyle} placeholder='Password'></TextInput>
                 <TextInput value={confirmPassword} onChangeText={value=> setconfirmPassword(value)} style={StandardInputStyle} placeholder='Confirm Password'></TextInput>
                 <TouchableOpacity onPress={otp} style={StandardButtonStyle}> 

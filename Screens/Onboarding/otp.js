@@ -243,7 +243,7 @@ export default function OTPScreen({navigation, route}){
                     keyboardType = "number-pad"
                     maxLength={6}
                     onChangeText={(value) => setCode(value)}
-                    style={{width: WIDTH*0.8, height: HEIGHT*0.05, marginTop: HEIGHT*0.05, paddingLeft: WIDTH*0.025, backgroundColor: LIGHTGREY, alignSelf: 'center',}}>
+                    style={{width: WIDTH*0.8, paddingVertical: HEIGHT*0.01, marginTop: HEIGHT*0.05, paddingLeft: WIDTH*0.025, backgroundColor: LIGHTGREY, alignSelf: 'center',}}>
 
                     </TextInput>
                     <Pressable onPress={()=>setSMSErrorModal(true)}>
