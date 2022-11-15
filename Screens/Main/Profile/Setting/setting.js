@@ -15,10 +15,12 @@ import {GetFAIconWithColor, EditPagesHeaderContainer, EditPageNameContainer, Edi
 import OneSignal from 'react-native-onesignal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont() 
-import { HeaderContainer, BackButtonContainer, NameContainer, Header,ResetButtonContainer, CategoryContainer, CategoryName,
-      RowContainer, RowName, RowValueContainer, RowValueText } from './settingStyle';
+import {Header, CategoryContainer, CategoryName,
+      RowContainer, RowName, RowValueContainer, RowValueText, UpgradeContainer, UpgradeContainerLeft, UpgradeContainerRight, UpgradeContainerHeader, UpgradeContainerSubheader } from './settingStyle';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 FontAwesome.loadFont()
 
 export default function SettingScreen({navigation, route}){
@@ -126,7 +128,7 @@ export default function SettingScreen({navigation, route}){
 
   return(
     <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
-      <EditPagesHeaderContainer>
+      <EditPagesHeaderContainer style={{borderBottomWidth: 0}}>
           <EditPageBackButtonContainer>
               <Pressable onPress={()=> navigation.goBack()} >
                   <Ionicons name='arrow-back-outline' size={25} color='black'/>
@@ -140,24 +142,66 @@ export default function SettingScreen({navigation, route}){
           </EditPageForwardButtonContainer>
       </EditPagesHeaderContainer>
 
+      <UpgradeContainer>
+        <UpgradeContainerLeft>
+          <Ionicons name='cog-outline' size={40} color='black'/>
+        </UpgradeContainerLeft>
+        <UpgradeContainerRight>
+            <UpgradeContainerHeader>Upgrade to premium</UpgradeContainerHeader>
+            <UpgradeContainerSubheader>
+              Post more than
+              one property and use advanced filtered!
+            </UpgradeContainerSubheader>
+        </UpgradeContainerRight>
+      </UpgradeContainer>
+
+      
+
+
         
-        <CategoryContainer>
-          <CategoryName>Account Information</CategoryName>
-        </CategoryContainer>
         {/* Phone number press to change */}
         <RowContainer>
-          <RowName>Phone Number</RowName>
-          <RowValueContainer>
-            <RowValueText>+1 {userData.phoneNumber}</RowValueText>
-          </RowValueContainer>
+          <Ionicons name='share' size={22} color='black'/>
+          <RowName>Share Crib</RowName>
+        </RowContainer>
+        <RowContainer style={{borderBottomWidth: 0}}>
+          <Ionicons name='home' size={22} color='black'/>
+          <RowName>List property</RowName>
+        </RowContainer>
+        <RowContainer style={{borderBottomWidth: 0}}>
+          <Ionicons name='search' size={22} color='black'/>
+          <RowName>View posted property</RowName>
         </RowContainer>
         <RowContainer>
-          <RowName>Email</RowName>
-          <RowValueContainer onPress={()=>navigation.navigate("ChangeEmail", {email: userData.email})}>
-            <RowValueText>{userData.email}</RowValueText>
-            {/* {GetFAIconWithColor("ArrowRight", 'black')} */}
-          </RowValueContainer>
+          <Ionicons name='heart' size={22} color='black'/>
+          <RowName>Favorite property</RowName>
         </RowContainer>
+        <RowContainer>
+          <Ionicons name='person' size={22} color='black'/>
+          <RowName>My profile</RowName>
+        </RowContainer>
+        <RowContainer>
+          <Ionicons name='newspaper' size={22} color='black'/>
+          <RowName>Notification</RowName>
+        </RowContainer>
+        <RowContainer style={{borderBottomWidth: 0}}  onPress={() => navigation.navigate('TermsAndService')}>
+          <Ionicons name='bookmarks' size={22} color='black'/>
+          <RowName>Terms and services</RowName>
+        </RowContainer>
+        <RowContainer style={{borderBottomWidth: 0}} onPress={() => navigation.navigate('Privacy')}>
+          <Ionicons name='shield' size={22} color='black'/>
+          <RowName>Terms and services</RowName>
+        </RowContainer>
+        <RowContainer>
+          <Ionicons name='mail' size={22} color='black' onPress={()=> navigation.navigate("ContactUs", {email: userData.email})}/>
+          <RowName>Contact us</RowName>
+        </RowContainer>
+        <RowContainer style={{borderBottomWidth: 0}} onPress={logoutAlert}>
+          <Ionicons name='ellipsis-vertical' size={22} color='black'/>
+          <RowName>Logout</RowName>
+        </RowContainer>
+
+        
 
         {/* Notification settings */}
         {/* <CategoryContainer>
@@ -170,30 +214,6 @@ export default function SettingScreen({navigation, route}){
           </Pressable>
         </RowContainer> */}
       
-
-        <CategoryContainer>
-          <CategoryName>General</CategoryName>
-        </CategoryContainer>
-        
-        <RowContainer  onPress={() => navigation.navigate('TermsAndService')}>
-          <RowName>Terms and Services</RowName>
-          {GetFAIconWithColor("ArrowRight", "black")}
-        </RowContainer>
-        <RowContainer onPress={() => navigation.navigate('Privacy')}>
-          <RowName>Privacy</RowName>
-          {GetFAIconWithColor("ArrowRight", "black")}
-        </RowContainer>
-        <RowContainer onPress={()=> navigation.navigate("ContactUs", {email: userData.email})}>
-          <RowName>Contact Us</RowName>
-          {GetFAIconWithColor("ArrowRight", "black")}
-        </RowContainer>
-        
-        <CategoryContainer>
-          <TouchableOpacity onPress={logoutAlert}>
-          <CategoryName style={{color:'red'}}>Logout</CategoryName>
-          </TouchableOpacity>
-        </CategoryContainer>
-  
     </SafeAreaView>
   )
 }

@@ -317,7 +317,7 @@ export default function PropertyDetailScreen({navigation, route}){
 
             {/* Section for amenities  */}
             <Section>
-                <Subheading>Amenities ({propData.amenities.length})</Subheading>
+                <Subheading>Amenities ({propData.amenities.length == 0 ? null : propData.amenities.length})</Subheading>
                 <AmenitiesContainer>
                     {propData.amenities.length != 0 ? 
                     propData.amenities.map((value)=>(
