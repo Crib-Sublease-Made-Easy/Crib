@@ -44,7 +44,7 @@ export const PlaceholderLogoTextContainer  = styled.Text`
 `
 
 export const SearchContainer = styled.Pressable`
-  height: ${HEIGHT*0.065}px
+  padding-vertical: ${HEIGHT*0.01}px
   width: ${WIDTH*0.9}px
   shadowColor: black
   shadowRadius: 10px
