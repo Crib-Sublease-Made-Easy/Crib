@@ -195,20 +195,11 @@ export default function Login_OTP({navigation, route}){
                     </HeadingImageContainer>
                     <InputFollowUpContainer>
                     
-                    {/* <OTPInputField
-                        onPress={()=>Keyboard.emit()}
-                        setPinReady={pinReady}
-                        code={code}
-                        keypad="none"
-                        setCode={setCode}
-                        autoFocus
-                        maxLength={MAX_CODE_LENGTH}
-                    /> */}
                     <TextInput 
                     keyboardType = "number-pad"
                     maxLength={6}
                     onChangeText={(value) => setCode(value)}
-                    style={{width: WIDTH*0.8, height: HEIGHT*0.05, backgroundColor: LIGHTGREY, alignSelf: 'center', paddingLeft: WIDTH*0.025413}}>
+                    style={{width: WIDTH*0.8, paddingVertical: HEIGHT*0.01, backgroundColor: LIGHTGREY, alignSelf: 'center', paddingLeft: WIDTH*0.025413}}>
 
                     </TextInput>
                     <Pressable onPress={()=>setSMSErrorModal(true)}>
