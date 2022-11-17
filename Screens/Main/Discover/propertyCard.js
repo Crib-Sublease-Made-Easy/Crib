@@ -16,6 +16,7 @@ import {
     ActivityIndicator,
     Pressable,
     Animated as RNAnimated,
+    FlatList
     
   } from 'react-native';
 
@@ -32,7 +33,7 @@ Ionicons.loadFont()
 
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, runOnJS, FadeIn, Layout,  FadeInUp, SlideInLeft, Easing, interpolate,} from 'react-native-reanimated';
 
-import { FlatList, Gesture, GestureDetector, TouchableOpacity,  } from 'react-native-gesture-handler';
+import {Gesture, GestureDetector, TouchableOpacity,  } from 'react-native-gesture-handler';
 
 import Lottie from 'lottie-react-native';
 
@@ -265,7 +266,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     const renderCards = (data, index) =>{
 
         return(
-        
+         
           <RNAnimated.View 
           style={{opacity: flatListItemOpacity.interpolate({
             inputRange:[0,1],
@@ -341,8 +342,8 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         {/* {flatlistRefreshing ?
         <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />
         : */
-        filteredPropertiesData.length != 0 ?
-       
+        filteredPropertiesData.length != 0 && filteredPropertiesData != undefined ?
+        
           <FlatList
           onEndReachedThreshold = {0.4}
           ItemSeparatorComponent={() => {
@@ -375,6 +376,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
           keyExtractor={(item, index) => String(index)}
           renderItem={(item, index)=>renderCards(item, index)}
           />
+         
          
           :
           loading ?

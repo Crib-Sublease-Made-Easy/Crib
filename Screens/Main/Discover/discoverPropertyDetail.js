@@ -61,9 +61,10 @@ export default function PropertyDetailScreen({navigation, route}){
     const createConversation = async () =>{
 
         //Check if the user is signed in or not
-        const rt  = SecureStorage.getItem("refressToken");
-
-        if(rt != null){
+        const rt  = await SecureStorage.getItem("refressToken");
+        
+        console.log( rt);
+        if(rt != null || rt != undefined){
 
             var userIds = [USERID, propData.postedBy]
             sb.GroupChannel.createChannelWithUserIds(userIds, true, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
