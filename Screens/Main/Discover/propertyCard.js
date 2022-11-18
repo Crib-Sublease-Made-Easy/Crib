@@ -42,19 +42,19 @@ import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, ROBOTOFONTFAMILY, EXTRA
 import { SystemMessage } from 'react-native-gifted-chat';
 
 const CardContainer = styled(Pressable)`
-  width: ${WIDTH*0.9}px
-  align-self: center;
-  border-radius: 15px;
-  padding-vertical: ${HEIGHT*0.01}px
+width: ${WIDTH*0.9}px
+height: ${WIDTH}px
+align-self: center;
+border-radius: 15px;
 `
 
 
 const PropertyInfoContainer = styled.View`
-  width: ${WIDTH*0.875}px;
-  justify-content:space-around
+  width: ${WIDTH*0.9}px;
+  height: ${WIDTH*0.2}px;
+  padding-top: ${HEIGHT*0.01}px
   align-self: center
-  padding-top: ${HEIGHT*0.01}px;
-  padding-left: ${WIDTH*0.001}px
+  justify-content: space-around
   
 `
 
@@ -65,30 +65,36 @@ const LocationAndPrice = styled.View`
 `
 
 const LocationFont = styled.Text`
-  font-size: ${HEIGHT*0.0175}px;
+  font-size: ${HEIGHT*0.017}px;
   font-weight: 600;
-  max-width: ${WIDTH*0.5}px
-  font-family: ${ROBOTOFONTFAMILY}
+  color: black
 
-  
 `
 const DateFont = styled.Text`
-    margin-top: ${HEIGHT*0.01}px;
-    font-size: ${HEIGHT*0.0155}px;
-    font-weight: 400;
-    font-family: ${ROBOTOFONTFAMILY}
-
-  
-   
+font-size: ${HEIGHT*0.0155}px;
+font-weight: 400;
+font-family: ${ROBOTOFONTFAMILY}
+color: black  
 `
+
+const DatePriceContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  width: ${WIDTH*0.9}px
+  align-items: center
+`
+const BedBathNumberText = styled.Text`
+  font-size: ${HEIGHT*0.0155}px;
+  font-weight: 400;
+  color: black
+`
+
 const PriceFont = styled.Text`
   max-width: ${WIDTH*0.3}px
   justify-content: center;
   font-size: ${HEIGHT*0.0175}px;
   color: black
-  font-weight: 500;
-  font-family: ${ROBOTOFONTFAMILY}
-
+  font-weight: 600;
 `
 
 const PropertyImageContainer = styled.View`
@@ -98,9 +104,9 @@ const PropertyImageContainer = styled.View`
 `
 
 const OpenMapIconContainer = styled.Pressable`
-  height: ${HEIGHT*0.05}px;
-  width: ${HEIGHT*0.05}px;
-  border-radius: ${HEIGHT*0.025}px;
+  height: ${HEIGHT*0.06}px;
+  width: ${HEIGHT*0.06}px;
+  border-radius: ${HEIGHT*0.03}px;
   background-color: rgba(0,0,0,0.8);
   bottom: ${HEIGHT*0.02}px;
   right: ${WIDTH*0.05}px;
@@ -110,12 +116,13 @@ const OpenMapIconContainer = styled.Pressable`
 `
 
 const DragGreyLineContainer = styled.View`
-  
+  height: ${HEIGHT*0.07}px
   width: ${WIDTH}px;
   align-items: center
-  background-color:red
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
+  justify-content: center
+  background-color: white
 `  
 // const DragGreyLine = styled.View`
 //   height: ${HEIGHT*0.004}px;
@@ -146,6 +153,12 @@ const DefaultPostFavText = styled.Text`
     width: ${WIDTH*0.6}px
     text-align: center
 `
+const NumberOfPropertiesText = styled.Text`
+  font-size: ${HEIGHT*0.015}px;
+  font-weight: 600
+  color: black
+`
+
 
 export default function PropertyCard({navigation, setSelectedPin, loadMoreProperties,
     filteredPropertiesData, flatlistRefreshing, length, moveMap, openPreviewCard, userId,
@@ -161,10 +174,10 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     useEffect(()=>{
      
       if(searching){
-        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:15})
+        translateY.value = withSpring(HEIGHT*0.68, {stiffness: 70, mass: 0.3, damping:15})
       }
       if(flatlistRefreshing){
-        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
+        translateY.value = withSpring(0, {stiffness: 50, mass: 0.3, damping:15})
         // flatlistRef.current.scrollToIndex({index:0})
       }
      
@@ -182,27 +195,27 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     }).onUpdate((event)=>{
     translateY.value = event.translationY + context.value.y
     
-    translateY.value = Math.max(translateY.value, -HEIGHT*0.005);
+    translateY.value = Math.max(translateY.value, 0);
 
     velocityY.value = event.velocityY;
 
    
     }).onEnd(()=>{
     //console.log(velocityY.value)
-    if(translateY.value  < HEIGHT*0.35){
-      if(Math.abs(velocityY.value) > 1500){
-        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:10})
+    if(translateY.value  < HEIGHT*0.3){
+      if(Math.abs(velocityY.value) > 500){
+        translateY.value = withSpring(HEIGHT*0.68, {stiffness: 70, mass: 0.3, damping:10})
       }
       else{
-        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
+        translateY.value = withSpring(0, {stiffness: 50, mass: 0.3, damping:15})
       }       
     }
     else{
-      if(Math.abs(velocityY.value) > 1750){
-        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 70, mass: 0.3, damping:10})
+      if(Math.abs(velocityY.value) > 1000){
+        translateY.value = withSpring(0, {stiffness: 70, mass: 0.3, damping:10})
       }
       else{
-        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:15})
+        translateY.value = withSpring(HEIGHT*0.68, {stiffness: 70, mass: 0.3, damping:15})
       }
     }
 
@@ -245,79 +258,66 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     })
 
     function MoveMapToPin(pinInfo){
-   
-        setSelectedPin(pinInfo)
+        console.log(pinInfo)
+       
         openPreviewCard()
         moveMap(pinInfo.propertyInfo.loc.coordinates[1] - 0.015,pinInfo.propertyInfo.loc.coordinates[0])
-        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 50, mass: 0.3, damping:15})
+        translateY.value = withSpring(HEIGHT*0.68, {stiffness: 50, mass: 0.3, damping:15})
     }
-
-    function toogleCard(){
-      if(translateY.value > HEIGHT*0.5){
-
-        translateY.value = withSpring(-HEIGHT*0.005, {stiffness: 50, mass: 0.3, damping:15})
-      }
-      else{
-        translateY.value = withSpring(HEIGHT*0.67, {stiffness: 70, mass: 0.3, damping:15})
-      }
-    }
-  
 
     const renderCards = (data, index) =>{
+      return(
+        <RNAnimated.View 
+        style={{opacity: flatListItemOpacity.interpolate({
+          inputRange:[0,1],
+          outputRange:[0,1]
+        })}}>
+          <CardContainer
+          onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId, incrementViewCount : true, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0])), currentLocation: currentLocation})} >
+              
+            <PropertyImageContainer>
+              <FastImage  
+              source={{
+                uri: data.item.propertyInfo.imgList[0],
+                priority: FastImage.priority.high,
+              }}  
+              style={{width:WIDTH*0.9, height:WIDTH*0.8, borderRadius:15, backgroundColor:LIGHTGREY,
+              opacity: 1,
+              }}
+              />
+              
+              <OpenMapIconContainer hitSlop={WIDTH*0.05} onPress={()=>{MoveMapToPin(data.item), setSelectedPin(data.item)}}>
+                  <FontAwesome name='location-arrow' size={20} color='white'/>
+              </OpenMapIconContainer>
+            </PropertyImageContainer>
+              
+            <PropertyInfoContainer>
+              <LocationFont numberOfLines={1}>{data.item.propertyInfo.type} in {data.item.propertyInfo.loc.secondaryTxt}</LocationFont>
+              <DatePriceContainer>
+                <BedBathNumberText numberOfLines={1}>{data.item.propertyInfo.bed} Bed   {data.item.propertyInfo.bath} Bath</BedBathNumberText>
+              </DatePriceContainer>
+              
+              <DatePriceContainer>
+                <DateFont numberOfLines={1}>
+                  {
+                  // "Flexible  " +   
+                  new Date(data.item.propertyInfo.availableFrom).toDateString().split(" ")[1] + " " +
+                  new Date(data.item.propertyInfo.availableFrom).toDateString().split(" ")[2] + " " +
+                  new Date(data.item.propertyInfo.availableFrom).getFullYear()
+                  }  -  {
+                  new Date(data.item.propertyInfo.availableTo).toDateString().split(" ")[1] + " " +
+                  new Date(data.item.propertyInfo.availableTo).toDateString().split(" ")[2] + " " +
+                  new Date(data.item.propertyInfo.availableTo).getFullYear()
+                  }
+                </DateFont>
+                <PriceFont numberOfLines={1}>${data.item.propertyInfo.price} / month</PriceFont>
 
-        return(
-         
-          <RNAnimated.View 
-          style={{opacity: flatListItemOpacity.interpolate({
-            inputRange:[0,1],
-            outputRange:[0,1]
-          })}}>
-            <CardContainer hitSlop={WIDTH*0.05}
-            onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId, incrementViewCount : true, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0])), currentLocation: currentLocation})} >
-               
-              <PropertyImageContainer >
-                <FastImage  
-                source={{
-                  uri: data.item.propertyInfo.imgList[0],
-                  priority: FastImage.priority.high,
-                }} 
-                style={{width:WIDTH*0.9, height:WIDTH*0.6, borderRadius:15, backgroundColor:LIGHTGREY,
-                opacity: 1,
-                }}
-                />
-                
-                  <OpenMapIconContainer hitSlop={WIDTH*0.05} onPress={()=>MoveMapToPin(data.item)}>
-                      <FontAwesome name='location-arrow' size={HEIGHT*0.02} color='white'/>
-                  </OpenMapIconContainer>
-              </PropertyImageContainer>
-               
-                <PropertyInfoContainer>
-                   
-                  <LocationAndPrice>
-                  
-                    <LocationFont>{data.item.propertyInfo.loc.secondaryTxt}</LocationFont>
-                    
-                    <PriceFont>${data.item.propertyInfo.price} / month</PriceFont>
-                  </LocationAndPrice>
-                  <DateFont>{new Date(data.item.propertyInfo.availableFrom).getDate() + " " +
-                            new Date(data.item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) + " " + 
-                            new Date(data.item.propertyInfo.availableFrom).getFullYear()
-                            }  -  {new Date(data.item.propertyInfo.availableTo).getDate() + " " +
-                            new Date(data.item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })+ " " + 
-                            new Date(data.item.propertyInfo.availableTo).getFullYear()}
-                            </DateFont>
-                          
-                  <DateFont>{Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0]))} miles away</DateFont>
+              </DatePriceContainer>
+            </PropertyInfoContainer>   
             
-                </PropertyInfoContainer>   
-              
-                    <View style={{backgroundColor:'white'}}></View>
-              
-            </CardContainer>
-          </RNAnimated.View>
-         
-         
-        )
+          </CardContainer>
+        </RNAnimated.View>
+      )
     }
 
     
@@ -326,18 +326,14 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
   <GestureDetector  gesture={gesture}>
     
       <Animated.View
-        style={[bottomSheetStyle,{width: WIDTH, height: HEIGHT*0.75, alignItems:'center', borderTopLeftRadius:25, 
+        style={[bottomSheetStyle,{width: WIDTH, height: HEIGHT*0.75,  position:'absolute', bottom: 0, alignItems:'center', borderTopLeftRadius:25, 
         borderTopRightRadius:25,backgroundColor: 'white',
-        shadowColor: 'black', shadowRadius: 15,shadowOffset: {width: 0, height: 0},  shadowOpacity: 0.2, elevation: 5,
+        shadowColor: 'black', shadowRadius: 15,shadowOffset: {width: 0, height: 0},  shadowOpacity: 0.2, elevation: 5, alignSelf:'baseline'
       }]}>
         <DragGreyLineContainer>
-          
-          <TopBarSlider>
-            <Pressable hitSlop={WIDTH*0.05} onPress={toogleCard}
-            style={{paddingVertical: HEIGHT*0.005, paddingHorizontal: WIDTH*0.05, backgroundColor: EXTRALIGHT, borderRadius:20}}>
-              <Ionicons name='map' size={25} color={PRIMARYCOLOR}/>
-            </Pressable>
-          </TopBarSlider>
+          <NumberOfPropertiesText>
+            Search result
+          </NumberOfPropertiesText>
         </DragGreyLineContainer>
         {/* {flatlistRefreshing ?
         <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />

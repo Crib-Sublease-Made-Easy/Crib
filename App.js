@@ -174,7 +174,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       } 
       else{
         onChat = false
-        // disconnectSendbird()
+        disconnectSendbird()
       }
 
       appState.current = nextAppState;

@@ -5,7 +5,8 @@ import {
     View,
     Dimensions,
     Image,
-    Animated as RNAnimated
+    Animated as RNAnimated,
+    SafeAreaView
 } from 'react-native';
 
 import FastImage from 'react-native-fast-image'
@@ -19,20 +20,23 @@ import {UserContext} from '../../../UserContext'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { Container, PropertyDescription, CardSectionOne, CardTitle, LocationDistanceContainer,
-        LocationText, BedAndBathContainer, CardSectionTwo, InfoHeaderText,
-            InfoContainer, InfoText, AmenitiesItem, Footer,
+import { Section, TypeLocationContainer, TypeLocationFavoriteContainer ,CardSectionOne, CardTitle, LocationDistanceContainer,
+        LocationText, FavoriteContainer ,CardSectionTwo, InfoHeaderText,
+            InfoContainer, InfoText, AmenitiesItem, Footer,Subheading,
             PricePerMonth, ContactTanentButton, TenantInfoContainer, TenantInfo, ProfileImageContainer,
            DateContainer, DateText, DescriptionContainer, AmenitiesText, TypeText, BedContainer,
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
-           StickyHeaderContainer,  StickyHeaderIcon} from './discoverPDStyle'
+           StickyHeaderContainer,  StickyHeaderIcon, BedBathDateContainer, BedBathText, DescriptionText, DistanceText, RowContainer, TenantInformationContainer, TenantProfileImageContainr, TenantNameScollOccupationContainer, AmenitiesContainer} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY } from '../../../sharedUtils';
+import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY, MEDIUMGREY, DARKGREY } from '../../../sharedUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBath, faBed, faEye, faFire, faFireFlameCurved, faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
 
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
+
+import Lottie from 'lottie-react-native';
+
 
 
 
@@ -223,26 +227,27 @@ export default function PropertyDetailScreen({navigation, route}){
       }
 
     return(
-       
-        <Container>             
-            <PropertyDescription>
-    
-                <ScrollView 
-                showsVerticalScrollIndicator={false} 
-                bouncesZoom={1}
-                scrollEventThrottle={5}
-                >
-                    {/* <Lottie source={require('../../../ImageLoading.json')} autoPlay loop={2}  style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/> */}
+        <View style={{flex: 1}}>
+            <ScrollView 
+            showsVerticalScrollIndicator={false} 
+            bouncesZoom={1}
+            scrollEventThrottle={5}
+            >
+                <Lottie source={require('../../../ImageLoading.json')} autoPlay   style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/>
 
-                    <View style={{height:HEIGHT*0.35, width:WIDTH}}>
-                        <FlatList 
+                <View style={{height:HEIGHT*0.35, width:WIDTH}}>
+                    <FlatList 
                         onScroll={onScroll}
                         horizontal 
+                        snapToAlignment="center"
+                        decelerationRate={"fast"}
+                        showsHorizontalScrollIndicator={false}
+                        bounces={false}
+                        snapToInterval={WIDTH}
                         style={{position:'absolute', width:WIDTH, height:HEIGHT*0.35, overflow:'hidden'}}
                         data={route.params.data.propertyInfo.imgList}
                         ref={flatListRef}
                         renderItem={({item})=>(
-                           
                             <View style={{width:WIDTH, height:HEIGHT*0.35,justifyContent:'center'}}>
                                 <FastImage 
                                 source={{
@@ -253,213 +258,124 @@ export default function PropertyDetailScreen({navigation, route}){
                                 }}/>
                             </View>
                         )}
-                        snapToAlignment="center"
-                        decelerationRate={"fast"}
-                        showsHorizontalScrollIndicator={false}
-                        bounces={false}
-                        snapToInterval={WIDTH}
+                    />
                         
-                        />
-                            
-                            {/* <Image style={ImageStyle} source={{uri: data.imgList[0]}}/> */}
-                        <View style={{width: WIDTH, height: HEIGHT*0.02, position:'absolute', bottom:HEIGHT*0.03, flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
-                            {propData.imgList.map((data, index)=>(
-                                <View key={"img"+ index} style={{marginLeft:WIDTH*0.02, marginRight:WIDTH*0.02, height:HEIGHT*0.012, width:HEIGHT*0.012, 
-                                borderRadius:HEIGHT*0.006,backgroundColor: flatlistIndex == index ? PRIMARYCOLOR : 'white' }}>
-                                </View>
-                            ))
-
-                            }
-
-                        </View>
-
-
-                        
-                    </View>
-                    
-                    <CardSectionOne>
-                        <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                            <TypeText>{propData.type} for rent</TypeText>
-                            {route.params.distance != undefined &&
-                            <View style={{flexDirection:'row'}}>   
-                                <Ionicons name="location"  size={20} style={{marginRight:WIDTH*0.01}}/>
-                                <TypeText style={{color:'black', fontWeight: '500',}}>{route.params.distance} miles</TypeText>
+                    {/* <Image style={ImageStyle} source={{uri: data.imgList[0]}}/> */}
+                    <View style={{width: WIDTH, height: HEIGHT*0.02, position:'absolute', bottom:HEIGHT*0.03, flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+                        {propData.imgList.map((data, index)=>(
+                            <View key={"img"+ index} style={{marginLeft:WIDTH*0.02, marginRight:WIDTH*0.02, height:HEIGHT*0.012, width:HEIGHT*0.012, 
+                            borderRadius:HEIGHT*0.006,backgroundColor: flatlistIndex == index ? PRIMARYCOLOR : 'white' }}>
                             </View>
+                        ))}
+                    </View>
+                </View>
+                    
+                <Section>
+                    <TypeLocationFavoriteContainer>
+                        <TypeLocationContainer>
+                            <CardTitle>{propData.type} for rent</CardTitle>
+                            <LocationText>{propData.loc.secondaryTxt}  •  UW - Madison</LocationText>
+                        </TypeLocationContainer>
+
+                        <FavoriteContainer>
+                        { !ownProperty &&
+                            <Ionicons  name="heart" size={30} color={ liked ? '#ee88a6' : DARKGREY}
+                            onPress={likeProperty}/>
                         }
-                       </View>
-                        <CardTitle>{propData.loc.streetAddr}</CardTitle>
-                        <LocationDistanceContainer>
-                            <LocationText>{propData.loc.secondaryTxt}</LocationText>
-                        </LocationDistanceContainer>
+                        </FavoriteContainer>
+                    </TypeLocationFavoriteContainer>
 
-                        <BedAndBathContainer>
-                            <BedContainer>
-                                <BedTopContainer>
-                              
-                                <FontAwesomeIcon icon={faBed} size={30}/>
-                                
-                                    {/* <BedNumberText>{propData.bed.replace("P","+")}</BedNumberText> */}
-                                </BedTopContainer>
-                                {propData.bed == "Studio" ?
-                                    <BedroomNameText>Studio</BedroomNameText>
-                                    :
-                                    <BedroomNameText>{propData.bed.replace("P","+")} Bedroom</BedroomNameText>
-                                }
-                            </BedContainer>
-                            <BedContainer>
-                                <BedTopContainer>
-                                    <FontAwesomeIcon icon={faBath} size={30}/>
-                                    {/* <BedNumberText>{propData.bath.replace("P","+")}</BedNumberText> */}
-                                </BedTopContainer>
-                                <BedroomNameText>{propData.bath.replace("P","+")} Bathroom</BedroomNameText>
-                            </BedContainer>
-                            <BedContainer>
-                                <BedTopContainer>
-                                <FontAwesomeIcon icon={faFireFlameSimple} size={30}/>
-                                    {/* <BedNumberText>
-                                    {
-                                    propData.numberOfViews < 1000 ?
-                                    propData.numberOfViews 
-                                    :
-                                    Math.round(propData.numberOfViews/1000) + "K"
-                                    }
-                                    </BedNumberText> */}
-                                </BedTopContainer>
-                                <BedroomNameText>{
-                                    propData.numberOfViews < 1000 ?
-                                    propData.numberOfViews 
-                                    :
-                                    Math.round(propData.numberOfViews/1000) + "K"
-                                    } Views</BedroomNameText>
-                            </BedContainer>
-                          
-                        </BedAndBathContainer>
-                    </CardSectionOne>   
-                    <CardSectionOne>   
-                    <InfoHeaderText>Description</InfoHeaderText>
-                        <DescriptionContainer>
-                        
-                            {propData.description}
-                        
-                        </DescriptionContainer>
-                    </CardSectionOne>
-                    <CardSectionTwo>
-                     
-                        <InfoHeaderText>Availability</InfoHeaderText>
-                        <InfoContainer> 
-                            <DateContainer>
-                                <Ionicons name='calendar' size={20} />
-                                <DateText style={{color:'black', marginLeft: WIDTH*0.025, width: WIDTH*0.15 }}>From    </DateText>
-                                <DateText>{new Date(propData.availableFrom).toDateString()}</DateText>
-                            </DateContainer>
-                            <DateContainer>
-                                <Ionicons name='calendar' size={20} />
-                                <DateText style={{color:'black', marginLeft: WIDTH*0.025,width: WIDTH*0.15 }}>To   </DateText>
-                                <DateText>{new Date(propData.availableTo).toDateString()}</DateText>
-                            </DateContainer>
-                                
-                        </InfoContainer>
-                       
-                    </CardSectionTwo>
+                    {/* Container that contains the bed and bath count also the date */}
+                    <BedBathDateContainer>
+                        <BedBathText>{propData.bed} Bed  •  {propData.bath} Bath</BedBathText>
+                        <BedBathText>
+                            {new Date(propData.availableFrom).toDateString().split(" ")[1]} {new Date(propData.availableFrom).toDateString().split(" ")[3] + "  "} -  
+                            {"  " + new Date(propData.availableTo).toDateString().split(" ")[1]} {new Date(propData.availableTo).toDateString().split(" ")[3]}
+                        </BedBathText>
+                    </BedBathDateContainer>
 
-                    <CardSectionTwo>
-                        <InfoHeaderTextAndCenter>
-                            <InfoHeaderText>Location</InfoHeaderText>
-                            {/* <View style={{flexDirection:'row', alignItems:'flex-start', justifyContent:'center'}}>
-                                <Ionicons name="locate" size={20} />
-                                <Text>Center</Text>
-                            </View> */}
-                        </InfoHeaderTextAndCenter>
-                        <View style={{width: WIDTH*0.9, height: HEIGHT*0.25, borderRadius:25, marginTop: HEIGHT*0.025 }}>
-                        <MapView
-                            scrollEnabled={false}
-                            zoomEnabled={false}
-                            rotateEnabled={false}
-                            style={{flex:1, position:'relative', borderRadius:10}}
-                            initialRegion={{
-                            latitude: route.params.currentLocation == undefined ? propData.loc.coordinates[1] : (propData.loc.coordinates[1] +route.params.currentLocation[0])/2, 
-                            longitude: route.params.currentLocation == undefined ? propData.loc.coordinates[0] : (propData.loc.coordinates[0]+ route.params.currentLocation[1]) /2,
-                            latitudeDelta: route.params.currentLocation == undefined ? 0.03 : getMapView(propData.loc.coordinates[1], propData.loc.coordinates[0], route.params.currentLocation[0], route.params.currentLocation[1]),
-                            longitudeDelta: route.params.currentLocation == undefined ? 0.03 : getMapView(propData.loc.coordinates[1], propData.loc.coordinates[0], route.params.currentLocation[0], route.params.currentLocation[1])
-                            }}
-                        >
-                            <Marker
-                            pinColor='green'
-                            title='Destination'
-                            coordinate={{latitude: propData.loc.coordinates[1], longitude: propData.loc.coordinates[0]}}
-                            ></Marker>
-                            {route.params.currentLocation != undefined &&
-                            <Marker
-                            title='Search Location'
-                            coordinate={{latitude: route.params.currentLocation[0], longitude: route.params.currentLocation[1]}}
-                            ></Marker>
+                    {propData.description == "" ?
+                        null
+                    :
+                    <View style={{ marginTop: HEIGHT*0.03}}>
+                        <Subheading>Description</Subheading>
+                        <DescriptionText>{propData.description}</DescriptionText>
+                    </View>
+                    }
+                </Section>   
+
+                {/* This section shows the distance from searched location and the show on map pressable */}
+                <Section>
+                    <Subheading>Sublease details</Subheading>
+                    <RowContainer>
+                        <Ionicons  name="pin" size={20} color='black' style={{paddingRight: WIDTH*0.02}}></Ionicons>
+                        <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>3 miles</DistanceText> away from search location</DistanceText>
+                    </RowContainer>
+                </Section>
+
+                {/* This is the tenant information. Seperated to left and right */}
+                <Section>
+                    <Subheading>Tenant Information:</Subheading>
+                    <TenantInformationContainer>
+                        <TenantProfileImageContainr>
+                            <Image source={{uri:postedUserData.profilePic}} style={{height:WIDTH*0.2, width:WIDTH*0.2, borderRadius:WIDTH*0.1, backgroundColor:LIGHTGREY,  }}/>
+                        </TenantProfileImageContainr>
+                        <TenantNameScollOccupationContainer>
+                            <TenantNameText>{postedUserData.firstName} {postedUserData.lastName}</TenantNameText>
+                            {postedUserData.school != "" &&
+                            <TenantNameText>{postedUserData.school} </TenantNameText>
                             }
-                        </MapView>
-                        </View>
-                    </CardSectionTwo>
-                    
-                    
-                    <CardSectionTwo>
-                        <InfoHeaderText>Tenant Information</InfoHeaderText>
-                        <TenantInfoContainer>
-                            <ProfileImageContainer>
-                                <Image source={{uri:postedUserData.profilePic}} style={{height:HEIGHT*0.1, width:HEIGHT*0.1, borderRadius:20, backgroundColor:LIGHTGREY}}/>
-                            </ProfileImageContainer>
-                            <TenantInfo>
-                                <TenantNameText style={{width: WIDTH*0.6}}>{postedUserData.firstName} {postedUserData.lastName}</TenantNameText>
-                                <View>
-                                {postedUserData.school != "" && 
-                                    <InfoText>{postedUserData.school}</InfoText>
-                                }
-                                {postedUserData.occupation != "" && 
-                                    <InfoText>{postedUserData.occupation}</InfoText>
-                                }
-                                </View>
-                            </TenantInfo>
-                        </TenantInfoContainer>
-                    </CardSectionTwo>
-                  
-                    <CardSectionOne>
-                        <InfoHeaderText>Amenities ({propData.amenities.length})</InfoHeaderText>
-                        <View style={{marginTop: HEIGHT*0.025}}>
-                        {propData.amenities.length != 0 ? propData.amenities.map((value)=>(
-                            <AmenitiesItem key={value + "detailamen"}>
-                                {GetFAIconsInBlack(value)}
-                                <AmenitiesText>{value.replaceAll("_"," ")}</AmenitiesText>
-                               
-                            </AmenitiesItem>
+                            {postedUserData.occupation != "" &&
+                            <TenantNameText>{postedUserData.occupation}</TenantNameText>
+                            }
+                        </TenantNameScollOccupationContainer>
+
+                    </TenantInformationContainer>
+                </Section>
+                
+                {/* Section for amenities  */}
+                <Section>
+                    <Subheading>Amenities ({propData.amenities.length == 0 ? null : propData.amenities.length})</Subheading>
+                    <AmenitiesContainer>
+                        {propData.amenities.length != 0 ? 
+                        propData.amenities.map((value)=>(
+                        <AmenitiesItem key={value + "detailamen"}>
+                            {GetFAIconsInBlack(value)}
+                            {/* <AmenitiesText>{value.replaceAll("_"," ")}</AmenitiesText> */}
+                            <AmenitiesText>{value.replace("_", " ").replace("_"," ")}</AmenitiesText>
+                            
+                        </AmenitiesItem>
 
                         ))
                         :
                         <InfoText>No amenities listed ...</InfoText>
-                    
-                    }
-                    </View>
-                    </CardSectionOne>
-                    
-                </ScrollView>
-                <StickyHeaderContainer>
-                    < StickyHeaderIcon  hitSlop={WIDTH*0.05} onPress={()=>navigation.goBack()}>
-                        <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
-                    </ StickyHeaderIcon>
-                    { !ownProperty &&
-                    < StickyHeaderIcon hitSlop={WIDTH*0.05} onPress={likeProperty}>
-                        <Ionicons  name="heart" size={25} color={ liked ? '#ee88a6' : 'white'}></Ionicons>
-                    </ StickyHeaderIcon>
-                    }
-                    
-                </StickyHeaderContainer>
-            </PropertyDescription>
-            <Footer>
-                    <PricePerMonth>${propData.price} <Text style={{fontSize: HEIGHT*0.025, fontWeight:'500'}}>/ month</Text></PricePerMonth>
-                
-                    <ContactTanentButton disabled={ownProperty} ownProperty={ownProperty} hitSlop={WIDTH*0.05} onPress={()=>createConversation()}>
-                        <Text style={{color:'white', fontWeight:'700'}}>Contact Tenant</Text>
-                    </ContactTanentButton>
-            </Footer>
+                            
+                        }
+                    </AmenitiesContainer>
+                </Section>
+                {/* This is the section for sublease details */}
+                {/* <Section>
+                    <Subheading>Sublease details</Subheading>
+                    <SubleaseDetailsText>Security deposit:  <SubleaseDetailsValueText>$1500</SubleaseDetailsValueText></SubleaseDetailsText>
+                    <SubleaseDetailsText>Gas, water and electric:  <SubleaseDetailsValueText>$40 / month</SubleaseDetailsValueText></SubleaseDetailsText>
+                    <SubleaseDetailsText>Parking:  <SubleaseDetailsValueText>$200 / month</SubleaseDetailsValueText></SubleaseDetailsText>
 
-        </Container>
-       
+                </Section>       */}
+            </ScrollView>
+            <StickyHeaderContainer>
+                < StickyHeaderIcon  hitSlop={WIDTH*0.05} onPress={()=>navigation.goBack()}>
+                    <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
+                </ StickyHeaderIcon>
+            </StickyHeaderContainer>
+            
+            <Footer>
+                <PricePerMonth>${propData.price} <Text style={{fontSize: HEIGHT*0.025, fontWeight:'500'}}>/ month</Text></PricePerMonth>
+            
+                <ContactTanentButton disabled={ownProperty} ownProperty={ownProperty} hitSlop={WIDTH*0.05} onPress={()=>createConversation()}>
+                    <Text style={{color:'white', fontWeight:'700'}}>Contact Tenant</Text>
+                </ContactTanentButton>
+            </Footer>
+         </View>
         
     )
 }
