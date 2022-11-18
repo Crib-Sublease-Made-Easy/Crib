@@ -68,7 +68,6 @@ const LocationFont = styled.Text`
   font-size: ${HEIGHT*0.017}px;
   font-weight: 600;
   color: black
-
 `
 const DateFont = styled.Text`
 font-size: ${HEIGHT*0.0155}px;
@@ -100,7 +99,6 @@ const PriceFont = styled.Text`
 const PropertyImageContainer = styled.View`
   position: relative;
   border-radius:25px
-
 `
 
 const OpenMapIconContainer = styled.Pressable`
