@@ -208,7 +208,10 @@ export default function EditPropertyScreen({navigation, route}){
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + accessToken,
-            }
+            },
+            body:JSON.stringify({
+                authyID: route.params.authyID
+            })
             }).then(async res => {
                 console.log(res)
                 if(res.status == 200){

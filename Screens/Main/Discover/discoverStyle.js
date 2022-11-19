@@ -166,7 +166,7 @@ export const  PreviewBottomContainer = styled.Pressable`
   padding-vertical: ${HEIGHT*0.02}px
   height: ${HEIGHT*0.1}px;
   width: ${WIDTH*0.9}px;
-  padding-horizontal: ${WIDTH*0.02}px;
+  padding-horizontal: ${WIDTH*0.03}px;
   padding-top: ${HEIGHT*0.01}px
   align-self:center
   justify-content: space-around
@@ -191,13 +191,13 @@ export const PreviewNameText = styled.Text`
   font-weight: 400
   width: ${WIDTH*0.6}px
 ` 
-export const PreviewPriceText = styled.Text`
-  width: ${WIDTH*0.9}px
-  padding-horizontal: ${WIDTH*0.025}px
-  font-size: ${HEIGHT*0.014}px;
-  color: ${DARKGREY}
-
+export const PreviewPriceText = styled. Text`
+  font-size: ${HEIGHT*0.015}px;
+  color: black
+  font-weight: 600
 `
+
+
 
 export const SeachIconContainer = styled.View`
   padding-left: ${WIDTH*0.02}px
@@ -264,5 +264,22 @@ export const SearchHereText = styled.Text`
   font-size: ${HEIGHT*0.013}px;
   color: ${GOOGLEBLUE}
   font-weight: 600
+`
+
+export const PreviewLocationText = styled.Text`
+  font-size: ${HEIGHT*0.015}px;
+  font-weight: 500
+  width: ${WIDTH*0.9}px
+  overflow: hidden
+  color: black
+  
+`
+export const PreviewdetailsText = styled.Text`
+  font-size: ${HEIGHT*0.015}px;
+  color: black
+`
+export const DatePriceContainer = styled.View`
+  flex-direction: row
+  justify-content: space-between
 `
 

@@ -19,6 +19,7 @@ export default function DiscoverTab(){
         
         screenOptions={({ route }) => ({
           lazy: false,
+          tabBarShowLabel: false,
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 

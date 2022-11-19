@@ -50,7 +50,9 @@ import {
     SearchHerePressable, 
     SearchHereText,
     FilterAppliedIconBackground,
-    NoFilterAppliedIconBackground
+    NoFilterAppliedIconBackground,
+    PreviewdetailsText,
+    DatePriceContainer
 } from './discoverStyle';
 
 //Gesture Handler to control propertycard
@@ -58,7 +60,6 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 //React Native Map
 import MapView , { Marker }from 'react-native-maps';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function DiscoverScreen({navigation}){
@@ -112,7 +113,7 @@ export default function DiscoverScreen({navigation}){
     //To indicate if user is searching or not
     const [searching, setSearching] = useState(false)
     //Access the fields by selectedPin.item.name
-    const [selectedPin, setSelectedPin] = useState(null)
+    const [selectedPin, setSelectedPin] = useState([])
     //Page number of properties shown, it is called in load more properties, hence initial 1 
     const [propertyPage, setPropertyPage] = useState(1);
     //Controls the filter modal page
@@ -243,7 +244,7 @@ export default function DiscoverScreen({navigation}){
            console.log(properties)
 
             if(properties.propertiesFound != "none"){
-                console.log("HAPPY", properties)
+            
                 properties.forEach(async propData => {
                     let imgList = propData.propertyInfo.imgList
                     imgList.forEach(async element => {
@@ -445,9 +446,11 @@ export default function DiscoverScreen({navigation}){
                 viewCount: "false"
             })
             }) 
-            .then(res => res.json()).then(property =>{
+            .then(async res => await res.json()).then(property =>{
+                console.log("HELLOOO" ,property.propertyInfo)
                 setSelectedPin(property)
-                moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
+                
+                // moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
             })
             .catch(e=>{
                 console.log("ERROR --- DISCOVER --- onMarkerClick")
@@ -534,7 +537,7 @@ export default function DiscoverScreen({navigation}){
                         outputRange: [0, 1],
                     })}}>
                             {/* Checks if any pin is selected for displaying in the preview card */}
-                        {selectedPin != undefined && selectedPin != "" &&
+                        {selectedPin != "" && selectedPin != null && selectedPin != undefined &&
                         <Pressable disabled={loading}  hitSlop={WIDTH*0.05} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0]))})}}>
                             <PreviewTopContainer>
                                 <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
@@ -543,17 +546,29 @@ export default function DiscoverScreen({navigation}){
 
                             <PreviewBottomContainer >
                                 <PreviewLocationText>{selectedPin.propertyInfo.loc.secondaryTxt}</PreviewLocationText>
-                                <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).getDate() + " " +
-                                        new Date(selectedPin.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
-                                        }  -  {new Date(selectedPin.propertyInfo.availableTo).getDate() + " " +
-                                        new Date(selectedPin.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}</PreviewPriceText>
+                                <PreviewdetailsText>{selectedPin.propertyInfo.bed} Bed  •  {selectedPin.propertyInfo.bath} Bath</PreviewdetailsText>
                                 
-                                <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
+                                <DatePriceContainer>
+                                    <PreviewdetailsText>
+                                        {
+                                            new Date(selectedPin.propertyInfo.availableFrom).toDateString().split(" ")[1] + " " +
+                                            new Date(selectedPin.propertyInfo.availableFrom).toDateString().split(" ")[3]
+                                        }  
+                                        {"  "}-{"  "}
+                                        {
+                                            new Date(selectedPin.propertyInfo.availableTo).toDateString().split(" ")[1] + " " +
+                                            new Date(selectedPin.propertyInfo.availableTo).toDateString().split(" ")[3]
+                                        }
+                                    </PreviewdetailsText>
+
+                                    <PreviewPriceText>${selectedPin.propertyInfo.price} / month</PreviewPriceText>
+
+                                </DatePriceContainer>
                             </ PreviewBottomContainer> 
                         </Pressable>
                         }
 
-                        <FontAwesome  hitSlop={WIDTH*0.05} onPress={()=>closePreviewCard()} name="times-circle" size={25}  color='white' style={{position: 'absolute', right:WIDTH*0.025,
+                        <FontAwesome  hitSlop={WIDTH*0.05} onPress={()=>closePreviewCard()} name="times-circle" size={30}  color='white' style={{position: 'absolute', right:WIDTH*0.03,
                         top: HEIGHT*0.015}}/>
                     </RNAnimated.View>
                 </MapContainer>

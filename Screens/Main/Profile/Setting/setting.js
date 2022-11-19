@@ -125,6 +125,73 @@ export default function SettingScreen({navigation, route}){
     );
   }
 
+  async function deleteAccountAlert(){
+    Alert.alert(
+      'Are you sure?',
+      'You account will be permanantly deleted.',
+      [
+        {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+        {text: 'Yes', onPress: () => deleteAccount(), style: 'destructive'},
+      ],
+      { 
+        cancelable: true 
+      }
+    );
+  }
+
+  async function deleteAccount(){
+
+    const accessToken = await SecureStorage.getItem("accessToken");
+    console.log("USERID", USERID);
+    console.log("propID", route.params.propID);
+    console.log("authyID", route.params.authyID);
+
+    if(route.params.propID != null && route.params.propID != undefined && accessToken != null){
+      fetch('https://crib-llc.herokuapp.com/properties/' + route.params.propID, {
+      method: 'DELETE',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + accessToken,
+      },
+      body:JSON.stringify({
+          authyID: route.params.authyID
+      })
+      }).then(async res => {
+          console.log(res)
+         
+            console.log(res)
+            await AsyncStorage.removeItem("postedProperty")
+                
+      })
+      .catch((error) => {
+        console.log('Unable to delete this property. Please try again later.')
+        console.log(error)
+      });
+    }
+    if(USERID != undefined && route.params.authyID != undefined){
+        fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+        method: 'DELETE',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken,
+        },
+        body: JSON.stringify({
+          authyID: route.params.authyID
+        })
+        }).then(async res => {
+          const data = await res.json()
+          console.log(data)
+          logout()
+        })
+        .catch((error) => {
+            console.log("ERRPR in deleting user", error)
+        });
+    }
+  }
+
+
   return(
     <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
       <HeaderContainer>
@@ -194,6 +261,11 @@ export default function SettingScreen({navigation, route}){
         <CategoryContainer>
           <TouchableOpacity onPress={logoutAlert}>
           <CategoryName style={{color:'red'}}>Logout</CategoryName>
+          </TouchableOpacity>
+        </CategoryContainer>
+        <CategoryContainer>
+          <TouchableOpacity onPress={deleteAccountAlert}>
+          <CategoryName style={{color:'red'}}>Delete account</CategoryName>
           </TouchableOpacity>
         </CategoryContainer>
   

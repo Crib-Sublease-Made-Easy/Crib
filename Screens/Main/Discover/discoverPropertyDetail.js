@@ -118,6 +118,7 @@ export default function PropertyDetailScreen({navigation, route}){
     }
 
     async function fetchProperties(){
+        
         const accessToken = await SecureStorage.getItem("accessToken");
         if(route.params.data != undefined && accessToken != null){
             await fetch('https://crib-llc.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {

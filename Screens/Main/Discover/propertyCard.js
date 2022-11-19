@@ -257,7 +257,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
 
     function MoveMapToPin(pinInfo){
         console.log(pinInfo)
-       
+        setSelectedPin(pinInfo)
         openPreviewCard()
         moveMap(pinInfo.propertyInfo.loc.coordinates[1] - 0.015,pinInfo.propertyInfo.loc.coordinates[0])
         translateY.value = withSpring(HEIGHT*0.68, {stiffness: 50, mass: 0.3, damping:15})
@@ -284,7 +284,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
               }}
               />
               
-              <OpenMapIconContainer hitSlop={WIDTH*0.05} onPress={()=>{MoveMapToPin(data.item), setSelectedPin(data.item)}}>
+              <OpenMapIconContainer hitSlop={WIDTH*0.025} onPress={()=>{MoveMapToPin(data.item)}}>
                   <FontAwesome name='location-arrow' size={20} color='white'/>
               </OpenMapIconContainer>
             </PropertyImageContainer>
