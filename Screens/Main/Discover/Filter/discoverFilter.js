@@ -139,12 +139,15 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
             'Content-Type': 'application/json'
             }
             }) 
-            .then(res => res.json()).then(properties =>{
-                console.log("filtered properties is:")
-                if(properties.propertiesFound != 'none'){
-                    setFilteredProperties([...properties])
-                } else{
-                    setFilteredProperties([])
+            .then(async res => {
+                if(res.status == 200){
+                    const properties = await res.json()
+                    if(properties != undefined && properties.length != 0){
+                        setFilteredProperties([...properties])
+                    }
+                }
+                else{
+                    alert("An error occured. Please try again later!")
                 }
                 close()
             })

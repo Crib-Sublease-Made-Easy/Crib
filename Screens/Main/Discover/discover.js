@@ -33,7 +33,7 @@ FontAwesome.loadFont()
 
 
 //Style components 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, DARKGREY, EXTRALIGHT } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY} from '../../../sharedUtils';
 
 //Custom components
 import {
@@ -206,7 +206,7 @@ export default function DiscoverScreen({navigation}){
     }
 
     //Load initial properties
-    const loadProperty = useCallback(()=> {
+    const loadProperty = useCallback(async ()=> {
         setPropertyPage(1)
         setRetrieveMore(true)
         setLoading(true)
@@ -232,41 +232,38 @@ export default function DiscoverScreen({navigation}){
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
 
-        fetch('https://crib-llc.herokuapp.com/properties/query?page=0' + s, {
+        await fetch('https://crib-llc.herokuapp.com/properties/query?page=0' + s, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
             }
         }) 
-        .then(res => res.json()).then(properties =>{
-            
-           console.log(properties)
+        .then(async res =>{
+            // console.log(res.status); 
 
-            if(properties.propertiesFound != "none"){
-            
+            //Continue only with good status
+            if(res.status == 200 || res.status == 201){
+                properties = await res.json()
                 properties.forEach(async propData => {
                     let imgList = propData.propertyInfo.imgList
                     imgList.forEach(async element => {
-                        const success = await Image.prefetch(element)
-                        console.log(success)
+                        await Image.prefetch(element)
                     });
     
-                    
-                   
                 });
                 setFilteredProperties(properties)
+                setLoading(false)
             }
-            
+            else{
+                dropDownAlertRef.alertWithType('error', 'Error', "An error has occured while loading property. Please try again later!");
+                setLoading(false)
+            }
         })
         .catch(e=>{
+            dropDownAlertRef.alertWithType('error', 'Error', "An error has occured while loading property. Please try again later!");
             console.log("ERROR --- DISCOVER --- loadProperty")
-            alert(e)
         })
-       
-        setTimeout(()=>{
-            setLoading(false)
-        },2000)
        
     },[currentLocation])
 
@@ -300,25 +297,34 @@ export default function DiscoverScreen({navigation}){
             await fetch('https://crib-llc.herokuapp.com/properties/query?page=' + propertyPage + s, {
             method: 'GET',
             headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-            }
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+                }
             }) 
-            .then(res => res.json()).then(properties =>{
-
-            if(properties.length == 0){
-                setRetrieveMore(false)
-            }
-                setFilteredProperties([...filteredProperties,...properties])
+            .then(async res => {
+                
+                //Continue with good status
+                if(res.status == 200 || res.status == 201){
+                    const properties = await res.json();
+                    if(properties.length == 0){
+                        setRetrieveMore(false)
+                        return;
+                    }
+                    setFilteredProperties([...filteredProperties,...properties])
+                }
+                else{
+                    dropDownAlertRef.alertWithType('error', 'Error', "Could not load more properties, please try again later");
+                    console.log("ERROR --- DISCOVER --- loadMoreProperties")
+                }
             })
             .catch(e=>{
+                dropDownAlertRef.alertWithType('error', 'Error', "Could not load more properties, please try again later");
                 console.log("ERROR --- DISCOVER --- loadMoreProperties")
-                alert(e)
             })   
         }   
     }
 
-    function retrieveAllPins(lat, long, distance, price, bed, bath, type, amens, from, to ){
+    async function retrieveAllPins(lat, long, distance, price, bed, bath, type, amens, from, to ){
         setPropertyPreviewCard(false)
         let s = "";
         if(type != ""){
@@ -345,24 +351,27 @@ export default function DiscoverScreen({navigation}){
         s = s +`&availableFrom=${from}`
         s = s +`&availableTo=${to}`
 
-        fetch(`https://crib-llc.herokuapp.com/properties/pins?${s}` , {
+        await fetch(`https://crib-llc.herokuapp.com/properties/pins?${s}` , {
             method: 'GET',
             headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
             }
         }) 
-        .then(res => res.json()).then( pins =>{
-            if(pins.length == 0){
-                setPinsData([])
-            }
-            else{
+        .then(async res => {
+            if(res.status == 200 || res.status == 201){
+                const pins = await res.json();
                 setPinsData(pins) 
             }
+            else{
+                dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
+                console.log("ERROR --- DISCOVER --- retrieveAllPins")
+            }
+            
         })
         .catch(e=>{
+            dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
             console.log("ERROR --- DISCOVER --- retrieveAllPins")
-            alert(e)
         })
     }
 
@@ -391,22 +400,27 @@ export default function DiscoverScreen({navigation}){
         if (locationQueryName != ""){
             setlocationQuery(locationQueryName)
             setSearching(false)
-            let spacelessLocation = locationQueryName.replaceAll(" ", "+");
+            
+            let spacelessLocation = locationQueryName;
             var config = {
                 method: 'get',
                 url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${spacelessLocation}`,
             };
             axios(config)
             .then(async (response)=> {           
-                console.log(JSON.stringify(response))
-                let lat = response.data.lat;
-                let long = response.data.lng;
-                setCurrentLocation([lat,long])
-                moveMap(lat - 0.015, long)
+                if(response.status == 200 || response.status == 201){
+                    let lat = response.data.lat;
+                    let long = response.data.lng;
+                    setCurrentLocation([lat,long])
+                    moveMap(lat - 0.015, long)
+                }
+                else{
+                    dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
+                    console.log("ERROR --- DISCOVER --- selectCurrentLocation")
+                }
             })
-            .catch(function (error) {
-                
-                console.log(error);
+            .catch(e=>{
+                console.log("ERROR (CATCH) --- DISCOVER --- selectCurrentLocation")
             });
         }
     }
@@ -446,23 +460,36 @@ export default function DiscoverScreen({navigation}){
                 viewCount: "false"
             })
             }) 
-            .then(async res => await res.json()).then(property =>{
-                console.log("HELLOOO" ,property.propertyInfo)
-                setSelectedPin(property)
-                
-                // moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
+            .then(async res =>  {
+                const property = await res.json();
+                if(res.status == 200){
+                    if(property != null && property != undefined && property.propertyInfo.deleted == false){
+                        moveMap(item.loc.coordinates[1] - 0.01, item.loc.coordinates[0])
+                        //Toggle previewCard modal, but the opcaity is 0 when opened 
+                        setPropertyPreviewCard(true)
+                        //Function that animates the opcaity of preview caed
+                        openPreviewCard()
+                        setLoading(false)
+                        setSelectedPin(property)
+                    }
+                    else if(property.propertyInfo.deleted == true){
+                        dropDownAlertRef.alertWithType('error', 'Error', "Property is deleted by tenant.");
+                        console.log("ERROR --- DISCOVER --- onMarkerClick")
+                        setLoading(false)
+                    }
+                }
+                else{
+                    dropDownAlertRef.alertWithType('error', 'Error', "Error occured. Please try again later!");
+                    console.log("ERROR --- DISCOVER --- onMarkerClick")
+                    setLoading(false)
+                }
             })
             .catch(e=>{
+                dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
                 console.log("ERROR --- DISCOVER --- onMarkerClick")
-                alert(e)
+                setLoading(false)
             })
         }
-        
-        //Toggle previewCard modal, but the opcaity is 0 when opened 
-        setPropertyPreviewCard(true)
-        //Function that animates the opcaity of preview caed
-        openPreviewCard()
-        setLoading(false)
     }
 
     //Input is the lat and long location 
@@ -473,11 +500,18 @@ export default function DiscoverScreen({navigation}){
             url: `https://crib-llc.herokuapp.com/autocomplete/reversegeocoding?lat=${loc[0]}&long=${loc[1]}`,
         };
         await axios(config)
-        .then(async (response)=> {           
-            setlocationQuery(response.data.formatted_address)
+        .then(async (response)=> {   
+            if(response.status == 200 || response.status == 201){
+                setlocationQuery(response.data.formatted_address)
+            }
+            else{
+                dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
+                console.log("ERROR --- DISCOVER --- updateQueryString")
+            }
         })
         .catch(function (error) {
-            console.log(error);
+            dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
+            console.log("ERROR (CATCH) --- DISCOVER --- updateQueryString")
         });
     }
 
