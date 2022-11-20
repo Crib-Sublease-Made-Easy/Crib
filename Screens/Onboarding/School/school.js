@@ -20,7 +20,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
   
-import { HEIGHT, WIDTH , LIGHTGREY, DARKGREY, ContinueButton, ContinueText, ProgressText, SignUpHeader} from '../../../sharedUtils';
+import { HEIGHT, WIDTH , LIGHTGREY, DARKGREY, ContinueButton, ContinueText, ProgressText, SignUpHeader, SignUpBackButtonPressable} from '../../../sharedUtils';
 
 import {Header, ProgressBarContainer, SubtitleText, TitleText,  FollowUpContainer, FollowUpText,
     GeneralTextInput, TextInputContainer} from './schoolStyle';
@@ -50,10 +50,10 @@ export default function SchoolScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
            <KeyboardAvoidingView behavior='padding' style={{flex: 1}}>
             <SignUpHeader>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                <SignUpBackButtonPressable onPress={()=> navigation.goBack()}>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
                     <Ionicons name='arrow-back-outline' size={25} />
-                </Pressable>
+                </SignUpBackButtonPressable>
             </SignUpHeader>
                 
             <ProgressBarContainer>
@@ -67,13 +67,6 @@ export default function SchoolScreen({navigation, route}){
                 <TextInputContainer >
                     <GeneralTextInput  value={school} onChangeText={(value)=> setSchool(value)} placeholder="Ex: University of Wisconsin - Madison"  />
                 </TextInputContainer>
-
-                {/* <FollowUpContainer>
-                    <Pressable onPress={() => setShowPicker(!showPicker)}>
-                        <Ionicons size={20} name={showPicker ? 'checkbox' : 'checkbox-outline'} color={DARKGREY} style={{ paddingVertical: HEIGHT * 0.01 }} />
-                    </Pressable>
-                    <FollowUpText>Show selection</FollowUpText>
-                </FollowUpContainer> */}
             
             </ScrollView>
           

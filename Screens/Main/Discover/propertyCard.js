@@ -330,7 +330,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
       }]}>
         <DragGreyLineContainer>
           <NumberOfPropertiesText>
-            Wendy Bae
+            Search results
           </NumberOfPropertiesText>
         </DragGreyLineContainer>
         {/* {flatlistRefreshing ?

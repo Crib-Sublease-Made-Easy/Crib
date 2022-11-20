@@ -50,8 +50,7 @@ export const ButtonText = styled.Text`
 
 export const HeadingImageContainer = styled.View`
     width: ${WIDTH}px
-    height: ${HEIGHT*0.25}px
-  
+    padding-vertical: ${HEIGHT*0.015}px  
 `
 
 export const ContinueText = styled.Text`
@@ -69,10 +68,10 @@ export const SubtitleText = styled.Text`
 
 export const ContinueButton = styled.Pressable`
     width: ${WIDTH*0.7}px;
-    height: ${ HEIGHT*0.07}px;
+    padding-vertical: ${HEIGHT*0.02}px
     background-color: ${PRIMARYCOLOR}
     align-self: center
-    border-radius: 25px
+    border-radius: 20px
     justify-content: center
     align-items: center
     margin-bottom: ${HEIGHT*0.075}px;

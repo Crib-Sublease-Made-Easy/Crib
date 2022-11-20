@@ -19,7 +19,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, ContinueText, ProgressText, DARKGREY, MEDIUMGREY, GOOGLEBLUE, SignUpHeader } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, ContinueText, ProgressText, DARKGREY, MEDIUMGREY, GOOGLEBLUE, SignUpHeader, SignUpBackButtonPressable } from '../../../sharedUtils';
 
 import Lottie from 'lottie-react-native';
 
@@ -36,9 +36,7 @@ export default function PhoneNumberScreen({navigation, route}){
     
     console.log(passedPhoneNumber)
     async function signupStep1(){
-        console.log("Stepping 1")
-        console.log("PHONENUMBER  ", passedPhoneNumber);
-        console.log("EMAIL  ", route.params.email);
+        console.log("INSIDE STEP 1")
         fetch('https://crib-llc.herokuapp.com/users/OTP/step1', {
             method: 'POST',
             headers: {
@@ -50,29 +48,40 @@ export default function PhoneNumberScreen({navigation, route}){
                 email: route.params.email
             })
         }) 
-        .then(res => res.json()).then(data =>{
-            console.log("STEP1");
-            console.log(data);
-            if(data.error != undefined){
-                if(data.error.error_code == 60027){
-                    alert("Invalid Email Address")
-
-                    navigation.navigate("Email", {
-                        firstName: route.params.firstName, 
-                        lastName: route.params.lastName,
-                        age: route.params.age,
-                        gender: route.params.gender,
-                        profilePic: route.params.profilePic,
-                        school: route.params.school,
-                        occupation: route.params.occupation});
+        .then(async res => {
+            console.log("RESS in step 1", res)
+            const data = await res.json();
+            if(res.status == 201){
+                if(data.response.user.id != undefined){
+                    console.log("Going to step 2", res)
+                    signupStep2(data.response.user.id);
+                }
+                else{
+                    alert("An error has occured.")
                 }
             }
-            else{
-                console.log("GOING TO STEP2")
-                signupStep2(data.response.user.id);
+            else if(data.error != undefined){
+                alert("Invalid Email Address")
+                navigation.navigate("Email", {
+                    firstName: route.params.firstName, 
+                    lastName: route.params.lastName,
+                    age: route.params.age,
+                    gender: route.params.gender,
+                    profilePic: route.params.profilePic,
+                    school: route.params.school,
+                    occupation: route.params.occupation
+                });
             }
+            else{
+                alert("An error has occured. Please try again later!")
+                navigation.reset(
+                    {index: 0 , routes: [{ name: 'DiscoverTabs'}]}
+                )
+            }
+        })
+        .catch( e => {
 
-        })   
+        })
     }
     function signupStep2(id){
         console.log("STEP2");
@@ -87,13 +96,10 @@ export default function PhoneNumberScreen({navigation, route}){
                 authy_id: id
             })
         })
-        .then(res => res.json()).then(data =>{
-            console.log("STEP2 in data");
-            console.log(data);
-            if(data.response.success != true){
-                alert("invalid in step 2.")
-            }
-            else{
+        .then(async res => {
+            const data = await res.json();
+            if(res.status == 201){
+                setLoading(false)
                 navigation.reset(
                     {index: 0 , routes: [{ name: 'otp', params:{
                     firstName: route.params.firstName, 
@@ -109,9 +115,17 @@ export default function PhoneNumberScreen({navigation, route}){
                     authy_id: id}}]}
                 )
             }
+            else{
+                setLoading(false)
+                alert("An error has occured. Please try again later!")
+                navigation.reset(
+                    {index: 0 , routes: [{ name: 'DiscoverTabs'}]}
+                )
+            }
         })
-        
-        setLoading(false)
+        .catch( e => {
+            alert("An error has occured!")
+        }) 
     }
 
     async function signup(){
@@ -128,9 +142,9 @@ export default function PhoneNumberScreen({navigation, route}){
             alert("Incorrect phone number.")
         }
         else{
+            console.log("CHECKING SIGNUP")
             setLoading(true)
-            console.log("Inside Signup")
-            const res =  await fetch('https://crib-llc.herokuapp.com/users/check', {
+            await fetch('https://crib-llc.herokuapp.com/users/check', {
                 method: 'POST',
                 headers: {
                 Accept: 'application/json',
@@ -139,15 +153,17 @@ export default function PhoneNumberScreen({navigation, route}){
                 body: JSON.stringify({
                     phoneNumber: passedPhoneNumber
                 })
-            }).then(res => res.json()).then(async data =>{
-                if(data.message == 'This is a valid phone number'){
+            }).then(async res => {
+                console.log(res)
+                if(res.status == 200){
+                    console.log("Stepping to 1" , res)
+                    const data = await res.json();
                     signupStep1()
                 }
-                else if(data.message == 'User already has an account with this phone number'){
+                else{
                     alert("Account with phone number exist, please login.")
                     navigation.reset({index: 0 , routes: [{ name: 'ProfileTabs'}]})
                 }
-                console.log(data)
             }).catch(e=>
                 console.log(e)
             )
@@ -208,10 +224,9 @@ export default function PhoneNumberScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
             <SignUpHeader>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
-                   
+                <SignUpBackButtonPressable onPress={()=> navigation.goBack() }>
                     <Ionicons name='arrow-back-outline' size={25} />
-                </Pressable>
+                </SignUpBackButtonPressable>
             </SignUpHeader>
                 
             <ProgressBarContainer>
@@ -244,7 +259,7 @@ export default function PhoneNumberScreen({navigation, route}){
 
             <ContinueButton disabled={loading} loading={loading} onPress={signup}>
             {loading ?
-                <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
+                <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.1, height: WIDTH*0.1, }}/>
             :
                 <ContinueText>Continue</ContinueText>
             }

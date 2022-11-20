@@ -12,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
   
-import { HEIGHT, WIDTH, ContainsSpace, ContinueButton, ContinueText, ProgressText, SignUpHeader, } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, ContainsSpace, ContinueButton, ContinueText, ProgressText, SignUpHeader, SignUpBackButtonPressable, } from '../../../sharedUtils';
 
 
 import {Header, ProgressBarContainer, SubtitleText, TitleText, 
@@ -61,10 +61,10 @@ export default function EmailScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
            <KeyboardAvoidingView behavior='padding' style={{flex: 1}}>
             <SignUpHeader>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                <SignUpBackButtonPressable onPress={()=> navigation.goBack() }>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
                     <Ionicons name='arrow-back-outline' size={25} />
-                </Pressable>
+                </SignUpBackButtonPressable>
             </SignUpHeader>
                 
             <ProgressBarContainer>

@@ -155,7 +155,9 @@ export default function OTPScreen({navigation, route}){
                 
                 setTimeout(()=>{setLoading(false)},2000)
                 login(data.createdUser._id);
-                navigation.navigate("DiscoverTabs")
+                navigation.reset(
+                    {index: 0 , routes: [{ name: 'DiscoverTabs'}]}
+                )
 
             }
         })
@@ -229,10 +231,11 @@ export default function OTPScreen({navigation, route}){
             <Container>
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
                 <ScrollView>
+                    <Heading>Enter OTP</Heading>
+                    <SubtitleText>A one time password was sent to you.</SubtitleText>
                     <HeadingImageContainer>
-                        <Heading>Enter OTP</Heading>
-                        <SubtitleText>Please enter the one time password sent to you through sms</SubtitleText>
-                        <Image source={require('../../assets/otp.jpg')} style={{ height: HEIGHT*0.15, width: HEIGHT*0.2, alignSelf: 'center', }}/>
+                        
+                        <Image source={require('../../assets/otp.jpg')} style={{ height: HEIGHT*0.1, width: HEIGHT*0.15, alignSelf: 'center', }}/>
                     </HeadingImageContainer>
                     
                     <OTPInputField

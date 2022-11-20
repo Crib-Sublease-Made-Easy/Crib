@@ -188,7 +188,7 @@ export default function Login_OTP({navigation, route}){
                 <ScrollView>
                     <HeadingImageContainer>
                         <Heading>Enter OTP</Heading>
-                        <SubtitleText>Please enter the one time password sent to you through sms</SubtitleText>
+                        <SubtitleText>A one time password was sent to you.</SubtitleText>
                     </HeadingImageContainer>
                     <InputFollowUpContainer>
                     <OTPInputField

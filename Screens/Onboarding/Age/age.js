@@ -15,7 +15,7 @@ Ionicons.loadFont()
 
 import DatePicker from 'react-native-date-picker'
   
-import { HEIGHT, WIDTH, ContinueButton, ContinueText, ProgressText, SignUpHeader } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, ContinueButton, ContinueText, ProgressText, SignUpHeader, SignUpBackButtonPressable } from '../../../sharedUtils';
 
 import { AgeContainer, Header, ProgressBarContainer, SubtitleText, TitleText, DatePlaceHolder } from './ageStyle';
 
@@ -30,7 +30,6 @@ export default function AgeScreen({navigation, route}){
         let hours = mins / 60 
         let days = hours/24
         let years = days/365
-        console.log(years)
         
         if(age.getTime() >= new Date().getTime()){
             alert("Please enter a valid Date of birth.")
@@ -58,10 +57,10 @@ export default function AgeScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior={'padding'} style={{flex:1}}>
                 <SignUpHeader>
-                    <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                    <SignUpBackButtonPressable onPress={()=> navigation.goBack() }>
                         {/* <FontAwesome name='arrow-left' size={25} /> */}
                         <Ionicons name='arrow-back-outline' size={25} />
-                    </Pressable>
+                    </SignUpBackButtonPressable>
                 </SignUpHeader>
                 
                 <ProgressBarContainer>

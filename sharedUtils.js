@@ -382,10 +382,10 @@ export const ProgressText = styled.Text`
 //Continue Button used in sign up 
 export const ContinueButton = styled(Pressable)`
     width: ${WIDTH*0.7}px;
-    height: ${ HEIGHT*0.07}px;
+    padding-vertical: ${HEIGHT*0.02}px
     backgroundColor:  ${props=>(props.loading ? MEDIUMGREY : PRIMARYCOLOR)}}
     align-self: center
-    border-radius: 25px
+    border-radius: 20px
     justify-content: center
     align-items: center
     margin-bottom: ${HEIGHT*0.025}px;
@@ -409,9 +409,14 @@ export const IconPressable = styled.Pressable`
 //Sing up
 export const SignUpHeader = styled.View`
   width: ${WIDTH*0.9}px
-  height: ${HEIGHT*0.075}px
-  padding-vertical: ${HEIGHT*0.01}px
+  padding-vertical: ${HEIGHT*0.02}px
   justify-content: flex-start;
   align-self: center
   flex-direction: row 
+`
+
+//Sign up back button Pressable
+
+export const SignUpBackButtonPressable = styled.Pressable`
+    padding: ${HEIGHT*0.01}px
 `
