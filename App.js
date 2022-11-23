@@ -2,22 +2,10 @@ import * as React from 'react';
 import { useState, useRef, useEffect, createContext } from 'react';
 import {
   AppState,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  Dimensions,
   Image
 } from 'react-native';
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
-
+import EncryptedStorage from 'react-native-encrypted-storage';
 import './onChat'
-var axios = require('axios');
-
-import {PRIMARYCOLOR} from './sharedUtils'
 
 //User Context
 import { UserContext } from './UserContext.js';
@@ -76,7 +64,6 @@ import MessageTab from './Screens/Main/Message/message.js';
 
 //Navigation between tabs
 import { NavigationContainer, getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import { CardStyleInterpolators } from '@react-navigation/stack';
 
@@ -87,7 +74,7 @@ import SendBird from 'sendbird'
 
 const Stack = createSharedElementStackNavigator();
 
-const appId = '58220273-043E-4162-AFFC-B4035FD78760';
+const appId = 'EF181665-2473-42C6-9376-A340AF716169';
 import OneSignal from 'react-native-onesignal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -116,15 +103,15 @@ OneSignal.setAppId("a979dd6f-dffb-476e-8d0b-bb27863a3c55");
 //Prompt for push on iOS
 OneSignal.promptForPushNotificationsWithUserResponse(async response => {
   const deviceState = await OneSignal.getDeviceState();
-  console.log(deviceState)
+  // console.log(deviceState)
   try{
-    const cacheOneSignalID = await SecureStorage.getItem("oneSignalUserID");
+    const cacheOneSignalID = await EncryptedStorage.getItem("oneSignalUserID");
     if (deviceState.userId != cacheOneSignalID && deviceState != null){
-      await SecureStorage.setItem("oneSignalUserID", deviceState.userId);
+      await EncryptedStorage.setItem("oneSignalUserID", deviceState.userId);
     }
   }
   catch{e=>{
-    console.log(("TRY/CATCH in APP.js SecureStorage.setItem('oneSignalUserID')"))
+    console.log(("TRY/CATCH in APP.js EncryptedStorage.setItem('oneSignalUserID')"))
     console.log(e)
   }}
 });
@@ -133,7 +120,7 @@ OneSignal.promptForPushNotificationsWithUserResponse(async response => {
 
 //Method for handling notifications opened
 OneSignal.setNotificationOpenedHandler(notification => {
-  console.log("OneSignal: notification opened:", notification);
+  // console.log("OneSignal: notification opened:", notification);
 });
 
 //Method for handling notifications received while app in foreground
@@ -144,13 +131,9 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   const data = notification.additionalData
   // console.log("additionalData: ", data);
   // Complete with null means don't show a notification.
-  console.log("SOMETHING")
   if(!onChat){
-    console.log("WILL SHOW MSG ")
-
     notificationReceivedEvent.complete(notification);
   } else{
-    console.log("DOES NOT SHOW MSG ")
     notificationReceivedEvent.complete(null);
   }
 
@@ -159,8 +142,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   useEffect(() => {
    
     cleanup()
-    console.log("INITIALIZE APP.JS USEEFFECT")
-
+    // console.log("INITIALIZE APP.JS USEEFFECT")
     // refreshAccessToken()
     const subscription = AppState.addEventListener("change", nextAppState => {
 
@@ -168,9 +150,8 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
         // appState.current.match(/inactive|background/) &&
         nextAppState === "active"
       ) {
-        console.log("App has come to the foreground!");
+        // console.log("App has come to the foreground!");
         refreshAccessToken()
-        // connectSendbird()
       } 
       else{
         onChat = false
@@ -187,99 +168,118 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
   }, [user])
 
+  //Check if the user logged is on app for the first time
+  //If launch is null ( new install ): then clean up all stored varaibled
+
   async function cleanup(){
-    
-    const launched = await AsyncStorage.getItem("launched")
-   
-    console.log(launched)
-
-    if (launched == null){
-      await SecureStorage.removeItem("studio.jpg");
-      await SecureStorage.removeItem("accessToken");
-      await SecureStorage.removeItem("refreshToken")
-      await SecureStorage.removeItem("firstName");
-      await SecureStorage.removeItem("lastName");
-      await SecureStorage.removeItem("email");
-      await SecureStorage.removeItem("userId");
-      await SecureStorage.removeItem("profilePic");
-      await AsyncStorage.clear()
-      await AsyncStorage.setItem("launched", 'true');
-
+    try{
+      const firstTime = await AsyncStorage.getItem("launched")
+      if(firstTime != null){
+        await AsyncStorage.setItem("launched", 'true');
+      }
+      else{
+        // console.log("New start after uninstalling")
+        await EncryptedStorage.clear();
+        await AsyncStorage.clear()
+        await AsyncStorage.setItem("launched", 'true');
+      }
     }
-    else{
-      await AsyncStorage.setItem("launched", 'false');
+    catch{ e => {
+      alert("Error! Please try again later.")
+    }
     }
   }
 
   const disconnectSendbird = async () =>{
-    const UID = await SecureStorage.getItem("userId");
-    if (UID != undefined) {
-      await sb.disconnect()
-      console.log("Sendbird Disconnected")
-    }
-  }
-  const connectSendbird = async () => {
-    const UID = await SecureStorage.getItem("userId");
-    if (UID != undefined) {
-      setUser(UID)
-      try {
-        console.log("connecting to sendbird")
-     
-        await sb.connect(UID, function (user, error) {
-          if (error) {
-            // Handle error.
-            console.log("sendbird error")
-            console.log(error)
-          }
-          else {
-            
-            console.log("sendbird connected")
-          }
-          // The user is connected to Sendbird server.
-        });
-        // The user is connected to the Sendbird server.
-      } catch (err) {
-        // Handle error.
-        console.log("SENDBIRD ERROR")
+    try{
+      const UID = await EncryptedStorage.getItem("userId");
+      if (UID != undefined) {
+        await sb.disconnect()
+        console.log("Sendbird Disconnected")
       }
+    }
+    catch{
+      console.log("ERROR --- APP.JS --- DISCONNECT")
+    }
+    
+  }
+
+  const connectSendbird = async (UID) => {
+    setUser(UID)
+    try {
+      console.log("connecting to sendbird")
+      await sb.connect(UID, function (user, error) {
+        if (error) {
+          // Handle error.
+          console.log("Error connecting to sendbird in the App.Js")
+          console.log(error)
+        }
+        else {
+          // The user is connected to Sendbird server.
+          console.log("sendbird connected")
+        }
+      });
+    } 
+    catch (err) {
+      // Handle error.
+      console.log("SENDBIRD ERROR")
     }
   }
 
   const refreshAccessToken = async () => {
-    const rt = await SecureStorage.getItem("refreshToken");
-    const id = await SecureStorage.getItem("userId");
+    try{
+      const rt = await EncryptedStorage.getItem("refreshToken");
+      const id = await EncryptedStorage.getItem("userId");
 
-    if (rt != undefined) {
-      setUser(id)
-      connectSendbird()
-     
-      await fetch('https://crib-llc.herokuapp.com/tokens/accessRefresh', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + rt
-        }
-      }).then(async e => e.json()).then(async (response) => {
-        try {
-          await SecureStorage.setItem("accessToken", response.accessToken)
-        } catch (err) {
-          alert(err)
-        }
-      })
+      //If refresh token is undefined, meaning user have not logged in
+      if (rt != undefined && id != undefined) {
+        setUser(id)
+        connectSendbird(id)
       
-      //Prefetch basic info
-      const cachedProfilePic = await SecureStorage.getItem("profilePic");
-      if(cachedProfilePic != null){
-        const success = await Image.prefetch(cachedProfilePic);
-        console.log("PREFETCH --- APP.JS --- PROFILEPIC")
+        await fetch('https://crib-llc.herokuapp.com/tokens/accessRefresh', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + rt
+          }
+        }).then(async e => {
+          const response = await e.json();
+          if(e.status == 200){
+            try {
+              if(response.accessToken != undefined ?? response.accessToken != null){
+                await EncryptedStorage.setItem("accessToken", response.accessToken)
+                const cachedProfilePic = await EncryptedStorage.getItem("profilePic");
+                if(cachedProfilePic != undefined){
+                  await Image.prefetch(cachedProfilePic);
+                  console.log("PREFETCH --- APP.JS --- PROFILEPIC")
+                }
+              }
+              
+            } catch (err) {
+              alert(err)
+            }
+          }
+          else if(e.status == 401){
+            alert("An error has occured.");
+            logout()
+          }
+          else{
+            alert("An error has occured.")
+          }
+        })
+        .catch ( e => {
+          alert("An error has occured.")
+        })
       }
-
-       
+      else{
+        console.log("Refresh Token is undefined. User is not logged in.")
+      }
     }
-    else{
-      console.log("Refresh Token is undefined. User is not logged in.")
+    catch{
+      console.log("ERROR --- APP --- REFRESHTOKEN")
     }
+  
   }
   const login = (name) => {
     setUser(name);

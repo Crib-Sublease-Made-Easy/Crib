@@ -26,7 +26,8 @@ import { Container, Heading, SignupForm, ButtonText, StandardButtonStyle, Standa
 import OTPInputField from  './otpStyle'
 import { UserContext } from '../../UserContext';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
@@ -46,7 +47,6 @@ export default function OTPScreen({navigation, route}){
     const [smsErrorModal, setSMSErrorModal] = useState(false)
     const [laoding, setLoading] = useState(false)
 
-    console.log(route.params.authy_id)
     const MAX_CODE_LENGTH = 6;
 
     useEffect(()=> {
@@ -59,115 +59,129 @@ export default function OTPScreen({navigation, route}){
 
     async function signupStep3(){ 
         setLoading(true)
-        let oneSignalUserId = await SecureStorage.getItem('oneSignalUserID');
-        const formData = new FormData();
+        try{
+            let oneSignalUserId = await EncryptedStorage.getItem('oneSignalUserID');
+            if(oneSignalUserId != undefined){
+                const formData = new FormData();
 
-        formData.append("firstName", route.params.firstName);                     
-        formData.append("lastName", route.params.lastName);  
-        formData.append("dob", route.params.age);      
-        formData.append("gender", route.params.gender);
-        formData.append("phoneNumber", route.params.phoneNumber);                       
-        formData.append("occupation", route.params.occupation)
-        formData.append("school", route.params.school);                       
-        formData.append("email", route.params.email);      
-        formData.append("token", code);      
-        formData.append("authy_id", route.params.authy_id);      
-        formData.append("oneSignalUserId", oneSignalUserId);      
+                formData.append("firstName", route.params.firstName);                     
+                formData.append("lastName", route.params.lastName);  
+                formData.append("dob", route.params.age);      
+                formData.append("gender", route.params.gender);
+                formData.append("phoneNumber", route.params.phoneNumber);                       
+                formData.append("occupation", route.params.occupation)
+                formData.append("school", route.params.school);                       
+                formData.append("email", route.params.email);      
+                formData.append("token", code);      
+                formData.append("authy_id", route.params.authy_id);      
+                formData.append("oneSignalUserId", oneSignalUserId);      
 
- 
-        var array = route.params.profilePic.split(".");
-        formData.append("userImage", {
-            uri: route.params.profilePic,
-            type: 'image/' + array[1],
-            name: 'someName',
-        });
+        
+                var array = route.params.profilePic.split(".");
+                formData.append("userImage", {
+                    uri: route.params.profilePic,
+                    type: 'image/' + array[1],
+                    name: 'someName',
+                });
 
-        console.log("TOKEN")
-        console.log(code);
-        console.log("AuthyID")
-        console.log(route.params.authy_id);
-        fetch('https://crib-llc.herokuapp.com/users/OTP/step3', {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: formData
-        })
-        .then(res => res.json()).then(async data =>{
-            console.log("STEP3");
-            console.log(data);
-
-            if(data.message != "User account created successfully"){
-                alert("Incorrect code.")
-                setCode("")
-                setLoading(false)
-            }
-            else{
-
-                //The USER_ID below should be unique to your Sendbird application.
-                try {
-                    console.log("connecting to sendbird")
-                    console.log()
-                    sb.connect(data.createdUser._id, function(user, error) {
-                        if (error) {
-                            // Handle error.
-                            console.log("sendbird error")
-                            console.log(err)
-                        }
-                        else{
-                            console.log("sendbird connected")
-                            sb.updateCurrentUserInfo(data.createdUser.firstName, data.createdUser.profilePic, (user, err) => {
-                                if (!err) {
-                                    console.log("Successfully updated current user", err)
-                                  } else {
-                                    console.log("Error with updating current user", err)
-                                  }
-                            });
-                        }
-                        // The user is connected to Sendbird server.
-                    });
-                    // The user is connected to the Sendbird server.
-                } catch (err) {
-                    // Handle error.
-                }
-                console.log("OTP",data)
-                try{
-                    OneSignal.disablePush(false);
-                    //Create sendbird user here with userid
-                    //store user info in
-
-                    await SecureStorage.setItem("accessToken", data.token.accessToken)
-                    await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
-                    await SecureStorage.setItem("userId", data.createdUser._id)
-                    await SecureStorage.setItem("firstName", data.createdUser.firstName)
-                    await SecureStorage.setItem("lastName", data.createdUser.lastName)
-                    await SecureStorage.setItem("refreshToken", data.token.refreshToken)
-                  
-
-
-                    connectSendbird()
-
-                }
-                catch{e=>{
-                    console.log(e)
-                }}
+                fetch('https://crib-llc.herokuapp.com/users/OTP/step3', {
+                    method: 'POST',
+                    headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                    },
+                    body: formData
+                })
+                .then(async res => {
+                    const data = await res.json();
+                    if(res.status == 201){
                 
-                setTimeout(()=>{setLoading(false)},2000)
-                login(data.createdUser._id);
-                navigation.reset(
-                    {index: 0 , routes: [{ name: 'DiscoverTabs'}]}
-                )
+                        try {
+                            sb.connect(data.createdUser._id, function(user, error) {
+                                if (error) {
+                                    // Handle error.
+                                    console.log("sendbird error")
+                                }
+                                else{
+                                    console.log("sendbird connected")
+                                    sb.updateCurrentUserInfo(data.createdUser.firstName, data.createdUser.profilePic, (user, err) => {
+                                        if (!err) {
+                                            console.log("Successfully updated current user")
+                                        } else {
+                                            console.log("Error with updating current user", err)
+                                        }
+                                    });
+                                }
+                                // The user is connected to Sendbird server.
+                            });
+                            // The user is connected to the Sendbird server.
+                        } catch (err) {
+                            alert("An error has occured.")
+                        }
+                    
+                        try{
+                            OneSignal.disablePush(false);
+                            //Create sendbird user here with userid
+                            if(data.token.accessToken != undefined){
+                                await EncryptedStorage.setItem("accessToken", data.token.accessToken)
+                            }
+                            if( data.createdUser.profilePic != undefined){
+                                await EncryptedStorage.setItem("profilePic", data.createdUser.profilePic)
+                            }
+                            if( data.createdUser._id != undefined){
+                                await EncryptedStorage.setItem("userId", data.createdUser._id)
+                            }
+                            if(data.createdUser.firstName != undefined){
+                                await EncryptedStorage.setItem("firstName", data.createdUser.firstName)
+                            }
+                            if(data.createdUser.lastName != undefined){
+                                await EncryptedStorage.setItem("lastName", data.createdUser.lastName)
+                            }
+                            if(data.token.refreshToken != undefined){
+                                await EncryptedStorage.setItem("refreshToken", data.token.refreshToken)
+                            }
+                            connectSendbird()
+                        }
+                        catch{e=>{
+                            console.log(e)
+                        }}
+                        
+                        setLoading(false)
+                        login(data.createdUser._id);
+                        navigation.reset(
+                            {index: 0 , routes: [{ name: 'DiscoverTabs'}]}
+                        )
+                    }
+                    else if(res.status == 500){
+                        alert("Error occured while creating account. Please try again later!")
+                    }
+                    else{
+                        alert("Incorrect code.")
+                        setCode("")
+                        setLoading(false)
+                    }
 
+                })
+                .catch( e => {
+                    setLoading(false)
+                    alert("Error occured while creating account. Please try again later!")
+                    navigation.reset(
+                        {index: 0 , routes: [{ name: 'DiscoverTabs'}]}
+                    )
+                })
             }
-        })
+        }
+        catch{
+            alert("Error. Please try again later!")
+        }
+         setLoading(false)
+        
     }
   const connectSendbird = async () => {
-    const UID = await SecureStorage.getItem("userId");
+    const UID = await EncryptedStorage.getItem("userId");
     if (UID != undefined) {
       try {
         console.log("connecting to sendbird")
-        console.log("UID", UID)
      
         sb.connect(UID, function (user, error) {
           if (error) {
@@ -188,6 +202,7 @@ export default function OTPScreen({navigation, route}){
     }
   }
     function backToPhoneNumber(){
+        setSMSErrorModal(false)
         navigation.reset(
             {index: 0 , routes: [{ name: 'PhoneNumber', 
             params: {
@@ -198,7 +213,9 @@ export default function OTPScreen({navigation, route}){
             profilePic: route.params.profilePic,
             school: route.params.school,
             email: route.params.email,
-            password: route.params.password, }}]}
+            password: route.params.password, 
+            wrongPhoneNumber: true
+        }}]}
             
         )
     }
@@ -217,12 +234,12 @@ export default function OTPScreen({navigation, route}){
         })
         .then(res => res.json()).then(data =>{
             console.log("STEP2");
-            console.log(data);
             if(data.response.success != true){
                 alert("invalid in step 2.")
             }
         })
         setLoading(false)
+        setSMSErrorModal(false)
     }
 
     return(

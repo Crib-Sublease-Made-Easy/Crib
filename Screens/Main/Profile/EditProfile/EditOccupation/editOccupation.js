@@ -14,7 +14,7 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../../sharedUtils
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { UserContext } from '../../../../../UserContext'
 
@@ -31,34 +31,38 @@ export default function EditOccupationScreen({navigation, route}){
     
 
     async function update(){
-        const accessToken = await SecureStorage.getItem("accessToken");
-        fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken,
-            },
-            body: JSON.stringify({
-                occupation: occupation.trim(),
-            })
-        })
-        .then((response) => response.json()).then(data => {
-            
-            console.log(data)
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
+            if(accessToken != undefined){
+                fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+                    method: 'PUT',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + accessToken,
+                    },
+                    body: JSON.stringify({
+                        occupation: occupation.trim(),
+                    })
+                })
+                .then((response) => response.json()).then(data => {
+                    navigation.navigate('ProfileEdit', {userData:data})
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+            }
+        }
+        catch{
 
-            navigation.navigate('ProfileEdit', {userData:data})
-        })
-        .catch(e => {
-            console.log(e)
-        })
+        }
     }
 
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
           <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack()}>
                         <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>
@@ -66,7 +70,7 @@ export default function EditOccupationScreen({navigation, route}){
                     <Header>Change Occupation</Header>
                 </NameContainer>
                 <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={update}>
                         <Ionicons name='checkmark' size={25} style={{paddingHorizontal:WIDTH*0.02}} color='black' />
                     </Pressable>
                 </ResetButtonContainer>

@@ -256,7 +256,6 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     })
 
     function MoveMapToPin(pinInfo){
-        console.log(pinInfo)
         setSelectedPin(pinInfo)
         openPreviewCard()
         moveMap(pinInfo.propertyInfo.loc.coordinates[1] - 0.015,pinInfo.propertyInfo.loc.coordinates[0])

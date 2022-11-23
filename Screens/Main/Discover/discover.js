@@ -23,8 +23,7 @@ import DiscoverFilterScreen from './Filter/discoverFilter'; //onPress Search Fil
 
 import PropertyCard from './propertyCard';  //The slide up screen that shows all properties
 
-import SecureStorage from 'react-native-secure-storage'
-
+import EncryptedStorage from 'react-native-encrypted-storage';
 //Icons
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -73,28 +72,32 @@ export default function DiscoverScreen({navigation}){
         navigation.navigate("Message")
     });
     const connectSendbird = async () => {
-        const UID = await SecureStorage.getItem("userId");
-        if (UID != undefined) {
-          try {
-            console.log("connecting to sendbird")
-         
-            await sb.connect(UID, function (user, error) {
-              if (error) {
+        try{
+            const UID = await EncryptedStorage.getItem("userId");
+            if (UID != undefined) {
+            try {
+                // console.log("connecting to sendbird")
+                await sb.connect(UID, function (user, error) {
+                if (error) {
+                    // Handle error.
+                    console.log("sendbird error")
+                    console.log(error)
+                }
+                else {
+                    
+                    console.log("sendbird connected")
+                }
+                // The user is connected to Sendbird server.
+                });
+                // The user is connected to the Sendbird server.
+            } catch (err) {
                 // Handle error.
-                console.log("sendbird error")
-                console.log(error)
-              }
-              else {
-                
-                console.log("sendbird connected")
-              }
-              // The user is connected to Sendbird server.
-            });
-            // The user is connected to the Sendbird server.
-          } catch (err) {
-            // Handle error.
-            console.log("SENDBIRD ERROR",err)
-          }
+                console.log("SENDBIRD ERROR",err)
+            }
+            }
+        }
+        catch{
+            console.log("ERROR --- DISCOVER --- CONNECTSENDBIRD")
         }
       }
 
@@ -240,7 +243,6 @@ export default function DiscoverScreen({navigation}){
             }
         }) 
         .then(async res =>{
-            // console.log(res.status); 
 
             //Continue only with good status
             if(res.status == 200 || res.status == 201){

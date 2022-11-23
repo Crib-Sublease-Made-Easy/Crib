@@ -17,7 +17,8 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 import {GiftedChat, Actions, Bubble , InputToolbar, Send} from 'react-native-gifted-chat';
 import { ifIphoneX , getBottomSpace} from 'react-native-iphone-x-helper'
 
@@ -88,7 +89,6 @@ export default function ChatScreen({navigation, route}){
     const assignRecipient = () =>{
       if(channel != null && channel.members.length == 2){
         if(channel.members[0].userId == USERID){
-          console.log("INSIDEEEE")
           setRecipient(channel.members[1].nickname)
         }else{
           setRecipient(channel.members[0].nickname)
@@ -99,7 +99,7 @@ export default function ChatScreen({navigation, route}){
     }
     const onSend = useCallback(async (messages = []) => {
       setSending(true)
-      const accessToken = await SecureStorage.getItem("accessToken");
+      const accessToken = await EncryptedStorage.getItem("accessToken");
 
       const params = new sb.UserMessageParams();
       params.message = messages[0].text;
@@ -170,7 +170,6 @@ export default function ChatScreen({navigation, route}){
 
         if(groupChannel != null && groupChannel.members.length == 2){
           if(groupChannel.members[0].userId == USERID){
-            console.log("INSIDEEEE")
             setRecipient(groupChannel.members[1].nickname)
           }else{
             setRecipient(groupChannel.members[0].nickname)
@@ -183,7 +182,6 @@ export default function ChatScreen({navigation, route}){
     }
 
     const deletedChat = async (groupChannel) => {
-      console.log("delete chat" , groupChannel)
       onChat= false
     
       await groupChannel.leave()
@@ -192,17 +190,13 @@ export default function ChatScreen({navigation, route}){
     }
 
     const getPropertyInfo = async (propId, gc) =>{
-      console.log("getpropertyinfo" , propId)
-      console.log("getpropertyinfo" , gc)
       await fetch('https://crib-llc.herokuapp.com/properties/' + propId, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         }
-      }).then(async e => e.json()).then(async (response) => {
-        // console.log(response.propertyInfo.deleted)
-        
+      }).then(async e => e.json()).then(async (response) => {        
         if(response.propertyInfo.deleted == true){
           if(loading == true){
             onChat = false
@@ -267,8 +261,6 @@ export default function ChatScreen({navigation, route}){
             })
             setMessages(messages)
            
-         
-        // console.log(messages)
         }
         
 
@@ -337,7 +329,7 @@ export default function ChatScreen({navigation, route}){
       />  
       
       }
-    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(fgalse)} leaveChat={leaveChat} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
+    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} leaveChat={leaveChat} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
     </SafeAreaView>
     )
 }

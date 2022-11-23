@@ -6,12 +6,13 @@ import {
     Dimensions,
     Image,
     Animated as RNAnimated,
-    SafeAreaView
+    SafeAreaView,
+    Pressable
 } from 'react-native';
 
 import FastImage from 'react-native-fast-image'
 
-import SecureStorage from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import MapView , { Marker }from 'react-native-maps';
@@ -65,98 +66,111 @@ export default function PropertyDetailScreen({navigation, route}){
     const createConversation = async () =>{
 
         //Check if the user is signed in or not
-        const rt  = await SecureStorage.getItem("refressToken");
-        
-        console.log( rt);
-        if(rt != null || rt != undefined){
-
-            var userIds = [USERID, propData.postedBy]
-            sb.GroupChannel.createChannelWithUserIds(userIds, true, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
-                if (error) {
-                    // Handle error.
-                    console.log("Failed To Create Channel")
-                    console.log(error)
-                    alert("You are currently engaged in a conversation with this user")
-                } else {
-                    console.log("Channel Created Successfully")
-                    //console.log(groupChannel)
-                    // A group channel with additional information is successfully created.
-                    var channelUrl = groupChannel.url;
-                    navigation.navigate("Chat", {url:channelUrl, id: USERID, postedBy:postedUserData.firstName})
-                }
-            });
+        try{
+            const accessToken  = await EncryptedStorage.getItem("accessToken");
+            
+            if(accessToken != undefined){
+                var userIds = [USERID, propData.postedBy]
+                sb.GroupChannel.createChannelWithUserIds(userIds, true, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
+                    if (error) {
+                        // Handle error.
+                        console.log("Failed To Create Channel")
+                        console.log(error)
+                        alert("You are currently engaged in a conversation with this user")
+                    } else {
+                        console.log("Channel Created Successfully")
+                        //console.log(groupChannel)
+                        // A group channel with additional information is successfully created.
+                        var channelUrl = groupChannel.url;
+                        navigation.navigate("Chat", {url:channelUrl, id: USERID, postedBy:postedUserData.firstName})
+                    }
+                });
+            }
+            else{
+                alert("Sign in to contact tenant.");
+                navigation.navigate("Landing")
+            }
         }
-        else{
-            alert("Sign in to contact tenant.");
-            navigation.navigate("Landing")
+        catch{
+            console.log("ERROR --- DISCOVERPROPERTYDETIAL --- CREATECONVO")
         }
     }
 
     async function getTokens(){
-        const accessToken = await SecureStorage.getItem("accessToken");
-        if (USERID != null && accessToken != null){
-            fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
-            method: 'GET',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + accessToken,
-            }
-            }) 
-            .then(res => res.json()).then(async userData =>{
-                if(userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) == -1){
-                    setLiked(false)
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
+            
+            if (USERID != null && accessToken != undefined){
+                fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+                method: 'GET',
+                headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
                 }
-                else{
-                    setLiked(true)
-                }
-            })
-            .catch(e=>{
-                alert(e)
-            })
-        }   
+                }) 
+                .then(res => res.json()).then(async userData =>{
+                    if(userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) == -1){
+                        setLiked(false)
+                    }
+                    else{
+                        setLiked(true)
+                    }
+                })
+                .catch(e=>{
+                    alert(e)
+                })
+            }   
+        }
+        catch{
+            console.log("ERROR --- DISCOVERPROPRTYDETIAL --- GETTOKEN")
+        }
     }
 
     async function fetchProperties(){
-        
-        const accessToken = await SecureStorage.getItem("accessToken");
-        if(route.params.data != undefined && accessToken != null){
-            await fetch('https://crib-llc.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + accessToken,
-            },
-            body:JSON.stringify({
-                viewCount: route.params.incrementViewCount ? "true" : "false"
-            })
-            
-            
-            }) 
-            .then(res => res.json()).then( async propertyData =>{
-                if(propertyData.propertyInfo.deleted){
-                    await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
-                        method: 'POST',
-                        headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': 'bearer ' + accessToken,
-                        },
-                        body: JSON.stringify({
-                            propertyId: route.params.data.propertyInfo._id,
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
+            if(route.params.data != undefined && accessToken != undefined){
+                await fetch('https://crib-llc.herokuapp.com/properties/' + route.params.data.propertyInfo._id, {
+                method: 'POST',
+                headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
+                },
+                body:JSON.stringify({
+                    viewCount: route.params.incrementViewCount ? "true" : "false"
+                })
+                
+                
+                }) 
+                .then(res => res.json()).then( async propertyData =>{
+                    if(propertyData.propertyInfo.deleted){
+                        await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
+                            method: 'POST',
+                            headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'bearer ' + accessToken,
+                            },
+                            body: JSON.stringify({
+                                propertyId: route.params.data.propertyInfo._id,
+                            })
+                            }) 
+                            .catch(e=>{
+                                alert(e)
                         })
-                        }) 
-                        .catch(e=>{
-                            alert(e)
-                    })
-                    alert("Property is deleted.")
-                    navigation.goBack()
-                }
-            })
-            .catch(e=>{
-                alert(e)
-            })
+                        alert("Property is deleted.")
+                        navigation.goBack()
+                    }
+                })
+                .catch(e=>{
+                    alert(e)
+                })
+            }
+        }
+        catch{
+            console.log("EDDOR --- DISCOVERPROPERTYDETAIL --- FETCH")
         }
         
     }
@@ -170,40 +184,43 @@ export default function PropertyDetailScreen({navigation, route}){
     }, []);
 
     async function likeProperty(){
-        console.log("Liking")
-
-        const refreshToken = await SecureStorage.getItem("refreshToken");
-
-        if(refreshToken != undefined){
-            
-            const accessToken = await SecureStorage.getItem("accessToken");
-            if(accessToken != null){
-                await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
-                method: 'POST',
-                headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'bearer ' + accessToken,
-                },
-                body: JSON.stringify({
-                    propertyId: route.params.data.propertyInfo._id,
-                })
-                }) 
-                .then(res => res.json()).then(async message =>{
-                    // console.log(message)
-                    console.log("hello")
-                    await AsyncStorage.removeItem("favoriteProperties");
-                
-                    setLiked(!liked)
-                })
-                .catch(e=>{
-                    alert(e)
-                })
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
+            if(accessToken != undefined){
+                if(accessToken != null){
+                    await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
+                    method: 'POST',
+                    headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'bearer ' + accessToken,
+                    },
+                    body: JSON.stringify({
+                        propertyId: route.params.data.propertyInfo._id,
+                    })
+                    }) 
+                    .then(res => res.json()).then(async message =>{
+                        try{
+                            await AsyncStorage.removeItem("favoriteProperties");
+                        }
+                        catch{
+                            alert("An error has occured. Please try again later!")
+                        }
+                    
+                        setLiked(!liked)
+                    })
+                    .catch(e=>{
+                        alert(e)
+                    })
+                }
+            }
+            else{
+                alert("Sign in to like properties.");
+                navigation.navigate("Landing")
             }
         }
-        else{
-            alert("Sign in to like properties.");
-            navigation.navigate("Landing")
+        catch{
+            console.log("ERROR --- LIKEPROPERTY --- PROPERTYDETAIL")
         }
         
     }
@@ -275,13 +292,15 @@ export default function PropertyDetailScreen({navigation, route}){
                     <TypeLocationFavoriteContainer>
                         <TypeLocationContainer>
                             <CardTitle>{propData.type} for rent</CardTitle>
-                            <LocationText>{propData.loc.secondaryTxt}  •  UW - Madison</LocationText>
+                            <LocationText style={{marginTop: HEIGHT*0.005}}>{propData.loc.secondaryTxt}</LocationText>
                         </TypeLocationContainer>
 
                         <FavoriteContainer>
+                        
                         { !ownProperty &&
-                            <Ionicons  name="heart" size={30} color={ liked ? '#ee88a6' : DARKGREY}
-                            onPress={likeProperty}/>
+                            <Pressable onPress={likeProperty} hitSlop={WIDTH*0.025}>
+                                <Ionicons  name="heart" size={30} color={ liked ? '#ee88a6' : DARKGREY}/>
+                            </Pressable>
                         }
                         </FavoriteContainer>
                     </TypeLocationFavoriteContainer>
@@ -310,7 +329,7 @@ export default function PropertyDetailScreen({navigation, route}){
                     <Subheading>Sublease details</Subheading>
                     <RowContainer>
                         <Ionicons  name="pin" size={20} color='black' style={{paddingRight: WIDTH*0.02}}></Ionicons>
-                        <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>3 miles</DistanceText> away from search location</DistanceText>
+                        <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>{route.params.distance} miles</DistanceText> away from search location</DistanceText>
                     </RowContainer>
                 </Section>
 
@@ -364,7 +383,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 </Section>       */}
             </ScrollView>
             <StickyHeaderContainer>
-                < StickyHeaderIcon  hitSlop={WIDTH*0.05} onPress={()=>navigation.goBack()}>
+                < StickyHeaderIcon  hitSlop={WIDTH*0.025} onPress={()=>navigation.goBack()}>
                     <Ionicons  name="arrow-back-outline" size={25} color='white'></Ionicons>
                 </ StickyHeaderIcon>
             </StickyHeaderContainer>

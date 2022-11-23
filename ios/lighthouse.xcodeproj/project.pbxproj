@@ -14,9 +14,10 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		27A63ED41A4F02E78A127A7F /* libPods-lighthouse-lighthouseTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CBC3F7029623C16F54B1B375 /* libPods-lighthouse-lighthouseTests.a */; };
-		5D8C6AB628D252ED0045A0CC /* Crib180Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D8C6AB328D252ED0045A0CC /* Crib180Icon.png */; };
-		5D8C6AB728D252ED0045A0CC /* Crib20124Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D8C6AB428D252ED0045A0CC /* Crib20124Icon.png */; };
-		5D8C6AB828D252ED0045A0CC /* Crib120Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D8C6AB528D252ED0045A0CC /* Crib120Icon.png */; };
+		5D4F31AD292B342400AEE091 /* Crib20124Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D4F31AA292B342400AEE091 /* Crib20124Icon.png */; };
+		5D4F31AE292B342400AEE091 /* Crib180Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D4F31AB292B342400AEE091 /* Crib180Icon.png */; };
+		5D4F31AF292B342400AEE091 /* Crib120Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D4F31AC292B342400AEE091 /* Crib120Icon.png */; };
+		5D4F31B1292B34B900AEE091 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D4F31B0292B34B900AEE091 /* logo.png */; };
 		5DE61C1228B30C8A0023B7DA /* EBGaramond-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C0828B30C8A0023B7DA /* EBGaramond-Bold.ttf */; };
 		5DE61C1428B30C8A0023B7DA /* EBGaramond-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C0A28B30C8A0023B7DA /* EBGaramond-ExtraBold.ttf */; };
 		5DE61C1528B30C8A0023B7DA /* EBGaramond-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C0B28B30C8A0023B7DA /* EBGaramond-Medium.ttf */; };
@@ -28,7 +29,6 @@
 		5DE61C2F28B549490023B7DA /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C2928B549490023B7DA /* Roboto-Thin.ttf */; };
 		5DE61C3028B549490023B7DA /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C2A28B549490023B7DA /* Roboto-Black.ttf */; };
 		5DE61C3128B549490023B7DA /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C2B28B549490023B7DA /* Roboto-Regular.ttf */; };
-		5DE61C3528B5F9410023B7DA /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C3428B5F9410023B7DA /* logo.png */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B1C384E1289C497B00B4D85F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C384E0289C497B00B4D85F /* NotificationService.swift */; };
 		B1C384E5289C497B00B4D85F /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B1C384DE289C497A00B4D85F /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -80,9 +80,10 @@
 		2E88BCA15638954AFC6A3BC2 /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		367FF7851103DC4CA30D2C28 /* Pods-lighthouse-lighthouseTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse-lighthouseTests.debug.xcconfig"; path = "Target Support Files/Pods-lighthouse-lighthouseTests/Pods-lighthouse-lighthouseTests.debug.xcconfig"; sourceTree = "<group>"; };
 		587BAF0321F05C9863AC01C5 /* Pods-lighthouse.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lighthouse.debug.xcconfig"; path = "Target Support Files/Pods-lighthouse/Pods-lighthouse.debug.xcconfig"; sourceTree = "<group>"; };
-		5D8C6AB328D252ED0045A0CC /* Crib180Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Crib180Icon.png; sourceTree = "<group>"; };
-		5D8C6AB428D252ED0045A0CC /* Crib20124Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Crib20124Icon.png; sourceTree = "<group>"; };
-		5D8C6AB528D252ED0045A0CC /* Crib120Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Crib120Icon.png; sourceTree = "<group>"; };
+		5D4F31AA292B342400AEE091 /* Crib20124Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Crib20124Icon.png; sourceTree = "<group>"; };
+		5D4F31AB292B342400AEE091 /* Crib180Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Crib180Icon.png; sourceTree = "<group>"; };
+		5D4F31AC292B342400AEE091 /* Crib120Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Crib120Icon.png; sourceTree = "<group>"; };
+		5D4F31B0292B34B900AEE091 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		5DE61C0828B30C8A0023B7DA /* EBGaramond-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "EBGaramond-Bold.ttf"; path = "../../assets/fonts/EBGaramond-Bold.ttf"; sourceTree = "<group>"; };
 		5DE61C0A28B30C8A0023B7DA /* EBGaramond-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "EBGaramond-ExtraBold.ttf"; path = "../../assets/fonts/EBGaramond-ExtraBold.ttf"; sourceTree = "<group>"; };
 		5DE61C0B28B30C8A0023B7DA /* EBGaramond-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "EBGaramond-Medium.ttf"; path = "../../assets/fonts/EBGaramond-Medium.ttf"; sourceTree = "<group>"; };
@@ -94,7 +95,6 @@
 		5DE61C2928B549490023B7DA /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Thin.ttf"; path = "../../assets/fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; };
 		5DE61C2A28B549490023B7DA /* Roboto-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Black.ttf"; path = "../../assets/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
 		5DE61C2B28B549490023B7DA /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Regular.ttf"; path = "../../assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
-		5DE61C3428B5F9410023B7DA /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = lighthouse/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		95E44E296076C7D5AB66CEFC /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		B1C384D7289C488200B4D85F /* lighthouse.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = lighthouse.entitlements; path = lighthouse/lighthouse.entitlements; sourceTree = "<group>"; };
@@ -156,10 +156,10 @@
 		13B07FAE1A68108700A75B9A /* lighthouse */ = {
 			isa = PBXGroup;
 			children = (
-				5D8C6AB528D252ED0045A0CC /* Crib120Icon.png */,
-				5D8C6AB328D252ED0045A0CC /* Crib180Icon.png */,
-				5D8C6AB428D252ED0045A0CC /* Crib20124Icon.png */,
-				5DE61C3428B5F9410023B7DA /* logo.png */,
+				5D4F31AC292B342400AEE091 /* Crib120Icon.png */,
+				5D4F31AB292B342400AEE091 /* Crib180Icon.png */,
+				5D4F31B0292B34B900AEE091 /* logo.png */,
+				5D4F31AA292B342400AEE091 /* Crib20124Icon.png */,
 				B1C384D7289C488200B4D85F /* lighthouse.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -379,15 +379,15 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				5DE61C1728B30C8A0023B7DA /* EBGaramond-Regular.ttf in Resources */,
 				5DE61C2D28B549490023B7DA /* Roboto-Light.ttf in Resources */,
-				5D8C6AB628D252ED0045A0CC /* Crib180Icon.png in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				5D8C6AB828D252ED0045A0CC /* Crib120Icon.png in Resources */,
+				5D4F31AE292B342400AEE091 /* Crib180Icon.png in Resources */,
+				5D4F31B1292B34B900AEE091 /* logo.png in Resources */,
+				5D4F31AF292B342400AEE091 /* Crib120Icon.png in Resources */,
 				5DE61C2E28B549490023B7DA /* Roboto-Bold.ttf in Resources */,
-				5D8C6AB728D252ED0045A0CC /* Crib20124Icon.png in Resources */,
 				5DE61C1528B30C8A0023B7DA /* EBGaramond-Medium.ttf in Resources */,
 				5DE61C1228B30C8A0023B7DA /* EBGaramond-Bold.ttf in Resources */,
-				5DE61C3528B5F9410023B7DA /* logo.png in Resources */,
 				5DE61C1828B30C8A0023B7DA /* EBGaramond-SemiBold.ttf in Resources */,
+				5D4F31AD292B342400AEE091 /* Crib20124Icon.png in Resources */,
 				5DE61C3128B549490023B7DA /* Roboto-Regular.ttf in Resources */,
 				5DE61C2F28B549490023B7DA /* Roboto-Thin.ttf in Resources */,
 				5DE61C3028B549490023B7DA /* Roboto-Black.ttf in Resources */,

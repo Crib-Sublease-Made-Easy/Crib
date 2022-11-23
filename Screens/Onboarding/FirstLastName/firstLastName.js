@@ -59,7 +59,7 @@ export default function FirstLastNameScreen({navigation, route}){
             <KeyboardAvoidingView behavior={'padding'} style={{flex:1}} >
            
             <SignUpHeader>
-                <SignUpBackButtonPressable onPress={backToLanding}>
+                <SignUpBackButtonPressable hitSlop={WIDTH*0.025} onPress={backToLanding}>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
                     <Ionicons name='arrow-back-outline' size={25} />
                 </SignUpBackButtonPressable>
@@ -78,11 +78,7 @@ export default function FirstLastNameScreen({navigation, route}){
             </ScrollView>
 
             <ContinueButton loading={loading} onPress={()=> checkInput()}>
-            {loading ?
-            <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.1, height: WIDTH*0.1,}}/>
-            :
-            <ContinueText>Continue</ContinueText>
-            }
+                <ContinueText>Continue</ContinueText>
             </ContinueButton>
             
             </KeyboardAvoidingView>

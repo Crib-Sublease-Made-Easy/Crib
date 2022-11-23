@@ -26,8 +26,8 @@ import { Router } from 'express';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 FontAwesome.loadFont()
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
-import { PropertyDescription } from '../../../Discover/discoverPDStyle';
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 
 
 export default function EditPropertyDescriptionScreen({navigation, route}){
@@ -35,27 +35,31 @@ export default function EditPropertyDescriptionScreen({navigation, route}){
     const [description, setDescription] = useState(route.params.description);
 
     async function update(){
-    
-        const accessToken = await SecureStorage.getItem("accessToken");
-        fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken,
-            },
-            body: JSON.stringify({
-                description: description
-            })
-        })
-            .then((response) => response.json()).then(data => {
-                console.log("Update type reponse")
-                console.log(data)
-                navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
-            })
-            .catch(e => {
-                console.log(e)
-            })
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
+            if(accessToken != undefined){
+                fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
+                    method: 'PUT',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + accessToken,
+                    },
+                    body: JSON.stringify({
+                        description: description
+                    })
+                })
+                .then((response) => response.json()).then(data => {
+                    navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+            }
+        }
+        catch{
+            alert("Error. Please try again later!")
+        }        
     }
 
     return(
@@ -63,15 +67,15 @@ export default function EditPropertyDescriptionScreen({navigation, route}){
             
             <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                        <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack()}>
+                        <Ionicons name='close-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>
                 <NameContainer>
-                    <Header>Edit Property</Header>
+                    <Header>Edit Description</Header>
                 </NameContainer>
                 <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={update}>
                         <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
                     </Pressable>
                 </ResetButtonContainer>

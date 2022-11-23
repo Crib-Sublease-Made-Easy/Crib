@@ -224,9 +224,6 @@ export const FavPropertyCardDateText = styled.Text`
   font-weight: 400
 `
 export const FavPropertyCardDateContainer = styled.View`
-  padding-vertical: ${HEIGHT*0.01}px
-  width: 50%;
-  justify-content: space-between;
   align-items: center
   flex-direction: row
 `
@@ -271,8 +268,8 @@ export const NoUserViewContainer = styled.View`
 
 export const LoginContainer = styled.Pressable`
   width: ${WIDTH*0.8}px;
-  height: ${HEIGHT*0.065}px;
-  border-radius: 25px;
+  padding-vertical: ${HEIGHT*0.02}px
+  border-radius: 20px;
   background-color: ${PRIMARYCOLOR}
   margin-top: ${HEIGHT*0.15}px
   justify-content: center;
@@ -285,8 +282,8 @@ export const LoginContainer = styled.Pressable`
 `
 export const SignupContainer = styled.Pressable`
   width: ${WIDTH*0.8}px;
-  height: ${HEIGHT*0.065}px;
-  border-radius: 25px;
+  padding-vertical: ${HEIGHT*0.02}px
+  border-radius: 20px;
   border-color: ${PRIMARYCOLOR}
   background-color: white
   margin-top: ${HEIGHT*0.02}px

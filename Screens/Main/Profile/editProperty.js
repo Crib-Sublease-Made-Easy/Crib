@@ -12,7 +12,7 @@ import {
   Alert
 } from 'react-native';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY} from '../../../../sharedUtils'
 
@@ -56,8 +56,7 @@ export default function EditPropertyScreen({navigation, route}){
 
 
     async function getTokens(){
-        console.log("refresh")
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
 
         if(route.params.propId != null && route.params.propId != undefined && accessToken != null){
             fetch('https://crib-llc.herokuapp.com/properties/' + route.params.propId, {
@@ -73,60 +72,60 @@ export default function EditPropertyScreen({navigation, route}){
 
                 //Set the default varaibles 
                 if(route.params.propertyData.type == undefined || propType != propData.propertyInfo.type){
-                    console.log("UPDATE --- API --- propType")
+                    // console.log("UPDATE --- API --- propType")
                     setPropType(propData.propertyInfo.type)
                 }
                 else{
-                    console.log("UPDATE --- PARAMS --- propType")
+                    // console.log("UPDATE --- PARAMS --- propType")
                 }
                 if(route.params.propertyData.price == undefined || propPrice != propData.propertyInfo.price){
-                    console.log("UPDATE --- API --- propPrice")
+                    // console.log("UPDATE --- API --- propPrice")
                     setPropPrice(propData.propertyInfo.price)
                 }
                 else{
-                    console.log("UPDATE --- PARAMS --- propPrice")
+                    // console.log("UPDATE --- PARAMS --- propPrice")
                 }
                 if(route.params.propertyData.propDateFrom == undefined || propDateFrom != propData.propertyInfo.availableFrom){
-                    console.log("UPDATE --- API --- propavailFrom")
+                    // console.log("UPDATE --- API --- propavailFrom")
                     setPropDateFrom(propData.propertyInfo.availableFrom)
                 }
                 else{
-                    console.log("UPDATE --- PARAMS --- propavailableFrom")
+                    // console.log("UPDATE --- PARAMS --- propavailableFrom")
                 }
                 if(route.params.propertyData.propDateTo == undefined != propData.propertyInfo.availableTo){
-                    console.log("UPDATE --- API --- propavailTo")
+                    // console.log("UPDATE --- API --- propavailTo")
                     setPropDateTo(propData.propertyInfo.availableTo)
                 }
                 else{
-                    console.log("UPDATE --- PARAMS --- propavailableTo")
+                    // console.log("UPDATE --- PARAMS --- propavailableTo")
                 }
                 if(route.params.propertyData.description == undefined || propDescription != propData.propertyInfo.description){
-                    console.log("UPDATE --- API --- propDescription")
+                    // console.log("UPDATE --- API --- propDescription")
                     setPropDescription(propData.propertyInfo.description)
                 }
                 else{
-                    console.log("UPDATE --- PARAMS --- propDescription")
+                    // console.log("UPDATE --- PARAMS --- propDescription")
                 }
                 if(route.params.propertyData._id == undefined ||  propID != propData.propertyInfo._id){
-                    console.log("UPDATE --- API --- propID")
+                    // console.log("UPDATE --- API --- propID")
                     setPropID(propData.propertyInfo._id)
                 }
                 else{
-                    console.log("UPDATE --- PARAMS --- propID")
+                    // console.log("UPDATE --- PARAMS --- propID")
                 }
                 if(route.params.propertyData.amenities == undefined || new Object(propAmen).toLocaleString() != new Object(propData.propertyInfo.amenities).toLocaleString()){
-                    console.log("UPDATE --- API --- propAmen")
+                    // console.log("UPDATE --- API --- propAmen")
                     setPropAmen(propData.propertyInfo.amenities)
                 }
                 else{
-                    console.log("UPDATE --- PARAMS --- propAmen")
+                    // console.log("UPDATE --- PARAMS --- propAmen")
                 }
                 if(route.params.propertyData.imgList == undefined || new Object(propImg).toLocaleString() != new Object(propData.propertyInfo.imgList).toLocaleString()){
-                    console.log("UPDATE --- API --- propImg")
+                    // console.log("UPDATE --- API --- propImg")
                     setPropImg(propData.propertyInfo.imgList)
                 }
                 else{
-                    console.log("UPDATE --- PARAMS --- propImg")
+                    // console.log("UPDATE --- PARAMS --- propImg")
                 }
                 //console.log(propData.propertyInfo.imgList)
 
@@ -140,47 +139,59 @@ export default function EditPropertyScreen({navigation, route}){
     }
 
     async function SelectPropPic(index){
-       
-        const accessToken = await SecureStorage.getItem("accessToken");
-        ImagePicker.openPicker({
-            width: 300,
-            height: 300,
-            cropping:true,
-            compressImageQuality: 0.3
-          }).then(image => {
-
-            const formData = new FormData();
-            var array = image.path.split(".");      
-            formData.append("propertyImage" , {
-                uri: image.path,
-                type: 'image/' + array[1],
-                name: 'someName',
-            }); 
-            formData.append("changeIdx", index);
-           
-            if(propID != null && propID != undefined){
-                fetch('https://crib-llc.herokuapp.com/properties/propertyImages/' + propID, {
-                method: 'PUT',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + accessToken,
-                },
-                body: formData
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
+            if(accessToken != undefined){
+                ImagePicker.openPicker({
+                    width: 300,
+                    height: 300,
+                    cropping:true,
+                    compressImageQuality: 0.3
+                }).then(image => {
+    
+                    const formData = new FormData();
+                    var array = image.path.split(".");      
+                    formData.append("propertyImage" , {
+                        uri: image.path,
+                        type: 'image/' + array[1],
+                        name: 'someName',
+                    }); 
+                    formData.append("changeIdx", index);
+                
+                    if(propID != null && propID != undefined){
+                        fetch('https://crib-llc.herokuapp.com/properties/propertyImages/' + propID, {
+                        method: 'PUT',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + accessToken,
+                        },
+                        body: formData
+                        })
+                        .then(res => res.json()).then(async data=>{
+                            setPropImg([...propImg.slice(0, index),data.propertyImage,...propImg.slice(index + 1),])
+                            try{
+                                await AsyncStorage.removeItem('postedProperty')
+                            }
+                            catch{
+                                alert("Error. Please try again later!")
+                            }
+                            
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        });
+                    }
+                    
+                }).catch(e=>{
+                    console.log("Canceled")
                 })
-                .then(res => res.json()).then(async data=>{
-                    setPropImg([...propImg.slice(0, index),data.propertyImage,...propImg.slice(index + 1),])
-                    await AsyncStorage.removeItem('postedProperty')
-                    console.log(data)
-                })
-                .catch((error) => {
-                    console.log(error)
-                });
             }
-            
-        }).catch(e=>{
-            console.log("Canceled")
-        })
+        }
+        catch{
+            console.log("ERROR --- SELECTPROPPIC")
+        }
+        
         
         
     }   
@@ -200,33 +211,36 @@ export default function EditPropertyScreen({navigation, route}){
           );
     }
     async function deletePropertyRequest(){
-        const accessToken = await SecureStorage.getItem("accessToken");
-        if(propID != null && propID != undefined && accessToken != null){
-            fetch('https://crib-llc.herokuapp.com/properties/' + propID, {
-            method: 'DELETE',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken,
-            },
-            body:JSON.stringify({
-                authyID: route.params.authyID
-            })
-            }).then(async res => {
-                console.log(res)
-                if(res.status == 200){
-                    console.log(res)
-                        await AsyncStorage.removeItem("postedProperty")
-                        navigation.goBack()
-                    }
-                    else{
-                        alert('Unable to delete this property. Please try again later.')
-                    }
-                
-            })
-            .catch((error) => {
-                console.log(error)
-            });
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
+            if(propID != null && propID != undefined && accessToken != undefined){
+                fetch('https://crib-llc.herokuapp.com/properties/' + propID, {
+                method: 'DELETE',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken,
+                },
+                body:JSON.stringify({
+                    authyID: route.params.authyID
+                })
+                }).then(async res => {
+                    if(res.status == 200){
+                            await AsyncStorage.removeItem("postedProperty")
+                            navigation.goBack()
+                        }
+                        else{
+                            alert('Unable to delete this property. Please try again later.')
+                        }
+                    
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
+            }
+        }
+        catch{
+            console.log("ERROR --- DELETEPROP")
         }
     }   
     

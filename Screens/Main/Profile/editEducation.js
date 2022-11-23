@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { User } from 'realm';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../../sharedUtils'
 
@@ -27,8 +27,8 @@ export default function EditEducationScreen({navigation, route}){
     const [education, setEducation] = useState('')
     
     async function update(){
-        const accessToken = await SecureStorage.getItem("accessToken");
-        if(USERID != null && accessToken != null){
+        const accessToken = await EncryptedStorage.getItem("accessToken");
+        if(USERID != null && accessToken != undefined){
             fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
                 method: 'PUT',
                 headers: {
@@ -41,8 +41,6 @@ export default function EditEducationScreen({navigation, route}){
                 })
             })
             .then((response) => response.json()).then(data => {
-                console.log("Update education reponse")
-                console.log(data)
                 navigation.navigate('ProfileEdit',{userData:data,})
             })
             .catch(e => {
@@ -56,7 +54,7 @@ export default function EditEducationScreen({navigation, route}){
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
           <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack()}>
                         <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>

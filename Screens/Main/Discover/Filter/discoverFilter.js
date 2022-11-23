@@ -6,16 +6,13 @@ import {
   Pressable,
 } from 'react-native';
 
-import { MEDIUMGREY,HEIGHT, WIDTH, amenitiesList, GetFAIconsInBlack, PRIMARYCOLOR, PROPERTIESTYPES, DEFAULTTYPE, DEFAULTPRICE, DEFAULTAVAILABLEFROM, DEFAULTAVAILABLETO, DEFAULTBEDROOM, DEFAULTDISTANCE, DEFAULTAMENITIES, DEFAULTBATHROOM} from '../../../../sharedUtils';
+import { MEDIUMGREY,HEIGHT, WIDTH, amenitiesList, GetFAIconsInBlack, PRIMARYCOLOR, PROPERTIESTYPES, DEFAULTTYPE, DEFAULTPRICE, DEFAULTAVAILABLEFROM, DEFAULTAVAILABLETO, DEFAULTBEDROOM, DEFAULTDISTANCE, DEFAULTAMENITIES, DEFAULTBATHROOM, EditPagesHeaderContainer, EditPageBackButtonContainer, EditPageNameContainer, EditPageForwardButtonContainer} from '../../../../sharedUtils';
 
 import Modal from "react-native-modal";
 import Slider from '@react-native-community/slider';
 import DatePicker from 'react-native-date-picker'
 
 import {
-HeaderContainer,
-BackButtonContainer,
-NameContainer,
 Header,
 InputForm,
 InputSection, 
@@ -24,8 +21,6 @@ InputNameContainer,
 InputOptionContainer,
 InputPriceRangeContainer, 
 PriceRangeText, 
-PriceInputSection,
-InputSectionCol, 
 TypeOption, 
 TypeContainer, 
 PropertyTypeName, 
@@ -37,7 +32,10 @@ DateInputPressable,
 Footer, 
 ResetText, 
 ApplyButton, 
-ApplyText
+ApplyText,
+Section,
+IndividualAmenitiesContainer,
+ResetButtonContainer
 } from './discoverFilterStyle';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -63,35 +61,20 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
     //Sets DatePicker Modal Visibility
     const [openFrom, setOpenFrom] = useState(false)
     const [openTo, setOpenTo] = useState(false)
-
-    //Save the previos user options in case user make changes but doesnt want it 
-        // let savedType;
-        // const [savedPriceHigher, setSavedPriceHigher] = useState(filterPriceHigher)
-        // const [savedAvailableFrom, setSavedAvailableFrom] = useState(filterAvailableFrom);
-        // const [savedAvailableTo, setSavedAvailableTo] = useState(filterAvailableTo);
-        // const [savedPreviewDistance, setSavedPreviewDistance] = useState(filterDistance);
-        // const [savedPreviewValue, setSavedPreviewValue] = useState(filterPreviewValue);
-        // const [savedAmenities, setSavedAmenities] = useState(filterAmenities);
-        // const [savedBathroom, setSavedBathroom] = useState(filterBathroom);
-        // const [savedBedroom, setSavedBedroom] = useState(filterBedroom);
-        // const [savedDistance, setSavedDistance] = useState(filterDistance);
     
     //Add and remove amenities from fitleramn list 
     function updateAmenities(name) {
         if (filterAmenities.indexOf(name) != -1) {
-            console.log("deleting")
             let tempindex = filterAmenities.indexOf(name);
             setfilterAmenities([...filterAmenities.slice(0, tempindex), ...filterAmenities.slice(tempindex + 1, filterAmenities.length)])
         }
         else {
-            console.log("adding")
             setfilterAmenities(prev => [...prev, name]);
         }
     }
 
     //Function to set all filter back to default
     function resetFilter(){
-        console.log("resettin")
         setfilterType(DEFAULTTYPE)
         setfilterPriceHigher(DEFAULTPRICE)
         setfilterAvailableFrom(DEFAULTAVAILABLEFROM)
@@ -145,6 +128,9 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                     if(properties != undefined && properties.length != 0){
                         setFilteredProperties([...properties])
                     }
+                    else{
+                        setFilteredProperties([])
+                    }
                 }
                 else{
                     alert("An error occured. Please try again later!")
@@ -164,28 +150,13 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
 
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!NEED TO CHECK!!!!!!!!!!!!!!!!!!!!!!!!!!
     async function checkResetAndBack(){
-        console.log(reset)
-        console.log("closing")
+       
         if(reset){
             setReset(false)
             retrieveAllPins(currentLocation[0], currentLocation[1], DEFAULTDISTANCE, DEFAULTPRICE, DEFAULTBEDROOM, DEFAULTBATHROOM, DEFAULTTYPE, DEFAULTAMENITIES,DEFAULTAVAILABLEFROM.getTime(), DEFAULTAVAILABLETO.getTime())
             loadProperty()
         }
-        else{
-            console.log("Normal back")
-            // console.log("savedtype"  ,savedType)
-            // setfilterType(savedType)
-            // setfilterPriceHigher(savedPriceHigher)
-            // setfilterAvailableFrom(savedAvailableFrom)
-            // setfilterAvailableTo(savedAvailableTo)
-            // setfilterPreviewDistanceValue(savedPreviewDistance)
-            // setfilterPreviewValue(savedPreviewValue)
-            // setfilterAmenities(savedAmenities)
-            // setfilterBathroom(savedBedroom)
-            // setfilterBedroom(savedBathroom)
-            // setfilterDistance(savedDistance)
-    
-        }
+       
         close()
     }
 
@@ -193,21 +164,22 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
        
         <Modal visible={open} animationType='slide' style={{flex: 1, backgroundColor:'white', margin: 0}}>
             <SafeAreaView style={{flex: 1}}>
-                <HeaderContainer>
-                    <BackButtonContainer>
-                        <Pressable hitSlop={WIDTH*0.05} style={{height:'50%', width:'50%', alignItems:'center'}} onPress={checkResetAndBack}>
-                            <Ionicons name='arrow-back-outline' size={25} />
+                <EditPagesHeaderContainer>
+                    <EditPageBackButtonContainer>
+                        <Pressable  onPress={close}>
+                            <Ionicons name='arrow-back-outline' size={25} color='black'/>
                         </Pressable>
-                    </BackButtonContainer>
-                    <NameContainer>
+                    </EditPageBackButtonContainer>
+                    <EditPageNameContainer>
                         <Header>Filter</Header>
-                    </NameContainer>
-                </HeaderContainer>
+                    </EditPageNameContainer>
+                    <EditPageForwardButtonContainer/>
+                </EditPagesHeaderContainer>
                 <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={scrollEnabled}>
                     {/* All the inputs for the filter */}
                     <InputForm>
                         {/* Filter Type */}
-                        <InputSectionCol>
+                        <Section>
                             <InputNameContainer>
                                 <InputName>Type</InputName>
                             </InputNameContainer>
@@ -219,19 +191,20 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                         <FontAwesome name={value.icon} size={20} />
                                         <PropertyTypeName>{value.type}</PropertyTypeName>
                                     </NameIcon>
-                                    <Pressable hitSlop={WIDTH*0.05} onPress={()=>{value.type == filterType ? setfilterType("") : setfilterType(value.type)}}>
-                                    <Ionicons name='checkbox' size={25} color={value.type == filterType ? PRIMARYCOLOR : MEDIUMGREY}/>
+                                    <Pressable hitSlop={WIDTH*0.025} onPress={()=>{value.type == filterType ? setfilterType("") : setfilterType(value.type)}}>
+                                    <Ionicons name='checkbox' size={30} color={value.type == filterType ? PRIMARYCOLOR : MEDIUMGREY}/>
                                 </Pressable>
                                 </TypeOption>
                             ))}
                             </TypeContainer>
-                        </InputSectionCol>
-            
+                        </Section>
+
+    
                         {/* Filter Price */}
-                        <PriceInputSection>
+                        <Section style={{paddingBottom: 0}}>
                             <InputSection style={{borderBottomWidth: 0}}>
                                 <InputNameContainer>
-                                        <InputName>Max Budget</InputName>
+                                    <InputName>Max Budget</InputName>
                                 </InputNameContainer>
                                 <InputPriceRangeContainer>
                                         <PriceRangeText>${filterPreviewValue} / month</PriceRangeText>
@@ -240,7 +213,7 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                             {/* Cannot use style in slider so put slider in view component */}
                             <View style={{alignItems:'center'}}>
                                 <Slider
-                                    style={{width: WIDTH*0.8, height: HEIGHT*0.1}}
+                                    style={{width: WIDTH*0.8, height: HEIGHT*0.15}}
                                     value={filterPriceHigher}
                                     onValueChange={(value)=> setfilterPreviewValue(value)}
                                     onValuesChangeStart={()=> setscrollEnabled(false)}
@@ -253,9 +226,9 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                     maximumTrackTintColor={MEDIUMGREY}
                                 />
                             </View>
-                        </PriceInputSection>
+                        </Section>
 
-                        <InputSectionCol>
+                        <Section>
                             <InputNameContainer>
                                 <InputName>Available From</InputName>
                             </InputNameContainer>
@@ -317,10 +290,10 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                     setOpenTo(false)
                                 }}
                             />
-                        </InputSectionCol>
+                        </Section>
 
                         {/* Filter Distance  */}
-                        <PriceInputSection>
+                        <Section>
                             <InputSection style={{borderBottomWidth: 0}}>
                                 <InputNameContainer>
                                         <InputName>Max Distance</InputName>
@@ -344,12 +317,12 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                 maximumTrackTintColor={MEDIUMGREY}
                             />
                             </View>
-                        </PriceInputSection>
+                        </Section>
 
                         {/* Filter Bedroom  */}
-                        <InputSectionCol>
+                        <Section>
                             <InputNameContainer>
-                                <InputName>Bedrooms</InputName>
+                                <InputName>Beds</InputName>
                             </InputNameContainer>
                             <InputOptionContainer>
                             {BEDROOMTYPES.map((value, index)=>(
@@ -358,10 +331,10 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                 </BedroomOptions>
                             ))}
                             </InputOptionContainer>
-                        </InputSectionCol>
+                        </Section>
 
                         {/* Bathroom Section, bathroom stores as 4P not 4+ so need to change */}
-                        <InputSectionCol>
+                        <Section>
                             <InputNameContainer>
                                 <InputName>Bathrooms</InputName>
                             </InputNameContainer>
@@ -372,10 +345,10 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                                 </BedroomOptions>
                             ))}
                             </InputOptionContainer>
-                        </InputSectionCol>
+                        </Section>
 
                         {/* Filter Amenities */}
-                        <InputSectionCol style={{borderBottomWidth: 0}}>
+                        <Section style={{borderBottomWidth: 0}}>
                             <InputNameContainer>
                                 <InputName>Amenities</InputName>
                             </InputNameContainer>
@@ -383,33 +356,30 @@ export default function DiscoverFilterScreen({navigation, currentLocation, open,
                             <AmenitiesContainer>
                                 {amenitiesList.map((value, index)=>(
                                 
-                                    <TypeOption key={value.name + "amenitiesfilter"} >
+                                <IndividualAmenitiesContainer index={index} key={value.name + "amenitiesfilter"}>
                                         <NameIcon  hitSlop={WIDTH*0.05} onPress={()=>updateAmenities(value.name)}>
                                             {GetFAIconsInBlack(value.name)}
                                             <PropertyTypeName>{value.name.replaceAll("_", " ")}</PropertyTypeName>
                                         </NameIcon>
                                         <Pressable  hitSlop={WIDTH*0.05} onPress={()=>updateAmenities(value.name)}>
-                                            <View style={{height:WIDTH*0.055, width:WIDTH*0.055, borderRadius: 5, backgroundColor:filterAmenities.indexOf(value.name) != -1 ? PRIMARYCOLOR : MEDIUMGREY,
-                                            justifyContent:'center',alignItems:'center'}}>
-                                                <Ionicons name='checkmark' size={15} color='white'/>
-                                            </View>
+                                            <Ionicons name='checkbox' size={30} color={filterAmenities.indexOf(value.name) != -1 ? PRIMARYCOLOR : MEDIUMGREY}/>
                                         </Pressable>
-                                    </TypeOption>
+                                </IndividualAmenitiesContainer>
                                 
                                 ))}
                             </AmenitiesContainer>
 
                             {/* Padding in the bottom so the amenities list dont touch the bottom */}
                             <View style={{width:WIDTH, height: HEIGHT*0.025}}/>
-                        </InputSectionCol>
+                        </Section>
 
                     </InputForm>
                 </ScrollView>
 
                 <Footer>
-                    <Pressable  hitSlop={WIDTH*0.05} onPress={resetFilter}>
+                    <ResetButtonContainer hitSlop={WIDTH*0.05} onPress={resetFilter}>
                         <ResetText>Reset</ResetText>
-                    </Pressable>
+                    </ResetButtonContainer>
 
                     <ApplyButton  hitSlop={WIDTH*0.05} onPress={filter}>
                         <ApplyText>Apply Filter</ApplyText>

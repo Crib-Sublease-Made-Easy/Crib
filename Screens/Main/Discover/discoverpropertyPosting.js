@@ -21,7 +21,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import DatePicker from 'react-native-date-picker'
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import ImagePicker from 'react-native-image-crop-picker';
 
@@ -113,7 +113,6 @@ export default function PropertyPostingScreen({ navigation }) {
 
     function moveScrollView(val) {
        
-        console.log(propertyPrice)
         Keyboard.dismiss()
         if (val < 0) {
             navigation.goBack();
@@ -125,7 +124,6 @@ export default function PropertyPostingScreen({ navigation }) {
             alert("Must enter property location.")
         }
         else if(val == 3 && !locationPressed){
-            console.log("hello")
             setpropertyLocation(autocompleteLocation[0].description)
             setpropertyMainAddr(autocompleteLocation[0].structured_formatting.main_text)
             setpropertySecondaryAddr(autocompleteLocation[0].structured_formatting.secondary_text)
@@ -164,9 +162,6 @@ export default function PropertyPostingScreen({ navigation }) {
         else {
             setscrollviewIndex(val)
             
-            propertyAmenities.forEach(element => {
-                console.log(element)
-            });
             setTimeout(() => {
                 scrollView.current.scrollTo({ x: WIDTH * val });
                 setscrollviewIndex(val)
@@ -259,103 +254,120 @@ export default function PropertyPostingScreen({ navigation }) {
 
     async function postproperty() {
         setLoading(true)
-        console.log("Posting")
-        const accessToken = await SecureStorage.getItem("accessToken");
-        console.log(propertyphotoGallery);
-        const postingData = new FormData();
+        try{
 
-        postingData.append("type", propertyType);                       //String 
-        postingData.append("streetAddr", propertyMainAddr);               //String 
-        postingData.append("secondaryTxt", propertySecondaryAddr);               //String 
-        postingData.append("latitude", latLong[0])
-        postingData.append("longitude", latLong[1])
-        //String Array
+            const accessToken = await EncryptedStorage.getItem("accessToken");
 
-        var array = propertyBedroomImage.split(".");
+            if(accessToken != undefined){
+                const postingData = new FormData();
 
-        postingData.append("propertyImages", {
-            uri: propertyBedroomImage,
-            type: 'image/' + array[1],
-            name: 'someName',
-        });
+                postingData.append("type", propertyType);                       //String 
+                postingData.append("streetAddr", propertyMainAddr);               //String 
+                postingData.append("secondaryTxt", propertySecondaryAddr);               //String 
+                postingData.append("latitude", latLong[0])
+                postingData.append("longitude", latLong[1])
+                //String Array
 
-        var array = propertyBathroomImage.split(".");
-        postingData.append("propertyImages", {
-            uri: propertyBathroomImage,
-            type: 'image/' + array[1],
-            name: 'someName',
-        });
-        var array = propertyLivingroomImage.split(".");
+                var array = propertyBedroomImage.split(".");
 
-        postingData.append("propertyImages", {
-            uri: propertyLivingroomImage,
-            type: 'image/' + array[1],
-            name: 'someName',
-        });
+                postingData.append("propertyImages", {
+                    uri: propertyBedroomImage,
+                    type: 'image/' + array[1],
+                    name: 'someName',
+                });
 
-        var array = propertyKitchenImage.split(".");
+                var array = propertyBathroomImage.split(".");
+                postingData.append("propertyImages", {
+                    uri: propertyBathroomImage,
+                    type: 'image/' + array[1],
+                    name: 'someName',
+                });
+                var array = propertyLivingroomImage.split(".");
 
-        postingData.append("propertyImages", {
-            uri: propertyKitchenImage,
-            type: 'image/' + array[1],
-            name: 'someName',
-        });
+                postingData.append("propertyImages", {
+                    uri: propertyLivingroomImage,
+                    type: 'image/' + array[1],
+                    name: 'someName',
+                });
 
-        if(propertyFloorplanImage!= null){
-            var array = propertyFloorplanImage.split(".");
-            postingData.append("propertyImages", {
-                uri: propertyFloorplanImage,
-                type: 'image/' + array[1],
-                name: 'someName',
-            });
+                var array = propertyKitchenImage.split(".");
+
+                postingData.append("propertyImages", {
+                    uri: propertyKitchenImage,
+                    type: 'image/' + array[1],
+                    name: 'someName',
+                });
+
+                if(propertyFloorplanImage!= null){
+                    var array = propertyFloorplanImage.split(".");
+                    postingData.append("propertyImages", {
+                        uri: propertyFloorplanImage,
+                        type: 'image/' + array[1],
+                        name: 'someName',
+                    });
+                }
+
+
+                postingData.append("price", propertyPrice.split("$")[1]);                     //String 
+                postingData.append("description", propertyDescription);         //String 
+                postingData.append("availableFrom", propertydateFrom.getTime());          //String
+                postingData.append("availableTo", propertydateTo.getTime());              //String
+                postingData.append("bed", propertyNumBed);                      //String
+                postingData.append("bath", propertyNumBath);                    //String 
+                postingData.append("title", "Name");                    //String
+                // postingData.append("propertyAmenities", propertyAmenities);     //Array of String 
+                postingData.append("timePosted", new Date())
+                propertyAmenities.forEach(element => {
+                    postingData.append("amenities", element);
+                });
+
+            
+              
+                    fetch('https://crib-llc.herokuapp.com/properties', {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'multipart/form-data',
+                            'Authorization': 'bearer ' + accessToken
+                        },
+                        body: postingData,
+                    })
+                    .then(async (response) => {
+                        if(response.status == 200){
+                            try{
+                                await EncryptedStorage.removeItem("postedProperty")
+                            }
+                            catch{
+                                setLoading(false)
+                                navigation.goBack()
+                            }
+                            setTimeout(()=>{
+                                setLoading(false)
+                                navigation.goBack()
+                            },1500)
+                        }
+                        else{
+                            setLoading(false)
+                            navigation.goBack()
+                            alert("An error occured. Please try again later!")
+                        }
+                       
+                    })
+                    .catch(e => {
+                        setLoading(false)
+                        navigation.goBack()
+                        alert(e)
+                    })
+                
+               
+            }
         }
-
-
-        postingData.append("price", propertyPrice.split("$")[1]);                     //String 
-        postingData.append("description", propertyDescription);         //String 
-        postingData.append("availableFrom", propertydateFrom.getTime());          //String
-        postingData.append("availableTo", propertydateTo.getTime());              //String
-        postingData.append("bed", propertyNumBed);                      //String
-        postingData.append("bath", propertyNumBath);                    //String 
-        postingData.append("title", "Name");                    //String
-        // postingData.append("propertyAmenities", propertyAmenities);     //Array of String 
-        postingData.append("timePosted", new Date())
-        propertyAmenities.forEach(element => {
-            postingData.append("amenities", element);
-        });
-
-       
-        if(accessToken != null){
-            fetch('https://crib-llc.herokuapp.com/properties', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': 'bearer ' + accessToken
-                },
-                body: postingData,
-            })
-            .then((response) => response.json()).then( async data => {
-                console.log("RESPONSE", data)
-                await SecureStorage.removeItem("postedProperty")
-                setTimeout(()=>{
-                    navigation.goBack()
-                    setLoading(false)
-                    console.log(data)
-                },1500)
-            })
-            .catch(e => {
-                alert(e)
-            })
+        catch{
+            console.log("PROPERTYPOSTING");
         }
-        else{
-            console.log("ERROR --- DISCOVERPOSTING -- POSTPROPERTY")
-        }
-      
     }
 
     async function selectGallery(name) {
-        console.log(name)
         ImagePicker.openPicker({
             width: 600,
             height: 600,
@@ -363,7 +375,6 @@ export default function PropertyPostingScreen({ navigation }) {
             compressImageQuality: 0.7
             
           }).then(image => {
-            console.log(image.path)
             if (name == "Bedroom") {
                 setPropertyBedroomImage(image.path);
             }
@@ -410,8 +421,6 @@ export default function PropertyPostingScreen({ navigation }) {
     }
 
     function moveOn(value) {
-        console.log("fefefwewf", value.description)
-        console.log("II", value)
         setLocationPressed(true)
         Keyboard.dismiss()
         // if(value.results == undefined){
@@ -437,23 +446,29 @@ export default function PropertyPostingScreen({ navigation }) {
     }
 
     async function LocationToLatLong(name){
-        const accessToken = await SecureStorage.getItem("accessToken");
-        if(accessToken != null && name != null && name != undefined){
-            let spacelessLocation = name.replaceAll(" ", "+");
-            var config = {
-                method: 'get',
-                url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${name}`,
-            };
-            axios(config)
-            .then(async (locInfo)=> {           
-                setLatLong([locInfo.data.lat, locInfo.data.lng])
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
 
-            })
-            .catch(function (error) {
-                
-                console.log(error);
-            });
+            if(accessToken != undefined && name != null && name != undefined){
+                var config = {
+                    method: 'get',
+                    url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${name}`,
+                };
+                axios(config)
+                .then(async (locInfo)=> {           
+                    setLatLong([locInfo.data.lat, locInfo.data.lng])
+    
+                })
+                .catch(function (error) {
+                    
+                    console.log(error);
+                });
+            }
         }
+        catch{
+            console.log("ERROR --- LocationToLatLong")
+        }
+        
     }
 
    
@@ -700,7 +715,6 @@ export default function PropertyPostingScreen({ navigation }) {
                                         alert("Available to date cannot be before available from date")
                                     }
                                     else if(date.getTime() > 1759176355615){
-                                        console.log(propertydateTo)
                                         alert("Cannot schdeul too far in advance.")
                                     }
                                     else if(propertydateFrom != null && date.getTime() < propertydateFrom.getTime()+50000000){

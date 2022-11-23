@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import { UserContext } from '../../../UserContext';
 
-import SecureStorage from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -85,7 +86,6 @@ export default function ProfileScreen({navigation}){
     useEffect(()=>{
     
         const unsubscribe = navigation.addListener('focus', () => {
-            console.log("REFRESH --- USEEFFECT")
             getTokens()              
         });
        
@@ -115,58 +115,63 @@ export default function ProfileScreen({navigation}){
 
     //Retrieve user info for display and cache for later use
     async function getTokens(){
-       
-        const accessToken = await SecureStorage.getItem("accessToken");
-        const refreshToken = await SecureStorage.getItem("refreshToken");
-        const UID = await SecureStorage.getItem("userId")
+        try{
+        const accessToken = await EncryptedStorage.getItem("accessToken");
+        const UID = await EncryptedStorage.getItem("userId")
 
-        if(refreshToken != undefined){
-            
-            //Get user favorite properties
-            fetchFavoriteProperties(accessToken)
-            if(accessToken != null && UID != null){
-                fetch('https://crib-llc.herokuapp.com/users/' + UID, {
-                method: 'GET',
-                headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken,
-                }
-                }) 
-                .then(res => res.json()).then(async userData =>{
-                    setUserData(userData)
-                    //Load API data if the cached profile pic is null
-                    let cachedProfilePic = await AsyncStorage.getItem("profilePic");
-                    if(profilePic == null){
-                        if(cachedProfilePic != null && cachedProfilePic == userData.profilePic ){
-                        
-                            console.log("UPDATE --- CACHE --- profilePic")
-                            setProfilePic(cachedProfilePic)
-                        }
-                        else{
-                            console.log("UPDATE --- API --- profilePic")
-                            setProfilePic(userData.profilePic)
-                            try{
-                                await AsyncStorage.setItem("profilePic", userData.profilePic);
-                            }
-                            catch{e=>{
-                                console.log("ERROR --- PROFILE --- GETTOKEN")
-                            }
-
-                            }
+            if(accessToken != undefined && UID != undefined){
+                
+                //Get user favorite properties
+                fetchFavoriteProperties(accessToken)
+                if(accessToken != null && UID != null){
+                    fetch('https://crib-llc.herokuapp.com/users/' + UID, {
+                    method: 'GET',
+                    headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken,
+                    }
+                    }) 
+                    .then(res => res.json()).then(async userData =>{
+                        setUserData(userData)
+                        //Load API data if the cached profile pic is null
+                        let cachedProfilePic = await AsyncStorage.getItem("profilePic");
+                        if(profilePic == null){
+                            if(cachedProfilePic != null && cachedProfilePic == userData.profilePic ){
                             
+                                // console.log("UPDATE --- CACHE --- profilePic")
+                                setProfilePic(cachedProfilePic)
+                            }
+                            else{
+                                // console.log("UPDATE --- API --- profilePic")
+                                setProfilePic(userData.profilePic)
+                                try{
+                                    if(userData.profilePic != undefined && userData.profilePic != null){
+                                        await AsyncStorage.setItem("profilePic", userData.profilePic);
+                                    }
+                                }
+                                catch{e=>{
+                                    console.log("ERROR --- PROFILE --- GETTOKEN")
+                                }
+
+                                }
+                                
+                            }
                         }
-                    }
-                    if(userData.postedProperties != undefined){
-                        fetchPostedProperties(userData.postedProperties[0], accessToken)
-                    }
-                })
-                .catch(e=>{
-                    console.log("ERROR --- PROFILE --- GETTOKEN")
-                    alert(e)
-                })
+                        if(userData.postedProperties != undefined){
+                            fetchPostedProperties(userData.postedProperties[0], accessToken)
+                        }
+                    })
+                    .catch(e=>{
+                        console.log("ERROR --- PROFILE --- GETTOKEN")
+                        alert(e)
+                    })
+                }
+        
             }
-    
+        }
+        catch{
+            console.log("ERROR ---GETTOKENS")
         }
         
     }
@@ -198,7 +203,7 @@ export default function ProfileScreen({navigation}){
                     let compare = (tempPropData === JSON.stringify(propertyData))
                     
                     if(!compare || tempPropData == null) {
-                        console.log("UPDATE --- API --- POSTED PROPERTY")
+                        // console.log("UPDATE --- API --- POSTED PROPERTY")
                         try{
                             await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
                         }
@@ -219,7 +224,7 @@ export default function ProfileScreen({navigation}){
                 }
 
             }).catch(e=>{
-                console.log("ERROR --- PROFILE --- FETCHPOSTEDPROPERTIES")
+                // console.log("ERROR --- PROFILE --- FETCHPOSTEDPROPERTIES")
                 alert(e)
             })
         
@@ -241,7 +246,6 @@ export default function ProfileScreen({navigation}){
             // console.log("TEMPDATA", tempFavProp)
 
             const compare = tempFavProp === JSON.stringify(data)
-            // console.log(compare)
 
             //If the api data is different from the AyncStorage data
             if(!compare){
@@ -251,7 +255,9 @@ export default function ProfileScreen({navigation}){
                     
                     setFavoriteProperties(data);
                     try{
-                        await AsyncStorage.setItem("favoriteProperties", JSON.stringify(data) )
+                        if(data != undefined){
+                            await AsyncStorage.setItem("favoriteProperties", JSON.stringify(data) )
+                        }
                     }
                     catch{e=>{
                         console.log("ERRROR --- PROFILE --- FETCHFAVORITEPROPERTY")
@@ -262,7 +268,7 @@ export default function ProfileScreen({navigation}){
                 }
             }
             else{ // The api and cache data is the same
-                console.log("UPDATE --- CACHE --- FAV PROPERTY")
+                // console.log("UPDATE --- CACHE --- FAV PROPERTY")
                 setFavoriteProperties(JSON.parse(tempFavProp))
             }
         })
@@ -319,8 +325,8 @@ export default function ProfileScreen({navigation}){
                         <Header>{userData.firstName}</Header>
                     </HeaderIndividualContainer>
 
-                    <HeaderIndividualContainer style={{ width:'15%',justifyContent:'flex-start', }}>
-                        <Pressable onPress={()=>navigation.navigate('Setting',{propID: postedProperties?.propertyInfo._id, authyID: userData?.authy_id})}>
+                    <HeaderIndividualContainer style={{justifyContent:'flex-start', }}>
+                        <Pressable hitSlop={WIDTH*0.03} onPress={()=>navigation.navigate('Setting',{propID: postedProperties?.propertyInfo._id, authyID: userData?.authy_id})}>
                             <Ionicons name='cog-outline' size={30} />
                         </Pressable>
                     </HeaderIndividualContainer>
@@ -421,14 +427,15 @@ export default function ProfileScreen({navigation}){
                                         </Pressable>
                                         <FavPropertyCardContent onPress={()=> navigation.navigate("PropertyDetail", {data: item, uid: userData._id})}>
                                             <FavPropertyCardName>{item.propertyInfo.loc.secondaryTxt}</FavPropertyCardName>
+                                            <FavPropertyCardDateText>{item.propertyInfo.bed} Bed  {item.propertyInfo.bath} Bath</FavPropertyCardDateText>
                                             <FavPropertyCardDateContainer>
                                                 <FavPropertyCardDateText>
                                                     {new Date(item.propertyInfo.availableFrom).getDate() + " " +
-                                                    new Date(item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) }
+                                                    new Date(item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) } -  
                                                 </FavPropertyCardDateText>
-                                                <Ionicons name="arrow-forward-outline" size={15} color={DARKGREY}/>
+                                                
                                                 <FavPropertyCardDateText>
-                                                {new Date(item.propertyInfo.availableTo).getDate() + " " +
+                                                {" " + new Date(item.propertyInfo.availableTo).getDate() + " " +
                                                     new Date(item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' }) }
                                                 </FavPropertyCardDateText>
                                             </FavPropertyCardDateContainer>

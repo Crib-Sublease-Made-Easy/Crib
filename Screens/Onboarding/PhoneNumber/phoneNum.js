@@ -32,9 +32,6 @@ export default function PhoneNumberScreen({navigation, route}){
     const [passedPhoneNumber, setPassedPhoneNumber]= useState("")
     const [loading, setLoading] = useState(false)
     const [agreement, setAgreement] = useState(false)
-    const [privacyagreement, setPrivacyAgreement] = useState(false)
-    
-    console.log(passedPhoneNumber)
     async function signupStep1(){
         console.log("INSIDE STEP 1")
         fetch('https://crib-llc.herokuapp.com/users/OTP/step1', {
@@ -49,11 +46,9 @@ export default function PhoneNumberScreen({navigation, route}){
             })
         }) 
         .then(async res => {
-            console.log("RESS in step 1", res)
             const data = await res.json();
             if(res.status == 201){
                 if(data.response.user.id != undefined){
-                    console.log("Going to step 2", res)
                     signupStep2(data.response.user.id);
                 }
                 else{
@@ -85,7 +80,6 @@ export default function PhoneNumberScreen({navigation, route}){
     }
     function signupStep2(id){
         console.log("STEP2");
-        console.log("ID", id)
         fetch('https://crib-llc.herokuapp.com/users/OTP/step2', {
             method: 'POST',
             headers: {
@@ -97,9 +91,10 @@ export default function PhoneNumberScreen({navigation, route}){
             })
         })
         .then(async res => {
-            const data = await res.json();
+            const test = await res.json()
             if(res.status == 201){
                 setLoading(false)
+
                 navigation.reset(
                     {index: 0 , routes: [{ name: 'otp', params:{
                     firstName: route.params.firstName, 
@@ -129,20 +124,15 @@ export default function PhoneNumberScreen({navigation, route}){
     }
 
     async function signup(){
-        console.log("Tryin to sign up.")
-        if(!agreement || !privacyagreement){
+        if(!agreement){
             if(!agreement){
-                alert("You have to agree to Crib Terms and Services to proceed.")
-            }
-            else if(!privacyagreement){
-                alert("You have to agree to Crib Privacy Policy to proceed.")
+                alert("You have to agree to Crib Terms and Services and Privacy policy to proceed.")
             }
         }
         else if (passedPhoneNumber.length != 10){
             alert("Incorrect phone number.")
         }
         else{
-            console.log("CHECKING SIGNUP")
             setLoading(true)
             await fetch('https://crib-llc.herokuapp.com/users/check', {
                 method: 'POST',
@@ -154,14 +144,17 @@ export default function PhoneNumberScreen({navigation, route}){
                     phoneNumber: passedPhoneNumber
                 })
             }).then(async res => {
-                console.log(res)
                 if(res.status == 200){
-                    console.log("Stepping to 1" , res)
-                    const data = await res.json();
                     signupStep1()
                 }
-                else{
+                else if(res.status == 409){
                     alert("Account with phone number exist, please login.")
+                    setLoading(false)
+                    navigation.reset({index: 0 , routes: [{ name: 'ProfileTabs'}]})
+                }
+                else{
+                    alert("An error has occured. Please try again later!")
+                    setLoading(false)
                     navigation.reset({index: 0 , routes: [{ name: 'ProfileTabs'}]})
                 }
             }).catch(e=>
@@ -224,9 +217,11 @@ export default function PhoneNumberScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
             <SignUpHeader>
-                <SignUpBackButtonPressable onPress={()=> navigation.goBack() }>
+                {route.params.wrongPhoneNumber == undefined && 
+                <SignUpBackButtonPressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack() }>
                     <Ionicons name='arrow-back-outline' size={25} />
                 </SignUpBackButtonPressable>
+                }
             </SignUpHeader>
                 
             <ProgressBarContainer>
@@ -243,23 +238,18 @@ export default function PhoneNumberScreen({navigation, route}){
                     
                 </TextInputContainer>
                 <FollowUpContainer>
-                    <Pressable onPress={()=> setAgreement(!agreement)}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={()=> setAgreement(!agreement)}>
                         <Ionicons size={25} name={'checkbox'} color={agreement ? PRIMARYCOLOR : MEDIUMGREY} />
                     </Pressable>
-                    <FollowUpText>I agree to Crib <Text onPress={()=>navigation.navigate('TermsAndService')} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Terms and Services</Text>.</FollowUpText>
+                    <FollowUpText>I agree to Crib <Text onPress={()=>navigation.navigate('TermsAndService')} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Terms and Services</Text> and <Text onPress={()=>navigation.navigate('Privacy')} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Privacy Policy</Text>.</FollowUpText>
                 </FollowUpContainer>
-                <FollowUpContainer>
-                    <Pressable onPress={()=> setPrivacyAgreement(!privacyagreement)}>
-                        <Ionicons size={25} name={'checkbox'} color={privacyagreement ? PRIMARYCOLOR : MEDIUMGREY} />
-                    </Pressable>
-                    <FollowUpText>I agree to Crib <Text onPress={()=>navigation.navigate('Privacy')} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Privacy Policy</Text>.</FollowUpText>
-                </FollowUpContainer>
+                
             </ScrollView>
           
 
             <ContinueButton disabled={loading} loading={loading} onPress={signup}>
             {loading ?
-                <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.1, height: WIDTH*0.1, }}/>
+                <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.05, height: WIDTH*0.05}}/>
             :
                 <ContinueText>Continue</ContinueText>
             }

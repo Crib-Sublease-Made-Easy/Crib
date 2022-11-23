@@ -87,5 +87,6 @@ export const FollowUpContainer = styled.View`
 export const FollowUpText = styled.Text`
     font-size: ${HEIGHT*0.015}px;
     margin-left: ${WIDTH*0.05}px
+    width: ${WIDTH*0.7}px
     color: black
 `

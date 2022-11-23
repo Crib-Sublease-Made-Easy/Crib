@@ -307,7 +307,7 @@ PODS:
     - glog
   - react-native-date-picker (4.2.2):
     - React-Core
-  - react-native-encrypted-storage (4.0.2):
+  - react-native-encrypted-storage (4.0.3):
     - React-Core
   - react-native-geolocation (2.1.0):
     - React-Core
@@ -710,7 +710,7 @@ SPEC CHECKSUMS:
   React-jsinspector: c5989c77cb89ae6a69561095a61cce56a44ae8e8
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
   react-native-date-picker: 9088350e06918f7d842a34c171acadc66583cb94
-  react-native-encrypted-storage: e78d848ce0fb663c2ce306e37921d026809322e6
+  react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
   react-native-geolocation: 69f4fd37650b8e7fee91816d395e62dd16f5ab8d
   react-native-image-picker: cffb727cf2f59bd5c0408e30b3dbe0b935f88835
   react-native-maps: 8b8bfada2c86205a7f5a07dd1f92f29b33ea83aa

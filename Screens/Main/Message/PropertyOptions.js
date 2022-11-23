@@ -38,7 +38,7 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                     </NameContainer>
                    
                 </HeaderContainer>
-                <RowContainer hitSlop={WIDTH*0.025} onPress={()=> {close(), viewProp()}}>
+                <RowContainer hitSlop={WIDTH*0.025} onPress={()=> {viewProp(), close()}}>
                     <Ionicons name='home' size={25}  style={{paddingLeft: WIDTH*0.05}} color={PRIMARYCOLOR}/>
                     <RowName>View Property</RowName>
                 </RowContainer>

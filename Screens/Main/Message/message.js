@@ -15,7 +15,7 @@ import {
   AppState
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -45,7 +45,6 @@ export default function MessageScreen({navigation, route}){
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
             onChat = false
-            console.log("FOCUSSSSSS")       
             fetchConvos()
             getFirstName()
             
@@ -62,42 +61,54 @@ export default function MessageScreen({navigation, route}){
     const channelHandler = new sb.ChannelHandler();
     
     channelHandler.onChannelChanged = channel => {
-        console.log("rEFRESH")
-
         fetchConvos()
       };
 
     const getFirstName = async()  => {
-        const firstName = await SecureStorage.getItem("firstName");
-        setFirstName(firstName)
+        try{
+
+            const firstName = await EncryptedStorage.getItem("firstName");
+
+            if(firstName != undefined){
+                setFirstName(firstName)
+            }
+           
+        }
+        catch{
+            console.log("ERROR ---GETFIRSTNAME")
+        }
+        
     }
     const fetchConvos = useCallback(async() => {
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
 
-        const refreshToken = await SecureStorage.getItem("refreshToken");
-
-        if(refreshToken != undefined){
-       
-            setUserId(USERID)
-            let listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
-            listQuery.includeEmpty = false;
-            listQuery.order = 'latest_last_message'; 
-            listQuery.limit = 30;   // The value of pagination limit could be set up to 100.
-            
-            if (listQuery.hasNext) {
-                listQuery.next(async function(groupChannels, error) {
-                    if (error) {
-                        // Handle error.
-                        console.log("error", error)
-                    }
-                    var gcs = groupChannels.filter(function(item) {
-                        return item.members.length == 2;
-                      });
-                    setConvoList(gcs)
-                    console.log(groupChannels)
-                });
+            if(accessToken != undefined){
+           
+                setUserId(USERID)
+                let listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+                listQuery.includeEmpty = false;
+                listQuery.order = 'latest_last_message'; 
+                listQuery.limit = 30;   // The value of pagination limit could be set up to 100.
+                
+                if (listQuery.hasNext) {
+                    listQuery.next(async function(groupChannels, error) {
+                        if (error) {
+                            // Handle error.
+                            console.log("error", error)
+                        }
+                        var gcs = groupChannels.filter(function(item) {
+                            return item.members.length == 2;
+                          });
+                        setConvoList(gcs)
+                    });
+                }
             }
         }
-        return;
+        catch{
+            console.log("fetchconvo --- ERROR --- MESSAGE")
+        }
+        
     },[])
 
     return(

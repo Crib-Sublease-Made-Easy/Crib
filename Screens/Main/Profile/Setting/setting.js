@@ -4,19 +4,22 @@ import {
   Switch,
   Pressable,
   TouchableOpacity,
-  Alert
+  Alert,
+  Text,
+  View,
+  Share
 } from 'react-native';
 import { UserContext } from '../../../../UserContext';
 
-import SecureStorage from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, EditPagesHeaderContainer, EditPageBackButtonContainer, EditPageNameContainer, EditPageForwardButtonContainer} from '../../../../sharedUtils';
 
 import OneSignal from 'react-native-onesignal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont() 
 import { HeaderContainer, BackButtonContainer, NameContainer, Header,ResetButtonContainer, CategoryContainer, CategoryName,
-      RowContainer, RowName, RowValueContainer, RowValueText } from './settingStyle';
+      RowContainer, RowName, RowValueContainer, RowValueText, UpgradeContainerLeft, UpgradeContainer, UpgradeContainerRight, UpgradeContainerHeader, UpgradeContainerSubheader } from './settingStyle';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 FontAwesome.loadFont()
@@ -49,15 +52,18 @@ export default function SettingScreen({navigation, route}){
     const logout =  async() => {
       disconnectSendbird()
       OneSignal.disablePush(true);
-      await SecureStorage.removeItem("studio.jpg");
-      await SecureStorage.removeItem("accessToken");
-      await SecureStorage.removeItem("refreshToken")
-      await SecureStorage.removeItem("firstName");
-      await SecureStorage.removeItem("lastName");
-      await SecureStorage.removeItem("email");
-      await SecureStorage.removeItem("userId");
-      await SecureStorage.removeItem("profilePic");
-      await AsyncStorage.clear()
+      try{
+        await EncryptedStorage.clear()
+      }
+      catch (err){
+        console.log(err)
+      }
+      try{
+        await AsyncStorage.clear()
+      }
+      catch (err) {
+        console.log(err)
+      }
       await login(null)
       navigation.reset(
         {index: 0 , routes: [{ name: 'ProfileTabs'}]}
@@ -65,10 +71,15 @@ export default function SettingScreen({navigation, route}){
     }
 
     const disconnectSendbird = async () =>{
-      const UID = await SecureStorage.getItem("userId");
-      if (UID != undefined) {
-        await sb.disconnect()
-        console.log("Sendbird Disconnected")
+      try{
+        const UID = await EncryptedStorage.getItem("userId");
+        if (UID != undefined) {
+          await sb.disconnect()
+          // console.log("Sendbird Disconnected")
+        }
+      }
+      catch (err) {
+        // console.log("An error has occured")
       }
     }
 
@@ -93,23 +104,29 @@ export default function SettingScreen({navigation, route}){
     }
   }
   async function getTokens(){
-      const accessToken = await SecureStorage.getItem("accessToken");
-
-      fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
-        method: 'GET',
-        headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken,
-        }
-      }) 
-      .then(res => res.json()).then(async userData =>{
-          setUserData(userData)   
-      })
-      .catch(e=>{
-          console.log("ERROR --- SETTING --- GETOTKEN")
-          alert(e)
-      })
+    try{
+      const accessToken = await EncryptedStorage.getItem("accessToken");
+      if(accessToken != undefined){
+        fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+          method: 'GET',
+          headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + accessToken,
+          }
+        }) 
+        .then(res => res.json()).then(async userData =>{
+            setUserData(userData)   
+        })
+        .catch(e=>{
+            console.log("ERROR --- SETTING --- GETOTKEN")
+            alert(e)
+        })
+      }
+    }
+    catch{
+      alert("Error. Please try again later!")
+    }
   }
   async function logoutAlert(){
     Alert.alert(
@@ -128,7 +145,7 @@ export default function SettingScreen({navigation, route}){
   async function deleteAccountAlert(){
     Alert.alert(
       'Are you sure?',
-      'You account will be permanantly deleted.',
+      'Your account will be permanantly deleted.',
       [
         {text: 'Cancel', onPress: () => {}, style: 'cancel'},
         {text: 'Yes', onPress: () => deleteAccount(), style: 'destructive'},
@@ -141,10 +158,7 @@ export default function SettingScreen({navigation, route}){
 
   async function deleteAccount(){
 
-    const accessToken = await SecureStorage.getItem("accessToken");
-    console.log("USERID", USERID);
-    console.log("propID", route.params.propID);
-    console.log("authyID", route.params.authyID);
+    const accessToken = await EncryptedStorage.getItem("accessToken");
 
     if(route.params.propID != null && route.params.propID != undefined && accessToken != null){
       fetch('https://crib-llc.herokuapp.com/properties/' + route.params.propID, {
@@ -158,14 +172,17 @@ export default function SettingScreen({navigation, route}){
           authyID: route.params.authyID
       })
       }).then(async res => {
-          console.log(res)
          
-            console.log(res)
-            await AsyncStorage.removeItem("postedProperty")
+        try{  
+          await AsyncStorage.removeItem("postedProperty")
+        }
+        catch{
+          alert("Error. Please try again later!")
+        }
                 
       })
       .catch((error) => {
-        console.log('Unable to delete this property. Please try again later.')
+        // console.log('Unable to delete this property. Please try again later.')
         console.log(error)
       });
     }
@@ -181,8 +198,6 @@ export default function SettingScreen({navigation, route}){
           authyID: route.params.authyID
         })
         }).then(async res => {
-          const data = await res.json()
-          console.log(data)
           logout()
         })
         .catch((error) => {
@@ -191,46 +206,78 @@ export default function SettingScreen({navigation, route}){
     }
   }
 
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        // message:
+        //   'Lighthouse | An app to find short term housing solutions made easy',
+          url: 'https://apps.apple.com/us/app/crib-subleasing-made-easy/id1645127110'
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
 
   return(
     <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
-      <HeaderContainer>
-            <BackButtonContainer>
-                <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                    <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}} />
-                </Pressable>
-            </BackButtonContainer>
-            <NameContainer>
-                <Header>Settings</Header>
-            </NameContainer>
-          
-        </HeaderContainer>
+      <EditPagesHeaderContainer style={{borderBottomWidth: 0}}>
+        <EditPageBackButtonContainer>
+          <Pressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack()} >
+              <Ionicons name='arrow-back-outline' size={25} color='black'/>
+          </Pressable>
+        </EditPageBackButtonContainer>
+        <EditPageNameContainer>
+          <Header>Settings</Header>
+        </EditPageNameContainer>
+        <EditPageForwardButtonContainer/>
+      </EditPagesHeaderContainer>
+
+
+      <UpgradeContainer onPress={()=> navigation.navigate("ContactUs", {email: userData.email})}>
+        <UpgradeContainerLeft>
+          <Ionicons name='cog-outline' size={40} color='black'/>
+        </UpgradeContainerLeft>
+        <UpgradeContainerRight>
+            <UpgradeContainerHeader>Found a bug?</UpgradeContainerHeader>
+            <UpgradeContainerSubheader>
+              Report it now for better experience in the future.
+            </UpgradeContainerSubheader>
+        </UpgradeContainerRight>
+      </UpgradeContainer>
+
+      <RowContainer onPress={() => navigation.navigate("ProfileEdit", {userData : userData})}>
+        <Ionicons name='person' size={22} color='black'/>
+        <RowName>Profile</RowName>
+      </RowContainer>
+      <RowContainer style={{borderBottomWidth: 0}} onPress={onShare}>
+        <Ionicons name='share' size={22} color='black'/>
+        <RowName>Share Crib</RowName>
+      </RowContainer>
 
         
-        <CategoryContainer>
+        {/* <CategoryContainer>
           <CategoryName>Account Information</CategoryName>
-        </CategoryContainer>
+        </CategoryContainer> */}
         {/* Phone number press to change */}
-        <RowContainer>
-          <RowName>Phone Number</RowName>
+        <RowContainer style={{justifyContent:'space-between'}} >
+          {/* <RowName>Phone Number</RowName>
           <RowValueContainer>
             <RowValueText>+1 {userData.phoneNumber}</RowValueText>
-          </RowValueContainer>
-        </RowContainer>
-        <RowContainer>
-          <RowName>Email</RowName>
-          <RowValueContainer onPress={()=>navigation.navigate("ChangeEmail", {email: userData.email})}>
-            <RowValueText>{userData.email}</RowValueText>
-            <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
-          </RowValueContainer>
-        </RowContainer>
-
-        {/* Notification settings */}
-        <CategoryContainer>
-          <CategoryName>Notifications</CategoryName>
-        </CategoryContainer>
-        <RowContainer>
-          <RowName>All Notifications</RowName>
+          </RowValueContainer> */}
+          <View style={{alignItems:'center', flexDirection:'row'}}>
+            <Ionicons name='newspaper' size={22} color='black'/>
+            <RowName>Notification</RowName>
+          </View>
           <Switch
             trackColor={{ false: "#767577", true: PRIMARYCOLOR }}
             thumbColor={ notificationsEnabled ? 'white': "#f4f3f4"}
@@ -239,35 +286,33 @@ export default function SettingScreen({navigation, route}){
             value={notificationsEnabled}
           />
         </RowContainer>
-      
-
-        <CategoryContainer>
-          <CategoryName>General</CategoryName>
-        </CategoryContainer>
-        
-        <RowContainer  onPress={() => navigation.navigate('TermsAndService')}>
-          <RowName>Terms and Services</RowName>
-          <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+        <RowContainer style={{borderBottomWidth: 0}}  onPress={() => navigation.navigate('TermsAndService')}>
+          <Ionicons name='bookmarks' size={22} color='black'/>
+          <RowName>Terms and services</RowName>
         </RowContainer>
-        <RowContainer onPress={() => navigation.navigate('Privacy')}>
+        <RowContainer style={{borderBottomWidth: 0}} onPress={() => navigation.navigate('Privacy')}>
+          <Ionicons name='shield' size={22} color='black'/>
           <RowName>Privacy</RowName>
-          <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
         </RowContainer>
         <RowContainer onPress={()=> navigation.navigate("ContactUs", {email: userData.email})}>
-          <RowName>Contact Us</RowName>
-          <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+          <Ionicons name='mail' size={22} color='black' />
+          <RowName>Contact us</RowName>
         </RowContainer>
-        
-        <CategoryContainer>
-          <TouchableOpacity onPress={logoutAlert}>
-          <CategoryName style={{color:'red'}}>Logout</CategoryName>
-          </TouchableOpacity>
-        </CategoryContainer>
-        <CategoryContainer>
-          <TouchableOpacity onPress={deleteAccountAlert}>
-          <CategoryName style={{color:'red'}}>Delete account</CategoryName>
-          </TouchableOpacity>
-        </CategoryContainer>
+        <RowContainer style={{borderBottomWidth: 0}} onPress={logoutAlert}>
+          <Ionicons name='ellipsis-vertical' size={22} color='black'/>
+          <RowName>Logout</RowName>
+        </RowContainer>
+        <RowContainer style={{borderBottomWidth: 0}} onPress={deleteAccountAlert}>
+          <Ionicons name='exit' size={22} color='black'/>
+          <RowName >Delete account</RowName>
+        </RowContainer>
+        {/* <RowContainer>
+          <RowName>Email</RowName>
+          <RowValueContainer onPress={()=>navigation.navigate("ChangeEmail", {email: userData.email})}>
+            <RowValueText>{userData.email}</RowValueText>
+            <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+          </RowValueContainer>
+        </RowContainer> */}
   
     </SafeAreaView>
   )

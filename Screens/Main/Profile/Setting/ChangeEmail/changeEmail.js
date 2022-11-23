@@ -8,8 +8,7 @@ import {
 } from 'react-native';
 import { User } from 'realm';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
-
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../../sharedUtils'
 
@@ -47,31 +46,40 @@ export default function ChangeEmailScreen({navigation, route}){
             alert("Please enter a valid email.")
         }
         else{
-            const accessToken = await SecureStorage.getItem("accessToken");
-            fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
-                method: 'PUT',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + accessToken,
-                },
-                body: JSON.stringify({
-                    email: email
-                })
-            })
-            .then((response) => response.json()).then(data => { 
-                navigation.goBack()
-            })
-            .catch(e => {
-                console.log(e)
-            })
+            try{
+                const accessToken = await EncryptedStorage.getItem("accessToken");
+                if(accessToken != undefined){
+                    fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+                        method: 'PUT',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + accessToken,
+                        },
+                        body: JSON.stringify({
+                            email: email
+                        })
+                    })
+                    .then((response) => response.json()).then(data => { 
+                        navigation.goBack()
+                    })
+                    .catch(e => {
+                        console.log(e)
+                    })
+                }
+            }
+            catch{
+                alert("Error. Please try again later!")
+            }
+            
+            
         }
     }
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
             <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack()}>
                         <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>
@@ -79,7 +87,7 @@ export default function ChangeEmailScreen({navigation, route}){
                     <Header>Change Email</Header>
                 </NameContainer>
                 <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={update}>
                         <Ionicons name='checkmark' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </ResetButtonContainer>

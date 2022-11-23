@@ -31,10 +31,9 @@ export default function LoginScreen({navigation, route}){
     const [phoneNumber, setPhoneNumber] = useState("")
     const [passedPhoneNumber, setPassedPhoneNumber]= useState("")
     const [loading, setLoading] = useState(false)
-    console.log(passedPhoneNumber)
+   
 
     async function signupStep1(){
-        console.log("Stepping 1")
         
         const number = phoneNumber.replace(/[^\d]/g, '').substring(0,10);
       
@@ -48,8 +47,10 @@ export default function LoginScreen({navigation, route}){
                 phoneNumber: number,
             })
         }) 
-        .then(res => {
+        .then(async res => {
+            
             if(res.status == 200){
+                const data = await res.json();
                 if(data.authy_id != undefined && number != undefined && number != null){
                     signupStep2(data.authy_id, number)
                 }
@@ -92,6 +93,7 @@ export default function LoginScreen({navigation, route}){
             })
         }) 
         .then(res => {
+         
             if(res.status == 201){
                 // console.log("LOGGED INNN")
                 navigation.reset({index: 0 , routes: [{ name: 'Login_OTP', authy_id: authy_id, phoneNumber: number }]})
@@ -149,7 +151,9 @@ export default function LoginScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
             <Header>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                <Pressable hitSlop={WIDTH*0.025} onPress={()=> route.wrongPhoneNumber == undefined ? navigation.goBack() : navigation.reset(
+            {index: 0 , routes: [{ name: 'DiscoverTabs'}]}
+            )}>
                    
                     <Ionicons name='arrow-back-outline' size={25} />
                 </Pressable>
@@ -172,7 +176,7 @@ export default function LoginScreen({navigation, route}){
 
             <ContinueButton disabled={loading} loading={loading} onPress={checkInput}>
             {loading ?
-                <Lottie source={require('../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.1, height: WIDTH*0.1, }}/>
+                <Lottie source={require('../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.05, height: WIDTH*0.05, }}/>
             :
                 <ContinueText>Continue</ContinueText>
             }

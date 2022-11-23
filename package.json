@@ -37,7 +37,7 @@
     "react-native": "0.68.2",
     "react-native-collapsible": "^1.6.0",
     "react-native-date-picker": "^4.2.2",
-    "react-native-encrypted-storage": "^4.0.2",
+    "react-native-encrypted-storage": "^4.0.3",
     "react-native-fast-image": "^8.6.1",
     "react-native-gesture-handler": "^2.5.0",
     "react-native-gifted-chat": "^1.0.4",

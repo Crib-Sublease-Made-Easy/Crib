@@ -72,7 +72,7 @@ export default function ProfilePicScreen({navigation, route}){
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <SignUpHeader>
-                <SignUpBackButtonPressable onPress={()=> navigation.goBack() }>
+                <SignUpBackButtonPressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack() }>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
                     <Ionicons name='arrow-back-outline' size={25} />
                 </SignUpBackButtonPressable>
