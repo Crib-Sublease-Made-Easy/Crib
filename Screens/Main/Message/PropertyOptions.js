@@ -8,6 +8,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  TouchableWithoutFeedback
 } from 'react-native';
 import { User } from 'realm';
 
@@ -21,13 +22,16 @@ import { RowContainer, RowName } from './PropertyOptionStyle';
 
 import { WIDTH, HEIGHT, HeaderContainer, Header, BackButtonContainer, NameContainer, PRIMARYCOLOR, MEDIUMGREY, DARKGREY,  } from '../../../sharedUtils';
 export default function PropertyOptionsModal({navigation,close, visible ,optionViewer, leaveChat}){
+    
     return(
         <SafeAreaView>
-
             <Modal backdropTransitionInTiming={300} animationOutTiming={700} 
             backdropTransitionOutTiming={0} hideModalContentWhileAnimating
             isVisible={visible} style={{padding:0, margin: 0, justifyContent:'flex-end', }}>
+                <Pressable style={{height:'100%', width:'100%'}} onPress={() => close()} ></Pressable>
+                <TouchableWithoutFeedback onPressOut={() => console.log('touching modal')}>
                 <View style={{width: WIDTH, height: HEIGHT*0.3, backgroundColor:'white', borderTopLeftRadius: 15, borderTopRightRadius: 15}}>
+                
                 <HeaderContainer>
                     <BackButtonContainer>
                         <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} hitSlop={WIDTH*0.05} onPress={()=> close()}>
@@ -62,8 +66,9 @@ export default function PropertyOptionsModal({navigation,close, visible ,optionV
                 
 
                 
-
+                
                 </View>
+                </TouchableWithoutFeedback>
             </Modal>
         </SafeAreaView>
     )
