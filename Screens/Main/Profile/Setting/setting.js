@@ -190,6 +190,10 @@ export default function SettingScreen({navigation, route}){
           <RowName>Contact Us</RowName>
           <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
         </RowContainer>
+        <RowContainer onPress={()=> navigation.navigate("ReportUs", {email: userData.email})}>
+          <RowName>Report</RowName>
+          <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+        </RowContainer>
         
         <CategoryContainer>
           <TouchableOpacity onPress={logoutAlert}>

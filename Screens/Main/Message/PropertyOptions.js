@@ -20,10 +20,10 @@ Ionicons.loadFont()
 import { RowContainer, RowName } from './PropertyOptionStyle';
 
 import { WIDTH, HEIGHT, HeaderContainer, Header, BackButtonContainer, NameContainer, PRIMARYCOLOR, MEDIUMGREY, DARKGREY,  } from '../../../sharedUtils';
-export default function PropertyOptionsModal({navigation,close, visible ,viewProp, leaveChat}){
+export default function PropertyOptionsModal({navigation,close, visible ,optionViewer, leaveChat}){
     return(
         <SafeAreaView>
-            
+
             <Modal backdropTransitionInTiming={300} animationOutTiming={700} 
             backdropTransitionOutTiming={0} hideModalContentWhileAnimating
             isVisible={visible} style={{padding:0, margin: 0, justifyContent:'flex-end', }}>
@@ -39,7 +39,7 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                     </NameContainer>
                    
                 </HeaderContainer>
-                <RowContainer hitSlop={WIDTH*0.025} onPress={()=> {close(), viewProp()}}>
+                <RowContainer hitSlop={WIDTH*0.025} onPress={()=> {close(), optionViewer.viewProp()}}>
                     <Ionicons name='home' size={25}  style={{paddingLeft: WIDTH*0.05}} color={PRIMARYCOLOR}/>
                     <RowName>View Property</RowName>
                 </RowContainer>
@@ -53,7 +53,7 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                     <RowName>Delete Conversation</RowName>
                 </RowContainer>
 
-                <RowContainer hitSlop={WIDTH*0.025} onPress={()=>console.log('Pressed Report button')}>
+                <RowContainer hitSlop={WIDTH*0.025} onPress={() =>{close(), optionViewer.viewRep()}}>
                     <Ionicons name='flag' size={25}  style={{paddingLeft: WIDTH*0.05}} color='red'/>
                     <RowName>Report</RowName>
                 </RowContainer>

@@ -63,6 +63,7 @@ import EditAboutMeScreen from './Screens/Main/Profile/EditProfile/EditAboutMe/ed
 import EditPropertyScreen from './Screens/Main/Profile/EditProperty/editProperty.js';
 import OTPEditScreen from './Screens/Main/Profile/Setting/OTPNumber/otpEdit.js';
 
+import ReportUsScreen from './Screens/Main/Profile/Setting/ReportUs/reportUs.js';
 import ContactUsScreen from './Screens/Main/Profile/Setting/ContactUs/contactUs.js';
 
 //Property Edit Screens
@@ -487,6 +488,14 @@ export default function App() {
               cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             }}
           />
+          <Stack.Screen name="ReportUs"
+            component={ReportUsScreen}
+            options={{
+              headerShown: false,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          />
+
 
 
 

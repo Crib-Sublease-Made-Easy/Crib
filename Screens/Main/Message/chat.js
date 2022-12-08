@@ -42,7 +42,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ChatScreen({navigation, route}){
     const {sb, USERID} = useContext(UserContext);
-
+  
     const { url, id } = route.params;
 
     const GiftedChatRef = useRef();
@@ -286,6 +286,12 @@ export default function ChatScreen({navigation, route}){
         alert("You have successfully left this chat.")
         navigation.goBack()
     }
+
+    const optionViewer = {
+      viewProp : () => navigation.navigate("PropertyDetail", {data: propertyInfo}),
+      viewRep: () => navigation.navigate("ReportUs")
+
+    }
     return(
     <SafeAreaView style={{backgroundColor:'white', flex:1}}>
     <HeaderContainer>
@@ -337,7 +343,7 @@ export default function ChatScreen({navigation, route}){
       />  
       
       }
-    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(fgalse)} leaveChat={leaveChat} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
+    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} leaveChat={leaveChat} optionViewer={optionViewer}/>
     </SafeAreaView>
     )
 }
