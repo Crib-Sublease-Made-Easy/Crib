@@ -23,6 +23,7 @@ import { WIDTH, HEIGHT, HeaderContainer, Header, BackButtonContainer, NameContai
 export default function PropertyOptionsModal({navigation,close, visible ,viewProp, leaveChat}){
     return(
         <SafeAreaView>
+            
             <Modal backdropTransitionInTiming={300} animationOutTiming={700} 
             backdropTransitionOutTiming={0} hideModalContentWhileAnimating
             isVisible={visible} style={{padding:0, margin: 0, justifyContent:'flex-end', }}>
@@ -51,6 +52,13 @@ export default function PropertyOptionsModal({navigation,close, visible ,viewPro
                     <Ionicons name='close' size={25}  style={{paddingLeft: WIDTH*0.05}} color='red'/>
                     <RowName>Delete Conversation</RowName>
                 </RowContainer>
+
+                <RowContainer hitSlop={WIDTH*0.025} onPress={()=>console.log('Pressed Report button')}>
+                    <Ionicons name='flag' size={25}  style={{paddingLeft: WIDTH*0.05}} color='red'/>
+                    <RowName>Report</RowName>
+                </RowContainer>
+
+
                 
 
                 
