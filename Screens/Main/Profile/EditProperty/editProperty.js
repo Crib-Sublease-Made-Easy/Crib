@@ -1,4 +1,4 @@
-import React , {useContext, useState, useRef, useEffect} from 'react';
+import React , {setState, useContext, useState, useRef, useEffect} from 'react';
 import {
   SafeAreaView,
   Switch,
@@ -39,7 +39,7 @@ export default function EditPropertyScreen({navigation, route}){
         });
         return unsubscribe; 
     },[navigation, ])
-
+    const [successfulLease, setSuccess] = useState('')
     const [propAPIData, setPropAPIData] = useState('')
     const [propID, setPropID] = useState(route.params.propertyData._id)
     const [propType, setPropType] = useState(route.params.propertyData.type)
@@ -184,17 +184,36 @@ export default function EditPropertyScreen({navigation, route}){
     async function deletePropertyAlert(){
         Alert.alert(
             'Are you sure you want to delete this property?',
-            'This action cannot be reveresed.',
+            'This action cannot be reversed.',
             [
               {text: 'No', onPress: () => {}, style: 'cancel'},
-              {text: 'Delete', onPress: () => deletePropertyRequest(), style: 'destructive'},
+              {text: 'Delete', onPress: () => {checkSuccess()}, style: 'destructive'},
             ],
             { 
               cancelable: true 
             }
           );
     }
+    async function checkSuccess() {
+        Alert.alert(
+            'Were you able to successfully sublease on Crib?',
+            'Let us know!',
+            [
+              {text: 'No', onPress: () => {
+                setSuccess('NO')
+                deletePropertyRequest()
+              }},
+              {text: 'Yes', onPress: () => {
+                setSuccess('YES');
+                deletePropertyRequest();
+              }}
+            ]
+          );
+          console.log(successfulLease)
+          
+    }
     async function deletePropertyRequest(){
+        
         const accessToken = await SecureStorage.getItem("accessToken");
         fetch('https://crib-llc.herokuapp.com/properties/' + propID, {
             method: 'DELETE',
@@ -205,8 +224,9 @@ export default function EditPropertyScreen({navigation, route}){
             }
         }).then(res => {
             if(res.status == 200){
-
-                    navigation.goBack()
+                console.log(`from delete prop req ${successfulLease}`);
+                  navigation.goBack()
+                  
                 }
                 else{
                     alert('Unable to delete this property. Please try again later.')
@@ -219,7 +239,6 @@ export default function EditPropertyScreen({navigation, route}){
     }   
     
     return(
-      
         <SafeAreaView style={{flex:1, backgroundColor:'white'}} >
             <HeaderContainer>
                 <BackButtonContainer>

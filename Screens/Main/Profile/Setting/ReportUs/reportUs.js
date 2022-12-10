@@ -25,7 +25,7 @@ export default function ReportUsScreen({navigation, route}){
 
     async function send(){
         const accessToken = await SecureStorage.getItem("accessToken");
-        await fetch('https://crib-llc.herokuapp.com/contact', {
+        await fetch('https://crib-llc.herokuapp.com/report', { // changed endpoint from contact to report
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -35,13 +35,14 @@ export default function ReportUsScreen({navigation, route}){
             
             body: JSON.stringify({
                 email: email,
-                title: title,
+                property: propertyName,
+                tenant: tenantName,
                 description: description
             })
         }) 
         .then(res => {
             if (res.status == 200){
-                alert("Message successfully sent!")
+                alert("Reported Successfully!")
                 navigation.goBack();
             }
             else{
