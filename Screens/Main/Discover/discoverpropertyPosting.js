@@ -32,11 +32,11 @@ import Lottie from 'lottie-react-native';
 FontAwesome.loadFont();
 
 const ImageName = [
-    { name: "Bedroom", des: "Please upload an image of tenant's bedroom.", icon: "bed-outline" },
-    { name: "Bathroom", des: "Please upload an image of tenant's bathroom.", icon: "water-outline" },
-    { name: "Living Room", des: "Please upload an image of common/shared space." , icon: "tv-outline"},
-    { name: "Kitchen", des: "Please upload an image of kitchen/cooking area." , icon: "fast-food-outline"},
-    { name: "Floor Plan", des: "Please upload an image of property floor plan.", icon: "logo-stackoverflow" },
+    { name: "Bedroom", des: "Image of where subtenants would sleep", icon: "bed-outline" },
+    { name: "Bathroom", des: "Image of bathroom tenant have access to", icon: "water-outline" },
+    { name: "Living Room", des: "Image of common/shared space." , icon: "tv-outline"},
+    { name: "Kitchen", des: "Image of kitchen/cooking area." , icon: "fast-food-outline"},
+    { name: "Floor Plan (Optional)", des: "Image of property floor plan.", icon: "logo-stackoverflow" },
 ]
 
 
@@ -44,7 +44,7 @@ const bedroomList = ["Studio", "1" , "2", "3", "4P"]
 const bathroomList = ["1", "2", "3", "4P"]
 
 
-
+import { faBath, faBed} from '@fortawesome/free-solid-svg-icons'
 
 
 import {
@@ -55,11 +55,14 @@ import {
     PricePerMonth, PropertyTypeCard, PriceInputSearchContainer, CategoryName, RowContainer, RowValueContainer, RowName,
     FollowUpContainer, FollowUpText, DateCategoryName, BedroomContaienr, BedroomItemContainer, RowContainerCol,
     ReviewHeading, ReviewLocationContainer, ReviewDateContainer, ImageSelectionContainer, ImageText, CribText,
-    ContinueText, MaxText
+    ContinueText, MaxText, ExitButtonContainer, ExitButtonText, ContinueButton, BackNextContainer, BackText, SmallContinueButton, ImageTypeText, PriceInput, DollarSignText, SecurityDepositInputSearchContainer, SecurityDepositInput, CounterContainer, BedroomCountContaienr, BedroomBathroomCountText, AmenitiesName, ReivewImageContainer, ReviewSection, ReviewHeadingAndEditContainer, ReviewButtonContainer,
 } from './discoverPropertyPostingStyle';
 import Easing from 'react-native/Libraries/Animated/Easing';
-import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, GetFAIcons} from '../../../sharedUtils';
+import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR, GetFAIcons} from '../../../sharedUtils';
 import { SubHeadingText } from '../../Onboarding/Landing/landingStyle';
+import { he, te } from 'date-fns/locale';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { set } from 'date-fns';
 
 
 export default function PropertyPostingScreen({ navigation }) {
@@ -67,7 +70,7 @@ export default function PropertyPostingScreen({ navigation }) {
     const flatListdata =
         [{ name: "Room", image: require('../../../assets/room.jpg'), description: "Shared public space" },
         { name: "House", image: require('../../../assets/house.jpg'), description: "Entire House" },
-        { name: "Apartment", image: require('../../../assets/apartment.jpg'), description: "2+ Bedroom Apartment" },
+        { name: "Entire apartment", image: require('../../../assets/apartment.jpg'), description: "2+ Bedroom Apartment" },
         { name: "Studio", image: require('../../../assets/studio.jpg'), description: "Open-styled apartment" }
     ]
 
@@ -79,20 +82,24 @@ export default function PropertyPostingScreen({ navigation }) {
     const [propertySecondaryAddr, setpropertySecondaryAddr] = useState('')
     const [propertydateFrom, setpropertydateFrom] = useState(null)
     const [propertydateTo, setpropertydateTo] = useState(null)
-    const [propertyNumBed, setpropertyNumBed] = useState('');
-    const [propertyNumBath, setpropertyNumBath] = useState('');
+    const [propertydateFlexible, setpropertydateFlexible] = useState(false)
+    const [propertyNumBed, setpropertyNumBed] = useState(0);
+    const [propertyNumBath, setpropertyNumBath] = useState(0);
     const [propertyPrice, setpropertyPrice] = useState('');
+    const [propertySecurityDeposit, setpropertySecurityDeposit] = useState('');
     const [propertyDescription, setpropertyDescription] = useState('')
     const [propertyAmenities, setpropertyAmenities] = useState([])
-    const [propertyPriceNego, setPropertyPriceNego] = useState(false)
+
+    const [title, setTitle] = useState("")
 
     const [propertyBedroomImage, setPropertyBedroomImage] = useState(null)
     const [propertyBathroomImage, setPropertyBathroomImage] = useState(null)
     const [propertyLivingroomImage, setPropertyLivingroomImage] = useState(null)
     const [propertyKitchenImage, setPropertyKitchenImage] = useState(null)
     const [propertyFloorplanImage, setPropertyFloorPlanImage] = useState(null)
-    const [locationPressed, setLocationPressed] = useState(false)
     const [latLong, setLatLong] = useState([])
+
+    const [reviewing, setReviewing] = useState(false)
 
     const [loading, setLoading] = useState(false)
 
@@ -111,65 +118,171 @@ export default function PropertyPostingScreen({ navigation }) {
     const TopContainerTranslation = useRef(new Animated.Value(HEIGHT * 0.1)).current;
 
 
-    function moveScrollView(val) {
-       
+    async function moveScrollView(val) {
+        setLoading(true)
         Keyboard.dismiss()
         if (val < 0) {
             navigation.goBack();
         }
-        else if(val == 2 && propertyType== ""){
-            alert("Must select a property type.")
+        if(val == 2 && !checkPropertyType()){
+            setLoading(false)
+            return;
         }
-        else if(val == 3 && propertyLocation== ""){
-            alert("Must enter property location.")
+        
+        if(val == 3){
+            const success = await checkPropertyLocation();
+            if(!success){
+                setLoading(false)
+                return;
+            }
         }
-        else if(val == 3 && !locationPressed){
+        if(val == 4){
+            const success = await checkPropertyImages();
+            if(!success){
+                setLoading(false)
+                return;
+            }
+        }
+        if(val == 5){
+            const success = await checkPropertyPrice();
+            if(!success){
+                setLoading(false)
+                return;
+            }
+        }
+        if(val == 6){
+            const success = await checkPropertyAvailability();
+            if(!success){
+                setLoading(false)
+                return;
+            }
+        }
+        if(val == 8){
+            const success = await checkPropertyBedBath();
+            if(!success){
+                setLoading(false)
+                return;
+            }
+        }
+
+        if(val == 10){
+            setReviewing(true)
+        }
+
+        setscrollviewIndex(val)
+        setLoading(false)
+        setTimeout(() => {
+            scrollView.current.scrollTo({ x: WIDTH * val });
+            setscrollviewIndex(val)
+        }, 100)
+        return
+        
+    }
+
+    //Function to check if user input a type in property type
+    function checkPropertyType(){
+        if(propertyType == ""){
+            alert("Must enter property type.");
+            return false;
+        }
+        return true;
+    }
+
+    //Function to check if user input a proper location in property location
+    async function checkPropertyLocation(){
+        //Didn't enter an address
+        if(propertyLocation.trim() == ""){
+            alert("Invalid property location.");
+            return false;
+        }
+        
+        //Entered some weird address that doesn't have result
+        if(autocompleteLocation.length == 0){
+            alert("Invalid property location.");
+            return false;
+        }
+
+        //This checks if the user pressed next without selecting autocomplete options 
+        if(propertyMainAddr == null || propertyMainAddr.trim() == "" || latLong == null){
             setpropertyLocation(autocompleteLocation[0].description)
             setpropertyMainAddr(autocompleteLocation[0].structured_formatting.main_text)
             setpropertySecondaryAddr(autocompleteLocation[0].structured_formatting.secondary_text)
-            LocationToLatLong(autocompleteLocation[0].description)
-            setLocationPressed(true)
-        }
-        else if(val == 4 && (propertyBathroomImage == null || propertyBathroomImage == null ||
-            propertyLivingroomImage == null || propertyKitchenImage == null)){
-                if(propertyBedroomImage == null){
-                    alert("Must select Bedroom Image.")
-                }
-                else if(propertyBathroomImage == null){
-                    alert("Must select Bathrrom Image.")
-                }
-                else if(propertyKitchenImage == null){
-                    alert("Must select Kitchen Image.")
-                }
-                else if(propertyLivingroomImage == null){
-                    alert("Must select Livingroom Image.")
-                }
-        }
-        else if(val == 5 && (propertyPrice == "" || parseInt(propertyPrice.split("$")[1]) > 10000)){
-            if(propertyPrice == ""){
-                alert("Must enter property price.")
-            }
-            else{
-                alert("Property price must be less than $10000 / month.")
-            }
-        }
-        else if(val == 7 && propertydateFrom == null){
-            alert("Must enter property availability start date.")
-        }
-        else if(val == 7 && propertydateTo == null){
-            alert("Must enter property availability end date.")
-        }
-        else {
-            setscrollviewIndex(val)
-            
-            setTimeout(() => {
-                scrollView.current.scrollTo({ x: WIDTH * val });
-                setscrollviewIndex(val)
-            }, 100)
-            return
-        }
 
+            const tempLatLong = await LocationToLatLong(autocompleteLocation[0].description);
+            setLatLong(tempLatLong)
+            return true;
+        }
+        return true;
     }
+
+    //Checks if user have input the required images for image gallery
+    async function checkPropertyImages(){
+        if(propertyBedroomImage == null){
+            alert("Must select Bedroom Image.")
+            return false;
+        }
+        else if(propertyBathroomImage == null){
+            alert("Must select Bathrrom Image.")
+            return false;
+        }
+        else if(propertyKitchenImage == null){
+            alert("Must select Kitchen Image.")
+            return false;
+        }
+        else if(propertyLivingroomImage == null){
+            alert("Must select Livingroom Image.")
+            return false;
+        }
+        return true;
+    }
+
+    //Check if users have input sublease price or security deposit
+    async function checkPropertyPrice(){
+        if(propertyPrice == null || propertyPrice.trim() == ""){
+            alert("Invalid property price.")
+            return false;
+        }
+        if(propertyPrice <= 0){
+            alert("Invalid property price.")
+            return false;
+        }
+        if(propertyPrice > 10000){
+            alert("Property price must be less than $10000")
+            return false;
+        }
+        if(propertySecurityDeposit > 10000){
+            alert("Security deposit must be less than $10000")
+            return false;
+        }
+        return true;
+    }
+
+    //Check if user have input a valid sublease availability
+    async function checkPropertyAvailability(){
+        if(propertydateFrom == null){
+            alert("Must select sublease start date.")
+            return false;
+        }
+        if(propertydateTo == null){
+            alert("Must select sublease end date.")
+            return false
+        }
+        return true;
+    }
+
+    //Check if user have input a valid bed and bath number 
+    async function checkPropertyBedBath(){
+        if(propertyNumBed == 0){
+            alert("Please enter a valid bed number.")
+            return false;
+        }
+        if(propertyNumBath == 0){
+            alert("Please enter a valid bathroom number.")
+            return false;
+        }
+        return true;
+    }
+
 
     function SelectLocationSequence() {
 
@@ -222,7 +335,7 @@ export default function PropertyPostingScreen({ navigation }) {
                 }        
             })
             .catch(function (error) {
-                console.log(error);
+                console.log("PLACES", error);
             });
         }
     }
@@ -230,7 +343,7 @@ export default function PropertyPostingScreen({ navigation }) {
     //Render individual card items for PropertyType in posting page
     const renderItem = ({ item, index }) => (
         <Pressable hitSlop={WIDTH*0.05} onPress={() => setpropertyType(item.name)}
-            style={{ width: WIDTH * 0.9, height: WIDTH * 0.2, backgroundColor: propertyType == item.name ? PRIMARYCOLOR : 'white', borderRadius: 15, marginLeft: HEIGHT * 0.01, marginTop: HEIGHT * 0.01, flexDirection: 'row' }}>
+            style={{ width: WIDTH * 0.9, height: WIDTH * 0.2, backgroundColor: propertyType == item.name ? PRIMARYCOLOR : 'white', borderRadius: 15, marginTop: HEIGHT * 0.01, flexDirection: 'row' }}>
 
             <Image source={item.image} style={{ height: '100%', width: WIDTH * 0.45, borderBottomLeftRadius: 15, borderTopLeftRadius: 15 }} />
 
@@ -252,120 +365,265 @@ export default function PropertyPostingScreen({ navigation }) {
         }
     }
 
-    async function postproperty() {
+
+
+
+async function testScraped(){
+        console.log("hello")
+        // console.log(propertyType)
+        // console.log(propertyMainAddr)
+        // console.log(propertySecondaryAddr)
+        // console.log(latLong[0])
+        // console.log(latLong[1])
+        // console.log(propertyPrice)
+        // console.log(propertyDescription)
+        // console.log(propertydateFrom.getTime())
+        // console.log(propertydateTo.getTime())
+        // console.log(propertyNumBed)
+        // console.log(propertyNumBath)
+        // console.log(propertydateFlexible)
+        // console.log(propertySecurityDeposit)
         setLoading(true)
-        try{
+        
+        const postingData = new FormData();
 
-            const accessToken = await EncryptedStorage.getItem("accessToken");
+        postingData.append("type", propertyType);                       //String 
+        postingData.append("streetAddr", propertyMainAddr);               //String 
+        postingData.append("secondaryTxt", propertySecondaryAddr);               //String 
+        postingData.append("latitude", latLong[0])
+        postingData.append("longitude", latLong[1])
+        //String Array
 
-            if(accessToken != undefined){
-                const postingData = new FormData();
+        var array = propertyBedroomImage.split(".");
 
-                postingData.append("type", propertyType);                       //String 
-                postingData.append("streetAddr", propertyMainAddr);               //String 
-                postingData.append("secondaryTxt", propertySecondaryAddr);               //String 
-                postingData.append("latitude", latLong[0])
-                postingData.append("longitude", latLong[1])
-                //String Array
+        postingData.append("propertyImages", {
+            uri: propertyBedroomImage,
+            type: 'image/' + array[1],
+            name: 'someName',
+        });
 
-                var array = propertyBedroomImage.split(".");
+        var array = propertyBathroomImage.split(".");
+        postingData.append("propertyImages", {
+            uri: propertyBathroomImage,
+            type: 'image/' + array[1],
+            name: 'someName',
+        });
+        var array = propertyLivingroomImage.split(".");
 
-                postingData.append("propertyImages", {
-                    uri: propertyBedroomImage,
-                    type: 'image/' + array[1],
-                    name: 'someName',
-                });
+        postingData.append("propertyImages", {
+            uri: propertyLivingroomImage,
+            type: 'image/' + array[1],
+            name: 'someName',
+        });
 
-                var array = propertyBathroomImage.split(".");
-                postingData.append("propertyImages", {
-                    uri: propertyBathroomImage,
-                    type: 'image/' + array[1],
-                    name: 'someName',
-                });
-                var array = propertyLivingroomImage.split(".");
+        var array = propertyKitchenImage.split(".");
 
-                postingData.append("propertyImages", {
-                    uri: propertyLivingroomImage,
-                    type: 'image/' + array[1],
-                    name: 'someName',
-                });
+        postingData.append("propertyImages", {
+            uri: propertyKitchenImage,
+            type: 'image/' + array[1],
+            name: 'someName',
+        });
 
-                var array = propertyKitchenImage.split(".");
+        if(propertyFloorplanImage!= null){
+            var array = propertyFloorplanImage.split(".");
+            postingData.append("propertyImages", {
+                uri: propertyFloorplanImage,
+                type: 'image/' + array[1],
+                name: 'someName',
+            });
+        }
 
-                postingData.append("propertyImages", {
-                    uri: propertyKitchenImage,
-                    type: 'image/' + array[1],
-                    name: 'someName',
-                });
 
-                if(propertyFloorplanImage!= null){
-                    var array = propertyFloorplanImage.split(".");
-                    postingData.append("propertyImages", {
-                        uri: propertyFloorplanImage,
-                        type: 'image/' + array[1],
-                        name: 'someName',
-                    });
+        postingData.append("price", propertyPrice);                     //String 
+        postingData.append("description", propertyDescription);         //String 
+        postingData.append("availableFrom", propertydateFrom.getTime());          //String
+        postingData.append("availableTo", propertydateTo.getTime());              //String
+        postingData.append("bed", propertyNumBed);                      //String
+        postingData.append("bath", propertyNumBath);                    //String 
+        postingData.append("title", title);                    //String
+        // postingData.append("propertyAmenities", propertyAmenities);     //Array of String 
+        postingData.append("timePosted", new Date())
+        propertyAmenities.forEach(element => {
+            postingData.append("amenities", element);
+        });
+        
+        postingData.append("availabilityFlexibility", true);
+       
+        if(propertySecurityDeposit != null && propertySecurityDeposit != undefined){
+            postingData.append("securityDeposit", propertySecurityDeposit);
+        }
+
+
+    
+        
+            fetch('https://crib-llc.herokuapp.com/properties/scraped', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                },
+                body: postingData,
+            })
+            .then(async (response) => {
+                alert(response.status);
+                if(response.status == 200){
+                    
+                    try{
+                        await EncryptedStorage.removeItem("postedProperty")
+                    }
+                    catch{
+                    }
                 }
+                else{
+                    setLoading(false)
+                    // navigation.goBack()
+                    alert("An error occured. Please try again later!")
+                }
+                
+            })
+            .catch(e => {
+                setLoading(false)
+                console.log(e)
+                alert("error")
+            })
+            
+            setLoading(false)
+    }
 
 
-                postingData.append("price", propertyPrice.split("$")[1]);                     //String 
-                postingData.append("description", propertyDescription);         //String 
-                postingData.append("availableFrom", propertydateFrom.getTime());          //String
-                postingData.append("availableTo", propertydateTo.getTime());              //String
-                postingData.append("bed", propertyNumBed);                      //String
-                postingData.append("bath", propertyNumBath);                    //String 
-                postingData.append("title", "Name");                    //String
-                // postingData.append("propertyAmenities", propertyAmenities);     //Array of String 
-                postingData.append("timePosted", new Date())
-                propertyAmenities.forEach(element => {
-                    postingData.append("amenities", element);
-                });
+    // async function postproperty() {
+    //     // console.log("hello")
+    //     // console.log(propertyType)
+    //     // console.log(propertyMainAddr)
+    //     // console.log(propertySecondaryAddr)
+    //     // console.log(latLong[0])
+    //     // console.log(latLong[1])
+    //     // console.log(propertyPrice)
+    //     // console.log(propertyDescription)
+    //     // console.log(propertydateFrom.getTime())
+    //     // console.log(propertydateTo.getTime())
+    //     // console.log(propertyNumBed)
+    //     // console.log(propertyNumBath)
+    //     // console.log(propertydateFlexible)
+    //     // console.log(propertySecurityDeposit)
+    //     setLoading(true)
+    //     try{
+
+    //         const accessToken = await EncryptedStorage.getItem("accessToken");
+
+    //         if(accessToken != undefined){
+    //             const postingData = new FormData();
+
+    //             postingData.append("type", propertyType);                       //String 
+    //             postingData.append("streetAddr", propertyMainAddr);               //String 
+    //             postingData.append("secondaryTxt", propertySecondaryAddr);               //String 
+    //             postingData.append("latitude", latLong[0])
+    //             postingData.append("longitude", latLong[1])
+    //             //String Array
+
+    //             var array = propertyBedroomImage.split(".");
+
+    //             postingData.append("propertyImages", {
+    //                 uri: propertyBedroomImage,
+    //                 type: 'image/' + array[1],
+    //                 name: 'someName',
+    //             });
+
+    //             var array = propertyBathroomImage.split(".");
+    //             postingData.append("propertyImages", {
+    //                 uri: propertyBathroomImage,
+    //                 type: 'image/' + array[1],
+    //                 name: 'someName',
+    //             });
+    //             var array = propertyLivingroomImage.split(".");
+
+    //             postingData.append("propertyImages", {
+    //                 uri: propertyLivingroomImage,
+    //                 type: 'image/' + array[1],
+    //                 name: 'someName',
+    //             });
+
+    //             var array = propertyKitchenImage.split(".");
+
+    //             postingData.append("propertyImages", {
+    //                 uri: propertyKitchenImage,
+    //                 type: 'image/' + array[1],
+    //                 name: 'someName',
+    //             });
+
+    //             if(propertyFloorplanImage!= null){
+    //                 var array = propertyFloorplanImage.split(".");
+    //                 postingData.append("propertyImages", {
+    //                     uri: propertyFloorplanImage,
+    //                     type: 'image/' + array[1],
+    //                     name: 'someName',
+    //                 });
+    //             }
+
+
+    //             postingData.append("price", propertyPrice);                     //String 
+    //             postingData.append("description", propertyDescription);         //String 
+    //             postingData.append("availableFrom", propertydateFrom.getTime());          //String
+    //             postingData.append("availableTo", propertydateTo.getTime());              //String
+    //             postingData.append("bed", propertyNumBed);                      //String
+    //             postingData.append("bath", propertyNumBath);                    //String 
+    //             postingData.append("title", "Name");                    //String
+    //             // postingData.append("propertyAmenities", propertyAmenities);     //Array of String 
+    //             postingData.append("timePosted", new Date())
+    //             propertyAmenities.forEach(element => {
+    //                 postingData.append("amenities", element);
+    //             });
+               
+    //             postingData.append("availabilityFlexibility", true);
+               
+    //             if(propertySecurityDeposit != null && propertySecurityDeposit != undefined){
+    //                 postingData.append("securityDeposit", propertySecurityDeposit);
+    //             }
+
 
             
               
-                    fetch('https://crib-llc.herokuapp.com/properties', {
-                        method: 'POST',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'multipart/form-data',
-                            'Authorization': 'bearer ' + accessToken
-                        },
-                        body: postingData,
-                    })
-                    .then(async (response) => {
-                        if(response.status == 200){
-                            try{
-                                await EncryptedStorage.removeItem("postedProperty")
-                            }
-                            catch{
-                                setLoading(false)
-                                navigation.goBack()
-                            }
-                            setTimeout(()=>{
-                                setLoading(false)
-                                navigation.goBack()
-                            },1500)
-                        }
-                        else{
-                            setLoading(false)
-                            navigation.goBack()
-                            alert("An error occured. Please try again later!")
-                        }
+    //                 fetch('https://crib-llc.herokuapp.com/properties', {
+    //                     method: 'POST',
+    //                     headers: {
+    //                         Accept: 'application/json',
+    //                         'Content-Type': 'multipart/form-data',
+    //                         'Authorization': 'bearer ' + accessToken
+    //                     },
+    //                     body: postingData,
+    //                 })
+    //                 .then(async (response) => {
+    //                     if(response.status == 200){
+    //                         try{
+    //                             await EncryptedStorage.removeItem("postedProperty")
+    //                         }
+    //                         catch{
+    //                         }
+    //                     }
+    //                     else{
+    //                         setLoading(false)
+    //                         navigation.goBack()
+    //                         alert("An error occured. Please try again later!")
+    //                     }
                        
-                    })
-                    .catch(e => {
-                        setLoading(false)
-                        navigation.goBack()
-                        alert(e)
-                    })
+    //                 })
+    //                 .catch(e => {
+    //                     setLoading(false)
+    //                     navigation.goBack()
+    //                     alert(e)
+    //                 })
+
+    //                 setTimeout(()=>{
+    //                     navigation.goBack()
+    //                 },1500)
                 
                
-            }
-        }
-        catch{
-            console.log("PROPERTYPOSTING");
-        }
-    }
+    //         }
+    //     }
+    //     catch{
+    //         console.log("PROPERTYPOSTING");
+    //     }
+    // }
 
     async function selectGallery(name) {
         ImagePicker.openPicker({
@@ -394,8 +652,36 @@ export default function PropertyPostingScreen({ navigation }) {
         }).catch((e)=>{
             console.log(e)
         })
+    }
 
+    async function editImageGalleryInReview(name){
+        ImagePicker.openPicker({
+            width: 600,
+            height: 600,
+            cropping:true,
+            compressImageQuality: 0.7
+            
+          }).then(image => {
+            setHeaderImage(image.path);
+            if (name == "Bedroom") {
+                setPropertyBedroomImage(image.path);
+            }
+            else if (name == "Bathroom") {
+                setPropertyBathroomImage(image.path);
+            }
+            else if (name == "Living Room") {
+                setPropertyLivingroomImage(image.path);
+            }
+            else if (name == "Kitchen") {
+                setPropertyKitchenImage(image.path);
+            }
+            else if (name == "Floor Plan") {
+                setPropertyFloorPlanImage(image.path);
+            }
 
+        }).catch((e)=>{
+            console.log(e)
+        })
     }
 
     function updateImages(index) {
@@ -406,7 +692,6 @@ export default function PropertyPostingScreen({ navigation }) {
     const heighttranslation = useRef(new Animated.Value(startingvalue)).current;
     useEffect(() => {
         testing();
-        console.log("Useeffect")
         //   getTokens
     }, [expanded])
 
@@ -420,72 +705,85 @@ export default function PropertyPostingScreen({ navigation }) {
         }).start()
     }
 
-    function moveOn(value) {
-        setLocationPressed(true)
-        Keyboard.dismiss()
-        // if(value.results == undefined){
-        //     setpropertyLocation("")
-        //     alert("Invalid Address")
-        // }
-        // else{
-            setpropertyLocation(value.description)
-            setpropertyMainAddr(value.structured_formatting.main_text)
-            setpropertySecondaryAddr(value.structured_formatting.secondary_text)
-            LocationToLatLong(value.description)
-        // }
-        
-       
-    }
-
-    function formatPrice(price){
-        if (price == ""){
-            return;
-        }
-        let val = price.replace("$","")
-        return "$" + val
-    }
-
     async function LocationToLatLong(name){
-        try{
-            const accessToken = await EncryptedStorage.getItem("accessToken");
-
-            if(accessToken != undefined && name != null && name != undefined){
-                var config = {
-                    method: 'get',
-                    url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${name}`,
-                };
-                axios(config)
-                .then(async (locInfo)=> {           
-                    setLatLong([locInfo.data.lat, locInfo.data.lng])
-    
-                })
-                .catch(function (error) {
-                    
-                    console.log(error);
-                });
+        let tempLatLong = [];
+        let spacelessname = name.replace(" ", "+");
+        await fetch(`https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${spacelessname}`, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
             }
-        }
-        catch{
-            console.log("ERROR --- LocationToLatLong")
-        }
+        }).then( async res => {
+            if(res.status == 200){
+                const latLong = await res.json();
+                tempLatLong[0] = latLong.lat;
+                tempLatLong[1] = latLong.lng;
+            }
+        })
+        return tempLatLong;
+    }
+
+    async function selectAutocompleteLocationOption(value){
+        Keyboard.dismiss()
+        setpropertyLocation(value.description)
+        setpropertyMainAddr(value.structured_formatting.main_text)
+        setpropertySecondaryAddr(value.structured_formatting.secondary_text)
         
+        let tempLatLong = await LocationToLatLong(value.description);
+        setLatLong(tempLatLong);
+    }
+
+    async function checkReviewEdit(){
+        if(scrollviewIndex == 2){
+            const success = await checkPropertyLocation();
+            if(!success){
+                return;
+            }
+        } 
+        if(scrollviewIndex == 4){
+            const success = await checkPropertyPrice();
+            if(!success){
+                return;
+            }
+        } 
+        if(scrollviewIndex == 7){
+            const success = await checkPropertyBedBath();
+            if(!success){
+                return;
+            }
+        } 
+        moveScrollView(10);
+    }
+
+    async function exitAlert(){
+        Alert.alert(
+            'Do you want to exit?',
+            'You information will not be exit.',
+            [
+              {text: 'No', onPress: () => {}, style: 'cancel'},
+              {text: 'Delete', onPress: () => deletePropertyRequest(), style: 'destructive'},
+            ],
+            { 
+              cancelable: true 
+            }
+          );
     }
 
    
     return (
-        <SafeAreaView style={{ width: WIDTH, height: HEIGHT, margin: 0, padding: 0 }} >
-            <TouchableOpacity disabled={loading} style={{paddingLeft:WIDTH*0.05}} onPress={()=>navigation.navigate("Profile")}>
-                <Text style={{color: DARKGREY, fontWeight:'500'}}>Cancel Posting</Text>
-            </TouchableOpacity>
+        <SafeAreaView style={{ width: WIDTH, height: HEIGHT, padding: 0, backgroundColor: 'black'}} >
             <ModalView>
+            <SafeAreaView>
+
+                {/* Contains the exit button and the back button */}
                 <ButtonContainer>
-                    <Pressable disabled={loading} onPress={() => moveScrollView(scrollviewIndex - 1)} style={{ width: WIDTH * 0.1 }}>
-                        <Ionicons name="arrow-back" size={30} color='white'></Ionicons>
-                    </Pressable>
-                    <Pressable style={{ display: scrollviewIndex == 10 || scrollviewIndex == 9 || scrollviewIndex == 0 ? 'none' : 'flex', }}
-                         hitSlop={WIDTH*0.05} onPress={() => moveScrollView(scrollviewIndex + 1)}>
-                        <Ionicons name="checkmark-outline" size={30} color={PRIMARYCOLOR}></Ionicons>
-                    </Pressable>
+                    <ReviewButtonContainer hitSlop={WIDTH*0.025} >
+                       
+                    </ReviewButtonContainer>
+                    <ExitButtonContainer hitSlop={WIDTH*0.025} onPress={() => moveScrollView(-1)}>
+                        <ExitButtonText>Exit</ExitButtonText>
+                    </ExitButtonContainer>
                 </ButtonContainer>
                 <Animated.ScrollView keyboardShouldPersistTaps={'handled'}
                     style={{
@@ -494,34 +792,40 @@ export default function PropertyPostingScreen({ navigation }) {
                             outputRange: [0, 1]
                         })
                     }}
-                    scrollEnabled={false} horizontal snapToAlignment='end' decelerationRate='fast' snapToInterval={WIDTH} ref={scrollView} onTouchEnd={() => setexpended(true)} >
-                    <PostingSection style={{ width: WIDTH, height: HEIGHT, alignItems: 'center', }}>
-                        <Heading>Sublease your <CribText>Crib</CribText></Heading>
-                        <InfoText>
-                            We make subleasing as easy as possible.
-                        </InfoText>
-                        
-                            <Lottie source={require('../../../postingfirstpage.json')}  autoPlay={scrollviewIndex == 0 ? true : false} loop style={{width:WIDTH*0.9, height: WIDTH*0.9, }}/>
-                       
+                    scrollEnabled={false} 
+                    horizontal 
+                    snapToAlignment='end' 
+                    decelerationRate='fast' 
+                    snapToInterval={WIDTH} 
+                    ref={scrollView} 
+                    onTouchEnd={() => setexpended(true)}
+                >
+                    {/* Posting Landing Page */}
+                    <PostingSection>
+                        <Heading>Sublease your property,</Heading>
+                        <Heading style={{marginTop: HEIGHT*0.01}}>earn up to <Text style={{color: PRIMARYCOLOR}}> $950 </Text> per month</Heading>
 
+                        <Subheading>We make subleasing as easy as possible.</Subheading>
+
+                        <Lottie source={require('../../../postingfirstpage.json')}  autoPlay={scrollviewIndex == 0 ? true : false} loop style={{width:WIDTH*0.9, height: WIDTH*0.9, }}/>
+
+                                               
                     </PostingSection>
 
                     {/* Choose apartment type  */}
-                    <PostingSection >
-                        <Heading>Property Type</Heading>
-                        <InfoText>
-                            Please select one of the options
-                        </InfoText>
+                    <PostingSection>
+                        <Heading>Property type</Heading>
+                        <Subheading>Choose the type of sublease.</Subheading>
 
-                        <View style={{ marginTop: HEIGHT * 0.015 }}>
-                            <FlatList key={() => flatListdata.name} data={flatListdata} renderItem={renderItem} />
+
+                        <View style={{ marginTop: HEIGHT * 0.05}}>
+                            <FlatList scrollEnabled={false} key={() => flatListdata.name} data={flatListdata} renderItem={renderItem} />
                         </View>
-
                     </PostingSection>
 
                     {/* Select Address */}
 
-                    <PostingSection >
+                    <PostingSection>
                         <Animated.View style={{
                             height: TopContainerTranslation
                             , opacity: TopContainerTranslation.interpolate({
@@ -530,50 +834,47 @@ export default function PropertyPostingScreen({ navigation }) {
                             })
                         }}>
                             <Heading >Address of sublease </Heading>
-                            <InfoText>
-                                Enter your property address
-                            </InfoText>
+                            <Subheading>Choose the type of sublease.</Subheading>
                         </Animated.View>
                         <SearchContainer>
                             <Ionicons name="search-outline" size={20} color='white' />
-                            <SearchInput placeholderTextColor='white' onEndEditing={SelectLocationOutSequence}
-                                onFocus={SelectLocationSequence} value={propertyLocation} onChangeText={(value) => autocomplete(value)} placeholder="Location..." />
+                            <SearchInput placeholderTextColor='white' 
+                            // onEndEditing={SelectLocationOutSequence}
+
+                                onFocus={SelectLocationSequence} value={propertyLocation} onChangeText={(value) => {autocomplete(value), setLatLong(null)}} placeholder="Location..." />
                         </SearchContainer>
                         <Animated.View style={{ width: WIDTH * 0.9, height: HEIGHT * 0.4, borderRadius: 10 }}>
 
                             {propertyLocation.length != 0 && autocompleteLocation.map((value, index) => (
-                                <TouchableHighlight key={value.description + index} >
-                                    <View style={{
-                                        width: WIDTH * 0.9, height: HEIGHT * 0.08, paddingLeft: WIDTH * 0.025,
-                                        alignItems: 'center', flexDirection: 'row',
-                                    }}>
-                                        <Ionicons name="location-outline" size={25} color={LIGHTGREY} />
-                                        <Pressable style={{ width: WIDTH * 0.8, marginLeft: WIDTH * 0.025 }} hitSlop={WIDTH*0.05} onPress={() => moveOn(value)}>
-                                            <Text style={{ color: 'white', fontSize: HEIGHT * 0.015 }}>{value.structured_formatting.main_text}</Text>
-                                            <Text style={{ color: LIGHTGREY, fontSize: HEIGHT * 0.015 }}>{value.structured_formatting.secondary_text}</Text>
-                                        </Pressable>
+                                <Pressable 
+                                key={value.description + index}
+                                onPress={()=>selectAutocompleteLocationOption(value)}
+                                style={{
+                                    width: WIDTH * 0.9, height: HEIGHT * 0.08, paddingLeft: WIDTH * 0.025,
+                                    alignItems: 'center', flexDirection: 'row',
+                                }}>
+                                    <Ionicons name="location-outline" size={25} color={LIGHTGREY} />
+                                    <View style={{ width: WIDTH * 0.8, marginLeft: WIDTH * 0.025 }} hitSlop={WIDTH*0.05}>
+                                        <Text style={{ color: 'white', fontSize: HEIGHT * 0.015 }}>{value.structured_formatting.main_text}</Text>
+                                        <Text style={{ color: LIGHTGREY, fontSize: HEIGHT * 0.015 }}>{value.structured_formatting.secondary_text}</Text>
                                     </View>
-                                </TouchableHighlight>
+                                </Pressable>
                             ))}
 
                         </Animated.View>
 
                     </PostingSection>
-                    {/* <PostingSection >
-                        <Heading>Location details</Heading>
-                        <InfoText>Please enter address details</InfoText>
-
-                    </PostingSection> */}
+                    
 
                     {/* Select Photo Gallery */}
                     <PostingSection>
-                        <Heading>Image Gallery</Heading>
-                        <InfoText>Please upload images of your property. </InfoText>
-                        <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: HEIGHT * 0.02 }}>
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                        <Heading>Sublease images</Heading>
+                        <Subheading>Upload images for tenants to better understand the sublease property</Subheading>
                             {
                                 ImageName.map((value) => (
                                     <ImageSelectionContainer key={"Image" + value.name}>
-                                        <Subheading>{value.name}</Subheading>
+                                        <ImageTypeText>{value.name}</ImageTypeText>
                                         <ImageText >{value.des}</ImageText>
                                         <ImageContainer hitSlop={WIDTH*0.05} onPress={() => selectGallery(value.name)}>
                                             <Ionicons name={value.icon} size={40} color='white' />
@@ -595,8 +896,7 @@ export default function PropertyPostingScreen({ navigation }) {
 
 
                                 ))}
-                                <View style={{height:HEIGHT*0.1}}/>
-
+                                <View style={{height:HEIGHT*0.3}}/>
 
                         </ScrollView>
                         
@@ -604,39 +904,41 @@ export default function PropertyPostingScreen({ navigation }) {
                     </PostingSection>
 
                     <PostingSection>
-                        <Heading>Sublease Price</Heading>
-                        <InfoText>
-                            Please set property price per month.
-                        </InfoText>
+                        <Heading>Sublease price</Heading>
+                        <Subheading>Enter property price per month in USD</Subheading>
+                        
                         <PriceInputSearchContainer>
-                            <SearchInput keyboardType='number-pad' value={formatPrice(propertyPrice)} onChangeText={(value) => setpropertyPrice(value)}
-                                placeholder="$ Price" placeholderTextColor='white' />
+                            <View style={{flexDirection: 'row', alignItems:'center'}}>
+                            <DollarSignText>$  </DollarSignText>
+                            <PriceInput keyboardType='number-pad' value={propertyPrice} onChangeText={(value) => setpropertyPrice(value)}
+                                placeholder="1000" placeholderTextColor={DARKGREY} />
+                            </View>
+                            <DollarSignText> / month</DollarSignText>
                         </PriceInputSearchContainer>
+
+                        <Subheading style={{marginTop: HEIGHT*0.05}}>Security deposit (if applicable)</Subheading>
+                        
+                        <SecurityDepositInputSearchContainer>
+                            <View style={{flexDirection: 'row', alignItems:'center'}}>
+                            <DollarSignText>$  </DollarSignText>
+                            <SecurityDepositInput keyboardType='number-pad' value={propertySecurityDeposit} onChangeText={(value) => setpropertySecurityDeposit(value)}
+                                placeholder="1000" placeholderTextColor={DARKGREY} />
+                            </View>
+                            
+                        </SecurityDepositInputSearchContainer>
                         
                     </PostingSection>
 
-                    {/* Enter description  */}
                     <PostingSection>
-                        <Heading >Sublease Description</Heading>
-
-                        <PropertyDescriptionInput placeholder="Enter some basic details of your property. (Optional)"
-                            value={propertyDescription} onChangeText={(value) => setpropertyDescription(value)} multiline={true}
-                            placeholderTextColor={MEDIUMGREY} maxLength={700} />
-                        <MaxText length={propertyDescription.length}>{propertyDescription.length} / 700</MaxText>
-                    </PostingSection>
-
-
-                    <PostingSection>
-                        <Heading>Availability</Heading>
-                        <InfoText>
-                            Please select the availability of your property.
-                            </InfoText>
+                        <Heading>Sublease availability</Heading>
+                        <Subheading>Enter start and end date of sublease </Subheading>
+                           
                         <InputContainer >
                             <DateSelectContainer>
 
                                 <RowContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenFrom(true)}>
                                     <DateCategoryName>Available From</DateCategoryName>
-                                    <Ionicons name="shuffle" size={20} color='white' />
+                                   
                                     <RowValueContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenFrom(true)} >
                                         <DateSelectPressable  hitSlop={WIDTH*0.05} onPress={() => setOpenFrom(true)}>
                                         {
@@ -646,36 +948,23 @@ export default function PropertyPostingScreen({ navigation }) {
                                             <Text style={{ alignSelf: 'center', color: 'white' }}>{propertydateFrom.getMonth()%12 + 1}-{propertydateFrom.getDate()}-{propertydateFrom.getFullYear()}</Text>
                                         }
                                         </DateSelectPressable>
-                                        <Ionicons name='chevron-forward-outline' size={25} color='white' style={{ paddingLeft: WIDTH * 0.05 }} />
                                     </RowValueContainer>
                                 </RowContainer>
                                 <RowContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenTo(true)}>
                                     <DateCategoryName>Available To</DateCategoryName>
-                                    <Ionicons name="shuffle" size={20} color='white' />
-                                    <RowValueContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenTo(true)}>
-                                        <DateSelectPressable  hitSlop={WIDTH*0.05} onPress={() => setOpenTo(true)}>
-                                            {
-                                            propertydateTo == null ?
-                                                <Text style={{color: 'white'}}>Select Date</Text>
-                                            :
-                                                <Text style={{ alignSelf: 'center', color: 'white' }}>{propertydateTo.getMonth()%12 +1}-{propertydateTo.getDate()}-{propertydateTo.getFullYear()}</Text>
-                                            }
-                                        </DateSelectPressable>
-                                        <Ionicons name='chevron-forward-outline' size={25} color='white' style={{ paddingLeft: WIDTH * 0.05 }} />
-                                    </RowValueContainer>
+                        
+                                   <RowValueContainer  hitSlop={WIDTH*0.05} onPress={() => setOpenTo(true)} >
+                                       <DateSelectPressable  hitSlop={WIDTH*0.05} onPress={() => setOpenTo(true)}>
+                                       {
+                                           propertydateTo == null ?
+                                               <Text style={{color:'white'}}> Select Date</Text>
+                                           :
+                                           <Text style={{ alignSelf: 'center', color: 'white' }}>{propertydateTo.getMonth()%12 + 1}-{propertydateTo.getDate()}-{propertydateTo.getFullYear()}</Text>
+                                       }
+                                       </DateSelectPressable>
+                                   </RowValueContainer>
                                 </RowContainer>
                             </DateSelectContainer>
-
-                            {/* <DateSelectContainer>
-                               
-                                    <Subheading keyboardType='number-pad'>Bed</Subheading>
-                                    <BedBathInput keyboardType='number-pad' value={propertyNumBed} onChangeText={(value)=>setpropertyNumBed(value)}> </BedBathInput>
-                                    
-                               
-                                    <Subheading>Bath</Subheading>
-                                    <BedBathInput keyboardType='number-pad' value={propertyNumBath} onChangeText={(value)=>setpropertyNumBath(value)}> </BedBathInput>
-                               
-                            </DateSelectContainer>   */}
 
                             <DatePicker
                               
@@ -711,7 +1000,10 @@ export default function PropertyPostingScreen({ navigation }) {
                                 open={openTo}
                                 date={propertydateTo == null ? new Date () : propertydateTo}
                                 onConfirm={(date) => {
-                                    if(date.getTime() < propertydateFrom.getTime()){
+                                    if(date.getTime() < new Date().getTime()){
+                                        alert("Invalid date.")
+                                    }
+                                    else if(propertydateFrom != null &&  date.getTime() < propertydateFrom.getTime()){
                                         alert("Available to date cannot be before available from date")
                                     }
                                     else if(date.getTime() > 1759176355615){
@@ -732,202 +1024,264 @@ export default function PropertyPostingScreen({ navigation }) {
                                 }}
                             />
                         </InputContainer>
+                        <Heading style={{marginTop: HEIGHT*0.02}}>Flexible? (Optional)</Heading>
+                        <View style={{marginTop: HEIGHT*0.01, flexDirection: 'row', justifyContent:'space-between', width: WIDTH*0.9, alignItems:'center'}}>
+                            <Subheading style={{marginTop:0}}>Can tenant move in a few days early / late</Subheading>
+                            <Ionicons name='checkbox' color={propertydateFlexible ? PRIMARYCOLOR : 'white'} size={30} onPress={()=>setpropertydateFlexible(!propertydateFlexible)}/>
+                        </View>
                     </PostingSection>
 
                     <PostingSection>
-                        <Heading>Property Details</Heading>
-                        <InfoText>What would tenants be able to access.</InfoText>
-                        <RowContainerCol>
-                            <CategoryName>Bedroom</CategoryName>
-                            <Ionicons name='bed-outline' color='white' size={25} style={{ paddingVertical: HEIGHT * 0.015 }} />
-                            <BedroomContaienr>
-                                {bedroomList.map((value) => (
-                                    <BedroomItemContainer hitSlop={WIDTH*0.05} onPress={() => setpropertyNumBed(value)} userInput={propertyNumBed} value={value}
-                                        key={"bedroom" + value}>
-                                        <Text style={{ color: value == propertyNumBed ? 'black' : 'white', fontWeight: '500' }}>{value.replace("P","+")}</Text>
-                                    </BedroomItemContainer>
-                                ))}
-                            </BedroomContaienr>
-                        </RowContainerCol>
-
-                        <RowContainerCol>
-                            <CategoryName>Bathroom</CategoryName>
-                            <Ionicons name='water-outline' color='white' size={25} style={{ paddingVertical: HEIGHT * 0.015 }} />
-                            <BedroomContaienr>
-                                {bathroomList.map((value) => (
-                                    <BedroomItemContainer hitSlop={WIDTH*0.05} onPress={() => setpropertyNumBath(value)} userInput={propertyNumBath} value={value}
-                                        key={"bathroom" + value}>
-                                        <Text style={{ color: value == propertyNumBath ? 'black' : 'white', fontWeight: '500' }}>{value.replace("P","+")}</Text>
-                                    </BedroomItemContainer>
-                                ))}
-                            </BedroomContaienr>
-                        </RowContainerCol>
-
-
-                    </PostingSection>
-
-                    <PostingSection>
-                        <Heading>More Details</Heading>
+                        <Heading>Sublease amenities</Heading>
                         {/* <FontAwesomeIcon icon=blogger color='white' /> */}
-                        <InfoText>
-                            Select all of the amenities that are available
-                            at this sublease property. Not all may apply
-                        </InfoText>
+                        <Subheading>Enter all amenities that are included with the sublease</Subheading>
                         <InputContainer >
-                            <Subheading>Amenities</Subheading>
-                            <ScrollView style={{height:HEIGHT*0.5}}>
+                            <ScrollView style={{height:HEIGHT*0.6}}>
                             <AmenitiesContainer>
-                                
                                 {amenitiesList.map((value, index) => (
-                                    <View key={value.name + index + 'view'} style={{
-                                        minWidth: WIDTH * 0.35, width: value.name.length * 0.03 * WIDTH, height: HEIGHT * 0.055, justifyContent: 'center',
-                                        paddingRight: WIDTH * 0.03
-                                    }}>
-                                        <Pressable key={value.name + 'pressable'} hitSlop={WIDTH*0.05} onPress={() => updateAmenities(value.name)} style={{
-                                            borderWidth: 3, borderColor: propertyAmenities.indexOf(value.name) == -1 ? value.color : '#0085FF', height: HEIGHT * 0.045,
-                                            borderRadius: 20, justifyContent: 'center', backgroundColor: value.color, flexDirection: 'row', alignItems: 'center'
-                                        }}>
+                                    
+                                    <Pressable key={value.name + index} onPress={() => updateAmenities(value.name)} hitSlop={WIDTH*0.025}
+                                    style={{width: WIDTH*0.9, paddingVertical: HEIGHT*0.0175, flexDirection: 'row',
+                                    justifyContent:'space-between'}}>
+                                        <View style={{flexDirection:'row'}}>
                                             {GetFAIcons(value.name)}
-                                            <Text key={value.name + 'text'} style={{ justifyContent: 'center', color: 'white' }}>
-                                                {"   "}{value.name.replaceAll("_"," ")}
-                                            </Text>
-                                        </Pressable>
-
-                                    </View>
+                                            <AmenitiesName>{value.name.replace("_", " ")}</AmenitiesName>
+                                        </View>
+                                        <Ionicons name='checkbox' color={propertyAmenities.indexOf(value.name) == -1 ? 'white' : PRIMARYCOLOR} size={27}/>
+                                    </Pressable>
+                                   
                                 ))}
-                                
                             </AmenitiesContainer>
                             </ScrollView>
                         </InputContainer>
                     </PostingSection>
 
                     <PostingSection>
-                        <Heading>One last step!</Heading>
-                        <InfoText>
-                            Please review your property information before posting.
-                        </InfoText>
-                        <ImageContainer>
-                            <Image source={require('../../../assets/room.jpg')} style={{ height: HEIGHT * 0.25, width: WIDTH * 0.9, marginTop: HEIGHT * 0.1, borderRadius: 20 }} />
-                        </ImageContainer>
+                        <Heading>Property Details</Heading>
+                        <Subheading>Enter details of what tenant have access to</Subheading>
+                        <RowContainerCol>
+                            <View style={{flexDirection: 'row', alignItems:'center'}}>
+                            <FontAwesomeIcon icon={faBed} color='white' size={20}/>
+                                <CategoryName>Bed</CategoryName>
+                            </View>
+                            <CounterContainer>
+                                <Pressable hitSlop={WIDTH*0.1}>
+                                    <Ionicons name="remove-circle" color='white' size={30}  onPress={propertyNumBed > 0 ? ()=> setpropertyNumBed(propertyNumBed-1) : null}/>
+                                </Pressable>
+                                <BedroomCountContaienr>
+                                    <BedroomBathroomCountText>{propertyNumBed}</BedroomBathroomCountText>
+                                </BedroomCountContaienr>
+                                <Pressable hitSlop={WIDTH*0.1}>
+                                    <Ionicons name="add-circle" color='white' size={30} onPress={propertyNumBed < 10 ? ()=> setpropertyNumBed(propertyNumBed+1) : null}/>
+                                </Pressable>
+                            </CounterContainer>
+                            {/* <BedroomContaienr>
+                                {bedroomList.map((value) => (
+                                    <BedroomItemContainer hitSlop={WIDTH*0.05} onPress={() => setpropertyNumBed(value)} userInput={propertyNumBed} value={value}
+                                        key={"bedroom" + value}>
+                                        <Text style={{ color: value == propertyNumBed ? 'black' : 'white', fontWeight: '500' }}>{value.replace("P","+")}</Text>
+                                    </BedroomItemContainer>
+                                ))}
+                            </BedroomContaienr> */}
+                        </RowContainerCol>
+
+                        <RowContainerCol>
+                            <View style={{flexDirection: 'row', alignItems:'center'}}>
+                                
+                                <FontAwesomeIcon icon={faBath} color='white' size={20}/>
+                               
+                                <CategoryName>Bathroom</CategoryName>
+                            </View>
+                            <CounterContainer>
+                                <Pressable hitSlop={WIDTH*0.1}>
+                                    <Ionicons name="remove-circle" color='white' size={30} onPress={propertyNumBath > 0 ? ()=> setpropertyNumBath(propertyNumBath-1) : null} />
+                                </Pressable>
+                                <BedroomCountContaienr>
+                                    <BedroomBathroomCountText>{propertyNumBath}</BedroomBathroomCountText>
+                                </BedroomCountContaienr>
+                                <Pressable hitSlop={WIDTH*0.1}>
+                                    <Ionicons name="add-circle" color='white' size={30} onPress={propertyNumBath < 10 ? ()=> setpropertyNumBath(propertyNumBath+1) : null }/>
+                                </Pressable>
+                            </CounterContainer>
+                        
+                        </RowContainerCol>
+
+                    </PostingSection>
+
+                    {/* Enter description  */}
+                    <PostingSection>
+                        <Heading >Sublease description (Optional)</Heading>
+                        <Subheading>Enter useful information about the sublease that would help tenants</Subheading>
+
+                        <PropertyDescriptionInput placeholder="It is 5 minutes from campus..."
+                            value={propertyDescription} onChangeText={(value) => setpropertyDescription(value)} multiline={true}
+                            placeholderTextColor={MEDIUMGREY} maxLength={700} />
+                        <MaxText length={propertyDescription.length}>{propertyDescription.length} / 700</MaxText>
                     </PostingSection>
 
 
                     <PostingSection>
-                        <ScrollView style={{ paddingLeft: WIDTH * 0.05 }} showsVerticalScrollIndicator={false}>
-                            <ReviewHeading>Review</ReviewHeading>
+                        <Heading>One <Text style={{color: PRIMARYCOLOR}}>last</Text> step,</Heading>
+                        <Heading>you're almost done!</Heading>
+                        
+                        <Lottie source={require('../../../postingfirstpage.json')}  autoPlay={scrollviewIndex == 0 ? true : false} loop style={{marginTop: HEIGHT*0.025, width:WIDTH*0.9, height: WIDTH*0.9, }}/>
+
+                    </PostingSection>
 
 
-                            <View style={{ width: WIDTH, height: HEIGHT * 0.25, paddingBottom: HEIGHT * 0.05, marginTop: HEIGHT * 0.03, borderRadius: 10, }}>
-                                <Image source={{ uri: headerImage == null ? propertyBedroomImage == null ? null : propertyBedroomImage: headerImage }}
-                                    style={{ width: WIDTH * 0.9, height: HEIGHT * 0.25, borderRadius: 10, borderWidth: 1, borderColor: MEDIUMGREY }} />
-                            </View>
-                            <ReviewHeading style={{ marginTop: HEIGHT * 0.02 }}>Gallery</ReviewHeading>
-                            <PropertyPhotoContainer >
+                    <PostingSection>
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            <Heading>Review</Heading>
+                            <Subheading>Please ensure all information is correct and accurate</Subheading>
 
-                                <TouchableOpacity key={"bedroomPic"} hitSlop={WIDTH*0.05}  onPress={() => setHeaderImage(propertyBedroomImage)}>
-                                    <PhotoContainer >
-                                        <Image source={{ uri: propertyBedroomImage == null ? null : propertyBedroomImage }}
-                                            style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
-                                        {/* <Text>{propertyphotoGallery[index]}</Text> */}
-                                    </PhotoContainer>
-                                </TouchableOpacity>
-                                <TouchableOpacity key={"bathRoomPic"} hitSlop={WIDTH*0.05}  onPress={() => setHeaderImage(propertyBathroomImage)}>
-                                    <PhotoContainer >
-                                        <Image source={{ uri: propertyBathroomImage == null ? null : propertyBathroomImage}}
-                                            style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
-                                        {/* <Text>{propertyphotoGallery[index]}</Text> */}
-                                    </PhotoContainer>
-                                </TouchableOpacity>
-                                <TouchableOpacity key={"livingRoomPic"} hitSlop={WIDTH*0.05}  onPress={() => setHeaderImage(propertyLivingroomImage)}>
-                                    <PhotoContainer >
-                                        <Image source={{ uri: propertyLivingroomImage == null ? null : propertyLivingroomImage}}
-                                            style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
-                                        {/* <Text>{propertyphotoGallery[index]}</Text> */}
-                                    </PhotoContainer>
-                                </TouchableOpacity>
-                                <TouchableOpacity key={"kitchenPic"} hitSlop={WIDTH*0.05}  onPress={() => setHeaderImage(propertyKitchenImage)}>
-                                    <PhotoContainer >
-                                        <Image source={{ uri: propertyKitchenImage == null ? null : propertyKitchenImage }}
-                                            style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
-                                        {/* <Text>{propertyphotoGallery[index]}</Text> */}
-                                    </PhotoContainer>
-                                </TouchableOpacity>
-                                <TouchableOpacity key={"floorplanPic"}  hitSlop={WIDTH*0.05} onPress={() => setHeaderImage(propertyFloorplanImage)}>
-                                    <PhotoContainer >
-                                        <Image source={{ uri: propertyFloorplanImage == null ? null : propertyFloorplanImage}}
-                                            style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
-                                        {/* <Text>{propertyphotoGallery[index]}</Text> */}
-                                    </PhotoContainer>
-                                </TouchableOpacity>
+                            <ReviewSectionContainer style={{marginTop: HEIGHT*0.025}}>
+                                <View style={{ width: WIDTH*0.9, height: HEIGHT * 0.4, borderRadius: 10, }}>
+                                    <Image source={{ uri: headerImage == null ? propertyBedroomImage == null ? null : propertyBedroomImage: headerImage }}
+                                        style={{ width: '100%', height: '100%', borderRadius: 10, borderWidth: 1, borderColor: MEDIUMGREY }} />
+                                </View>
+                                <ReviewHeading style={{ marginTop: HEIGHT * 0.02 }}>Gallery <Text style={{fontSize: HEIGHT*0.015}}> (Press and hold images below to edit)</Text></ReviewHeading>
+                                <PropertyPhotoContainer >
 
-                            </PropertyPhotoContainer>
+                                    <TouchableOpacity key={"bedroomPic"} hitSlop={WIDTH*0.05} onLongPress={()=> {editImageGalleryInReview("Bedroom")}} onPress={() => setHeaderImage(propertyBedroomImage)}>
+                                        <PhotoContainer >
+                                            <Image source={{ uri: propertyBedroomImage == null ? null : propertyBedroomImage }}
+                                                style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
+                                            {/* <Text>{propertyphotoGallery[index]}</Text> */}
+                                        </PhotoContainer>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity key={"bathRoomPic"} hitSlop={WIDTH*0.05} onLongPress={()=> {editImageGalleryInReview("Bathroom")}} onPress={() => setHeaderImage(propertyBathroomImage)}>
+                                        <PhotoContainer >
+                                            <Image source={{ uri: propertyBathroomImage == null ? null : propertyBathroomImage}}
+                                                style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
+                                            {/* <Text>{propertyphotoGallery[index]}</Text> */}
+                                        </PhotoContainer>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity key={"livingRoomPic"} hitSlop={WIDTH*0.05} onLongPress={()=> {editImageGalleryInReview("Living Room")}} onPress={() => setHeaderImage(propertyLivingroomImage)}>
+                                        <PhotoContainer >
+                                            <Image source={{ uri: propertyLivingroomImage == null ? null : propertyLivingroomImage}}
+                                                style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
+                                            {/* <Text>{propertyphotoGallery[index]}</Text> */}
+                                        </PhotoContainer>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity key={"kitchenPic"} hitSlop={WIDTH*0.05}  onLongPress={()=> {editImageGalleryInReview("Kitchen")}} onPress={() => setHeaderImage(propertyKitchenImage)}>
+                                        <PhotoContainer >
+                                            <Image source={{ uri: propertyKitchenImage == null ? null : propertyKitchenImage }}
+                                                style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
+                                            {/* <Text>{propertyphotoGallery[index]}</Text> */}
+                                        </PhotoContainer>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity key={"floorplanPic"}  hitSlop={WIDTH*0.05} onLongPress={()=> {editImageGalleryInReview("Floor Plan")}} onPress={() => setHeaderImage(propertyFloorplanImage)}>
+                                        <PhotoContainer >
+                                            <Image source={{ uri: propertyFloorplanImage == null ? null : propertyFloorplanImage}}
+                                                style={{ height: '100%', width: '100%', backgroundColor: LIGHTGREY, borderRadius: 15 }} />
+                                            {/* <Text>{propertyphotoGallery[index]}</Text> */}
+                                        </PhotoContainer>
+                                    </TouchableOpacity>
+
+                                </PropertyPhotoContainer>
+                            </ReviewSectionContainer>
+
                             <ReviewSectionContainer>
-                                <ReviewHeading>Location</ReviewHeading>
+                                <ReviewHeadingAndEditContainer>
+                                    <ReviewHeading>Type</ReviewHeading>
+                                    <Ionicons name="create-outline" hitSlop={WIDTH*0.05} color='white' size={25} onPress={()=>moveScrollView(1)}/>
+                                </ReviewHeadingAndEditContainer>
+                                <ReviewInfoText>{propertyType} for sublease</ReviewInfoText>
+                            </ReviewSectionContainer>
+
+                            <ReviewSectionContainer>
+                                <ReviewHeadingAndEditContainer>
+                                    <ReviewHeading>Location</ReviewHeading>
+                                    <Ionicons name="create-outline" hitSlop={WIDTH*0.05} color='white' size={25} onPress={()=>moveScrollView(2)}/>
+                                </ReviewHeadingAndEditContainer>
                                 <ReviewLocationContainer>
                                     <Ionicons name='location-outline' size={20} color='white' />
-                                    <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{propertyLocation}</ReviewInfoText>
+                                    <ReviewInfoText style={{ marginLeft: WIDTH * 0.02, paddingTop: 0 }}>{propertyLocation}</ReviewInfoText>
                                 </ReviewLocationContainer>
-
                             </ReviewSectionContainer>
 
                             <ReviewSectionContainer>
-                                <ReviewHeading>Property Type</ReviewHeading>
-                                <ReviewInfoText>{propertyType}</ReviewInfoText>
-                                <SubHeadingText style={{ marginTop: HEIGHT * 0.025 }} >Tenant will have access to: </SubHeadingText>
-                                <BedAndBathContainer>
-                                    <BedBathLogo>
-                                        <Ionicons name="bed-outline" size={30} color='white'></Ionicons>
-                                        <LocationText>
-                                            {
-                                                propertyNumBed == "Studio" ? "Studio" : propertyNumBed + ' bedroom'
-                                            }
+                                <ReviewHeadingAndEditContainer>
+                                    <ReviewHeading>Price</ReviewHeading>
+                                    <Ionicons name="create-outline" hitSlop={WIDTH*0.05} color='white' size={25} onPress={()=>moveScrollView(4)}/>
+                                </ReviewHeadingAndEditContainer>
+                                <ReviewInfoText><Text style={{fontWeight:'400'}}>Rent: </Text> ${propertyPrice} / month</ReviewInfoText>
+                                {propertySecurityDeposit != null && propertySecurityDeposit.trim() != "" &&
+                                <ReviewInfoText><Text style={{fontWeight:'400'}}>Security deposit: </Text> ${propertySecurityDeposit}</ReviewInfoText>
+                                }
+                            </ReviewSectionContainer>
 
-                                        </LocationText>
-                                    </BedBathLogo>
-                                    <BedBathLogo>
-                                        <Ionicons name="water-outline" size={30} color='white' ></Ionicons>
-                                        <LocationText>{propertyNumBath.replaceAll("P","+")} bathroom</LocationText>
-                                    </BedBathLogo>
+                            <ReviewSectionContainer>
+                                <ReviewHeadingAndEditContainer>
+                                    <ReviewHeading>Availability</ReviewHeading>
+                                    <Ionicons name="create-outline" hitSlop={WIDTH*0.05} color='white' size={25}  onPress={()=>moveScrollView(5)}/>
+                                </ReviewHeadingAndEditContainer>
+                                    <ReviewInfoText>From        {new Date(propertydateFrom).toDateString()}</ReviewInfoText>
+                                    <ReviewInfoText>To             {new Date(propertydateTo).toDateString()}</ReviewInfoText>
+
+                                    <ReviewInfoText><Text style={{fontWeight:'400'}}>Flexible: </Text>  {propertydateFlexible == true ? "Yes" : "No"}</ReviewInfoText>
+                            </ReviewSectionContainer>
+
+                            <ReviewSectionContainer>
+                                <ReviewHeadingAndEditContainer>
+                                    <ReviewHeading>Details</ReviewHeading>
+                                    <Ionicons name="create-outline" hitSlop={WIDTH*0.05} color='white' size={25}  onPress={()=>moveScrollView(7)}/>
+                                </ReviewHeadingAndEditContainer>
+                                <BedAndBathContainer>
+                                    <FontAwesomeIcon icon={faBed} color='white' size={20}/>
+                                    <ReviewInfoText style={{paddingTop:0, marginLeft: WIDTH*0.02}}>{propertyNumBed} Bed</ReviewInfoText>
+                                </BedAndBathContainer>
+                                <BedAndBathContainer>
+                                    <FontAwesomeIcon icon={faBath} color='white' size={18}/>
+                                    <ReviewInfoText style={{paddingTop:0, marginLeft: WIDTH*0.02}}>{propertyNumBath} Bathroom</ReviewInfoText>
                                 </BedAndBathContainer>
                             </ReviewSectionContainer>
+
+                            
                             <ReviewSectionContainer>
-                                <ReviewHeading>Description</ReviewHeading>
+                                <ReviewHeadingAndEditContainer>
+                                    <ReviewHeading>Description</ReviewHeading>
+                                    <Ionicons name="create-outline" hitSlop={WIDTH*0.05} color='white' size={25}  onPress={()=>moveScrollView(8)}/>
+                                </ReviewHeadingAndEditContainer>
                                 <ReviewPropertyDescriptionInput editable={false} value={propertyDescription} multiline={true} />
                             </ReviewSectionContainer>
 
-                            <ReviewSectionContainer>
-                                <ReviewHeading>Availability</ReviewHeading>
-                                <ReviewDateContainer>
-                                    {propertydateFrom != null &&
-                                        <ReviewInfoText>From {propertydateFrom.getMonth()}-{propertydateFrom.getDate()}-{propertydateFrom.getFullYear()}</ReviewInfoText>
-                                    }
-                                    <Ionicons name='shuffle-outline' size={20} color='white' />
-                                    {propertydateTo != null &&
-                                        <ReviewInfoText>To {propertydateTo.getMonth()}-{propertydateTo.getDate()}-{propertydateTo.getFullYear()}</ReviewInfoText>
-                                    }
-                                </ReviewDateContainer>
+                            
+                            <ReviewSectionContainer style={{borderBottomWidth: 0}}>
+                                <ReviewHeadingAndEditContainer>
+                                    <ReviewHeading>Amenities</ReviewHeading>
+                                    <Ionicons name="create-outline" hitSlop={WIDTH*0.05} color='white' size={25}  onPress={()=>moveScrollView(6)}/>
+                                </ReviewHeadingAndEditContainer>
+                                <View>
+                                    {propertyAmenities.map((value) => (
+                                        <ReviewLocationContainer key={"amenities" + value}>
+                                            {GetFAIcons(value)}
+                                            <ReviewInfoText style={{ marginLeft: WIDTH * 0.05, paddingTop:0 }}>{value.replaceAll("_", " ")}</ReviewInfoText>
+                                        </ReviewLocationContainer>
+                                    ))}
+                                </View>
                             </ReviewSectionContainer>
-                            <ReviewSectionContainer>
-                                <ReviewHeading>Amenities</ReviewHeading>
-                                {propertyAmenities.map((value) => (
-                                    <ReviewLocationContainer key={"amenities" + value}>
-                                        {GetFAIcons(value)}
-                                        <ReviewInfoText style={{ marginLeft: WIDTH * 0.05 }}>{value.replaceAll("_", " ")}</ReviewInfoText>
-                                    </ReviewLocationContainer>
-                                ))}
-                            </ReviewSectionContainer>
+                           
+                            <SearchInput style={{backgroundColor:'white', color:'black'}}placeholderTextColor='white' 
+                            // onEndEditing={SelectLocationOutSequence}
+
+                                value={title} onChangeText={(value) => setTitle(value)} placeholder="Location..." />
+                                 <View style={{height: HEIGHT, width: WIDTH}}/>
 
                         </ScrollView>
-                        <Footer>
-                            <PricePerMonth>{propertyPrice} <Text style={{ fontSize: HEIGHT * 0.025, fontWeight: '500', color: 'white' }}>/ month</Text></PricePerMonth>
-                            <ContactTanentButton loading={loading} hitSlop={WIDTH*0.05} onPress={postproperty}>
-                            {loading ? 
-                                 <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
-                            :
-                                <Text style={{ color: 'white', fontWeight: '700' }}>Post</Text>
-                            }
-                            </ContactTanentButton>
-                        </Footer>
+                        {/* <Footer>
+                           
+                                <PricePerMonth>{propertyPrice} <Text style={{ fontSize: HEIGHT * 0.025, fontWeight: '500', color: 'white' }}>/ month</Text></PricePerMonth>
+                                <ContactTanentButton loading={loading} hitSlop={WIDTH*0.05} onPress={postproperty}>
+                                {loading ? 
+                                    <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
+                                :
+                                    <Text style={{ color: 'white', fontWeight: '700' }}>Post</Text>
+                                }
+                                </ContactTanentButton>
+                           
+                           
+                        </Footer> */}
 
 
                     </PostingSection>
@@ -935,13 +1289,31 @@ export default function PropertyPostingScreen({ navigation }) {
 
                 </Animated.ScrollView>
 
-                <NextContainer style={{ display: scrollviewIndex == 0 || scrollviewIndex == 9 ? 'flex' : 'none' }}>
-                    <ContinueButton hitSlop={WIDTH*0.05} onPress={() => moveScrollView(scrollviewIndex + 1)}>
+                <NextContainer>
+                    {(scrollviewIndex == 0 || scrollviewIndex == 10) ?
+                    <ContinueButton loading={loading} disabled={loading} hitSlop={WIDTH*0.05} onPress={() => {scrollviewIndex == 10 ? testScraped() : moveScrollView(scrollviewIndex + 1)}}>
                         <ContinueText>
-                            {scrollviewIndex == 0 ? "Start" : "Review"}
+                            {scrollviewIndex == 0 ? "Start" :  loading ? 
+                            <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.1, height: WIDTH*0.1, }}/>
+                            :
+                            "Post"}
                         </ContinueText>
                     </ContinueButton>
+                    :
+                    <BackNextContainer>
+                       
+                        <Pressable disabled={loading}  hitSlop={WIDTH*0.05} onPress={() =>{ !reviewing && moveScrollView(scrollviewIndex - 1)}}>
+                            <BackText>{reviewing ? null : "Back"}</BackText>
+                        </Pressable>
+                       
+                        <SmallContinueButton disabled={loading} onPress={() => {reviewing ? checkReviewEdit() : moveScrollView(scrollviewIndex + 1)}}>
+                            <ContinueText>{reviewing ? "Review" : "Next"}</ContinueText>
+                        </SmallContinueButton>
+                       
+                    </BackNextContainer>
+                    }
                 </NextContainer>
+            </SafeAreaView>
             </ModalView>
         </SafeAreaView>
     )

@@ -29,7 +29,8 @@ const PRIMARYCOLOR = '#4050B5'
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header} from '../../../sharedUtils'
+import { HeaderContainer, BackButtonContainer,  NameContainer, Header, GetFAIconWithColor,
+  EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer} from '../../../sharedUtils'
 
 import { MessageInput, MessageContainer, SendButton } from './chatStyle';
 
@@ -86,17 +87,18 @@ export default function ChatScreen({navigation, route}){
     }
 
 
-    const assignRecipient = () =>{
-      if(channel != null && channel.members.length == 2){
-        if(channel.members[0].userId == USERID){
-          setRecipient(channel.members[1].nickname)
-        }else{
-          setRecipient(channel.members[0].nickname)
-        }
-      } else{
-        deletedChat(channel)
-      }
-    }
+    // const assignRecipient = () =>{
+    //   if(channel != null && channel.members.length == 2){
+    //     if(channel.members[0].userId == USERID){
+    //       console.log("INSIDEEEE")
+    //       setRecipient(channel.members[1].nickname)
+    //     }else{
+    //       setRecipient(channel.members[0].nickname)
+    //     }
+    //   } else{
+    //     deletedChat(channel)
+    //   }
+    // }
     const onSend = useCallback(async (messages = []) => {
       setSending(true)
       const accessToken = await EncryptedStorage.getItem("accessToken");
@@ -182,6 +184,7 @@ export default function ChatScreen({navigation, route}){
     }
 
     const deletedChat = async (groupChannel) => {
+      console.log("delete chat" , groupChannel)
       onChat= false
     
       await groupChannel.leave()
@@ -196,7 +199,9 @@ export default function ChatScreen({navigation, route}){
           Accept: 'application/json',
           'Content-Type': 'application/json',
         }
-      }).then(async e => e.json()).then(async (response) => {        
+      }).then(async e => e.json()).then(async (response) => {
+        // console.log(response.propertyInfo.deleted)
+        
         if(response.propertyInfo.deleted == true){
           if(loading == true){
             onChat = false
@@ -261,6 +266,8 @@ export default function ChatScreen({navigation, route}){
             })
             setMessages(messages)
            
+         
+        // console.log(messages)
         }
         
 
@@ -278,6 +285,7 @@ export default function ChatScreen({navigation, route}){
         alert("You have successfully left this chat.")
         navigation.goBack()
     }
+
     return(
     <SafeAreaView style={{backgroundColor:'white', flex:1}}>
     <HeaderContainer>

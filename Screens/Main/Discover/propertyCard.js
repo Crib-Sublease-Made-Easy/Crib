@@ -38,8 +38,9 @@ import {Gesture, GestureDetector, TouchableOpacity,  } from 'react-native-gestur
 import Lottie from 'lottie-react-native';
 
 
-import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, ROBOTOFONTFAMILY, EXTRALIGHT, PRIMARYCOLOR } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, EXTRALIGHT, PRIMARYCOLOR } from '../../../sharedUtils';
 import { SystemMessage } from 'react-native-gifted-chat';
+import { useScrollToTop } from '@react-navigation/native';
 
 const CardContainer = styled(Pressable)`
 width: ${WIDTH*0.9}px
@@ -72,7 +73,6 @@ const LocationFont = styled.Text`
 const DateFont = styled.Text`
 font-size: ${HEIGHT*0.0155}px;
 font-weight: 400;
-font-family: ${ROBOTOFONTFAMILY}
 color: black  
 `
 
@@ -176,10 +176,16 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
       }
       if(flatlistRefreshing){
         translateY.value = withSpring(0, {stiffness: 50, mass: 0.3, damping:15})
+       
         // flatlistRef.current.scrollToIndex({index:0})
+        ScrollToTop();
       }
      
     }, [searching, flatlistRefreshing,])
+
+    function ScrollToTop(){
+      flatlistRef?.current?.scrollToIndex({index: 0, animated:true})
+    }
 
     // Swipable Bottom Sheet
     const translateY = useSharedValue(0)
@@ -258,7 +264,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
     function MoveMapToPin(pinInfo){
         setSelectedPin(pinInfo)
         openPreviewCard()
-        moveMap(pinInfo.propertyInfo.loc.coordinates[1] - 0.015,pinInfo.propertyInfo.loc.coordinates[0])
+        moveMap(pinInfo.propertyInfo.loc.coordinates[1] - 0.0005,pinInfo.propertyInfo.loc.coordinates[0], true)
         translateY.value = withSpring(HEIGHT*0.68, {stiffness: 50, mass: 0.3, damping:15})
     }
 
@@ -270,7 +276,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
           outputRange:[0,1]
         })}}>
           <CardContainer
-          onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId, incrementViewCount : true, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0])), currentLocation: currentLocation})} >
+          onPress={()=> navigation.navigate('PropertyDetail', {data: data.item, uid: userId, incrementViewCount : true, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],data.item.propertyInfo.loc.coordinates[1], data.item.propertyInfo.loc.coordinates[0])), currentLocation: currentLocation, scraped: data.item.propertyInfo.postedBy == null ? true : false})} >
               
             <PropertyImageContainer>
               <FastImage  
@@ -338,6 +344,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
         filteredPropertiesData.length != 0 && filteredPropertiesData != undefined ?
         
           <FlatList
+          
           onEndReachedThreshold = {0.4}
           ItemSeparatorComponent={() => {
             return (

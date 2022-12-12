@@ -51,8 +51,9 @@ export default function EditPropertyScreen({navigation, route}){
     const [propDescription, setPropDescription] = useState(route.params.propertyData.description)
     const [propImg, setPropImg] = useState(route.params.propertyData.imgList)
     const [propAmen, setPropAmen] = useState(route.params.propertyData.amenities)
-
+    const [propSecurityDeposit, setPropSecurityDeposit] = useState("")
     const [propFloorplanImage, setPropFloorplanImage] = useState(null)
+    const [propAvailabilityFlexibility, setPropAvailabilityFlexibility] = useState()
 
 
 
@@ -130,7 +131,9 @@ export default function EditPropertyScreen({navigation, route}){
                     else{
                         // console.log("UPDATE --- PARAMS --- propImg")
                     }
-                    //console.log(propData.propertyInfo.imgList)
+                    
+                    setPropSecurityDeposit(propData.propertyInfo.securityDeposit)
+                    setPropAvailabilityFlexibility(propData.propertyInfo.availabilityFlexibility)
 
                 })
                 .catch(e=>{
@@ -326,12 +329,12 @@ export default function EditPropertyScreen({navigation, route}){
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Price</CategoryName>
-            <RowContainer onPress={()=>navigation.navigate("EditPropertyPrice", {price: propPrice, uid: propID, propertyData: route.params.propertyData})}>
+            <RowContainer onPress={()=>navigation.navigate("EditPropertyPrice", {price: propPrice, uid: propID, propertyData: route.params.propertyData, securityDeposit: propSecurityDeposit})}>
                 <RowName>$ {propPrice}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Availability</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditPropertyAvail",{from: propDateFrom, to: propDateTo, uid: propID, propertyData: route.params.propertyData})}>
+            <RowContainer onPress={()=> navigation.navigate("EditPropertyAvail",{from: propDateFrom, to: propDateTo, uid: propID, propertyData: route.params.propertyData, availabilityFlexibility: propAvailabilityFlexibility})}>
                 <DatePriceText>
                     {new Date(propDateFrom).toDateString().split(" ")[1]} {new Date(propDateFrom).toDateString().split(" ")[2]}{" "}
                     {new Date(propDateFrom).getFullYear()}

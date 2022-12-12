@@ -36,6 +36,7 @@ export default function LoginScreen({navigation, route}){
     async function signupStep1(){
         
         const number = phoneNumber.replace(/[^\d]/g, '').substring(0,10);
+        
       
         await fetch('https://crib-llc.herokuapp.com/users/authy', {
             method: 'POST',
@@ -110,7 +111,7 @@ export default function LoginScreen({navigation, route}){
     
 
     function checkInput(){
-        if(passedPhoneNumber.length != 10){
+        if(passedPhoneNumber.length < 10){
             alert("Phone number is invalid")
         }
         else{
@@ -123,6 +124,7 @@ export default function LoginScreen({navigation, route}){
         // this is where we'll call our future formatPhoneNumber function that we haven't written yet.
         const formattedPhoneNumber = formatPhoneNumber(e);
         // we'll set the input value using our setInputValue
+
         setPhoneNumber(formattedPhoneNumber)
     };
 

@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 
 import styled from 'styled-components/native';
-import { LIGHTGREY, TEXTINPUTBORDERCOLOR, GOOGLEBLUE, PRIMARYCOLOR, DARKGREY, HEIGHT, WIDTH, ROBOTOFONTFAMILY, EXTRALIGHT, MEDIUMGREY } from '../../../sharedUtils';
+import { LIGHTGREY, TEXTINPUTBORDERCOLOR, GOOGLEBLUE, PRIMARYCOLOR, DARKGREY, HEIGHT, WIDTH, EXTRALIGHT, MEDIUMGREY } from '../../../sharedUtils';
 
 
 export const MapContainer = styled.View`
@@ -60,7 +60,6 @@ export const SearchContainer = styled.Pressable`
   align-items:center
 `
 export const SearchContainerPlaceholderText = styled(Text)`
-  font-family: ${ROBOTOFONTFAMILY}
   width: ${WIDTH*0.6}px
   align-items: center
   padding-horizontal: ${WIDTH*0.005}px

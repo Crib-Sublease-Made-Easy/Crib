@@ -2,7 +2,6 @@ import styled from 'styled-components/native';
 
 import { WIDTH, HEIGHT, PRIMARYCOLOR, TEXTINPUTBORDERCOLOR , OnlyLetters,  } from '../../../sharedUtils';
 
-const FONTFAMILY = 'EBGaramond-Bold'
 
 export const TopContainer = styled.View`
     
@@ -39,7 +38,7 @@ export const JoinButton = styled.Pressable`
     padding-vertical: ${HEIGHT*0.0135}px
     border-width:1.5px
     border-color: white
-    border-radius: 30px
+    border-radius: 15px
     margin-top: ${HEIGHT*0.015}px
     flex-direction: row
     align-items:center
@@ -69,5 +68,4 @@ export const TopLeftText = styled.Text`
     font-size: ${HEIGHT*0.07}px
     font-weight: 700
     color: white
-    font-family: ${FONTFAMILY}
 `

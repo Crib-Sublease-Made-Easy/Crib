@@ -85,7 +85,7 @@ export default function PropTypesScreen({navigation, route}){
                     </Pressable>
                 </BackButtonContainer>
                 <NameContainer>
-                    <Header>Property Type</Header>
+                    <Header>Edit Type</Header>
                 </NameContainer>
                 <ResetButtonContainer>
                     <Pressable hitSlop={WIDTH*0.025} onPress={update}>

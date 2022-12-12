@@ -232,14 +232,26 @@ export default function OTPScreen({navigation, route}){
                 authy_id: route.params.authy_id
             })
         })
-        .then(res => res.json()).then(data =>{
-            console.log("STEP2");
-            if(data.response.success != true){
-                alert("invalid in step 2.")
+        .then(res => {
+            if(res.status == 201){
+                alert("Message successfully sent!")
+                setLoading(false)
+                setSMSErrorModal(false)
             }
+            else if(res.status == 401){
+                alert("Invalid phone number, please try again!")
+                setLoading(false)
+                setSMSErrorModal(false)
+                backToPhoneNumber
+            }
+            else{
+                alert("An error has occured. Please try again later!")
+                setLoading(false)
+                setSMSErrorModal(false)
+            }
+        }).catch( e=>{
+            alert("An error has occured. Please try again later!")
         })
-        setLoading(false)
-        setSMSErrorModal(false)
     }
 
     return(

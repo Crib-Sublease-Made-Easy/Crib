@@ -32,7 +32,7 @@ export default function EditPropertyAvailScreen({navigation, route}){
     const [availTo, setAvailTo] = useState( new Date(route.params.to))
     const [openFrom, setOpenFrom] = useState(false);
     const [openTo, setOpenTo] = useState(false)
-    console.log(new Date(route.params.from))
+    const [flexible, setFlexible] = useState(route.params.availabilityFlexibility)
 
     async function update(){
 
@@ -47,6 +47,7 @@ export default function EditPropertyAvailScreen({navigation, route}){
                         'Authorization': 'Bearer ' + accessToken,
                     },
                     body: JSON.stringify({
+                        availabilityFlexibility: flexible,
                         availableFrom: availFrom,
                         availableTo: availTo
                     })
@@ -97,6 +98,14 @@ export default function EditPropertyAvailScreen({navigation, route}){
                 </Text>
             </DateContainer>
         </RowContainer>
+        <RowContainer style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: HEIGHT*0.02}}>
+            <CategoryName>Flexible?</CategoryName>
+            <Pressable hitSlop={WIDTH*0.05} onPress={()=>setFlexible(!flexible)}>
+                <Ionicons name='checkbox' color={flexible ? PRIMARYCOLOR : MEDIUMGREY} size={30} />
+            </Pressable>
+        </RowContainer>
+
+
         <DatePicker
            
             modal

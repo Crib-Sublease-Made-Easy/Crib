@@ -7,7 +7,8 @@ import {
     Image,
     Animated as RNAnimated,
     SafeAreaView,
-    Pressable
+    Pressable,
+    Linking
 } from 'react-native';
 
 import FastImage from 'react-native-fast-image'
@@ -29,7 +30,7 @@ import { Section, TypeLocationContainer, TypeLocationFavoriteContainer ,CardSect
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
            StickyHeaderContainer,  StickyHeaderIcon, BedBathDateContainer, BedBathText, DescriptionText, DistanceText, RowContainer, TenantInformationContainer, TenantProfileImageContainr, TenantNameScollOccupationContainer, AmenitiesContainer} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack, ROBOTOFONTFAMILY, MEDIUMGREY, DARKGREY } from '../../../sharedUtils';
+import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack,  MEDIUMGREY, DARKGREY } from '../../../sharedUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBath, faBed, faEye, faFire, faFireFlameCurved, faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
 
@@ -52,47 +53,66 @@ export default function PropertyDetailScreen({navigation, route}){
       
       return unsubscribe
     }, [])
-    
+
     const flatListRef = useRef(null)
     const [propData, setPropData] = useState(route.params.data.propertyInfo);
     const postedUserData = route.params.data.userInfo;
     const {sb, USERID} = useContext(UserContext);
     const [flatlistIndex, setFlatlistIndex] = useState(0)
     const [liked, setLiked]  = useState()
-    const [ownProperty, setOwnProperty] = useState(route.params.data.propertyInfo.postedBy == USERID)
-
+    const [ownProperty, setOwnProperty] = useState(!route.params.scraped && route.params.data.propertyInfo.postedBy == USERID)
 
     
     const createConversation = async () =>{
-
-        //Check if the user is signed in or not
-        try{
-            const accessToken  = await EncryptedStorage.getItem("accessToken");
-            
-            if(accessToken != undefined){
-                var userIds = [USERID, propData.postedBy]
-                sb.GroupChannel.createChannelWithUserIds(userIds, true, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
-                    if (error) {
-                        // Handle error.
-                        console.log("Failed To Create Channel")
-                        console.log(error)
-                        alert("You are currently engaged in a conversation with this user")
-                    } else {
-                        console.log("Channel Created Successfully")
-                        //console.log(groupChannel)
-                        // A group channel with additional information is successfully created.
-                        var channelUrl = groupChannel.url;
-                        navigation.navigate("Chat", {url:channelUrl, id: USERID, postedBy:postedUserData.firstName})
-                    }
-                });
-            }
-            else{
-                alert("Sign in to contact tenant.");
-                navigation.navigate("Landing")
-            }
+        if(USERID == null){
+            alert("Sign in to contact tenant.");
+            navigation.navigate("Landing")
         }
-        catch{
-            console.log("ERROR --- DISCOVERPROPERTYDETIAL --- CREATECONVO")
+        else if(propData.postedBy== null){
+            
+            let url = `${route.params.data.propertyInfo.title.split("+")[4]}`
+            const supported = await Linking.canOpenURL(url);
+
+            if (supported) {
+            // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+            // by some browser in the mobile
+            await Linking.openURL(url);
+            } else {
+            Alert.alert(`Don't know how to open this URL: ${url}`);
+            }
+            
+        }
+        else{
+
+            //Check if the user is signed in or not
+            try{
+                const accessToken  = await EncryptedStorage.getItem("accessToken");
+                
+                if(accessToken != undefined){
+                    var userIds = [USERID, propData.postedBy]
+                    sb.GroupChannel.createChannelWithUserIds(userIds, true, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
+                        if (error) {
+                            // Handle error.
+                            console.log("Failed To Create Channel")
+                            console.log(error)
+                            alert("You are currently engaged in a conversation with this user")
+                        } else {
+                            console.log("Channel Created Successfully")
+                            //console.log(groupChannel)
+                            // A group channel with additional information is successfully created.
+                            var channelUrl = groupChannel.url;
+                            navigation.navigate("Chat", {url:channelUrl, id: USERID, postedBy:postedUserData.firstName})
+                        }
+                    });
+                }
+                else{
+                    alert("Sign in to contact tenant.");
+                    navigation.navigate("Landing")
+                }
+            }
+            catch{
+                console.log("ERROR --- DISCOVERPROPERTYDETIAL --- CREATECONVO")
+            }
         }
     }
 
@@ -144,24 +164,30 @@ export default function PropertyDetailScreen({navigation, route}){
                 
                 
                 }) 
-                .then(res => res.json()).then( async propertyData =>{
-                    if(propertyData.propertyInfo.deleted){
-                        await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
-                            method: 'POST',
-                            headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json',
-                            'Authorization': 'bearer ' + accessToken,
-                            },
-                            body: JSON.stringify({
-                                propertyId: route.params.data.propertyInfo._id,
+                .then(async res => { 
+                    if(res.status == 200){
+                        const propertyData = await res.json();
+                        if(propertyData.propertyInfo.deleted){
+                            await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
+                                method: 'POST',
+                                headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                                'Authorization': 'bearer ' + accessToken,
+                                },
+                                body: JSON.stringify({
+                                    propertyId: route.params.data.propertyInfo._id,
+                                })
+                                }) 
+                                .catch(e=>{
+                                    alert(e)
                             })
-                            }) 
-                            .catch(e=>{
-                                alert(e)
-                        })
-                        alert("Property is deleted.")
-                        navigation.goBack()
+                            alert("Property is deleted.")
+                            navigation.goBack()
+                        }
+                    }
+                    else{
+
                     }
                 })
                 .catch(e=>{
@@ -245,7 +271,7 @@ export default function PropertyDetailScreen({navigation, route}){
       }
 
     return(
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, backgroundColor:'white'}}>
             <ScrollView 
             showsVerticalScrollIndicator={false} 
             bouncesZoom={1}
@@ -308,7 +334,7 @@ export default function PropertyDetailScreen({navigation, route}){
                     {/* Container that contains the bed and bath count also the date */}
                     <BedBathDateContainer>
                         <BedBathText>{propData.bed} Bed  •  {propData.bath} Bath</BedBathText>
-                        <BedBathText>
+                        <BedBathText>{propData.availabilityFlexibility ? "Flexible  •  " : null}
                             {new Date(propData.availableFrom).toDateString().split(" ")[1]} {new Date(propData.availableFrom).toDateString().split(" ")[3] + "  "} -  
                             {"  " + new Date(propData.availableTo).toDateString().split(" ")[1]} {new Date(propData.availableTo).toDateString().split(" ")[3]}
                         </BedBathText>
@@ -328,12 +354,22 @@ export default function PropertyDetailScreen({navigation, route}){
                 <Section>
                     <Subheading>Sublease details</Subheading>
                     <RowContainer>
-                        <Ionicons  name="pin" size={20} color='black' style={{paddingRight: WIDTH*0.02}}></Ionicons>
-                        <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>{route.params.distance} miles</DistanceText> away from search location</DistanceText>
+                        {propData.securityDeposit != null &&
+                            <DistanceText>Security deposit : <Text style={{fontWeight: '400'}}>${propData.securityDeposit}</Text></DistanceText>
+                        }
                     </RowContainer>
+                    {!ownProperty &&
+                    <RowContainer>
+                        <Ionicons  name="pin" size={20} color='black' style={{paddingRight: WIDTH*0.02}}></Ionicons>
+                       
+                            <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>{route.params.distance} miles</DistanceText> away from search location</DistanceText>
+                        
+                    </RowContainer>
+                    }
                 </Section>
 
                 {/* This is the tenant information. Seperated to left and right */}
+                {!route.params.scraped ?
                 <Section>
                     <Subheading>Tenant Information:</Subheading>
                     <TenantInformationContainer>
@@ -352,7 +388,28 @@ export default function PropertyDetailScreen({navigation, route}){
 
                     </TenantInformationContainer>
                 </Section>
+                :
+                <Section>
+                  
+                    <Subheading>Tenant Information:</Subheading>
+                    <TenantInformationContainer>
+                        <TenantProfileImageContainr style={{height:WIDTH*0.2, width:WIDTH*0.2,}}>
+                            <Image source={{uri:propData.title.split("+")[3]}} style={{height:WIDTH*0.2, width:WIDTH*0.2, borderRadius:WIDTH*0.1, backgroundColor:LIGHTGREY,  }}/>
+                        </TenantProfileImageContainr>
+                        <TenantNameScollOccupationContainer>
+                            <TenantNameText>{propData.title.split("+")[0]}</TenantNameText>
+                           
+                            <TenantNameText>{propData.title.split("+")[1]} </TenantNameText>
+                            
+                            <TenantNameText>{propData.title.split("+")[2]}</TenantNameText>
+                            
+                        </TenantNameScollOccupationContainer>
+
+                    </TenantInformationContainer>
+                    
+                </Section>
                 
+                }
                 {/* Section for amenities  */}
                 <Section>
                     <Subheading>Amenities ({propData.amenities.length == 0 ? null : propData.amenities.length})</Subheading>

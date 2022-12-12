@@ -240,37 +240,41 @@ export default function ProfileScreen({navigation}){
             'Authorization': 'Bearer ' + token,
             }
         }).then(res => res.json()).then(async data =>{
+            
             //data.properties get the list of all properties
-            // console.log("DATA", JSON.stringify(data))
+           console.log(data)
             const tempFavProp = await AsyncStorage.getItem("favoriteProperties");
             // console.log("TEMPDATA", tempFavProp)
 
             const compare = tempFavProp === JSON.stringify(data)
 
             //If the api data is different from the AyncStorage data
-            if(!compare){
-                //This is that favproperties is not empty so no error later on
-                if(data.length != 0){
-                    console.log("UPDATE --- API --- FAV PROPERTY")
-                    
-                    setFavoriteProperties(data);
-                    try{
-                        if(data != undefined){
-                            await AsyncStorage.setItem("favoriteProperties", JSON.stringify(data) )
-                        }
-                    }
-                    catch{e=>{
-                        console.log("ERRROR --- PROFILE --- FETCHFAVORITEPROPERTY")
-                    }}
-                }
-                else{
-                    setFavoriteProperties([])
-                }
-            }
-            else{ // The api and cache data is the same
-                // console.log("UPDATE --- CACHE --- FAV PROPERTY")
-                setFavoriteProperties(JSON.parse(tempFavProp))
-            }
+            // if(!compare){
+            //     //This is that favproperties is not empty so no error later on
+            //     if(data.length != 0){
+            //         console.log("UPDATE --- API --- FAV PROPERTY")
+            //         console.log(data)
+            //         setFavoriteProperties(data);
+            //         try{
+            //             if(data != undefined){
+            //                 await AsyncStorage.setItem("favoriteProperties", JSON.stringify(data) )
+            //             }
+            //         }
+            //         catch{e=>{
+            //             console.log("ERRROR --- PROFILE --- FETCHFAVORITEPROPERTY")
+            //         }}
+            //     }
+            //     else{
+            //         console.log("no fav")
+            //         setFavoriteProperties([])
+            //     }
+            // }
+            // else{ // The api and cache data is the same
+            //     // console.log("UPDATE --- CACHE --- FAV PROPERTY")
+            //     console.log("no faddv")
+            //     setFavoriteProperties(data)
+            // }
+            setFavoriteProperties(data)
         })
     }
 
@@ -407,9 +411,8 @@ export default function ProfileScreen({navigation}){
                         </View>
 
                          {/* This is the View of favorite property */}
-                        <PostedFavContainer>
-                            
-                            {favoriteProperties.length == 0 ?
+                         <PostedFavContainer>
+                        {favoriteProperties.length == 0  && favoriteProperties != undefined?
                             //When there is no favorite property
                                 <Pressable style={{width:WIDTH, height:'100%',alignItems:'center',justifyContent:'center'}} onPress={()=> navigation.navigate("Discover")}>
                                     {/* <Lottie source={require('../../../likeanimation.json')} autoPlay loop={20}  style={{width:WIDTH*0.4, height: WIDTH*0.4, }}/> */}
@@ -421,7 +424,7 @@ export default function ProfileScreen({navigation}){
                                 style={{alignSelf:'center', width: WIDTH, paddingTop: HEIGHT*0.01}} showsVerticalScrollIndicator={false}>
                                     {favoriteProperties != undefined && favoriteProperties.map((item, index)=>(
                                     <FavPropertyCard key={item.propertyInfo._id + index}>
-                                        <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
+                                        <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item, scraped: item.propertyInfo.postedBy == null ? true: false })}>
                                         <FastImage source={{uri: item.propertyInfo.imgList[0], priority: FastImage.priority.low}} 
                                         style={{width:'100%', height:'100%', borderTopLeftRadius:10, borderBottomLeftRadius:10}}/>
                                         </Pressable>
@@ -442,6 +445,7 @@ export default function ProfileScreen({navigation}){
                                             <FavPropertyCardName>$ {item.propertyInfo.price}</FavPropertyCardName>
                                         </FavPropertyCardContent>
                                     </FavPropertyCard>
+                      
 
                                     ))}
                                     {/* Padding in the bottom so the fav pro wont stick to bottom */}
@@ -449,6 +453,7 @@ export default function ProfileScreen({navigation}){
                 
                                 </ScrollView>
                             }
+                            
                         </PostedFavContainer>
                     
                     </ScrollView>

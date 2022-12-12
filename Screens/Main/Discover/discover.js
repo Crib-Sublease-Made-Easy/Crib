@@ -243,7 +243,6 @@ export default function DiscoverScreen({navigation}){
             }
         }) 
         .then(async res =>{
-
             //Continue only with good status
             if(res.status == 200 || res.status == 201){
                 properties = await res.json()
@@ -258,12 +257,12 @@ export default function DiscoverScreen({navigation}){
                 setLoading(false)
             }
             else{
-                dropDownAlertRef.alertWithType('error', 'Error', "An error has occured while loading property. Please try again later!");
+                alert("Error occured in load")
                 setLoading(false)
             }
         })
         .catch(e=>{
-            dropDownAlertRef.alertWithType('error', 'Error', "An error has occured while loading property. Please try again later!");
+            alert("Error occured")
             console.log("ERROR --- DISCOVER --- loadProperty")
         })
        
@@ -361,12 +360,13 @@ export default function DiscoverScreen({navigation}){
             }
         }) 
         .then(async res => {
+            
             if(res.status == 200 || res.status == 201){
                 const pins = await res.json();
                 setPinsData(pins) 
             }
             else{
-                dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
+                alert("Error in pins")
                 console.log("ERROR --- DISCOVER --- retrieveAllPins")
             }
             
@@ -381,13 +381,14 @@ export default function DiscoverScreen({navigation}){
     //Input is an array [lat, long]
     //If only currentLocation is vlaid data, then center the mapview to current location
     //If both the currentLocation and the pinLocation is valid, then use delta to adjust mapview
-    function moveMap(lat,long){  
+    function moveMap(lat,long, marker){ 
+        alert(marker) 
         if(currentLocation != ""){
             mapRef.current?.animateToRegion({
                 latitude: lat,
                 longitude: long,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.05,
+                latitudeDelta: marker != undefined ? 0.002 : 0.04,
+                longitudeDelta: marker != undefined ? 0.002 : 0.04,
             })
         }
     }
@@ -399,6 +400,7 @@ export default function DiscoverScreen({navigation}){
     //setSearching to false so to shrink the header
     //Dismiss keyboard
     function selectCurrentLocation(locationQueryName){
+        
         if (locationQueryName != ""){
             setlocationQuery(locationQueryName)
             setSearching(false)
@@ -414,7 +416,7 @@ export default function DiscoverScreen({navigation}){
                     let lat = response.data.lat;
                     let long = response.data.lng;
                     setCurrentLocation([lat,long])
-                    moveMap(lat - 0.015, long)
+                    moveMap(lat - 0.005, long)
                 }
                 else{
                     dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
@@ -450,47 +452,56 @@ export default function DiscoverScreen({navigation}){
     //Function to move map to selected property on map when the location icon is pressed
     //Open the preview card modal 
     async function onMarkerClick(item){
-        setLoading(true)
-        if(item != null && item != undefined){
-            await fetch('https://crib-llc.herokuapp.com/properties/' + item._id, {
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                viewCount: "false"
-            })
-            }) 
-            .then(async res =>  {
-                const property = await res.json();
-                if(res.status == 200){
-                    if(property != null && property != undefined && property.propertyInfo.deleted == false){
-                        moveMap(item.loc.coordinates[1] - 0.01, item.loc.coordinates[0])
-                        //Toggle previewCard modal, but the opcaity is 0 when opened 
-                        setPropertyPreviewCard(true)
-                        //Function that animates the opcaity of preview caed
-                        openPreviewCard()
-                        setLoading(false)
-                        setSelectedPin(property)
+        
+        if(item.postedBy == null){
+            moveMap(item.loc.coordinates[1] , item.loc.coordinates[0], false)
+            //Toggle previewCard modal, but the opcaity is 0 when opened 
+            setPropertyPreviewCard(true)
+            //Function that animates the opcaity of preview caed
+            openPreviewCard()
+        
+            let propertyInfo = item
+
+            setSelectedPin({propertyInfo})
+        }
+        else{
+            if(item != null && item != undefined){
+                await fetch('https://crib-llc.herokuapp.com/properties/' + item._id, {
+                method: 'POST',
+                headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+                },
+               
+                }) 
+                .then(async res =>  {
+                   
+                    const property = await res.json();
+                    if(res.status == 200){
+                        if(property != null && property != undefined && property.propertyInfo.deleted == false){
+                            moveMap(item.loc.coordinates[1] - 0.0005, item.loc.coordinates[0], false)
+                            //Toggle previewCard modal, but the opcaity is 0 when opened 
+                            setPropertyPreviewCard(true)
+                            //Function that animates the opcaity of preview caed
+                            openPreviewCard()
+                            setLoading(false)
+                            setSelectedPin(property)
+                        }
+                        else if(property.propertyInfo.deleted == true){
+                            console.log("ERROR --- DISCOVER --- onMarkerClick")
+                            setLoading(false)
+                        }
                     }
-                    else if(property.propertyInfo.deleted == true){
-                        dropDownAlertRef.alertWithType('error', 'Error', "Property is deleted by tenant.");
-                        console.log("ERROR --- DISCOVER --- onMarkerClick")
+                    else{
+                        console.log("ERROR --- DISCOVER --- onMarkerClicks")
                         setLoading(false)
                     }
-                }
-                else{
-                    dropDownAlertRef.alertWithType('error', 'Error', "Error occured. Please try again later!");
+                })
+                .catch(e=>{
                     console.log("ERROR --- DISCOVER --- onMarkerClick")
                     setLoading(false)
-                }
-            })
-            .catch(e=>{
-                dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
-                console.log("ERROR --- DISCOVER --- onMarkerClick")
-                setLoading(false)
-            })
+                })
+            }
         }
     }
 
@@ -574,7 +585,7 @@ export default function DiscoverScreen({navigation}){
                     })}}>
                             {/* Checks if any pin is selected for displaying in the preview card */}
                         {selectedPin != "" && selectedPin != null && selectedPin != undefined &&
-                        <Pressable disabled={loading}  hitSlop={WIDTH*0.05} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0]))})}}>
+                        <Pressable disabled={loading}  hitSlop={WIDTH*0.05} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0])), scraped: selectedPin.propertyInfo.postedBy == null ? true : false})}}>
                             <PreviewTopContainer>
                                 <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
                                 borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>

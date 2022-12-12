@@ -1,6 +1,6 @@
 import {Pressable} from 'react-native';
 import styled from 'styled-components/native';
-import { DARKGREY, EXTRALIGHT, MEDIUMGREY, PRIMARYCOLOR, HEIGHT, WIDTH,  TESTFONT, ROBOTOFONTFAMILY } from '../../../sharedUtils';
+import { DARKGREY, EXTRALIGHT, MEDIUMGREY, PRIMARYCOLOR, HEIGHT, WIDTH,  TESTFONT, } from '../../../sharedUtils';
 
 const PRIMARYGREY = '#5e5d5d'
 
@@ -35,7 +35,6 @@ export const LocationDistanceContainer = styled.View`
    
 `
 export const LocationText = styled.Text`
-    font-family: ${ROBOTOFONTFAMILY}
     font-size: ${HEIGHT*0.0175}px;
     font-weight: 500;
     color: ${DARKGREY}
@@ -91,7 +90,6 @@ export const InfoHeaderText = styled.Text`
     font-weight: 500;
     width: ${WIDTH*0.5}px;
     text-align: left
-    font-family: ${ROBOTOFONTFAMILY}
 `
 
 export const InfoText = styled.Text`
@@ -100,7 +98,6 @@ export const InfoText = styled.Text`
     width: ${WIDTH*0.5}px;
     color: ${PRIMARYGREY}
     margin-top: ${HEIGHT*0.005}px
-    font-family: ${ROBOTOFONTFAMILY}
 `
 
 export const AmenitiesItem = styled.View`
@@ -148,7 +145,6 @@ export const TenantInfoContainer = styled.View`
 `
 
 export const TenantInfo = styled.View`
-    font-family: ${ROBOTOFONTFAMILY}
     width: ${WIDTH*0.6}px;
     justify-content:space-between
     
@@ -187,7 +183,6 @@ export const DateContainer = styled.View`
 export const DateText = styled.Text`
     font-size: ${HEIGHT*0.0175}px;
     color: ${PRIMARYGREY}
-    font-family: ${ROBOTOFONTFAMILY}
 `
 
 export const DescriptionContainer = styled.Text`
@@ -196,13 +191,10 @@ export const DescriptionContainer = styled.Text`
     color: ${PRIMARYGREY}
     align-self: center
     border-radius: 10px
-    margin-top : ${HEIGHT*0.02}px
-    font-family: ${ROBOTOFONTFAMILY}
-    
+    margin-top : ${HEIGHT*0.02}px    
 `
 
 export const TypeText = styled.Text`
-    font-family: ${ROBOTOFONTFAMILY}
     font-size: ${HEIGHT*0.02}px;
     align-self: center;
     text-align: left
@@ -236,7 +228,6 @@ export const BedroomNameText = styled.Text`
     align-items: center
     align-self: center
     font-weight: 400
-    font-family: ${ROBOTOFONTFAMILY}
 `
 
 export const InfoHeaderTextAndCenter = styled.View`
@@ -281,6 +272,7 @@ export const Section = styled.View`
     align-self:center
     border-top-width: 1px;
     border-color: #E0E0E0
+    background-color: white
 `
 export const TypeLocationFavoriteContainer = styled.View`
     flex-direction: row;

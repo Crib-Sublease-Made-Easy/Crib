@@ -40,7 +40,7 @@ import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContai
 import {RowContainer, CategoryName, FollowUpContainer, FollowUpText,PriceContainer, } from './editPropertyPriceStyle';
 export default function EditPropertyPriceScreen({navigation, route}){
     const [propertyPrice, setPropertyPrice] = useState(route.params.price.toString())
-    const [propertyPriceNego,setPropertyPriceNego ] = useState(false)
+    const [securityDeposit,setSecurityDeposit ] = useState(route.params.securityDeposit.toString())
 
     async function update(){
         try{
@@ -54,7 +54,8 @@ export default function EditPropertyPriceScreen({navigation, route}){
                         'Authorization': 'Bearer ' + accessToken,
                     },
                     body: JSON.stringify({
-                        price: propertyPrice.split("$")[1]
+                        price: propertyPrice.split("$")[1],
+                        securityDeposit: securityDeposit.split("$")[1],
                     })
                 })
                 .then((response) => response.json()).then(async data => {
@@ -106,6 +107,11 @@ export default function EditPropertyPriceScreen({navigation, route}){
             <CategoryName>Property Price</CategoryName>
             <PriceContainer autoFocus onChangeText={(value)=> setPropertyPrice(value)}  placeholder={"$" + route.params.price.toString()}
             value={formatPrice(propertyPrice)} placeholderTextColor='black' keyboardType='number-pad'/>
+        </RowContainer>
+        <RowContainer>
+            <CategoryName>Security Deposit</CategoryName>
+            <PriceContainer autoFocus onChangeText={(value)=> setSecurityDeposit(value)}  placeholder={"$" + route.params.securityDeposit.toString()}
+            value={formatPrice(securityDeposit)} placeholderTextColor='black' keyboardType='number-pad'/>
         </RowContainer>
         
     </SafeAreaView>   

@@ -5,7 +5,7 @@ import MessageScreen from '../Message/message.js'
 import ProfileScreen from '../Profile/profile';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ROBOTOFONTFAMILY, PRIMARYCOLOR } from '../../../sharedUtils';
+import { PRIMARYCOLOR } from '../../../sharedUtils';
 Ionicons.loadFont()
 
 const Tab = createBottomTabNavigator();
@@ -41,7 +41,6 @@ export default function DiscoverTab(){
             return <Ionicons name={iconName} size={30} color={PRIMARYCOLOR} />;
           },
           tabBarLabelStyle:{
-            fontFamily: ROBOTOFONTFAMILY,
             fontWeight: '500',
             color: PRIMARYCOLOR
           },

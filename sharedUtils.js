@@ -35,7 +35,6 @@ export const WIDTH = Dimensions.get('screen').width;
 
 // export const  = 'NotoSerif'
 //Progress Bar
-export const ROBOTOFONTFAMILY= 'Roboto-Regular'
 
 export const ProgressBarCapacity = styled.View`
     width: ${WIDTH*0.8}px;
@@ -89,7 +88,8 @@ export const amenitiesList =
     { name: 'Washer_Dryer', library: 'MaterialCommunityIcons', color: '#00d14d', icon: 'tumble-dryer' },
     { name: 'Gated_Access', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'gate' },
     { name: 'Public_Transportation', library: 'FontAwesome', color: '#57b2f7', icon: 'bus' },
-    { name: 'Heating_Cooling', library: 'Ionicon', color: '#f79c40', icon: 'thermometer' },
+    { name: 'Heating', library: 'Ionicon', color: '#f79c40', icon: 'thermometer' },
+    { name: 'Cooling', library: 'Ionicon', color: '#f79c40', icon: 'wind' },
     { name: 'Microwave', library: 'MaterialCommunityIcons', color: '#57b2f7', icon: 'microwave' },
     { name: 'Grill', library: 'FontAwesome', color: '#fa4b4b', icon: 'bars' },
     { name: 'TV', library: 'Ionicon', color: '#fa4b4b', icon: 'tv-sharp' },
@@ -135,8 +135,11 @@ export const GetFAIcons = (name) =>{
     else if(name=="Public_Transportation"){
         return <FontAwesomeIcon icon={faBus} color='white'/>
     }
-    else if(name=="Heating_Cooling"){
+    else if(name=="Heating"){
         return <FontAwesomeIcon icon={faFire} color='white'/>
+    }
+    else if(name=="Cooling"){
+        return <FontAwesomeIcon icon={faWind} color='white'/>
     }
     else if(name=="Microwave"){
         return <FontAwesomeIcon icon={faBowlFood} color='white'/>
@@ -222,8 +225,11 @@ export const GetFAIconsInBlack = (name) =>{
     else if(name=="Public_Transportation"){
         return <FontAwesomeIcon icon={faBus} color='black'/>
     }
-    else if(name=="Heating_Cooling"){
+    else if(name=="Heating"){
         return <FontAwesomeIcon icon={faFire} color='black'/>
+    }
+    else if(name=="Cooling"){
+        return <FontAwesomeIcon icon={faWind} color='black'/>
     }
     else if(name=="Microwave"){
         return <FontAwesomeIcon icon={faBowlFood} color='black'/>
@@ -319,7 +325,10 @@ export const GetAmenitiesIcon = (name) =>{
     else if (name=="TV"){
         return "tv-outline";
     }
-    else if (name=="Heating and Cooling"){
+    else if (name=="Cooling"){
+        return "wind-outline";
+    }
+    else if (name=="Heating"){
         return "thermometer-outline";
     }
     else if (name=="Garages"){
