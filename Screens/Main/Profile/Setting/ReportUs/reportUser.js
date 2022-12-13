@@ -17,15 +17,14 @@ import { RowContainer,CategoryName, TitleContainer,DescriptionInput  } from './r
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont()
 
-export default function ReportUsScreen({navigation, route}){
-    const [propertyName, setPropertyName] = useState("")
+export default function ReportUserScreen({navigation, route}){
     const [tenantName, setTenantName] = useState("")
     const [email, setEmail] = useState("")
     const [description, setDescription] = useState("")
 
     async function send(){
         const accessToken = await SecureStorage.getItem("accessToken");
-        await fetch('https://crib-llc.herokuapp.com/report', { // changed endpoint from contact to report
+        await fetch('https://crib-llc.herokuapp.com/reportUser', { // changed endpoint from contact to report
             method: 'POST',
             headers: {
             Accept: 'application/json',
@@ -35,14 +34,13 @@ export default function ReportUsScreen({navigation, route}){
             
             body: JSON.stringify({
                 email: email,
-                property: propertyName,
                 tenant: tenantName,
                 description: description
             })
         }) 
         .then(res => {
             if (res.status == 200){
-                alert("Reported Successfully!")
+                alert("Reported User Successfully!")
                 navigation.goBack();
             }
             else{
@@ -64,7 +62,7 @@ export default function ReportUsScreen({navigation, route}){
                     </Pressable>
                 </BackButtonContainer>
                 <NameContainer>
-                    <Header>Report</Header>
+                    <Header>Report User</Header>
                 </NameContainer>
                 <ResetButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={send}>
@@ -73,11 +71,7 @@ export default function ReportUsScreen({navigation, route}){
                 </ResetButtonContainer>
             </HeaderContainer>
             <RowContainer>
-                <CategoryName>Property Name</CategoryName>
-                <TitleContainer onChangeText={(value)=> setPropertyName(value)} value={propertyName} />
-            </RowContainer>
-            <RowContainer>
-                <CategoryName>Tenant Name (if applicable)</CategoryName>
+                <CategoryName>User/Tenant Name</CategoryName>
                 <TitleContainer onChangeText={(value)=> setTenantName(value)} value={tenantName} />
             </RowContainer>
             <RowContainer>
@@ -85,7 +79,7 @@ export default function ReportUsScreen({navigation, route}){
                 <TitleContainer onChangeText={(value)=> setEmail(value)} value={email} />
             </RowContainer>
             <RowContainer>
-                <CategoryName>Describe your issue or suggestion</CategoryName>
+                <CategoryName>Please describe your issue with the user</CategoryName>
                 <DescriptionInput multiline value={description} onChangeText={(value)=>setDescription(value)}/>
             </RowContainer>
 

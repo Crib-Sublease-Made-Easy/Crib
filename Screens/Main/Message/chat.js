@@ -289,7 +289,8 @@ export default function ChatScreen({navigation, route}){
 
     const optionViewer = {
       viewProp : () => navigation.navigate("PropertyDetail", {data: propertyInfo}),
-      viewRep: () => navigation.navigate("ReportUs")
+      viewRep: () => navigation.navigate("ReportUs"),
+      viewRepUsr: () => navigation.navigate("ReportUser")
 
     }
     return(

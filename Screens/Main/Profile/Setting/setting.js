@@ -194,6 +194,10 @@ export default function SettingScreen({navigation, route}){
           <RowName>Report</RowName>
           <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
         </RowContainer>
+        <RowContainer onPress={()=> navigation.navigate("ReportUser", {email: userData.email})}>
+          <RowName>Report User</RowName>
+          <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
+        </RowContainer>
         
         <CategoryContainer>
           <TouchableOpacity onPress={logoutAlert}>
