@@ -382,7 +382,6 @@ export default function DiscoverScreen({navigation}){
     //If only currentLocation is vlaid data, then center the mapview to current location
     //If both the currentLocation and the pinLocation is valid, then use delta to adjust mapview
     function moveMap(lat,long, marker){ 
-        alert(marker) 
         if(currentLocation != ""){
             mapRef.current?.animateToRegion({
                 latitude: lat,
