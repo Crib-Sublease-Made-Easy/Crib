@@ -18,17 +18,6 @@
 		5D4F31AE292B342400AEE091 /* Crib180Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D4F31AB292B342400AEE091 /* Crib180Icon.png */; };
 		5D4F31AF292B342400AEE091 /* Crib120Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D4F31AC292B342400AEE091 /* Crib120Icon.png */; };
 		5D4F31B1292B34B900AEE091 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D4F31B0292B34B900AEE091 /* logo.png */; };
-		5DE61C1228B30C8A0023B7DA /* EBGaramond-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C0828B30C8A0023B7DA /* EBGaramond-Bold.ttf */; };
-		5DE61C1428B30C8A0023B7DA /* EBGaramond-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C0A28B30C8A0023B7DA /* EBGaramond-ExtraBold.ttf */; };
-		5DE61C1528B30C8A0023B7DA /* EBGaramond-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C0B28B30C8A0023B7DA /* EBGaramond-Medium.ttf */; };
-		5DE61C1728B30C8A0023B7DA /* EBGaramond-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C0D28B30C8A0023B7DA /* EBGaramond-Regular.ttf */; };
-		5DE61C1828B30C8A0023B7DA /* EBGaramond-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C0E28B30C8A0023B7DA /* EBGaramond-SemiBold.ttf */; };
-		5DE61C2C28B549490023B7DA /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C2628B549480023B7DA /* Roboto-Medium.ttf */; };
-		5DE61C2D28B549490023B7DA /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C2728B549480023B7DA /* Roboto-Light.ttf */; };
-		5DE61C2E28B549490023B7DA /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C2828B549480023B7DA /* Roboto-Bold.ttf */; };
-		5DE61C2F28B549490023B7DA /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C2928B549490023B7DA /* Roboto-Thin.ttf */; };
-		5DE61C3028B549490023B7DA /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C2A28B549490023B7DA /* Roboto-Black.ttf */; };
-		5DE61C3128B549490023B7DA /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE61C2B28B549490023B7DA /* Roboto-Regular.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B1C384E1289C497B00B4D85F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C384E0289C497B00B4D85F /* NotificationService.swift */; };
 		B1C384E5289C497B00B4D85F /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B1C384DE289C497A00B4D85F /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };

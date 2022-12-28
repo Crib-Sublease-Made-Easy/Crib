@@ -22,6 +22,103 @@ const PRIMARYGREY = '#5e5d5d'
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
+export const HeaderContainer = styled.View`
+  padding-vertical: ${HEIGHT*0.01}px;
+  flex-direction: row;
+  padding-horizontal: ${WIDTH*0.05}px
+  height: ${WIDTH*0.25}px
+`
+
+export const ImageContainer = styled.View`
+  width: ${WIDTH*0.25}px;
+  height: ${WIDTH*0.25}px;
+`
+
+export const NameDateContainer = styled.View`
+  
+  height: 100%;
+  justify-content: flex-end;
+  padding-left: ${WIDTH*0.05}px
+`
+
+export const NameText = styled.Text`
+    font-size: ${HEIGHT*0.02}px;
+    font-weight: 500;
+`
+export const JoinedDateText = styled.Text`
+    font-size: ${HEIGHT*0.015}px;
+    color: ${DARKGREY}
+    font-weight: 400;
+    color: ${PRIMARYGREY}
+`
+export const SettingContainer = styled.View`
+  flex: 1 
+  align-items:flex-end
+`
+
+export const UpgradeContainer = styled.View`
+  padding-vertical: ${HEIGHT*0.05}px
+  align-self: center
+`
+export const UpgradeView = styled.View`
+  flex-direction: row
+  align-items: center
+  padding-horizontal: ${WIDTH*0.05}px
+  width: ${WIDTH*0.9}px;
+  height: ${HEIGHT*0.15}px
+  shadow-offset: 0 0
+  border-radius: 15px
+  background-color: white;
+  shadow-color: black;
+  shadow-radius: 5px;
+  shadow-opacity: 0.15;
+  elevation: 5
+`
+
+export const UpgradeTextHeader = styled.Text`
+  font-size: ${HEIGHT*0.0175}px;
+  font-weight: 500; 
+  width: ${WIDTH*0.6}px
+`
+
+export const UpgradeText = styled.Text`
+  margin-top: ${HEIGHT*0.01}px
+  font-size: ${HEIGHT*0.015}px;
+  font-weight: 400; 
+  width: ${WIDTH*0.6}px
+`
+
+export const UpgradeImageContainer = styled.View`
+  height: ${HEIGHT*0.12}px
+  width: ${WIDTH*0.2}px;
+  border-radius: 10px;
+  background-color: ${MEDIUMGREY}
+`
+
+export const UpgradeTextContainer = styled.View`
+  padding-left: ${WIDTH*0.025}px
+  flex-direction: column
+  flex: 1
+`
+
+export const OptionContainer = styled.View`
+
+`
+
+export const OptionRow = styled.Pressable`
+  width: ${WIDTH*0.9}px;
+  align-self: center
+  padding-vertical: ${HEIGHT*0.015}px
+  flex-direction: row
+  justify-content: space-between
+`
+
+export const OptionName = styled.Text`
+  margin-left: ${WIDTH*0.025}px
+  font-size: ${HEIGHT*0.0175}px;
+  font-weight: 400; 
+`
+
 export const Header = styled.View`
   width: ${WIDTH*0.9}px;
   height: ${HEIGHT*0.05}px
@@ -37,21 +134,6 @@ export const Container = styled.View`
     align-items: center
     background-color:white
     
-`
-
-export const NameText = styled.Text`
-    font-size: ${HEIGHT*0.03}px;
-    width: ${WIDTH*0.9}px
-    font-weight: 500;
-    text-align:center
-`
-
-export const OccupationText = styled.Text`
-    font-size: ${HEIGHT*0.02}px;
-   
-    font-weight: 300;
-    color: ${PRIMARYGREY}
-    text-align:center
 `
 
 export const EditProfilePressable = styled.Pressable`
@@ -316,3 +398,4 @@ export const StyledView = styled.View`
   padding-bottom: ${({ insets }) => insets.bottom}px;
   padding-top: ${({ insets }) => insets.top}px;
 `;
+

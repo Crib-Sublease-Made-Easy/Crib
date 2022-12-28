@@ -1,0 +1,193 @@
+import React , {useContext, useState, useRef, useEffect} from 'react';
+import {
+  SafeAreaView,
+  Switch,
+  Pressable,
+  Animated,
+  View,
+  Text,
+  FlatList
+} from 'react-native';
+import { User } from 'realm';
+import { EditPageBackButtonContainer, EditPageForwardButtonContainer, EditPageNameContainer, EditPagesHeaderContainer, MEDIUMGREY, LIGHTGREY } from '../../../sharedUtils';
+import { WIDTH, HEIGHT } from '../../../sharedUtils';
+import FastImage from 'react-native-fast-image'
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { DatePriceText, EditPropertyPressable, EditText, PostedPropertyHeader, PostedPropertyInfoContainer, PostView, PriceEditContainer, PropertyName } from './postedPropertyStyle';
+Ionicons.loadFont()
+
+import EncryptedStorage from 'react-native-encrypted-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { UserContext } from '../../../UserContext';
+
+
+export default function PostedPropertyScreen({navigation, route}){
+
+    const [postedProperties, setPostedProperties] = useState()
+    const {USERID, user} = useContext(UserContext);
+    const [userData, setUserData] = useState()
+
+
+    useEffect(()=>{
+        const unsubscribe = navigation.addListener('focus', () => {
+            getTokens()              
+        });
+        return unsubscribe; 
+    }, [navigation])   
+
+    //Retrieve user info for display and cache for later use
+    async function getTokens(){
+        const accessToken = await EncryptedStorage.getItem("accessToken");
+        if(accessToken != undefined && USERID != undefined){
+            
+            //Get user favorite properties
+            // fetchFavoriteProperties(accessToken)
+            if(accessToken != null && USERID != null){
+                fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+                method: 'GET',
+                headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
+                }
+                }) 
+                .then(res => res.json()).then(async userData =>{
+                    setUserData(userData)
+                    //Load API data if the cached profile pic is null
+                    if(userData.postedProperties != undefined){
+                        fetchPostedProperties(userData.postedProperties[0], accessToken)
+                    }
+                })
+                .catch(e=>{
+                    console.log("ERROR --- PROFILE --- GETTOKEN")
+                    alert(e)
+                })
+            }
+        } 
+    }
+    
+
+    //Funciton: Get user's posted proeprty
+    async function fetchPostedProperties(id, token){
+        const accessToken = await EncryptedStorage.getItem("accessToken");
+        await fetch('https://crib-llc.herokuapp.com/properties/' + route.params.userData.postedProperties[0], {
+        method: 'POST',
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken,
+        }
+        })
+        .then(res => {
+           
+            if(res.status == 404){
+                setPostedProperties(null)
+            }
+            else{
+                return res.json()
+            }
+        }).then(async propertyData =>{
+           
+            if(propertyData != undefined){
+               
+                //Returns no prop found when theres nothing 
+                const tempPropData = await AsyncStorage.getItem('postedProperty')
+                
+                let compare = (tempPropData === JSON.stringify(propertyData))
+                if(!compare || tempPropData == null) {
+                    // console.log("UPDATE --- API --- POSTED PROPERTY")
+                    try{
+                        await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
+                    }
+                    catch{
+                        e=>{
+                            console.log(e)
+                        }
+                    }
+                    
+                    if(JSON.stringify(propertyData) != {"Error": "No Property found"}){
+                        setPostedProperties(propertyData)
+                    }
+                }
+                else{
+                    console.log("UPDATE --- CACHE --- POSTED PROPERTY")
+                    setPostedProperties(JSON.parse((tempPropData)))
+                }           
+            }
+
+        }).catch(e=>{
+            // console.log("ERROR --- PROFILE --- FETCHPOSTEDPROPERTIES")
+            alert(e)
+        })
+    }
+
+    function toPostProperty(){
+        if(route.params.userData.postedProperties.length >= 1 ){
+            alert("As a regular member, you can only post one property.")
+        }
+        else{
+            navigation.navigate('PropertyPosting')
+        }
+    }
+
+    return(
+        <View style={{flex: 1, backgroundColor:'white'}}>
+            <SafeAreaView style={{flex: 1}}>
+                <EditPagesHeaderContainer style={{borderBottomWidth: 0}}>
+                    <EditPageBackButtonContainer >
+                        <Pressable hitSlop={WIDTH*0.025} onPress={()=>navigation.goBack()}>
+                            <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+                        </Pressable>
+                    </EditPageBackButtonContainer>
+                    <EditPageNameContainer/>
+                    <EditPageForwardButtonContainer/>
+                </EditPagesHeaderContainer>
+                <View style={{flexDirection:'row',alignItems:'center',  width: WIDTH*0.85, justifyContent:'space-between', alignSelf:'center'}}>
+                    <PostedPropertyHeader>
+                        Posted property
+                    </PostedPropertyHeader>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={toPostProperty}>
+                        <Ionicons name='add-circle' size={30} color={MEDIUMGREY} />
+                    </Pressable>
+                </View>
+                
+                <View style={{flex: 1}}>
+                {postedProperties != null &&
+                    <FlatList 
+                    alwaysBounceVertical
+                    keyExtractor={item => item.propertyInfo._id}
+                    bounces={false}
+                    data={[postedProperties]}
+                    renderItem={({item})=>(
+                        <PostView  onPress={()=> navigation.navigate("PropertyDetail", {data: item, uid: USERID})}>
+                            <FastImage key={"defaultPropPic"}
+                            source={{uri: postedProperties == null ? null : postedProperties.propertyInfo.imgList[0], priority: FastImage.priority.medium}} style={{width:WIDTH*0.9, height:HEIGHT*0.35, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:5}}/>
+                            <PostedPropertyInfoContainer>
+                                <PropertyName>{postedProperties.propertyInfo.loc.streetAddr}</PropertyName>
+                                <DatePriceText>{postedProperties.propertyInfo.loc.secondaryTxt}</DatePriceText>
+                                <DatePriceText>
+                                    {new Date(postedProperties.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' })} {""}
+                                    {new Date(postedProperties.propertyInfo.availableFrom).getFullYear()}
+                                    {" "} - {" "}
+                                    {new Date(postedProperties.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })} {""}
+                                    {new Date(postedProperties.propertyInfo.availableTo).getFullYear()}
+                                </DatePriceText>
+                                <PriceEditContainer>
+                                    <PropertyName style={{color:'black'}}>${postedProperties.propertyInfo.price} / month</PropertyName>
+                                    <EditPropertyPressable onPress={()=>navigation.navigate("EditProperty", {propertyData: postedProperties.propertyInfo, propId: postedProperties.propertyInfo._id})}>
+                                        <EditText>Edit</EditText>
+                                    </EditPropertyPressable>
+                                </PriceEditContainer>
+                            </PostedPropertyInfoContainer>
+                        </PostView>
+                    )}
+                    />
+                }
+                </View>
+
+            </SafeAreaView>
+
+        </View>
+    )
+}

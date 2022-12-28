@@ -318,7 +318,7 @@ export default function PropertyDetailScreen({navigation, route}){
                     <TypeLocationFavoriteContainer>
                         <TypeLocationContainer>
                             <CardTitle>{propData.type} for rent</CardTitle>
-                            <LocationText style={{marginTop: HEIGHT*0.005}}>{propData.loc.secondaryTxt}</LocationText>
+                            <LocationText style={{marginTop: HEIGHT*0.005, width: WIDTH*0.8}}>{propData.loc.secondaryTxt}</LocationText>
                         </TypeLocationContainer>
 
                         <FavoriteContainer>

@@ -44,6 +44,8 @@ import EditOccupationScreen from './Screens/Main/Profile/EditProfile/EditOccupat
 import SettingScreen from './Screens/Main/Profile/Setting/setting.js'
 import ChatScreen from './Screens/Main/Message/chat.js'
 
+import ReportUsScreen from './Screens/Main/Profile/Setting/ReportUser/ReportUser';
+
 import ChangeNumberScreen from './Screens/Main/Profile/Setting/changeNumber.js';
 import ChangeEmailScreen from './Screens/Main/Profile/Setting/ChangeEmail/changeEmail.js';
 import EditAboutMeScreen from './Screens/Main/Profile/EditProfile/EditAboutMe/editAboutMe.js';
@@ -58,6 +60,9 @@ import EditPropertyPriceScreen from './Screens/Main/Profile/EditProperty/EditPro
 import EditPropertyAvailScreen from './Screens/Main/Profile/EditProperty/EditPropertyAvailability/editPropertyAvail.js';
 import EditPropertyDescriptionScreen from './Screens/Main/Profile/EditProperty/EditPropertyDescription/editPropertyDescription.js';
 import EditPropertyAmenitiesScreen from './Screens/Main/Profile/EditProperty/EditPropertyAmenities/editPropertyAmen.js';
+
+import PostedPropertyScreen from './Screens/Main/Profile/postedProperty';
+import FavoritePropertyScreen from './Screens/Main/Profile/favProperty';
 
 //Message
 import MessageTab from './Screens/Main/Message/message.js';
@@ -478,6 +483,32 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
               }}
             />
+
+            <Stack.Screen name="PostedProperty"
+              component={PostedPropertyScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+
+            <Stack.Screen name="FavoriteProperty"
+              component={FavoritePropertyScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="ReportUser"
+              component={ReportUsScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+
+
+
 
           
 

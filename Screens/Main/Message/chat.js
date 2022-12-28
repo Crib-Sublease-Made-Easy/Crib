@@ -17,8 +17,7 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 import {UserContext} from '../../../UserContext';
-import EncryptedStorage from 'react-native-encrypted-storage';
-
+import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
 import {GiftedChat, Actions, Bubble , InputToolbar, Send} from 'react-native-gifted-chat';
 import { ifIphoneX , getBottomSpace} from 'react-native-iphone-x-helper'
 
@@ -29,8 +28,7 @@ const PRIMARYCOLOR = '#4050B5'
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-import { HeaderContainer, BackButtonContainer,  NameContainer, Header, GetFAIconWithColor,
-  EditPagesHeaderContainer, EditPageNameContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer} from '../../../sharedUtils'
+import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header} from '../../../sharedUtils'
 
 import { MessageInput, MessageContainer, SendButton } from './chatStyle';
 
@@ -44,7 +42,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ChatScreen({navigation, route}){
     const {sb, USERID} = useContext(UserContext);
-
+  
     const { url, id } = route.params;
 
     const GiftedChatRef = useRef();
@@ -87,21 +85,21 @@ export default function ChatScreen({navigation, route}){
     }
 
 
-    // const assignRecipient = () =>{
-    //   if(channel != null && channel.members.length == 2){
-    //     if(channel.members[0].userId == USERID){
-    //       console.log("INSIDEEEE")
-    //       setRecipient(channel.members[1].nickname)
-    //     }else{
-    //       setRecipient(channel.members[0].nickname)
-    //     }
-    //   } else{
-    //     deletedChat(channel)
-    //   }
-    // }
+    const assignRecipient = () =>{
+      if(channel != null && channel.members.length == 2){
+        if(channel.members[0].userId == USERID){
+          console.log("INSIDEEEE")
+          setRecipient(channel.members[1].nickname)
+        }else{
+          setRecipient(channel.members[0].nickname)
+        }
+      } else{
+        deletedChat(channel)
+      }
+    }
     const onSend = useCallback(async (messages = []) => {
       setSending(true)
-      const accessToken = await EncryptedStorage.getItem("accessToken");
+      const accessToken = await SecureStorage.getItem("accessToken");
 
       const params = new sb.UserMessageParams();
       params.message = messages[0].text;
@@ -172,6 +170,7 @@ export default function ChatScreen({navigation, route}){
 
         if(groupChannel != null && groupChannel.members.length == 2){
           if(groupChannel.members[0].userId == USERID){
+            console.log("INSIDEEEE")
             setRecipient(groupChannel.members[1].nickname)
           }else{
             setRecipient(groupChannel.members[0].nickname)
@@ -193,6 +192,8 @@ export default function ChatScreen({navigation, route}){
     }
 
     const getPropertyInfo = async (propId, gc) =>{
+      console.log("getpropertyinfo" , propId)
+      console.log("getpropertyinfo" , gc)
       await fetch('https://crib-llc.herokuapp.com/properties/' + propId, {
         method: 'POST',
         headers: {
@@ -286,6 +287,11 @@ export default function ChatScreen({navigation, route}){
         navigation.goBack()
     }
 
+    const optionViewer = {
+      viewProp : () => navigation.navigate("PropertyDetail", {data: propertyInfo}),
+      viewRepUsr: () => navigation.navigate("ReportUser")
+
+    }
     return(
     <SafeAreaView style={{backgroundColor:'white', flex:1}}>
     <HeaderContainer>
@@ -337,7 +343,7 @@ export default function ChatScreen({navigation, route}){
       />  
       
       }
-    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} leaveChat={leaveChat} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
+    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} leaveChat={leaveChat} optionViewer={optionViewer}/>
     </SafeAreaView>
     )
 }
