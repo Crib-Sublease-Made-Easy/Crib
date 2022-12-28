@@ -14,14 +14,14 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../sharedUtils';
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     RowContainer, CategoryName, PhoneNumberContainer, HelpText } from './changeNumberStyle';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
 
 export default function ChangeNumberScreen({navigation}){
     const [phoneNumber, setPhoneNumber] = useState('')

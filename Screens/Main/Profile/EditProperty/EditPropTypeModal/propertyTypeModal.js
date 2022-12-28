@@ -19,9 +19,9 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY} from '../../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
 
 const flatListTypes =
 [{ name: "Room", image: require('../../../../../assets/room.jpg'), description: "Shared public space" },

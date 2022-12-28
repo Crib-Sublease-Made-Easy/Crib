@@ -40,8 +40,11 @@ ResetButtonContainer
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
+FontAwesome.loadFont();
 Ionicons.loadFont()
+
+
 
 //Bedroom and bathroom options
 const BEDROOMTYPES = ["Studio","1" ,"2", "3", "4P"];

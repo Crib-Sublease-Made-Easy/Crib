@@ -25,11 +25,10 @@ import FastImage from 'react-native-fast-image'
 
 import styled from 'styled-components/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
 
 //Icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
 
 import Animated, {useAnimatedStyle, useSharedValue, withSpring, runOnJS, FadeIn, Layout,  FadeInUp, SlideInLeft, Easing, interpolate,} from 'react-native-reanimated';
 

@@ -1,4 +1,4 @@
-import React , {useContext, useState, useRef, useEffect} from 'react';
+import React , {setState, useContext, useState, useRef, useEffect} from 'react';
 import {
   SafeAreaView,
   Switch,
@@ -30,7 +30,6 @@ import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButto
 import { ScrollView } from 'react-native-gesture-handler';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { acc } from 'react-native-reanimated';
 
 export default function EditPropertyScreen({navigation, route}){
 
@@ -40,7 +39,7 @@ export default function EditPropertyScreen({navigation, route}){
         });
         return unsubscribe; 
     },[navigation, ])
-
+    const [successfulLease, setSuccess] = useState('')
     const [propAPIData, setPropAPIData] = useState('')
     const [propID, setPropID] = useState(route.params.propertyData._id)
     const [propType, setPropType] = useState(route.params.propertyData.type)
@@ -51,207 +50,199 @@ export default function EditPropertyScreen({navigation, route}){
     const [propDescription, setPropDescription] = useState(route.params.propertyData.description)
     const [propImg, setPropImg] = useState(route.params.propertyData.imgList)
     const [propAmen, setPropAmen] = useState(route.params.propertyData.amenities)
-    const [propSecurityDeposit, setPropSecurityDeposit] = useState("")
+
     const [propFloorplanImage, setPropFloorplanImage] = useState(null)
-    const [propAvailabilityFlexibility, setPropAvailabilityFlexibility] = useState()
 
 
 
     async function getTokens(){
+        console.log("refresh")
+        const accessToken = await EncryptedStorage.getItem("accessToken");
 
-        try{
-            const accessToken = await EncryptedStorage.getItem("accessToken");
+        fetch('https://crib-llc.herokuapp.com/properties/' + route.params.propId, {
+        method: 'POST',
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken,
+        }
+        }) 
+        .then(res => res.json()).then(async propData =>{
+            setPropAPIData(propData) 
 
-            if(accessToken != undefined){
-                fetch('https://crib-llc.herokuapp.com/properties/' + route.params.propId, {
-                method: 'POST',
-                headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken,
-                }
-                }) 
-                .then(res => res.json()).then(async propData =>{
-                    setPropAPIData(propData) 
-
-                    //Set the default varaibles 
-                    if(route.params.propertyData.type == undefined || propType != propData.propertyInfo.type){
-                        // console.log("UPDATE --- API --- propType")
-                        setPropType(propData.propertyInfo.type)
-                    }
-                    else{
-                        // console.log("UPDATE --- PARAMS --- propType")
-                    }
-                    if(route.params.propertyData.price == undefined || propPrice != propData.propertyInfo.price){
-                        // console.log("UPDATE --- API --- propPrice")
-                        setPropPrice(propData.propertyInfo.price)
-                    }
-                    else{
-                        // console.log("UPDATE --- PARAMS --- propPrice")
-                    }
-                    if(route.params.propertyData.propDateFrom == undefined || propDateFrom != propData.propertyInfo.availableFrom){
-                        // console.log("UPDATE --- API --- propavailFrom")
-                        setPropDateFrom(propData.propertyInfo.availableFrom)
-                    }
-                    else{
-                        // console.log("UPDATE --- PARAMS --- propavailableFrom")
-                    }
-                    if(route.params.propertyData.propDateTo == undefined != propData.propertyInfo.availableTo){
-                        // console.log("UPDATE --- API --- propavailTo")
-                        setPropDateTo(propData.propertyInfo.availableTo)
-                    }
-                    else{
-                        // console.log("UPDATE --- PARAMS --- propavailableTo")
-                    }
-                    if(route.params.propertyData.description == undefined || propDescription != propData.propertyInfo.description){
-                        // console.log("UPDATE --- API --- propDescription")
-                        setPropDescription(propData.propertyInfo.description)
-                    }
-                    else{
-                        // console.log("UPDATE --- PARAMS --- propDescription")
-                    }
-                    if(route.params.propertyData._id == undefined ||  propID != propData.propertyInfo._id){
-                        // console.log("UPDATE --- API --- propID")
-                        setPropID(propData.propertyInfo._id)
-                    }
-                    else{
-                        // console.log("UPDATE --- PARAMS --- propID")
-                    }
-                    if(route.params.propertyData.amenities == undefined || new Object(propAmen).toLocaleString() != new Object(propData.propertyInfo.amenities).toLocaleString()){
-                        // console.log("UPDATE --- API --- propAmen")
-                        setPropAmen(propData.propertyInfo.amenities)
-                    }
-                    else{
-                        // console.log("UPDATE --- PARAMS --- propAmen")
-                    }
-                    if(route.params.propertyData.imgList == undefined || new Object(propImg).toLocaleString() != new Object(propData.propertyInfo.imgList).toLocaleString()){
-                        // console.log("UPDATE --- API --- propImg")
-                        setPropImg(propData.propertyInfo.imgList)
-                    }
-                    else{
-                        // console.log("UPDATE --- PARAMS --- propImg")
-                    }
-                    
-                    setPropSecurityDeposit(propData.propertyInfo.securityDeposit)
-                    setPropAvailabilityFlexibility(propData.propertyInfo.availabilityFlexibility)
-
-                })
-                .catch(e=>{
-                    alert(e)
-                })
+            //Set the default varaibles 
+            if(route.params.propertyData.type == undefined || propType != propData.propertyInfo.type){
+                console.log("UPDATE --- API --- propType")
+                setPropType(propData.propertyInfo.type)
             }
-        }
-        catch{
+            else{
+                console.log("UPDATE --- PARAMS --- propType")
+            }
+            if(route.params.propertyData.price == undefined || propPrice != propData.propertyInfo.price){
+                console.log("UPDATE --- API --- propPrice")
+                setPropPrice(propData.propertyInfo.price)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propPrice")
+            }
+            if(route.params.propertyData.propDateFrom == undefined || propDateFrom != propData.propertyInfo.availableFrom){
+                console.log("UPDATE --- API --- propavailFrom")
+                setPropDateFrom(propData.propertyInfo.availableFrom)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propavailableFrom")
+            }
+            if(route.params.propertyData.propDateTo == undefined != propData.propertyInfo.availableTo){
+                console.log("UPDATE --- API --- propavailTo")
+                setPropDateTo(propData.propertyInfo.availableTo)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propavailableTo")
+            }
+            if(route.params.propertyData.description == undefined || propDescription != propData.propertyInfo.description){
+                console.log("UPDATE --- API --- propDescription")
+                setPropDescription(propData.propertyInfo.description)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propDescription")
+            }
+            if(route.params.propertyData._id == undefined ||  propID != propData.propertyInfo._id){
+                console.log("UPDATE --- API --- propID")
+                setPropID(propData.propertyInfo._id)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propID")
+            }
+            if(route.params.propertyData.amenities == undefined || new Object(propAmen).toLocaleString() != new Object(propData.propertyInfo.amenities).toLocaleString()){
+                console.log("UPDATE --- API --- propAmen")
+                setPropAmen(propData.propertyInfo.amenities)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propAmen")
+            }
+            if(route.params.propertyData.imgList == undefined || new Object(propImg).toLocaleString() != new Object(propData.propertyInfo.imgList).toLocaleString()){
+                console.log("UPDATE --- API --- propImg")
+                setPropImg(propData.propertyInfo.imgList)
+            }
+            else{
+                console.log("UPDATE --- PARAMS --- propImg")
+            }
+            //console.log(propData.propertyInfo.imgList)
 
-        }
+        })
+        .catch(e=>{
+            alert(e)
+        })
     }
 
     async function SelectPropPic(index){
-       try{
+       
         const accessToken = await EncryptedStorage.getItem("accessToken");
-        if(accessToken != undefined){
-            const accessToken = await EncryptedStorage.getItem("accessToken");
-            ImagePicker.openPicker({
-                width: 812,
-                height: 812,
-                cropping:true,
-                compressImageQuality: 0.8
-            }).then(image => {
+        ImagePicker.openPicker({
+            width: 812,
+            height: 812,
+            cropping:true,
+            compressImageQuality: 0.8
+          }).then(image => {
 
-                const formData = new FormData();
-                var array = image.path.split(".");      
-                formData.append("propertyImage" , {
-                    uri: image.path,
-                    type: 'image/' + array[1],
-                    name: 'someName',
-                }); 
-                formData.append("changeIdx", index);
-            
-            
-                fetch('https://crib-llc.herokuapp.com/properties/propertyImages/' + propID, {
-                    method: 'PUT',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + accessToken,
-                    },
-                    body: formData
-                })
-                .then(res => res.json()).then(async data=>{
-                    setPropImg([...propImg.slice(0, index),data.propertyImage,...propImg.slice(index + 1),])
-                    try{
-                        await AsyncStorage.removeItem('postedProperty')
-                    }
-                    catch{
-                        alert("An error has occured. Please try again later!")
-                    }
-                    
-                })
-                .catch((error) => {
-                    console.log(error)
-                });
-            }).catch(e=>{
+            const formData = new FormData();
+            var array = image.path.split(".");      
+            formData.append("propertyImage" , {
+                uri: image.path,
+                type: 'image/' + array[1],
+                name: 'someName',
+            }); 
+            formData.append("changeIdx", index);
+           
+           
+            fetch('https://crib-llc.herokuapp.com/properties/propertyImages/' + propID, {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken,
+                },
+                body: formData
             })
-        }
-       }
-       catch{
-        console.log("ERROR --- SEELCTPIC")
-       }
+            .then(res => res.json()).then(async data=>{
+                setPropImg([...propImg.slice(0, index),data.propertyImage,...propImg.slice(index + 1),])
+                await AsyncStorage.removeItem('postedProperty')
+                console.log(data)
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+        }).catch(e=>{
+            console.log("Canceled")
+        })
+        
+        
     }   
 
 
     async function deletePropertyAlert(){
         Alert.alert(
             'Are you sure you want to delete this property?',
-            'This action cannot be reveresed.',
+            'This action cannot be reversed.',
             [
               {text: 'No', onPress: () => {}, style: 'cancel'},
-              {text: 'Delete', onPress: () => deletePropertyRequest(), style: 'destructive'},
+              {text: 'Delete', onPress: () => {checkSuccess()}, style: 'destructive'},
             ],
             { 
               cancelable: true 
             }
           );
     }
+    async function checkSuccess() {
+        Alert.alert(
+            'Were you able to successfully sublease on Crib?',
+            'Let us know, help us make Crib better.',
+            [
+              {text: 'No', onPress: () => {
+                setSuccess(true)
+                deletePropertyRequest()
+              }},
+              {text: 'Yes', onPress: () => {
+                setSuccess(false);
+                deletePropertyRequest();
+              }}
+            ]
+          );
+          console.log(successfulLease)
+          
+    }
     async function deletePropertyRequest(){
-        try{
-            const accessToken = await EncryptedStorage.getItem("accessToken");
-            if(accessToken != undefined && propID != null && propID != undefined){
-                fetch('https://crib-llc.herokuapp.com/properties/' + propID, {
-                    method: 'DELETE',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + accessToken,
-                    }
-                }).then(res => {
-                    if(res.status == 200){
-
-                            navigation.goBack()
-                        }
-                        else{
-                            alert('Unable to delete this property. Please try again later.')
-                        }
-                    
-                })
-                .catch((error) => {
-
-                });
+        
+        const accessToken = await EncryptedStorage.getItem("accessToken");
+        fetch('https://crib-llc.herokuapp.com/properties/' + propID, {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
             }
-        }
-        catch{
-            console.log("ERROR --- DELETEPROPERTYREQUEST")
-        }
-        
-        
+        }).then(res => {
+           
+            if(res.status == 200){
+               
+                  navigation.goBack()
+                  
+                }
+                else{
+                    alert('Unable to delete this property. Please try again later.')
+                }
+            
+        })
+        .catch((error) => {
+
+        });
     }   
     
     return(
-      
         <SafeAreaView style={{flex:1, backgroundColor:'white'}} >
             <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack()}>
+                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
                         <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>
@@ -329,17 +320,17 @@ export default function EditPropertyScreen({navigation, route}){
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Price</CategoryName>
-            <RowContainer onPress={()=>navigation.navigate("EditPropertyPrice", {price: propPrice, uid: propID, propertyData: route.params.propertyData, securityDeposit: propSecurityDeposit})}>
+            <RowContainer onPress={()=>navigation.navigate("EditPropertyPrice", {price: propPrice, uid: propID, propertyData: route.params.propertyData})}>
                 <RowName>$ {propPrice}</RowName>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Availability</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditPropertyAvail",{from: propDateFrom, to: propDateTo, uid: propID, propertyData: route.params.propertyData, availabilityFlexibility: propAvailabilityFlexibility})}>
+            <RowContainer onPress={()=> navigation.navigate("EditPropertyAvail",{from: propDateFrom, to: propDateTo, uid: propID, propertyData: route.params.propertyData})}>
                 <DatePriceText>
-                    {new Date(propDateFrom).toDateString().split(" ")[1]} {new Date(propDateFrom).toDateString().split(" ")[2]}{" "}
+                    {new Date(propDateFrom).getUTCMonth()% 12 + 1}- 
                     {new Date(propDateFrom).getFullYear()}
                     {" "} to {" "}
-                    {new Date(propDateTo).toDateString().split(" ")[1]} {new Date(propDateTo).toDateString().split(" ")[2]}{" "}
+                    {new Date(propDateTo).getUTCMonth() % 12 + 1}- 
                     {new Date(propDateTo).getFullYear()}
                 </DatePriceText>
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>

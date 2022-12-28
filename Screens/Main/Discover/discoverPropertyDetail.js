@@ -20,7 +20,7 @@ import MapView , { Marker }from 'react-native-maps';
 
 import {UserContext} from '../../../UserContext'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 import { Section, TypeLocationContainer, TypeLocationFavoriteContainer ,CardSectionOne, CardTitle, LocationDistanceContainer,
         LocationText, FavoriteContainer ,CardSectionTwo, InfoHeaderText,

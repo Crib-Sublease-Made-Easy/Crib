@@ -12,13 +12,13 @@ import {
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, EditPagesHeaderContainer, EditPageBackButtonContainer, EditPageNameContainer, EditPageForwardButtonContainer} from '../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     RowContainer, CategoryName, BodyContainer, HelpText, Terms } from './termsAndServiceStyle';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
 
 export default function Privacy({navigation, route}){
 

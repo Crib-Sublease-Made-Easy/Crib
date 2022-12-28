@@ -23,12 +23,12 @@ import FastImage from 'react-native-fast-image'
 import { PRIMARYCOLOR, Header, HEIGHT, WIDTH, MEDIUMGREY } from '../../../sharedUtils';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faSquareCheck, faSwimmer, faDog} from '@fortawesome/free-solid-svg-icons'
 library.add(faSquareCheck, faSwimmer, faDog)
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 import Lottie from 'lottie-react-native';
 

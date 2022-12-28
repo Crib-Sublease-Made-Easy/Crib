@@ -14,13 +14,13 @@ import { User } from 'realm';
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, EditPagesHeaderContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer, EditPageNameContainer} from '../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     RowContainer, CategoryName, Terms, BodyContainer, HelpText } from './termsAndServiceStyle';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
 
 export default function TermsAndService({navigation, route}){
 

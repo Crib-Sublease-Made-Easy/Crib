@@ -17,12 +17,12 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, EditPagesHeaderContainer, EditPa
 
 import OneSignal from 'react-native-onesignal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont() 
+ 
 import { HeaderContainer, BackButtonContainer, NameContainer, Header,ResetButtonContainer, CategoryContainer, CategoryName,
       RowContainer, RowName, RowValueContainer, RowValueText, UpgradeContainerLeft, UpgradeContainer, UpgradeContainerRight, UpgradeContainerHeader, UpgradeContainerSubheader } from './settingStyle';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-FontAwesome.loadFont()
+
 
 export default function SettingScreen({navigation, route}){
     const [notificationsEnabled, setNotificationsEnabled] = useState(true)

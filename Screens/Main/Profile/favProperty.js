@@ -12,8 +12,8 @@ import { EditPageBackButtonContainer, EditPageForwardButtonContainer, EditPageNa
 import { WIDTH, HEIGHT } from '../../../sharedUtils';
 import FastImage from 'react-native-fast-image'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { DatePriceText, EditPropertyPressable, EditText, PostedPropertyHeader, PostedPropertyInfoContainer, PostView, PriceEditContainer, PropertyName } from './favPropertyStyle';
-Ionicons.loadFont()
+import { DatePriceText, DefaultPostFavText, EditPropertyPressable, EditText, PostedPropertyHeader, PostedPropertyInfoContainer, PostView, PriceEditContainer, PropertyName } from './favPropertyStyle';
+
 
 import { UserContext } from '../../../UserContext';
 
@@ -124,12 +124,18 @@ export default function FavoritePropertyScreen({navigation, route}){
                 </View>
 
                 <View style={{flex: 1}}>
-                {favoriteProperties != null &&
+                {favoriteProperties != undefined && favoriteProperties.length == 0 ?
+                 <Pressable style={{width:WIDTH, height:'100%',alignItems:'center',justifyContent:'center'}} onPress={()=> navigation.navigate("Discover")}>
+                 {/* <Lottie source={require('../../../likeanimation.json')} autoPlay loop={20}  style={{width:WIDTH*0.4, height: WIDTH*0.4, }}/> */}
+                 <DefaultPostFavText>No likes yet. Start discovering...</ DefaultPostFavText>
+                 </Pressable>
+                :
                     <FlatList 
                     alwaysBounceVertical
                     showsVerticalScrollIndicator={false}
                     keyExtractor={item => item.propertyInfo._id}
                     bounces={false}
+                  
                     data={favoriteProperties}
                     renderItem={({item})=>(
                         <PostView>

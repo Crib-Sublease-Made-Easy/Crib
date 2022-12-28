@@ -56,3 +56,9 @@ export const EditText = styled.Text`
   font-weight: 500
   padding:${WIDTH*0.015}px
 `
+
+export const DefaultPostFavText = styled.Text`
+    color: ${DARKGREY};
+    font-weight: 700
+    font-size: ${HEIGHT*0.015}px;
+`

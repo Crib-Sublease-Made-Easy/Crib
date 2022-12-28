@@ -24,7 +24,7 @@ import {UserContext} from '../../../UserContext'
 import Lottie from 'lottie-react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 import { HEIGHT, WIDTH } from '../../../sharedUtils';
 

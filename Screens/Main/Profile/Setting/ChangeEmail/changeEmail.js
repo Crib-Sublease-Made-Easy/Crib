@@ -18,7 +18,7 @@ import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButto
 
 import { RowContainer, CategoryName, EmailContainer } from './changeEmailStyle.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 export default function ChangeEmailScreen({navigation, route}){
 

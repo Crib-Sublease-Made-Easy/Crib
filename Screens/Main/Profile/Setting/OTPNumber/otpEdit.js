@@ -18,7 +18,7 @@ import { Heading, HeaderContainer, BackButtonContainer, NameContainer, Header, R
 const MAX_CODE_LENGTH = 6;
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 
 export default function OTPEditScreen({navigation}){

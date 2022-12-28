@@ -17,7 +17,7 @@ import {
 import uniList from '../../../universityList.json'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
   
 import { HEIGHT, WIDTH , LIGHTGREY, DARKGREY, ContinueButton, ContinueText, ProgressText, SignUpHeader, SignUpBackButtonPressable} from '../../../sharedUtils';

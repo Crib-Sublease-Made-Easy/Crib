@@ -86,6 +86,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
 
+
   
   const appState = useRef(AppState.currentState);
   const [user, setUser] = useState(null)
@@ -513,7 +514,6 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
           
 
             <Stack.Screen name="Landing" component={LandingScreen} options={{ 
-              // headerStyle:{backgroundColor: PRIMARYCOLOR}, headerShadowVisible: false, headerTitle:"",
               headerShown: false,
               cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS}} 
               />

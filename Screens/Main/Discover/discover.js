@@ -27,8 +27,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 //Icons
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
-FontAwesome.loadFont()
+
 
 
 //Style components 

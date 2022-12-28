@@ -15,7 +15,7 @@ import { RowContainer,CategoryName, TitleContainer,DescriptionInput  } from './c
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 export default function ContactUsScreen({navigation, route}){
     const [title, setTitle ] = useState("")

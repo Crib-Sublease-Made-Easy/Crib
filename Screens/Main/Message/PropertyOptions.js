@@ -42,10 +42,10 @@ export default function PropertyOptionsModal({navigation,close, visible ,optionV
                     </NameContainer>
                    
                 </HeaderContainer>
-                <RowContainer hitSlop={WIDTH*0.025} onPress={()=> {close(), optionViewer.viewProp()}}>
+                {/* <RowContainer hitSlop={WIDTH*0.025} onPress={()=> {close(), optionViewer.viewProp()}}>
                     <Ionicons name='home' size={25}  style={{paddingLeft: WIDTH*0.05}} color={PRIMARYCOLOR}/>
                     <RowName>View Property</RowName>
-                </RowContainer>
+                </RowContainer> */}
                 {/* <RowContainer>
                     <Ionicons name='hand-left' size={25}  style={{paddingLeft: WIDTH*0.05}} color={DARKGREY}/>
                     <RowName>Report Property</RowName>

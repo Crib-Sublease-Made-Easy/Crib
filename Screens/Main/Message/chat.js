@@ -21,6 +21,9 @@ import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from '
 import {GiftedChat, Actions, Bubble , InputToolbar, Send} from 'react-native-gifted-chat';
 import { ifIphoneX , getBottomSpace} from 'react-native-iphone-x-helper'
 
+import FastImage from 'react-native-fast-image'
+
+
 import PropertyOptionsModal from './PropertyOptions';
 
 const PRIMARYCOLOR = '#4050B5'
@@ -28,12 +31,11 @@ const PRIMARYCOLOR = '#4050B5'
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header} from '../../../sharedUtils'
+import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header, LIGHTGREY} from '../../../sharedUtils'
 
-import { MessageInput, MessageContainer, SendButton } from './chatStyle';
+import { MessageInput, MessageContainer, SendButton, PreviewContainer, PreviewInfoContainer, PreviewLocaitonText, PreviewDateText } from './chatStyle';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
 
 import { ChatImageSettingContainer } from './chatStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -41,6 +43,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function ChatScreen({navigation, route}){
+ 
     const {sb, USERID} = useContext(UserContext);
   
     const { url, id } = route.params;
@@ -54,6 +57,8 @@ export default function ChatScreen({navigation, route}){
     const [sending, setSending] = useState(false)
     const [recipient, setRecipient] = useState(null)
     const [optionsModal, setOptionsModal] = useState(false)
+
+    
 
     const [channel, setChannel] = useState(null)
 
@@ -274,7 +279,7 @@ export default function ChatScreen({navigation, route}){
 
     });
   }
-
+ 
     //navigation.navigate("PAGENAME",{userData: userData})
 
     //route.params.userData 
@@ -296,7 +301,7 @@ export default function ChatScreen({navigation, route}){
     <SafeAreaView style={{backgroundColor:'white', flex:1}}>
     <HeaderContainer>
           <BackButtonContainer>
-              <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} hitSlop={WIDTH*0.05} onPress={()=> { onChat=false, navigation.goBack()}}>
+              <Pressable hitSlop={WIDTH*0.05} onPress={()=> { onChat=false, navigation.goBack()}}>
                   <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
               </Pressable>
           </BackButtonContainer>
@@ -306,11 +311,43 @@ export default function ChatScreen({navigation, route}){
              
          
           <ChatImageSettingContainer>
-              <Pressable hitSlop={WIDTH*0.05} onPress={()=> setOptionsModal(true)}>
+              <Pressable hitSlop={WIDTH*0.1} onPress={()=> setOptionsModal(true)}>
                 <Ionicons name="ellipsis-horizontal" size={25} />
               </Pressable>
           </ChatImageSettingContainer>
     </HeaderContainer>
+    {propertyInfo != null &&
+    <PreviewContainer onPress={()=>optionViewer.viewProp()}>
+      
+      <FastImage  
+      source={{
+        uri: propertyInfo.propertyInfo.imgList[0],
+        priority: FastImage.priority.high,
+      }}  
+      style={{width:WIDTH*0.15, height:WIDTH*0.15, borderRadius:10, backgroundColor:LIGHTGREY,
+      opacity: 1,
+      }}
+      />
+     
+      <PreviewInfoContainer >
+        <PreviewLocaitonText numberOfLines={1}>{propertyInfo.propertyInfo.loc.secondaryTxt}</PreviewLocaitonText>
+        <PreviewDateText>
+        {new Date(propertyInfo.propertyInfo.availableFrom).toDateString().split(" ")[2]} {}
+        {new Date(propertyInfo.propertyInfo.availableFrom).toDateString().split(" ")[1]} {}
+        {new Date(propertyInfo.propertyInfo.availableFrom).toDateString().split(" ")[3]} {}
+        - {}
+        {new Date(propertyInfo.propertyInfo.availableTo).toDateString().split(" ")[2]} {}
+        {new Date(propertyInfo.propertyInfo.availableTo).toDateString().split(" ")[1]} {}
+        {new Date(propertyInfo.propertyInfo.availableTo).toDateString().split(" ")[3]} {}
+        </PreviewDateText>
+        <PreviewDateText>
+          ${propertyInfo.propertyInfo.price} / month
+        </PreviewDateText>
+      </PreviewInfoContainer>
+
+
+    </PreviewContainer>
+    }
 
     {loading ?
       <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />

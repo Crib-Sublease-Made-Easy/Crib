@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 import { WIDTH, HEIGHT, OnlyLetters, ProgressText, ContinueButton, ContinueText, SignUpHeader, SignUpBackButtonPressable } from '../../../sharedUtils';
 

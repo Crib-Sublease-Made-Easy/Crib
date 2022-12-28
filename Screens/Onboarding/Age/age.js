@@ -11,7 +11,7 @@ import {
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 import DatePicker from 'react-native-date-picker'
   

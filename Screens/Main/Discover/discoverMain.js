@@ -6,7 +6,18 @@ import ProfileScreen from '../Profile/profile';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { PRIMARYCOLOR } from '../../../sharedUtils';
-Ionicons.loadFont()
+
+import {
+  SafeAreaView,
+  Switch,
+  Pressable,
+  Animated,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  TouchableWithoutFeedback
+} from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,31 +30,30 @@ export default function DiscoverTab(){
         
         screenOptions={({ route }) => ({
           lazy: false,
-          tabBarShowLabel: false,
+        
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
             if (route.name === 'Discover') {
               iconName = focused
-                ? 'home'
-                : 'home-outline';
-              color = 'PRIMARYCOLOR'
+                ? 'search'
+                : 'search-outline';
+              color = focused ? PRIMARYCOLOR : '#A9A9A9'
             } else if (route.name === 'Message') {
               iconName = focused ? 'mail' : 'mail-outline';
-              color = PRIMARYCOLOR
+              color = focused ? PRIMARYCOLOR : '#A9A9A9'
             }
             else if (route.name === 'Profile') {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
-              color = PRIMARYCOLOR
+              color = focused ? PRIMARYCOLOR : '#A9A9A9'
             }
 
             // You can return any component that you like here!
-            return <Ionicons name={iconName} size={30} color={PRIMARYCOLOR} />;
+            return <Ionicons name={iconName} size={30} color={color} />;
           },
-          tabBarLabelStyle:{
-            fontWeight: '500',
-            color: PRIMARYCOLOR
-          },
+          tabBarLabel: ({focused, color, size}) => (
+            <Text style={{color: focused ? PRIMARYCOLOR : '#A9A9A9', fontSize: 10, fontWeight:'500'}}>{route.name}</Text>
+          ),
           headerShown: false,
           
         })}
@@ -53,13 +63,14 @@ export default function DiscoverTab(){
         options={({ route }) => ({
           tabBarStyle: ((route) => {
               const routeName = getFocusedRouteNameFromRoute(route) ?? ""
-  
+              
               if(routeName == "Discover"){
                 return "flex";
               }
               else{
                 return "none";
               }
+              
          
           })})}/>
         <Tab.Screen name="Message" component={MessageScreen} />

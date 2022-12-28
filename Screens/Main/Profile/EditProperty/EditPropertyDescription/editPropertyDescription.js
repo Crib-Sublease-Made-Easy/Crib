@@ -20,11 +20,11 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY} from '../
 import { DescriptionInput, RowContainer, CategoryName } from './editPropertyDescriptionStyle';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Router } from 'express';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-FontAwesome.loadFont()
+
 
 import EncryptedStorage from 'react-native-encrypted-storage';
 

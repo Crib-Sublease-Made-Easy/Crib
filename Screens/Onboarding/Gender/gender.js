@@ -16,7 +16,7 @@ import {
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, SignUpHeader, MEDIUMGREY, ContinueButton, ContinueText, ProgressText, SignUpBackButtonPressable } from '../../../sharedUtils';
 

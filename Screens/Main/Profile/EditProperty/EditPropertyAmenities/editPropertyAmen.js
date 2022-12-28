@@ -24,9 +24,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
 
 export default function EditPropertyAmenitiesScreen({navigation, route}){
     const [propertyAmenities, setpropertyAmenities] = useState(route.params.amenities)

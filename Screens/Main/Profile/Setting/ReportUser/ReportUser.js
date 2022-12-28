@@ -15,7 +15,7 @@ import React , {useContext, useState, useRef} from 'react';
 
 
  import Ionicons from 'react-native-vector-icons/Ionicons';
- Ionicons.loadFont()
+ 
 
  export default function ReportUsScreen({navigation, route}){
      const [propertyName, setPropertyName] = useState("")

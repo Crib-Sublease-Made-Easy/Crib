@@ -8,13 +8,15 @@ import {
   Text,
   FlatList
 } from 'react-native';
-import { User } from 'realm';
+
+import Lottie from 'lottie-react-native';
+
 import { EditPageBackButtonContainer, EditPageForwardButtonContainer, EditPageNameContainer, EditPagesHeaderContainer, MEDIUMGREY, LIGHTGREY } from '../../../sharedUtils';
 import { WIDTH, HEIGHT } from '../../../sharedUtils';
 import FastImage from 'react-native-fast-image'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { DatePriceText, EditPropertyPressable, EditText, PostedPropertyHeader, PostedPropertyInfoContainer, PostView, PriceEditContainer, PropertyName } from './postedPropertyStyle';
-Ionicons.loadFont()
+import { DatePriceText, DefaultPostFavText, EditPropertyPressable, EditText, PostedPropertyHeader, PostedPropertyInfoContainer, PostView, PriceEditContainer, PropertyName } from './postedPropertyStyle';
+
 
 import EncryptedStorage from 'react-native-encrypted-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -153,7 +155,7 @@ export default function PostedPropertyScreen({navigation, route}){
                 </View>
                 
                 <View style={{flex: 1}}>
-                {postedProperties != null &&
+                {postedProperties != null ?
                     <FlatList 
                     alwaysBounceVertical
                     keyExtractor={item => item.propertyInfo._id}
@@ -183,6 +185,17 @@ export default function PostedPropertyScreen({navigation, route}){
                         </PostView>
                     )}
                     />
+                    :
+                    <Pressable style={{width:WIDTH, height:'100%', alignItems:'center', justifyContent:'center'}}
+                        onPress={toPostProperty}>
+                        <Lottie source={require('../../../subleaseProperties.json')} autoPlay loop={20}  style={{width:WIDTH*0.6, height: WIDTH*0.6, }}/>
+                        {/* <Pressable style={{width:WIDTH*0.5, height:HEIGHT*0.06, borderRadius:30,
+                        backgroundColor: PRIMARYCOLOR, justifyContent:'center', alignItems:'center'}}>
+                            <Text style={{color:'white', fontSize:HEIGHT*0.0175, fontWeight:'500'}}>Start Sublease</Text>
+                        </Pressable> */}
+                        <DefaultPostFavText>Sublease in just a few steps</ DefaultPostFavText>
+                    </Pressable>
+
                 }
                 </View>
 

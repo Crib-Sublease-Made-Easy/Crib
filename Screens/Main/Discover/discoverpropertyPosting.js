@@ -16,7 +16,7 @@ import {
 
 //Icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import DatePicker from 'react-native-date-picker'
@@ -29,7 +29,7 @@ import Lottie from 'lottie-react-native';
 
 
 
-FontAwesome.loadFont();
+;
 
 const ImageName = [
     { name: "Bedroom", des: "Image of where subtenants would sleep", icon: "bed-outline" },
