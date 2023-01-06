@@ -11,7 +11,7 @@ export const PostedPropertyHeader = styled.Text`
     margin-bottom: ${HEIGHT*0.01}px
 `
 
-export const PostView = styled.View`
+export const PostView = styled.Pressable`
     width: ${WIDTH*0.9}px;
     align-self: center
     margin-top: ${HEIGHT*0.025}px

@@ -6,13 +6,14 @@ import {
   Animated,
   View,
   Text,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native';
 
 import Lottie from 'lottie-react-native';
 
-import { EditPageBackButtonContainer, EditPageForwardButtonContainer, EditPageNameContainer, EditPagesHeaderContainer, MEDIUMGREY, LIGHTGREY } from '../../../sharedUtils';
-import { WIDTH, HEIGHT } from '../../../sharedUtils';
+import { EditPageBackButtonContainer, EditPageForwardButtonContainer, EditPageNameContainer, EditPagesHeaderContainer, MEDIUMGREY, LIGHTGREY, DARKGREY } from '../../../sharedUtils';
+import { WIDTH, HEIGHT} from '../../../sharedUtils';
 import FastImage from 'react-native-fast-image'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { DatePriceText, DefaultPostFavText, EditPropertyPressable, EditText, PostedPropertyHeader, PostedPropertyInfoContainer, PostView, PriceEditContainer, PropertyName } from './postedPropertyStyle';
@@ -29,6 +30,7 @@ export default function PostedPropertyScreen({navigation, route}){
     const [postedProperties, setPostedProperties] = useState()
     const {USERID, user} = useContext(UserContext);
     const [userData, setUserData] = useState()
+    const [loading, setLoading] = useState(true)
 
 
     useEffect(()=>{
@@ -40,45 +42,52 @@ export default function PostedPropertyScreen({navigation, route}){
 
     //Retrieve user info for display and cache for later use
     async function getTokens(){
+       
         const accessToken = await EncryptedStorage.getItem("accessToken");
-        if(accessToken != undefined && USERID != undefined){
+        if(accessToken != undefined && USERID != undefined && accessToken != null){
             
             //Get user favorite properties
             // fetchFavoriteProperties(accessToken)
-            if(accessToken != null && USERID != null){
-                fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
-                method: 'GET',
-                headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken,
-                }
-                }) 
-                .then(res => res.json()).then(async userData =>{
-                    setUserData(userData)
-                    //Load API data if the cached profile pic is null
-                    if(userData.postedProperties != undefined){
-                        fetchPostedProperties(userData.postedProperties[0], accessToken)
-                    }
-                })
-                .catch(e=>{
-                    console.log("ERROR --- PROFILE --- GETTOKEN")
-                    alert(e)
-                })
+           
+            await fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+            method: 'GET',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken,
             }
+            }) 
+            .then(res => res.json()).then(async userData =>{
+                // console.log(userData)
+                setUserData(userData)
+
+                //Load API data if the cached profile pic is null
+                
+                await fetchPostedProperties(userData.postedProperties[0], accessToken)
+
+                setLoading(false)
+                
+                
+                
+            })
+            .catch(e=>{
+                console.log("ERROR --- PROFILE --- GETTOKEN")
+                alert(e)
+            })
+            
         } 
     }
     
 
     //Funciton: Get user's posted proeprty
     async function fetchPostedProperties(id, token){
-        const accessToken = await EncryptedStorage.getItem("accessToken");
-        await fetch('https://crib-llc.herokuapp.com/properties/' + route.params.userData.postedProperties[0], {
+        console.log("oops")
+        await fetch('https://crib-llc.herokuapp.com/properties/' + id, {
         method: 'POST',
         headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken,
+        'Authorization': 'Bearer ' + token,
         }
         })
         .then(res => {
@@ -90,32 +99,37 @@ export default function PostedPropertyScreen({navigation, route}){
                 return res.json()
             }
         }).then(async propertyData =>{
-           
+            console.log("oops", propertyData)
             if(propertyData != undefined){
-               
+                
                 //Returns no prop found when theres nothing 
-                const tempPropData = await AsyncStorage.getItem('postedProperty')
+                const tempPropData = await EncryptedStorage.getItem('postedProperty')
                 
                 let compare = (tempPropData === JSON.stringify(propertyData))
                 if(!compare || tempPropData == null) {
-                    // console.log("UPDATE --- API --- POSTED PROPERTY")
+                   
+                    console.log("UPDATE --- API --- POSTED PROPERTY")
                     try{
-                        await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
+                        await EncryptedStorage.setItem('postedProperty', JSON.stringify(propertyData))
                     }
                     catch{
+
                         e=>{
                             console.log(e)
                         }
                     }
                     
-                    if(JSON.stringify(propertyData) != {"Error": "No Property found"}){
-                        setPostedProperties(propertyData)
-                    }
+                  
+                    setPostedProperties(propertyData)
+                    
                 }
                 else{
                     console.log("UPDATE --- CACHE --- POSTED PROPERTY")
                     setPostedProperties(JSON.parse((tempPropData)))
                 }           
+            }else{
+              
+                setPostedProperties(null)
             }
 
         }).catch(e=>{
@@ -125,7 +139,7 @@ export default function PostedPropertyScreen({navigation, route}){
     }
 
     function toPostProperty(){
-        if(route.params.userData.postedProperties.length >= 1 ){
+        if(userData.postedProperties.length >= 1 ){
             alert("As a regular member, you can only post one property.")
         }
         else{
@@ -155,7 +169,7 @@ export default function PostedPropertyScreen({navigation, route}){
                 </View>
                 
                 <View style={{flex: 1}}>
-                {postedProperties != null ?
+                {postedProperties != null && postedProperties != undefined ?
                     <FlatList 
                     alwaysBounceVertical
                     keyExtractor={item => item.propertyInfo._id}
@@ -186,6 +200,7 @@ export default function PostedPropertyScreen({navigation, route}){
                     )}
                     />
                     :
+                    !loading ?
                     <Pressable style={{width:WIDTH, height:'100%', alignItems:'center', justifyContent:'center'}}
                         onPress={toPostProperty}>
                         <Lottie source={require('../../../subleaseProperties.json')} autoPlay loop={20}  style={{width:WIDTH*0.6, height: WIDTH*0.6, }}/>
@@ -195,6 +210,8 @@ export default function PostedPropertyScreen({navigation, route}){
                         </Pressable> */}
                         <DefaultPostFavText>Sublease in just a few steps</ DefaultPostFavText>
                     </Pressable>
+                    :
+                    <ActivityIndicator size="large" color={DARKGREY} style={{marginTop: HEIGHT*0.2}}/>
 
                 }
                 </View>

@@ -72,13 +72,19 @@ export default function PropertyDetailScreen({navigation, route}){
             
             let url = `${route.params.data.propertyInfo.title.split("+")[4]}`
             const supported = await Linking.canOpenURL(url);
-
+            console.log(supported)
             if (supported) {
             // Opening the link with some app, if the URL scheme is "http" the web link should be opened
             // by some browser in the mobile
-            await Linking.openURL(url);
+            try{
+                await Linking.openURL(url);
+            }
+            catch{
+                alert("Error occured. Please try again later!")
+            }
+           
             } else {
-            Alert.alert(`Don't know how to open this URL: ${url}`);
+                alert("Error occured. Please try again later!")
             }
             
         }

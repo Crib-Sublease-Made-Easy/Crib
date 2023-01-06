@@ -7,7 +7,8 @@ import {
   Image,
   Pressable,
   Animated,
-  Share
+  Share,
+  ActivityIndicator
 } from 'react-native';
 import { UserContext } from '../../../UserContext';
 
@@ -95,8 +96,10 @@ export default function ProfileScreen({navigation}){
     const translation = useRef(new Animated.Value(0)).current;
 
     const [userData, setUserData] = useState('')
+    const [firstName, setFirstName] = useState('')
 
     const [profilePic, setProfilePic] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const RowOptions = [
         {text: 'Edit Profile', icon: 'create', color: GOOGLEBLUE},
@@ -117,15 +120,30 @@ export default function ProfileScreen({navigation}){
     //Retrieve user info for display and cache for later use
     async function getTokens(){
         try{
-        const accessToken = await EncryptedStorage.getItem("accessToken");
-        const UID = await EncryptedStorage.getItem("userId")
+            const accessToken = await EncryptedStorage.getItem("accessToken");
 
-            if(accessToken != undefined && UID != undefined){
+            //This is to set the profile pic from cache
+            let cachedProfilePic;
+            try{
+                cachedProfilePic = await AsyncStorage.getItem("profilePic");
+                let cachedFirstName = await AsyncStorage.getItem("firstName");
+                setFirstName(cachedFirstName)
+                if(cachedProfilePic != null){
+                    setProfilePic(cachedProfilePic)
+                }
+                console.log("SETPROFILEPIC --- CACHE --- GETTOKEN")
+                console.log("SETFIRSTNAME --- CACHE --- GETTOKEN")
+            }
+            catch{
+                console.log("Error in setting profile pic from cache.")
+            }
+
+            if(accessToken != undefined && USERID != undefined){
                 
                 //Get user favorite properties
                 fetchFavoriteProperties(accessToken)
-                if(accessToken != null && UID != null){
-                    fetch('https://crib-llc.herokuapp.com/users/' + UID, {
+                if(accessToken != null && USERID != null){
+                    fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
                     method: 'GET',
                     headers: {
                     Accept: 'application/json',
@@ -134,29 +152,20 @@ export default function ProfileScreen({navigation}){
                     }
                     }) 
                     .then(res => res.json()).then(async userData =>{
+                        
                         setUserData(userData)
                         //Load API data if the cached profile pic is null
-                        let cachedProfilePic = await AsyncStorage.getItem("profilePic");
-                        if(profilePic == null){
-                            if(cachedProfilePic != null && cachedProfilePic == userData.profilePic ){
-                            
-                                // console.log("UPDATE --- CACHE --- profilePic")
-                                setProfilePic(cachedProfilePic)
+                        
+                        if(cachedProfilePic == null){
+                            setProfilePic(userData.profilePic)
+                            try{
+                                console.log("PROFILEPIC --- API --- GETTOKEN")
+                                if(userData.profilePic != undefined && userData.profilePic != null){
+                                    await AsyncStorage.setItem("profilePic", userData.profilePic);
+                                }
                             }
-                            else{
-                                // console.log("UPDATE --- API --- profilePic")
-                                setProfilePic(userData.profilePic)
-                                try{
-                                    if(userData.profilePic != undefined && userData.profilePic != null){
-                                        await AsyncStorage.setItem("profilePic", userData.profilePic);
-                                    }
-                                }
-                                catch{e=>{
-                                    console.log("ERROR --- PROFILE --- GETTOKEN")
-                                }
-
-                                }
-                                
+                            catch{
+                                console.log("ERROR --- PROFILE --- GETTOKEN")
                             }
                         }
                         if(userData.postedProperties != undefined){
@@ -199,14 +208,14 @@ export default function ProfileScreen({navigation}){
                 if(propertyData != undefined){
                     
                     //Returns no prop found when theres nothing 
-                    const tempPropData = await AsyncStorage.getItem('postedProperty')
+                    const tempPropData = await EncryptedStorage.getItem('postedProperty')
                     
                     let compare = (tempPropData === JSON.stringify(propertyData))
                     
                     if(!compare || tempPropData == null) {
                         // console.log("UPDATE --- API --- POSTED PROPERTY")
                         try{
-                            await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
+                            await EncryptedStorage.setItem('postedProperty', JSON.stringify(propertyData))
                         }
                         catch{
                             e=>{
@@ -278,13 +287,21 @@ export default function ProfileScreen({navigation}){
     }
 
     //Function to post properties, only if user have no properties 
-    function toPostProperty(){
-        if(userData.postedProperties.length >= 1 ){
-            alert("As a regular member, you can only post one property.")
+    async function toPostProperty(userData){
+        try{
+            const cachedPostedProperty = await EncryptedStorage.getItem('postedProperty')
+           
+            if(cachedPostedProperty != undefined){
+                alert("As a regular member, you can only post one property.")
+            }
+            else{
+                navigation.navigate('PropertyPosting')
+            }
         }
-        else{
-            navigation.navigate('PropertyPosting')
+        catch{
+
         }
+       
     }
 
     //Function: animate the process of the sliding half transparant bckground between psoted and favorite 
@@ -331,11 +348,12 @@ export default function ProfileScreen({navigation}){
         <View>
             <HeaderContainer>
                 <ImageContainer>
-                <FastImage source={{uri: profilePic, priority: FastImage.priority.high}} style={{height:'100%', width:'100%', borderRadius:WIDTH*0.125}}/>
+                    <ActivityIndicator animating={loading}  size='small' color={DARKGREY} />
+                    <FastImage onLoadStart={()=> setLoading(true)}  onLoadEnd={()=>setLoading(false)} source={{uri: profilePic, priority: FastImage.priority.high}} style={{height:'100%', width:'100%', borderRadius:WIDTH*0.125, position:'absolute'}}/>
                 </ImageContainer>
                 <NameDateContainer>
-                    <NameText>{userData.firstName}</NameText>
-                    <JoinedDateText>Joined Dec 2023</JoinedDateText>
+                    <NameText>{firstName}</NameText>
+                    <JoinedDateText>Joined 2023</JoinedDateText>
                 </NameDateContainer>
                 <SettingContainer>
                     <Pressable hitSlop={WIDTH*0.03} onPress={()=>navigation.navigate('Setting',{propID: postedProperties?.propertyInfo._id, authyID: userData?.authy_id})}>
@@ -360,7 +378,7 @@ export default function ProfileScreen({navigation}){
 
             <OptionContainer>
                 {RowOptions.map((item) => (
-                    <OptionRow onPress={()=>pressOption(item.text)}>
+                    <OptionRow key={item.text} onPress={()=>pressOption(item.text)}>
                         <View style={{flexDirection:'row', alignItems:'center'}}>
                           <Ionicons name={item.icon} size={25} color='black'/>
                           <OptionName>{item.text}</OptionName>

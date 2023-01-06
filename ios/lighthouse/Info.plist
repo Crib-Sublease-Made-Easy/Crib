@@ -15,7 +15,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
+	<string>8.0</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleIconName</key>
@@ -23,11 +23,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>5.0</string>
+	<string>6.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>5</string>
+	<string>8</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -44,10 +44,9 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>To identify user location so application can search nearby results</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Use user's location to pan to user's location in the map</string>
+	<string>Use user&apos;s location to pan to user&apos;s location in the map</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Photo Library Access Profile Pic</string>
-	
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

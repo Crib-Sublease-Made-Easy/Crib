@@ -195,7 +195,7 @@ export default function EditPropertyScreen({navigation, route}){
     }
     async function checkSuccess() {
         Alert.alert(
-            'Were you able to successfully sublease on Crib?',
+            'Were you able to sublease on Crib?',
             'Let us know, help us make Crib better.',
             [
               {text: 'No', onPress: () => {
@@ -207,30 +207,29 @@ export default function EditPropertyScreen({navigation, route}){
                 deletePropertyRequest();
               }}
             ]
-          );
-          console.log(successfulLease)
-          
+          );  
     }
     async function deletePropertyRequest(){
         
         const accessToken = await EncryptedStorage.getItem("accessToken");
-        fetch('https://crib-llc.herokuapp.com/properties/' + propID, {
+        await fetch('https://crib-llc.herokuapp.com/properties/' + propID, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + accessToken,
             }
-        }).then(res => {
-           
+        }).then(async res => {
+            await EncryptedStorage.removeItem('postedProperty');
             if(res.status == 200){
-               
-                  navigation.goBack()
-                  
-                }
-                else{
-                    alert('Unable to delete this property. Please try again later.')
-                }
+                setTimeout(()=>{
+                    
+                    navigation.goBack({postedProperties: null})
+                },500)
+            }
+            else{
+                alert('Unable to delete this property. Please try again later.')
+            }
             
         })
         .catch((error) => {

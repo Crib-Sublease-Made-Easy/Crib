@@ -138,7 +138,7 @@ export default function FavoritePropertyScreen({navigation, route}){
                   
                     data={favoriteProperties}
                     renderItem={({item})=>(
-                        <PostView>
+                        <PostView onPress={()=> navigation.navigate("PropertyDetail", {data: item, uid: USERID})}>
                             <FastImage key={"defaultPropPic"}
                             source={{uri: item == null ? null : item.propertyInfo.imgList[0], priority: FastImage.priority.medium}} style={{width:WIDTH*0.9, height:HEIGHT*0.35, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:5}}/>
                             <PostedPropertyInfoContainer>

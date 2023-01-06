@@ -32,6 +32,8 @@ export const HeaderContainer = styled.View`
 export const ImageContainer = styled.View`
   width: ${WIDTH*0.25}px;
   height: ${WIDTH*0.25}px;
+  justify-content: center;
+  align-items: center
 `
 
 export const NameDateContainer = styled.View`

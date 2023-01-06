@@ -11,7 +11,8 @@ import {
     Pressable,
     FlatList,
     TouchableOpacity,
-    TouchableHighlight
+    TouchableHighlight,
+    Alert
 } from 'react-native';
 
 //Icons
@@ -491,139 +492,143 @@ async function testScraped(){
     }
 
 
-    // async function postproperty() {
-    //     // console.log("hello")
-    //     // console.log(propertyType)
-    //     // console.log(propertyMainAddr)
-    //     // console.log(propertySecondaryAddr)
-    //     // console.log(latLong[0])
-    //     // console.log(latLong[1])
-    //     // console.log(propertyPrice)
-    //     // console.log(propertyDescription)
-    //     // console.log(propertydateFrom.getTime())
-    //     // console.log(propertydateTo.getTime())
-    //     // console.log(propertyNumBed)
-    //     // console.log(propertyNumBath)
-    //     // console.log(propertydateFlexible)
-    //     // console.log(propertySecurityDeposit)
-    //     setLoading(true)
-    //     try{
+    async function postproperty() {
+        // console.log("hello")
+        // console.log(propertyType)
+        // console.log(propertyMainAddr)
+        // console.log(propertySecondaryAddr)
+        // console.log(latLong[0])
+        // console.log(latLong[1])
+        // console.log(propertyPrice)
+        // console.log(propertyDescription)
+        // console.log(propertydateFrom.getTime())
+        // console.log(propertydateTo.getTime())
+        // console.log(propertyNumBed)
+        // console.log(propertyNumBath)
+        // console.log(propertydateFlexible)
+        // console.log(propertySecurityDeposit)
+        setLoading(true)
+        try{
 
-    //         const accessToken = await EncryptedStorage.getItem("accessToken");
+            const accessToken = await EncryptedStorage.getItem("accessToken");
 
-    //         if(accessToken != undefined){
-    //             const postingData = new FormData();
+            if(accessToken != undefined){
+                const postingData = new FormData();
 
-    //             postingData.append("type", propertyType);                       //String 
-    //             postingData.append("streetAddr", propertyMainAddr);               //String 
-    //             postingData.append("secondaryTxt", propertySecondaryAddr);               //String 
-    //             postingData.append("latitude", latLong[0])
-    //             postingData.append("longitude", latLong[1])
-    //             //String Array
+                postingData.append("type", propertyType);                       //String 
+                postingData.append("streetAddr", propertyMainAddr);               //String 
+                postingData.append("secondaryTxt", propertySecondaryAddr);               //String 
+                postingData.append("latitude", latLong[0])
+                postingData.append("longitude", latLong[1])
+                //String Array
 
-    //             var array = propertyBedroomImage.split(".");
+                var array = propertyBedroomImage.split(".");
 
-    //             postingData.append("propertyImages", {
-    //                 uri: propertyBedroomImage,
-    //                 type: 'image/' + array[1],
-    //                 name: 'someName',
-    //             });
+                postingData.append("propertyImages", {
+                    uri: propertyBedroomImage,
+                    type: 'image/' + array[1],
+                    name: 'someName',
+                });
 
-    //             var array = propertyBathroomImage.split(".");
-    //             postingData.append("propertyImages", {
-    //                 uri: propertyBathroomImage,
-    //                 type: 'image/' + array[1],
-    //                 name: 'someName',
-    //             });
-    //             var array = propertyLivingroomImage.split(".");
+                var array = propertyBathroomImage.split(".");
+                postingData.append("propertyImages", {
+                    uri: propertyBathroomImage,
+                    type: 'image/' + array[1],
+                    name: 'someName',
+                });
+                var array = propertyLivingroomImage.split(".");
 
-    //             postingData.append("propertyImages", {
-    //                 uri: propertyLivingroomImage,
-    //                 type: 'image/' + array[1],
-    //                 name: 'someName',
-    //             });
+                postingData.append("propertyImages", {
+                    uri: propertyLivingroomImage,
+                    type: 'image/' + array[1],
+                    name: 'someName',
+                });
 
-    //             var array = propertyKitchenImage.split(".");
+                var array = propertyKitchenImage.split(".");
 
-    //             postingData.append("propertyImages", {
-    //                 uri: propertyKitchenImage,
-    //                 type: 'image/' + array[1],
-    //                 name: 'someName',
-    //             });
+                postingData.append("propertyImages", {
+                    uri: propertyKitchenImage,
+                    type: 'image/' + array[1],
+                    name: 'someName',
+                });
 
-    //             if(propertyFloorplanImage!= null){
-    //                 var array = propertyFloorplanImage.split(".");
-    //                 postingData.append("propertyImages", {
-    //                     uri: propertyFloorplanImage,
-    //                     type: 'image/' + array[1],
-    //                     name: 'someName',
-    //                 });
-    //             }
+                if(propertyFloorplanImage!= null){
+                    var array = propertyFloorplanImage.split(".");
+                    postingData.append("propertyImages", {
+                        uri: propertyFloorplanImage,
+                        type: 'image/' + array[1],
+                        name: 'someName',
+                    });
+                }
 
 
-    //             postingData.append("price", propertyPrice);                     //String 
-    //             postingData.append("description", propertyDescription);         //String 
-    //             postingData.append("availableFrom", propertydateFrom.getTime());          //String
-    //             postingData.append("availableTo", propertydateTo.getTime());              //String
-    //             postingData.append("bed", propertyNumBed);                      //String
-    //             postingData.append("bath", propertyNumBath);                    //String 
-    //             postingData.append("title", "Name");                    //String
-    //             // postingData.append("propertyAmenities", propertyAmenities);     //Array of String 
-    //             postingData.append("timePosted", new Date())
-    //             propertyAmenities.forEach(element => {
-    //                 postingData.append("amenities", element);
-    //             });
+                postingData.append("price", propertyPrice);                     //String 
+                postingData.append("description", propertyDescription);         //String 
+                postingData.append("availableFrom", propertydateFrom.getTime());          //String
+                postingData.append("availableTo", propertydateTo.getTime());              //String
+                postingData.append("bed", propertyNumBed);                      //String
+                postingData.append("bath", propertyNumBath);                    //String 
+                postingData.append("title", "Name");                    //String
+                // postingData.append("propertyAmenities", propertyAmenities);     //Array of String 
+                postingData.append("timePosted", new Date())
+                propertyAmenities.forEach(element => {
+                    postingData.append("amenities", element);
+                });
                
-    //             postingData.append("availabilityFlexibility", true);
+                postingData.append("availabilityFlexibility", true);
                
-    //             if(propertySecurityDeposit != null && propertySecurityDeposit != undefined){
-    //                 postingData.append("securityDeposit", propertySecurityDeposit);
-    //             }
+                if(propertySecurityDeposit != null && propertySecurityDeposit != undefined){
+                    postingData.append("securityDeposit", propertySecurityDeposit);
+                }
 
 
             
               
-    //                 fetch('https://crib-llc.herokuapp.com/properties', {
-    //                     method: 'POST',
-    //                     headers: {
-    //                         Accept: 'application/json',
-    //                         'Content-Type': 'multipart/form-data',
-    //                         'Authorization': 'bearer ' + accessToken
-    //                     },
-    //                     body: postingData,
-    //                 })
-    //                 .then(async (response) => {
-    //                     if(response.status == 200){
-    //                         try{
-    //                             await EncryptedStorage.removeItem("postedProperty")
-    //                         }
-    //                         catch{
-    //                         }
-    //                     }
-    //                     else{
-    //                         setLoading(false)
-    //                         navigation.goBack()
-    //                         alert("An error occured. Please try again later!")
-    //                     }
+                    fetch('https://crib-llc.herokuapp.com/properties', {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'multipart/form-data',
+                            'Authorization': 'bearer ' + accessToken
+                        },
+                        body: postingData,
+                    })
+                    .then(async (response) => {
+                        if(response.status == 200){
+                            try{
+                                await EncryptedStorage.removeItem("postedProperty")
+                            }
+                            catch{
+                            }
+                        }
+                        else{
+                           
+                            navigation.reset(
+                                {index: 0 , routes: [{ name: 'ProfileTabs'}]}
+                            )
+                            alert("An error occured. Please try again later!")
+                        }
                        
-    //                 })
-    //                 .catch(e => {
-    //                     setLoading(false)
-    //                     navigation.goBack()
-    //                     alert(e)
-    //                 })
+                    })
+                    .catch(e => {
+                        setLoading(false)
+                        navigation.reset(
+                            {index: 0 , routes: [{ name: 'ProfileTabs'}]}
+                        )
+                        alert(e)
+                    })
 
-    //                 setTimeout(()=>{
-    //                     navigation.goBack()
-    //                 },1500)
+                    setTimeout(()=>{
+                        navigation.goBack()
+                    },1000)
                 
                
-    //         }
-    //     }
-    //     catch{
-    //         console.log("PROPERTYPOSTING");
-    //     }
-    // }
+            }
+        }
+        catch{
+            console.log("PROPERTYPOSTING");
+        }
+    }
 
     async function selectGallery(name) {
         ImagePicker.openPicker({
@@ -645,7 +650,7 @@ async function testScraped(){
             else if (name == "Kitchen") {
                 setPropertyKitchenImage(image.path);
             }
-            else if (name == "Floor Plan") {
+            else if (name == "Floor Plan (Optional)") {
                 setPropertyFloorPlanImage(image.path);
             }
 
@@ -656,10 +661,10 @@ async function testScraped(){
 
     async function editImageGalleryInReview(name){
         ImagePicker.openPicker({
-            width: 600,
-            height: 600,
+            width: 800,
+            height: 800,
             cropping:true,
-            compressImageQuality: 0.7
+            compressImageQuality: 0.8
             
           }).then(image => {
             setHeaderImage(image.path);
@@ -758,11 +763,11 @@ async function testScraped(){
 
     async function exitAlert(){
         Alert.alert(
-            'Do you want to exit?',
-            'You information will not be exit.',
+            'Exit?',
+            `You're just ${11-scrollviewIndex} steps away!`,
             [
               {text: 'No', onPress: () => {}, style: 'cancel'},
-              {text: 'Delete', onPress: () => deletePropertyRequest(), style: 'destructive'},
+              {text: 'Exit', onPress: () => moveScrollView(-1), style: 'destructive'},
             ],
             { 
               cancelable: true 
@@ -781,7 +786,7 @@ async function testScraped(){
                     <ReviewButtonContainer hitSlop={WIDTH*0.025} >
                        
                     </ReviewButtonContainer>
-                    <ExitButtonContainer hitSlop={WIDTH*0.025} onPress={() => moveScrollView(-1)}>
+                    <ExitButtonContainer hitSlop={WIDTH*0.025} onPress={() => {console.log(scrollviewIndex), scrollviewIndex >= 2 ? exitAlert() : moveScrollView(-1)}}>
                         <ExitButtonText>Exit</ExitButtonText>
                     </ExitButtonContainer>
                 </ButtonContainer>
@@ -1262,11 +1267,11 @@ async function testScraped(){
                                 </View>
                             </ReviewSectionContainer>
                            
-                            <SearchInput style={{backgroundColor:'white', color:'black'}}placeholderTextColor='white' 
+                            {/* <SearchInput style={{backgroundColor:'white', color:'black'}}placeholderTextColor='white' 
                             // onEndEditing={SelectLocationOutSequence}
 
-                                value={title} onChangeText={(value) => setTitle(value)} placeholder="Location..." />
-                                 <View style={{height: HEIGHT, width: WIDTH}}/>
+                                value={title} onChangeText={(value) => setTitle(value)} placeholder="Location..." /> */}
+                                 <View style={{height: HEIGHT*0.3, width: WIDTH}}/>
 
                         </ScrollView>
                         {/* <Footer>
@@ -1291,7 +1296,7 @@ async function testScraped(){
 
                 <NextContainer>
                     {(scrollviewIndex == 0 || scrollviewIndex == 10) ?
-                    <ContinueButton loading={loading} disabled={loading} hitSlop={WIDTH*0.05} onPress={() => {scrollviewIndex == 10 ? testScraped() : moveScrollView(scrollviewIndex + 1)}}>
+                    <ContinueButton loading={loading} disabled={loading} hitSlop={WIDTH*0.05} onPress={() => {scrollviewIndex == 10 ? postproperty() : moveScrollView(scrollviewIndex + 1)}}>
                         <ContinueText>
                             {scrollviewIndex == 0 ? "Start" :  loading ? 
                             <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.1, height: WIDTH*0.1, }}/>

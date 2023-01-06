@@ -58,10 +58,9 @@ export default function ProfileTab(){
           // You can return any component that you like here!
           return <Ionicons name={iconName} size={30} color={color} />;
         },
-        tabBarLabelStyle: ({ focused}) =>{
-          fontWeight= '500',
-          color = focused ? PRIMARYCOLOR : '#A9A9A9'
-        },
+        tabBarLabel: ({focused, color, size}) => (
+          <Text style={{color: focused ? PRIMARYCOLOR : '#A9A9A9', fontSize: 10, fontWeight:'500'}}>{route.name}</Text>
+        ),
         headerShown: false,
         
       })}
