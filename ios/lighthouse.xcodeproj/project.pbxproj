@@ -18,6 +18,7 @@
 		5D4F31AE292B342400AEE091 /* Crib180Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D4F31AB292B342400AEE091 /* Crib180Icon.png */; };
 		5D4F31AF292B342400AEE091 /* Crib120Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D4F31AC292B342400AEE091 /* Crib120Icon.png */; };
 		5D4F31B1292B34B900AEE091 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D4F31B0292B34B900AEE091 /* logo.png */; };
+		5DD4F91929905E5800F8DDAF /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DD4F91829905E5800F8DDAF /* StoreKit.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B1C384E1289C497B00B4D85F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C384E0289C497B00B4D85F /* NotificationService.swift */; };
 		B1C384E5289C497B00B4D85F /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B1C384DE289C497A00B4D85F /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -73,6 +74,7 @@
 		5D4F31AB292B342400AEE091 /* Crib180Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Crib180Icon.png; sourceTree = "<group>"; };
 		5D4F31AC292B342400AEE091 /* Crib120Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Crib120Icon.png; sourceTree = "<group>"; };
 		5D4F31B0292B34B900AEE091 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		5DD4F91829905E5800F8DDAF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5DE61C0828B30C8A0023B7DA /* EBGaramond-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "EBGaramond-Bold.ttf"; path = "../../assets/fonts/EBGaramond-Bold.ttf"; sourceTree = "<group>"; };
 		5DE61C0A28B30C8A0023B7DA /* EBGaramond-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "EBGaramond-ExtraBold.ttf"; path = "../../assets/fonts/EBGaramond-ExtraBold.ttf"; sourceTree = "<group>"; };
 		5DE61C0B28B30C8A0023B7DA /* EBGaramond-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "EBGaramond-Medium.ttf"; path = "../../assets/fonts/EBGaramond-Medium.ttf"; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1103ABC5E42C8475F344875B /* libPods-lighthouse.a in Frameworks */,
+				5DD4F91929905E5800F8DDAF /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +166,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5DD4F91829905E5800F8DDAF /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				2E88BCA15638954AFC6A3BC2 /* libPods-OneSignalNotificationServiceExtension.a */,
 				24A5D7B00C7B5BA3EE635654 /* libPods-lighthouse.a */,
@@ -366,22 +370,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				5DE61C1728B30C8A0023B7DA /* EBGaramond-Regular.ttf in Resources */,
-				5DE61C2D28B549490023B7DA /* Roboto-Light.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				5D4F31AE292B342400AEE091 /* Crib180Icon.png in Resources */,
 				5D4F31B1292B34B900AEE091 /* logo.png in Resources */,
 				5D4F31AF292B342400AEE091 /* Crib120Icon.png in Resources */,
-				5DE61C2E28B549490023B7DA /* Roboto-Bold.ttf in Resources */,
-				5DE61C1528B30C8A0023B7DA /* EBGaramond-Medium.ttf in Resources */,
-				5DE61C1228B30C8A0023B7DA /* EBGaramond-Bold.ttf in Resources */,
-				5DE61C1828B30C8A0023B7DA /* EBGaramond-SemiBold.ttf in Resources */,
 				5D4F31AD292B342400AEE091 /* Crib20124Icon.png in Resources */,
-				5DE61C3128B549490023B7DA /* Roboto-Regular.ttf in Resources */,
-				5DE61C2F28B549490023B7DA /* Roboto-Thin.ttf in Resources */,
-				5DE61C3028B549490023B7DA /* Roboto-Black.ttf in Resources */,
-				5DE61C1428B30C8A0023B7DA /* EBGaramond-ExtraBold.ttf in Resources */,
-				5DE61C2C28B549490023B7DA /* Roboto-Medium.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -673,7 +666,7 @@
 				DEVELOPMENT_TEAM = R26A35UA9U;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = lighthouse/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -702,7 +695,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R26A35UA9U;
 				INFOPLIST_FILE = lighthouse/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

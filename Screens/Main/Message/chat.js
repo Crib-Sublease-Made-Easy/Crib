@@ -23,6 +23,7 @@ import { ifIphoneX , getBottomSpace} from 'react-native-iphone-x-helper'
 
 import FastImage from 'react-native-fast-image'
 
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import PropertyOptionsModal from './PropertyOptions';
 
@@ -104,7 +105,7 @@ export default function ChatScreen({navigation, route}){
     }
     const onSend = useCallback(async (messages = []) => {
       setSending(true)
-      const accessToken = await SecureStorage.getItem("accessToken");
+      
 
       const params = new sb.UserMessageParams();
       params.message = messages[0].text;
@@ -115,15 +116,19 @@ export default function ChatScreen({navigation, route}){
         }
         else if(groupChannel.members.length ==2){
           await groupChannel.markAsRead()
-          groupChannel.sendUserMessage(params, function(message, error) {
+          groupChannel.sendUserMessage(params, async function(message, error) {
             if (error) {
               console.log("ERROR CHANNEL 2")
               console.log(error)
             }else{
             // The message is successfully sent to the channel.
             // The current user can receive messages from other users through the onMessageReceived() method of an event handler.
-              // console.log("Message was successfully sent")
+              console.log("Message was successfully sent")
+              console.log(accessToken)
+              const accessToken = await EncryptedStorage.getItem("accessToken")
+              console.log(accessToken)
               if(accessToken != null){
+                console.log("SENTEDDDDD")
                 fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
                 method: 'POST',
                 headers: {
@@ -138,6 +143,8 @@ export default function ChatScreen({navigation, route}){
                     senderId: USERID,
                     message: messages[0].text
                 })
+                }).then(res => {
+                  console.log("RESPONSEEEEEEEEEEEEEEEEEEE",res.status);
                 })
               }
           }

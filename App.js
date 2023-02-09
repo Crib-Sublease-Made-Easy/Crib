@@ -112,7 +112,9 @@ OneSignal.promptForPushNotificationsWithUserResponse(async response => {
   // console.log(deviceState)
   try{
     const cacheOneSignalID = await EncryptedStorage.getItem("oneSignalUserID");
+    console.log("Geting OneSignal IDDDDDDDDD", deviceState.userId)
     if (deviceState.userId != cacheOneSignalID && deviceState != null){
+      
       await EncryptedStorage.setItem("oneSignalUserID", deviceState.userId);
     }
   }

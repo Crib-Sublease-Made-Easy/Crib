@@ -31,12 +31,11 @@ export const MessageInput = styled.TextInput`
 export const PreviewContainer = styled.Pressable`
     padding-vertical: ${HEIGHT*0.015}px;
     width: ${WIDTH}px
-   
     flex-direction: row
     padding-horizontal: ${WIDTH*0.05}px
 `
 
-export const PreviewInfoContainer = styled.Pressable`
+export const PreviewInfoContainer = styled.View`
     padding-left: ${WIDTH*0.025}px
     width: ${WIDTH*0.8}px
 `

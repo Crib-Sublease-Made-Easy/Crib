@@ -30,7 +30,7 @@ import { Section, TypeLocationContainer, TypeLocationFavoriteContainer ,CardSect
            BedTopContainer, BedNumberText, BedroomNameText, TenantNameText, InfoHeaderTextAndCenter,
            StickyHeaderContainer,  StickyHeaderIcon, BedBathDateContainer, BedBathText, DescriptionText, DistanceText, RowContainer, TenantInformationContainer, TenantProfileImageContainr, TenantNameScollOccupationContainer, AmenitiesContainer} from './discoverPDStyle'
 import { FlatList } from 'react-native-gesture-handler';
-import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack,  MEDIUMGREY, DARKGREY } from '../../../sharedUtils';
+import { LIGHTGREY , GetAmenitiesIcon, PRIMARYCOLOR, GetFAIconsInBlack,  MEDIUMGREY, DARKGREY, EXTRALIGHT } from '../../../sharedUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faBath, faBed, faEye, faFire, faFireFlameCurved, faFireFlameSimple } from '@fortawesome/free-solid-svg-icons';
 
@@ -44,6 +44,7 @@ import Lottie from 'lottie-react-native';
 
 export default function PropertyDetailScreen({navigation, route}){
     useEffect(()=>{
+
         const unsubscribe = navigation.addListener('focus', () => {
             onChat = false 
         });
@@ -61,7 +62,7 @@ export default function PropertyDetailScreen({navigation, route}){
     const [flatlistIndex, setFlatlistIndex] = useState(0)
     const [liked, setLiked]  = useState()
     const [ownProperty, setOwnProperty] = useState(!route.params.scraped && route.params.data.propertyInfo.postedBy == USERID)
-
+    const [scrapedProfilePic, setScrapedProfiePic] = useState(true)
     
     const createConversation = async () =>{
         if(USERID == null){
@@ -123,6 +124,7 @@ export default function PropertyDetailScreen({navigation, route}){
     }
 
     async function getTokens(){
+     
         try{
             const accessToken = await EncryptedStorage.getItem("accessToken");
             
@@ -400,7 +402,14 @@ export default function PropertyDetailScreen({navigation, route}){
                     <Subheading>Tenant Information:</Subheading>
                     <TenantInformationContainer>
                         <TenantProfileImageContainr style={{height:WIDTH*0.2, width:WIDTH*0.2,}}>
+                            { !Image.prefetch(propData.title.split("+")[3]) ? 
+                            
                             <Image source={{uri:propData.title.split("+")[3]}} style={{height:WIDTH*0.2, width:WIDTH*0.2, borderRadius:WIDTH*0.1, backgroundColor:LIGHTGREY,  }}/>
+                            :
+                            <View style={{height:WIDTH*0.2, width:WIDTH*0.2, justifyContent:'center', alignItems:'center', backgroundColor: EXTRALIGHT, borderRadius: WIDTH*0.1}}>
+                                <Ionicons name='person' size={25}/>
+                            </View>
+                            }
                         </TenantProfileImageContainr>
                         <TenantNameScollOccupationContainer>
                             <TenantNameText>{propData.title.split("+")[0]}</TenantNameText>
