@@ -157,7 +157,7 @@ const NumberOfPropertiesText = styled.Text`
 `
 
 
-export default function PropertyCard({navigation, setSelectedPin, loadMoreProperties,
+export default function PropertyCard({onOpen, navigation, setSelectedPin, loadMoreProperties,
     filteredPropertiesData, flatlistRefreshing, length, moveMap, openPreviewCard, userId,
     searching, currentLocation, loading
    
@@ -334,7 +334,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
       }]}>
         <DragGreyLineContainer>
           <NumberOfPropertiesText>
-            Search results
+          {length != 0 && length != undefined && onOpen == false ? `${length} properties found` : `Search results`}
           </NumberOfPropertiesText>
         </DragGreyLineContainer>
         {/* {flatlistRefreshing ?

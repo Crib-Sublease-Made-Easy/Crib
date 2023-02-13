@@ -100,6 +100,10 @@ export default function DiscoverScreen({navigation}){
         }
       }
 
+    // this keeps track of whether the discover page was just opened
+    // the variable is later used in a way such that the 'Search results' tag is only changed when the user
+    // searches for properties in a location 
+    const [onOpen, setOnOpen] = useState(true)
     //Reference to the MapView
     const mapRef = useRef(null)
     //This controls preview modal open opacity when the location icon in propertycard is pressed
@@ -413,6 +417,7 @@ export default function DiscoverScreen({navigation}){
                 if(response.status == 200 || response.status == 201){
                     let lat = response.data.lat;
                     let long = response.data.lng;
+                    setOnOpen(false)
                     setCurrentLocation([lat,long])
                     moveMap(lat - 0.005, long)
                 }
@@ -647,7 +652,7 @@ export default function DiscoverScreen({navigation}){
                 <View style={{width:WIDTH, height:HEIGHT*0.05}}/>
 
                 {/* Property Cards*/}       
-                <PropertyCard index={0} navigation={navigation} length={pinsData.length} userId={USERID}
+                <PropertyCard onOpen={onOpen} index={0} navigation={navigation} length={pinsData.length} userId={USERID}
                 loadMoreProperties={loadMoreProperties} filteredPropertiesData={filteredProperties} 
                 flatlistRefreshing={flatlistRefreshing} mapRef={mapRef} onMarkerClick={onMarkerClick} currentLocation={currentLocation} moveMap={moveMap}
                 setSelectedPin={setSelectedPin} openPreviewCard={openPreviewCard} locationQuery={locationQuery} searching={searching} loading={loading}/>
