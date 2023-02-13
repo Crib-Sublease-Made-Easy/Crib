@@ -97,12 +97,15 @@ export default function DiscoverScreen({navigation}){
         }
       }
 
+    
+    
     //Reference to the MapView
     const mapRef = useRef(null)
     //This controls preview modal open opacity when the location icon in propertycard is pressed
     const opacityTranslation = useRef(new RNAnimated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
-    const [currentLocation, setCurrentLocation] = useState([43.0747,89.3840])
+    // const lastSearchedLoc = await SecureStorage.getItem('lastSearchLoc')
+    const [currentLocation, setCurrentLocation] = useState([43.0747, 89.3840])
     //The location of the user input in string
     const [locationQuery, setlocationQuery] = useState("Search Location ...")
     //The data of the pins to acess a field its pinsData.item.field
@@ -146,6 +149,42 @@ export default function DiscoverScreen({navigation}){
     //Toggle the screen when searchbar is onPress
     const [discoverSearchVisible, setDiscoverSearchVisible] = useState(false)
 
+    const getCurrLoc = async () => {
+        const loc = await SecureStorage.getItem("lastLoc");
+        if (loc != undefined) {
+          try {
+            console.log("found lastLOC")
+            console.log(loc)
+            // selectCurrentLocation(loc.replaceAll("+", " "))
+            var config = {
+                method: 'get',
+                url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${loc}`,
+            };
+            axios(config)
+            .then(async (response)=> {  
+                let lat = response.data.lat;
+                let long = response.data.lng; 
+                console.log(lat, long)
+                setCurrentLocation([lat, long])
+                moveMap(lat,long)
+            })
+            .catch(function (error) {
+                
+                console.log(error);
+            });
+          } catch (err) {
+            // Handle error.
+            console.log("ERROR in getting last searched location",err)
+          }
+        }
+      }
+
+    // If last searched location was saved getCurrLoc() will trigger the next useEffect 
+    // as a result, when the user opens the app, the last searched location will be bought up.
+    useEffect(() => {
+        getCurrLoc()
+    },[])
+
     useEffect(()=>{
         setFlatlistRefreshing(true)
         //Loading initial batch of properties
@@ -166,7 +205,7 @@ export default function DiscoverScreen({navigation}){
         };
     },[currentLocation])
 
-
+    
     function dateCompare(date1, date2){
         let d1 = date1
         let d2 = date2
@@ -335,6 +374,7 @@ export default function DiscoverScreen({navigation}){
                 s = s + "&" + amen + "=true";
             }
         }
+        
         s = s + `&latitude=${lat}`
         s = s + `&longitude=${long}`
         s = s + `&priceHigh=${price}`
@@ -384,20 +424,24 @@ export default function DiscoverScreen({navigation}){
     //Empty the autocomplete locations 
     //setSearching to false so to shrink the header
     //Dismiss keyboard
-    function selectCurrentLocation(locationQueryName){
+    async function selectCurrentLocation(locationQueryName){
         if (locationQueryName != ""){
             setlocationQuery(locationQueryName)
             setSearching(false)
+
+            
             let spacelessLocation = locationQueryName.replaceAll(" ", "+");
+            await SecureStorage.setItem('lastLoc', spacelessLocation)
             var config = {
                 method: 'get',
                 url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${spacelessLocation}`,
             };
             axios(config)
-            .then(async (response)=> {           
-                console.log(JSON.stringify(response))
+            .then(async (response)=> {  
                 let lat = response.data.lat;
-                let long = response.data.lng;
+                let long = response.data.lng; 
+                console.log(JSON.stringify(response))
+                
                 setCurrentLocation([lat,long])
                 moveMap(lat - 0.015, long)
             })
