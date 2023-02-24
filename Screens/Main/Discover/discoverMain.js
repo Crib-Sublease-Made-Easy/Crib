@@ -23,7 +23,9 @@ const Tab = createBottomTabNavigator();
 
 
 
-export default function DiscoverTab(){
+export default function DiscoverTab({navigation, route}){
+
+  // console.log(route.params.LastSearched)
     return(
 
     <Tab.Navigator 
@@ -60,6 +62,7 @@ export default function DiscoverTab(){
       >
         
         <Tab.Screen name="Discover" component={DiscoverScreen}
+        initialParams={{ LastSearchedLocation:  route?.params?.LastSearchedLocation == undefined ? undefined :  route.params.LastSearchedLocation, LastSearched: route?.params?.LastSearched == undefined ? [43.0747,-89.3840] : [route.params.LastSearched.split(",")[0],route.params.LastSearched.split(",")[1]]}}
         options={({ route }) => ({
           tabBarStyle: ((route) => {
               const routeName = getFocusedRouteNameFromRoute(route) ?? ""

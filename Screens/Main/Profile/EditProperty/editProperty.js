@@ -17,9 +17,8 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY} from '../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+// FontAwesome.loadFont()
 
 import ImagePicker from 'react-native-image-crop-picker';
 
@@ -204,14 +203,34 @@ export default function EditPropertyScreen({navigation, route}){
               }},
               {text: 'Yes', onPress: () => {
                 setSuccess(false);
+
                 deletePropertyRequest();
               }}
             ]
           );  
     }
     async function deletePropertyRequest(){
-        
+
         const accessToken = await EncryptedStorage.getItem("accessToken");
+
+        console.log("ACCESS TOKEN ", accessToken, " PROPID ", propID)
+        await fetch('https://crib-llc.herokuapp.com/properties/internal/subleased', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
+            },
+            body:JSON.stringify({
+                propId: propID
+            })
+        }).then(async res => {
+           
+        })
+        .catch((error) => {
+            console.log("ERROR in registered sublease")
+        });
+        
         await fetch('https://crib-llc.herokuapp.com/properties/' + propID, {
             method: 'DELETE',
             headers: {

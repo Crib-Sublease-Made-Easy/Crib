@@ -21,6 +21,8 @@ var axios = require('axios');
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 import {PRIMARYCOLOR, WIDTH, HEIGHT, IconPressable, DARKGREY,} from '../../../sharedUtils.js';
 
 export default function DiscoverSearchScreen({navigation, route, open, close, selectCurrentLocation}){
@@ -66,6 +68,11 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
   //3. Set the current location to retrive properties and pins
   //4. Close current screen and go back to discover page
   async function pressAutocompleteItem(value){
+    try{
+      await EncryptedStorage.setItem("lastSearchedLocation", value)
+    }
+    catch{
+    }
     setLocationQuery(value)
     setautocompleteLocation([])
     selectCurrentLocation(value)
@@ -107,7 +114,7 @@ export default function DiscoverSearchScreen({navigation, route, open, close, se
 
           <View style={{marginTop: HEIGHT*0.025}}>
           {autocompleteLocation.length != 0 && autocompleteLocation.map((value, index)=>(
-                  <AutocompleteResultItems key={"autocomplete" + value.description + index}  hitSlop={WIDTH*0.05} onPress={()=>pressAutocompleteItem(value.description)}>
+                  <AutocompleteResultItems key={"autocomplete" + value.description + index} onPress={()=>pressAutocompleteItem(value.description)}>
 
                       <Ionicons name="navigate-circle-outline" size={25} color= {PRIMARYCOLOR} style={{width: WIDTH*0.1}}/>
                       <View>

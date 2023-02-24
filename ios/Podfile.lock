@@ -315,6 +315,8 @@ PODS:
     - React-Core
   - react-native-maps (0.31.1):
     - React-Core
+  - react-native-notifications (4.3.3):
+    - React-Core
   - react-native-onesignal (4.4.0):
     - OneSignalXCFramework (= 3.11.2)
     - React (< 1.0.0, >= 0.13.0)
@@ -513,6 +515,7 @@ DEPENDENCIES:
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
+  - react-native-notifications (from `../node_modules/react-native-notifications`)
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
@@ -616,6 +619,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-notifications:
+    :path: "../node_modules/react-native-notifications"
   react-native-onesignal:
     :path: "../node_modules/react-native-onesignal"
   react-native-safe-area-context:
@@ -714,6 +719,7 @@ SPEC CHECKSUMS:
   react-native-geolocation: 69f4fd37650b8e7fee91816d395e62dd16f5ab8d
   react-native-image-picker: cffb727cf2f59bd5c0408e30b3dbe0b935f88835
   react-native-maps: 8b8bfada2c86205a7f5a07dd1f92f29b33ea83aa
+  react-native-notifications: 83b4fd4a127a6c918fc846cae90da60f84819e44
   react-native-onesignal: dd51f7c4771983f0169a6f06df12a4cf096ca28e
   react-native-safe-area-context: b456e1c40ec86f5593d58b275bd0e9603169daca
   react-native-slider: cecabb58ecffad671d2ad3ccc58c7f4d2d029e95

@@ -38,8 +38,7 @@ import Lottie from 'lottie-react-native';
 
 
 import { HEIGHT, WIDTH, MEDIUMGREY, LIGHTGREY, DARKGREY, EXTRALIGHT, PRIMARYCOLOR } from '../../../sharedUtils';
-import { SystemMessage } from 'react-native-gifted-chat';
-import { useScrollToTop } from '@react-navigation/native';
+
 
 const CardContainer = styled(Pressable)`
 width: ${WIDTH*0.9}px
@@ -159,7 +158,7 @@ const NumberOfPropertiesText = styled.Text`
 
 export default function PropertyCard({navigation, setSelectedPin, loadMoreProperties,
     filteredPropertiesData, flatlistRefreshing, length, moveMap, openPreviewCard, userId,
-    searching, currentLocation, loading
+    searching, currentLocation, loading, 
    
 }){
     const flatListItemOpacity = useRef(new RNAnimated.Value(0)).current;
@@ -334,7 +333,7 @@ export default function PropertyCard({navigation, setSelectedPin, loadMoreProper
       }]}>
         <DragGreyLineContainer>
           <NumberOfPropertiesText>
-            Search results
+            {length} Subleases found
           </NumberOfPropertiesText>
         </DragGreyLineContainer>
         {/* {flatlistRefreshing ?

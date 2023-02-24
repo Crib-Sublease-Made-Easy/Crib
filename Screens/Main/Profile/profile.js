@@ -127,7 +127,6 @@ export default function ProfileScreen({navigation}){
             try{
                 cachedProfilePic = await AsyncStorage.getItem("profilePic");
                 let cachedFirstName = await EncryptedStorage.getItem("firstName");
-                console.log("LLLLLLLLLLLLLLLLLLLLL", cachedFirstName)
                 setFirstName(cachedFirstName)
                 if(cachedProfilePic != null){
                     setProfilePic(cachedProfilePic)

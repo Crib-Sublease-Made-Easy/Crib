@@ -124,11 +124,9 @@ export default function ChatScreen({navigation, route}){
             // The message is successfully sent to the channel.
             // The current user can receive messages from other users through the onMessageReceived() method of an event handler.
               console.log("Message was successfully sent")
-              console.log(accessToken)
+             
               const accessToken = await EncryptedStorage.getItem("accessToken")
-              console.log(accessToken)
               if(accessToken != null){
-                console.log("SENTEDDDDD")
                 fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
                 method: 'POST',
                 headers: {
@@ -144,7 +142,6 @@ export default function ChatScreen({navigation, route}){
                     message: messages[0].text
                 })
                 }).then(res => {
-                  console.log("RESPONSEEEEEEEEEEEEEEEEEEE",res.status);
                 })
               }
           }
@@ -204,8 +201,7 @@ export default function ChatScreen({navigation, route}){
     }
 
     const getPropertyInfo = async (propId, gc) =>{
-      console.log("getpropertyinfo" , propId)
-      console.log("getpropertyinfo" , gc)
+
       await fetch('https://crib-llc.herokuapp.com/properties/' + propId, {
         method: 'POST',
         headers: {

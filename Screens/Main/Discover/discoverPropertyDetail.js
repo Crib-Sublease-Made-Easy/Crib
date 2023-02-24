@@ -71,12 +71,33 @@ export default function PropertyDetailScreen({navigation, route}){
         }
         else if(propData.postedBy== null){
             
+            
             let url = `${route.params.data.propertyInfo.title.split("+")[4]}`
+            let at = await EncryptedStorage.getItem("accessToken")
             const supported = await Linking.canOpenURL(url);
-            console.log(supported)
+    
             if (supported) {
             // Opening the link with some app, if the URL scheme is "http" the web link should be opened
             // by some browser in the mobile
+            
+                fetch('https://crib-llc.herokuapp.com/properties/internal/contact/fb', {
+                    method: 'POST',
+                    headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + at,
+                    },
+                    body: JSON.stringify({
+                        propId: route.params.data.propertyInfo._id,
+                        time: new Date(),
+                        userId: USERID
+                    })
+                    })
+                    // .then(res => console.log(res.status)) 
+                    .catch(e=>{
+                        alert("fuck")
+                    })
+            
             try{
                 await Linking.openURL(url);
             }

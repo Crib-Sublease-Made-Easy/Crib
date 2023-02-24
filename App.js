@@ -64,6 +64,8 @@ import EditPropertyAmenitiesScreen from './Screens/Main/Profile/EditProperty/Edi
 import PostedPropertyScreen from './Screens/Main/Profile/postedProperty';
 import FavoritePropertyScreen from './Screens/Main/Profile/favProperty';
 
+import LoadingScreen from './LoadingScreen';
+
 //Message
 import MessageTab from './Screens/Main/Message/message.js';
 
@@ -94,10 +96,11 @@ export default function App() {
 
   const [sendBirdConnected, setSendbirdConnection] = useState(false)
   const [preloadProperties, setPreloadProperties] = useState([])
-
+  const [lastSearchedCoor, setLastSearchedCoor] = useState()
 
 
   const sb = new SendBird({ appId: appId});   // The `localCacheEnabled` is optional. The default is false.
+
 
 
 
@@ -112,7 +115,6 @@ OneSignal.promptForPushNotificationsWithUserResponse(async response => {
   // console.log(deviceState)
   try{
     const cacheOneSignalID = await EncryptedStorage.getItem("oneSignalUserID");
-    console.log("Geting OneSignal IDDDDDDDDD", deviceState.userId)
     if (deviceState.userId != cacheOneSignalID && deviceState != null){
       
       await EncryptedStorage.setItem("oneSignalUserID", deviceState.userId);
@@ -209,8 +211,8 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     catch{
       console.log("ERROR --- APP.JS --- DISCONNECT")
     }
-    
   }
+
 
   const connectSendbird = async (UID) => {
     setUser(UID)
@@ -310,9 +312,16 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   return (
 
     <NavigationContainer>
-      <UserContext.Provider value={{ login, logout, sb, USERID: user, preloadProperties: preloadProperties}}>
+      <UserContext.Provider value={{ login, logout, sb, USERID: user, preloadProperties: preloadProperties, lastSearchedCoor: lastSearchedCoor}}>
 
           <Stack.Navigator>
+
+            <Stack.Screen
+            name="PreloadData"
+            component={LoadingScreen}
+            options={{headerShadowVisible: false,cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter, headerShown:false}}
+            />
+
 
             <Stack.Screen
               name="DiscoverTabs"

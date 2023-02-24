@@ -28,6 +28,8 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import Modal from "react-native-modal";
+
 
 
 //Style components 
@@ -54,13 +56,14 @@ import {
 } from './discoverStyle';
 
 //Gesture Handler to control propertycard
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {GestureHandlerRootView, TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 //React Native Map
 import MapView , { Marker }from 'react-native-maps';
+import NotificationModal from './notificaitonModal';
 
 
-export default function DiscoverScreen({navigation}){
+export default function DiscoverScreen({navigation, route, initialParams}){
 
     const {sb, USERID, preloadProperties} = useContext(UserContext);
 
@@ -99,15 +102,22 @@ export default function DiscoverScreen({navigation}){
             console.log("ERROR --- DISCOVER --- CONNECTSENDBIRD")
         }
       }
-
+     
+    //   30.267153,-97.7430608
     //Reference to the MapView
     const mapRef = useRef(null)
     //This controls preview modal open opacity when the location icon in propertycard is pressed
     const opacityTranslation = useRef(new RNAnimated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
-    const [currentLocation, setCurrentLocation] = useState([43.0747,-89.3840])
+    let lastLocationCoor = route?.params?.LastSearched;
+    let LastSearchedLocation = route?.params?.LastSearchedLocation;
+    const [currentLocation, setCurrentLocation] = useState(lastLocationCoor == undefined ? [43.0747,-89.3840] : [lastLocationCoor[0], lastLocationCoor[1]])
+    // const [currentLocation, setCurrentLocation] = useState([route.params.LastSearched.split[0],route.params.LastSearched.split[1]])
+
+    // const [currentLocation, setCurrentLocation] = useState()
+
     //The location of the user input in string
-    const [locationQuery, setlocationQuery] = useState("Search Location ...")
+    const [locationQuery, setlocationQuery] = useState(LastSearchedLocation == undefined ? "Search Location ..." : LastSearchedLocation)
     //The data of the pins to acess a field its pinsData.item.field
     const [pinsData, setPinsData] = useState([])
     //Toggle to retrieve more properties
@@ -149,7 +159,10 @@ export default function DiscoverScreen({navigation}){
     //Toggle the screen when searchbar is onPress
     const [discoverSearchVisible, setDiscoverSearchVisible] = useState(false)
 
+    const [notifModalVisible, setNotifModalVisible] = useState(false)
+
     useEffect(()=>{
+
         setFlatlistRefreshing(true)
         //Loading initial batch of properties
         loadProperty()
@@ -158,16 +171,24 @@ export default function DiscoverScreen({navigation}){
         //Reset selected pin and preview card visibility
         setPropertyPreviewCard(false)
         setSelectedPin([])
-       
+        // clearData()
         //Disable loading indicator
         let timer1 = setTimeout(() => setFlatlistRefreshing(false), 2000);
         // this will clear Timeout
         // when component unmount like in willComponentUnmount
         // and show will not change to true
+
+        // clearData()
         return () => {
             clearTimeout(timer1);
         };
     },[currentLocation])
+
+    async function clearData (){
+        await EncryptedStorage.removeItem("lastSearchedLocation")
+        await EncryptedStorage.removeItem("lastSearchedCoor")
+    }
+
 
 
     function dateCompare(date1, date2){
@@ -250,8 +271,29 @@ export default function DiscoverScreen({navigation}){
                     imgList.forEach(async element => {
                         await Image.prefetch(element)
                     });
+                    
     
                 });
+
+                //This is when there is no properties in the area and user's notification is not set up 
+                let curTime = new Date();
+                if(properties.length == 0){
+                    let lastNotificationPrompTime = await EncryptedStorage.getItem("notificationPromptTime");
+                    console.log("lastNotificationPrompTime ", lastNotificationPrompTime)
+                    // EncryptedStorage.setItem("notificationPromptTime",new Date(lastNotificationPrompTime).getTime().toString());
+
+
+                    let daysApart = lastNotificationPrompTime == undefined ? null : (curTime.getTime() - lastNotificationPrompTime.toString()) / (1000*60*60*24);
+                   
+                    let device = await OneSignal.getDeviceState();
+                    console.log(daysApart)
+                    if((!device.isSubscribed && daysApart > 0.5) || daysApart == null){
+                       
+                        setNotifModalVisible(true)
+                        EncryptedStorage.setItem("notificationPromptTime",new Date().getTime().toString());
+                    }
+                    // EncryptedStorage.removeItem("notificationPromptTime")
+                }
                 setFilteredProperties(properties)
                 setLoading(false)
             }
@@ -264,6 +306,7 @@ export default function DiscoverScreen({navigation}){
             alert("Error occured")
             console.log("ERROR --- DISCOVER --- loadProperty")
         })
+        
        
     },[currentLocation])
 
@@ -313,12 +356,10 @@ export default function DiscoverScreen({navigation}){
                     setFilteredProperties([...filteredProperties,...properties])
                 }
                 else{
-                    dropDownAlertRef.alertWithType('error', 'Error', "Could not load more properties, please try again later");
                     console.log("ERROR --- DISCOVER --- loadMoreProperties")
                 }
             })
             .catch(e=>{
-                dropDownAlertRef.alertWithType('error', 'Error', "Could not load more properties, please try again later");
                 console.log("ERROR --- DISCOVER --- loadMoreProperties")
             })   
         }   
@@ -371,7 +412,6 @@ export default function DiscoverScreen({navigation}){
             
         })
         .catch(e=>{
-            dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
             console.log("ERROR --- DISCOVER --- retrieveAllPins")
         })
     }
@@ -397,7 +437,9 @@ export default function DiscoverScreen({navigation}){
     //Empty the autocomplete locations 
     //setSearching to false so to shrink the header
     //Dismiss keyboard
-    function selectCurrentLocation(locationQueryName){
+    async function selectCurrentLocation(locationQueryName){
+
+        const deviceState = await OneSignal.getDeviceState();
         
         if (locationQueryName != ""){
             setlocationQuery(locationQueryName)
@@ -405,19 +447,40 @@ export default function DiscoverScreen({navigation}){
             
             let spacelessLocation = locationQueryName;
             var config = {
-                method: 'get',
-                url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${spacelessLocation}`,
+                headers:{
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                // method: 'get',
+                // url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${spacelessLocation}`,
+                // body:JSON.stringify({
+                //     userId: USERID,
+                //     oneSignalID: deviceState.userId
+                // }),
+              
+                
             };
-            axios(config)
-            .then(async (response)=> {           
+
+            axios.get(`https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${spacelessLocation}`,{
+                params: {
+                    oneSignalID: deviceState.userId,
+                    userId: USERID,
+                }
+            }, config)
+            .then(async (response)=> {        
+                console.log(response.status)   
                 if(response.status == 200 || response.status == 201){
                     let lat = response.data.lat;
                     let long = response.data.lng;
+                    let s = lat + "," + long
+                  
+                    await EncryptedStorage.setItem("lastSearchedCoor", s);
+                   
                     setCurrentLocation([lat,long])
                     moveMap(lat - 0.005, long)
                 }
                 else{
-                    dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
+                  
                     console.log("ERROR --- DISCOVER --- selectCurrentLocation")
                 }
             })
@@ -516,12 +579,10 @@ export default function DiscoverScreen({navigation}){
                 setlocationQuery(response.data.formatted_address)
             }
             else{
-                dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
                 console.log("ERROR --- DISCOVER --- updateQueryString")
             }
         })
         .catch(function (error) {
-            dropDownAlertRef.alertWithType('error', 'Error', "Please try again later.");
             console.log("ERROR (CATCH) --- DISCOVER --- updateQueryString")
         });
     }
@@ -538,15 +599,15 @@ export default function DiscoverScreen({navigation}){
                         ref={mapRef}
                         style={{flex:1, position:'relative'}}
                         initialRegion={{
-                        latitude: currentLocation[0], 
-                        longitude: currentLocation[1],
+                        latitude: Number(currentLocation[0]), 
+                        longitude: Number(currentLocation[1]),
                         latitudeDelta: 0.02,
                         longitudeDelta: 0.02,
                         }}
                     >
                         <Marker
                             key={"currentlocationmarker"}
-                            coordinate={{ latitude:currentLocation[0], longitude:currentLocation[1] }}
+                            coordinate={{ latitude:Number(currentLocation[0]), longitude: Number(currentLocation[1]) }}
                             style={{zIndex:1}}
                         ></Marker>
                                 
@@ -668,7 +729,9 @@ export default function DiscoverScreen({navigation}){
 
                 {/* Search screen when the search bar is pressed */}
                 <DiscoverSearchScreen open={discoverSearchVisible} close={()=> setDiscoverSearchVisible(false)} selectCurrentLocation={selectCurrentLocation}/>
-                
+                <TouchableWithoutFeedback>
+                    <NotificationModal notifModalVisible={notifModalVisible} close={()=>setNotifModalVisible(false)}/>
+                </TouchableWithoutFeedback>
             </SafeAreaView>  
         </GestureHandlerRootView>
     )
