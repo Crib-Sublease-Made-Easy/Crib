@@ -39,7 +39,7 @@ export const ImageContainer = styled.View`
 export const NameDateContainer = styled.View`
   
   height: 100%;
-  justify-content: flex-end;
+  justify-content: space-around;
   padding-left: ${WIDTH*0.05}px
 `
 
@@ -400,4 +400,35 @@ export const StyledView = styled.View`
   padding-bottom: ${({ insets }) => insets.bottom}px;
   padding-top: ${({ insets }) => insets.top}px;
 `;
+
+export const CribPremiumPressable = styled.Pressable`
+  flex-direction: row
+  width: ${WIDTH*0.9}px
+  padding-vertical: ${HEIGHT*0.025}px
+  background-color: ${PRIMARYCOLOR}
+  align-self: center
+  border-radius: 10px
+  padding-horizontal: ${WIDTH*0.075}px
+  justify-content: space-between
+  align-items: center
+`
+
+export const CribPremiumPressableLeft = styled.View`
+  flex-direction: column
+`
+
+export const CribPremiumHeaderText = styled.Text`
+  font-size: ${HEIGHT*0.02}px
+  color: white
+  font-weight: 700
+
+`
+export const CribPremiumSubheaderText = styled.Text`
+  font-size: ${HEIGHT*0.015}px
+  font-weight: 500
+  color: white
+  margin-top: ${HEIGHT*0.01}px
+
+`
+
 

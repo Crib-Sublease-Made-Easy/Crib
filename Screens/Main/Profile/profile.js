@@ -8,7 +8,8 @@ import {
   Pressable,
   Animated,
   Share,
-  ActivityIndicator
+  ActivityIndicator,
+  AppState
 } from 'react-native';
 import { UserContext } from '../../../UserContext';
 
@@ -42,21 +43,7 @@ FavContainer,
 PostedText, 
 FavText,  
 DefaultPostFavText, 
-PostedPropertyInfoContainer,
-PropertyName, 
-DatePriceText,PriceEditContainer, 
-EditPropertyPressable, 
-EditText, 
-FavPropertyCard, 
-FavPropertyCardName, 
-FavPropertyCardContent, 
-FavPropertyCardDateText, 
-FavPropertyCardDateContainer, 
-PostedPropertyCard, 
-HeaderIndividualContainer,
-RowContainer, 
-RowItemName,
-ProfileHeading, 
+CribPremiumPressable,
 NoUserViewContainer, 
 LoginContainer, 
 LoginText, 
@@ -69,7 +56,7 @@ ImageContainer,
 NameDateContainer,
 NameText,
 SettingContainer,
-UpgradeContainer,
+CribPremiumHeaderText,
 UpgradeView,
 UpgradeImageContainer,
 UpgradeTextContainer,
@@ -77,13 +64,16 @@ UpgradeTextHeader,
 UpgradeText,
 OptionContainer,
 OptionRow,
-OptionName
+OptionName,
+CribPremiumPressableLeft,
+CribPremiumSubheaderText
 } from './profileStyle';
 
 import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, DARKGREY } from '../../../sharedUtils';
 
 
 export default function ProfileScreen({navigation}){
+    const appState = useRef(AppState.currentState);
     const insets = useSafeAreaInsets();
     const scrollviewRef = useRef(null)
     const {USERID, user} = useContext(UserContext);
@@ -102,19 +92,37 @@ export default function ProfileScreen({navigation}){
     const [loading, setLoading] = useState(false)
 
     const RowOptions = [
+        // {text: 'My Referral Code', icon: 'star'},
         {text: 'Edit Profile', icon: 'create', color: GOOGLEBLUE},
         {text: 'List a Property', icon: 'home', color: PRIMARYCOLOR},
         {text: 'View posted property', icon: 'search', color: 'black'},
         {text: 'View saved property', icon: 'heart', color: '#ed3413'},
+        {text: 'My Referral Code', icon: 'barcode', color: '#ed3413'},
     ]
    
     useEffect(()=>{
-    
         const unsubscribe = navigation.addListener('focus', () => {
-            getTokens()              
+            
+            getTokens()
+            fetchFavoriteProperties()
         });
+
+        const subscription = AppState.addEventListener('change', nextAppState => {
+            if (
+              appState.current.match(/inactive|background/) &&
+              nextAppState === 'active'
+            ) 
+            {
+                
+            }
+            getTokens()
+            appState.current = nextAppState;
+        });
+      
+        return () => {
+        subscription.remove();
+        };
        
-        return unsubscribe; 
     }, [navigation])   
 
     //Retrieve user info for display and cache for later use
@@ -137,13 +145,12 @@ export default function ProfileScreen({navigation}){
             catch{
                 console.log("Error in setting profile pic from cache.")
             }
-
-            if(accessToken != undefined && USERID != undefined){
+            const uid  = await EncryptedStorage.getItem("userId")
+            if(accessToken != undefined && uid != undefined){
                 
                 //Get user favorite properties
-                fetchFavoriteProperties(accessToken)
-                if(accessToken != null && USERID != null){
-                    fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+                if(accessToken != null && uid != null){
+                    fetch('https://crib-llc.herokuapp.com/users/' + uid, {
                     method: 'GET',
                     headers: {
                     Accept: 'application/json',
@@ -152,7 +159,6 @@ export default function ProfileScreen({navigation}){
                     }
                     }) 
                     .then(res => res.json()).then(async userData =>{
-                        
                         setUserData(userData)
                       
                         //Load API data if the cached profile pic is null
@@ -169,7 +175,8 @@ export default function ProfileScreen({navigation}){
                                 console.log("ERROR --- PROFILE --- GETTOKEN")
                             }
                         }
-                        if(userData.postedProperties != undefined){
+                        if(userData.postedProperties != undefined && userData.postedProperties.length >= 1){
+                            console.log(userData.postedProperties.length >= 1)
                             fetchPostedProperties(userData.postedProperties[0], accessToken)
                         }
                     })
@@ -241,7 +248,8 @@ export default function ProfileScreen({navigation}){
     }
 
     //Function: Fetch favorite properties 
-    function fetchFavoriteProperties(token){
+    async function fetchFavoriteProperties(token){
+        token = await EncryptedStorage.getItem("accessToken")
         fetch('https://crib-llc.herokuapp.com/users/favorites/all', {
             method: 'GET',
             headers: {
@@ -288,20 +296,16 @@ export default function ProfileScreen({navigation}){
     }
 
     //Function to post properties, only if user have no properties 
-    async function toPostProperty(userData){
-        try{
-            const cachedPostedProperty = await EncryptedStorage.getItem('postedProperty')
-           
-            if(cachedPostedProperty != undefined){
-                alert("As a regular member, you can only post one property.")
-            }
-            else{
-                navigation.navigate('PropertyPosting')
-            }
+    async function toPostProperty(){
+              
+        if(userData.postedProperties.length > 0){
+            alert("As a regular member, you can only post one property.")
         }
-        catch{
-
+        else{
+            
+            navigation.navigate('PropertyPosting')
         }
+       
        
     }
 
@@ -328,7 +332,7 @@ export default function ProfileScreen({navigation}){
         scrollviewRef.current.scrollTo({x:WIDTH})
     }
 
-    function pressOption(name){
+    async function pressOption(name){
         
         if(name == "Edit Profile"){
             navigation.navigate("ProfileEdit", {userData : userData})
@@ -342,6 +346,12 @@ export default function ProfileScreen({navigation}){
         else if(name == "View saved property"){
             navigation.navigate("FavoriteProperty", {favoriteProperties: favoriteProperties})
         }
+        else if(name == "My Referral Code"){
+            // const at = await EncryptedStorage.getItem("accessToken")
+            // console.log(at)
+            navigation.navigate("MyReferralCode", {userData : userData})
+        }
+      
     }
     return(
         <StyledView style={{backgroundColor:'white', flex: 1}} insets={insets}>
@@ -353,6 +363,11 @@ export default function ProfileScreen({navigation}){
                     <FastImage onLoadStart={()=> setLoading(true)}  onLoadEnd={()=>setLoading(false)} source={{uri: profilePic, priority: FastImage.priority.high}} style={{height:'100%', width:'100%', borderRadius:WIDTH*0.125, position:'absolute'}}/>
                 </ImageContainer>
                 <NameDateContainer>
+                    {userData?.cribPremium?.paymentDetails?.status ?
+                    <NameText style={{color: '#FFD700'}}>Premium Connect</NameText>
+                    :
+                    <NameText style={{color: '#D9D9D9'}}>Regular Member</NameText>
+                    }
                     <NameText>{firstName}</NameText>
                     <JoinedDateText>Joined 2023</JoinedDateText>
                 </NameDateContainer>
@@ -375,7 +390,27 @@ export default function ProfileScreen({navigation}){
                 </UpgradeView>
             </UpgradeContainer> */}
 
-            <View style={{height: HEIGHT*0.05}}/>
+            <View style={{height: HEIGHT*0.03}}/>
+            <CribPremiumPressable  style={{backgroundColor: '#d4af37'}} onPress={(()=>navigation.navigate("CribConnectTenant", {userData: userData}))}>
+                <CribPremiumPressableLeft>
+                    <CribPremiumHeaderText>Crib Connect</CribPremiumHeaderText>
+                    <CribPremiumSubheaderText>Let us do the work! {'\n'}We will find you a reliable {'\n'}tenant so you don't have to.</CribPremiumSubheaderText>
+                </CribPremiumPressableLeft>
+                <Lottie source={require('../../../assets/cribconnecttenantslide3.json')} autoPlay style={{width: WIDTH*0.2}}/>
+
+            </CribPremiumPressable>
+            <View style={{height: HEIGHT*0.015}}/>
+            <CribPremiumPressable onPress={toPostProperty}>
+                <CribPremiumPressableLeft>
+                    <CribPremiumHeaderText>Sublease your room</CribPremiumHeaderText>
+                    <CribPremiumSubheaderText>Stop paying for an empty {'\n'}room so you can spend it {'\n'}somewhere else!</CribPremiumSubheaderText>
+                </CribPremiumPressableLeft>
+                <Lottie source={require('../../../assets/cibprofilepremium.json')} autoPlay style={{width: WIDTH*0.25}}/>
+
+            </CribPremiumPressable>
+            
+            <View style={{height: HEIGHT*0.025}}/>
+
 
             <OptionContainer>
                 {RowOptions.map((item) => (

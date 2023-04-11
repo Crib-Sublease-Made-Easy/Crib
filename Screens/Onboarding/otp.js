@@ -32,7 +32,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-const PRIMARYCOLOR = '#8559E3'
+import {PRIMARYCOLOR} from '../../sharedUtils'
 
 import Modal from "react-native-modal";
 
@@ -58,6 +58,7 @@ export default function OTPScreen({navigation, route}){
     },[code])
 
     async function signupStep3(){ 
+        console.log("hello")
         setLoading(true)
         try{
             let oneSignalUserId = await EncryptedStorage.getItem('oneSignalUserID');
@@ -74,7 +75,8 @@ export default function OTPScreen({navigation, route}){
                 formData.append("email", route.params.email);      
                 formData.append("token", code);      
                 formData.append("authy_id", route.params.authy_id);      
-                formData.append("oneSignalUserId", oneSignalUserId);      
+                formData.append("oneSignalUserId", oneSignalUserId);    
+                formData.append("type", route.params.type)  
 
         
                 var array = route.params.profilePic.split(".");

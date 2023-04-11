@@ -5,7 +5,8 @@ import {
   View,
   Animated as RNAnimated,
   Image,
-  Pressable
+  Pressable,
+  AppState
 } from 'react-native';
 
 var axios = require('axios');
@@ -28,7 +29,8 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import Modal from "react-native-modal";
+import DeviceInfo from 'react-native-device-info';
+
 
 
 
@@ -61,14 +63,19 @@ import {GestureHandlerRootView, TouchableWithoutFeedback} from 'react-native-ges
 //React Native Map
 import MapView , { Marker }from 'react-native-maps';
 import NotificationModal from './notificaitonModal';
+import SubleaseLocationModal from './Modals/userTypeModal'
+import UserTypeModal from './Modals/userTypeModal';
 
 
 export default function DiscoverScreen({navigation, route, initialParams}){
 
     const {sb, USERID, preloadProperties} = useContext(UserContext);
+    
 
     //Method for handling notifications received while app in foreground
     OneSignal.setNotificationOpenedHandler(async notification => {
+        console.log(notification)
+
     // console.log("OneSignal: notification opened:", notification);
         await connectSendbird()
         navigation.navigate("Message")
@@ -160,10 +167,17 @@ export default function DiscoverScreen({navigation, route, initialParams}){
     const [discoverSearchVisible, setDiscoverSearchVisible] = useState(false)
 
     const [notifModalVisible, setNotifModalVisible] = useState(false)
+    //Ask if what user's objective is
+    const [userTypeModalVisible, setUserTypeModalVisible]= useState(false)
+
+    //Crib tenant premium modal 
+    const [cribtenantSubscriptionModalVisible, setCribTenantSubscriptionModalVisible] = useState(false)
 
     useEffect(()=>{
-
+        
         setFlatlistRefreshing(true)
+
+        // checkVersion()
         //Loading initial batch of properties
         loadProperty()
         // Loading the pins on the map with default values
@@ -203,6 +217,27 @@ export default function DiscoverScreen({navigation, route, initialParams}){
             return false;
         }
     }
+
+    async function checkVersion(){
+        const currentVersion = `${DeviceInfo.getReadableVersion()}-`
+        console.log(currentVersion)
+        const previousVersion = await EncryptedStorage.getItem("appVersion");
+        if (previousVersion) {
+            if (previousVersion !== currentVersion) {
+        
+             //this block of code will run when app will update
+             alert("Please update your app to get the latest functions!")
+
+        
+            }
+          } else {
+            EncryptedStorage.setItem("appVersion", currentVersion);
+          }
+    }
+
+
+    //Check the version of the user app
+ 
 
     //Open the preview card when the map button on the propertycard in flatlsit is pressed 
     function openPreviewCard(){
@@ -287,7 +322,7 @@ export default function DiscoverScreen({navigation, route, initialParams}){
                    
                     let device = await OneSignal.getDeviceState();
                     console.log(daysApart)
-                    if((!device.isSubscribed && daysApart > 0.5) || daysApart == null){
+                    if((!device.isSubscribed && (daysApart == null || daysApart > 0.5))){
                        
                         setNotifModalVisible(true)
                         EncryptedStorage.setItem("notificationPromptTime",new Date().getTime().toString());
@@ -731,7 +766,11 @@ export default function DiscoverScreen({navigation, route, initialParams}){
                 <DiscoverSearchScreen open={discoverSearchVisible} close={()=> setDiscoverSearchVisible(false)} selectCurrentLocation={selectCurrentLocation}/>
                 <TouchableWithoutFeedback>
                     <NotificationModal notifModalVisible={notifModalVisible} close={()=>setNotifModalVisible(false)}/>
+                    <UserTypeModal subleaseTypeModalVisible={userTypeModalVisible} close={()=>setUserTypeModalVisible(false)}/>
                 </TouchableWithoutFeedback>
+
+                {/* Tenant Subscription Modal */}
+                {/* <CribTenantSubscriptionModal cribtenantSubscriptionModalVisible={cribtenantSubscriptionModalVisible} close={()=>setCribTenantSubscriptionModalVisible(false)}/> */}
             </SafeAreaView>  
         </GestureHandlerRootView>
     )

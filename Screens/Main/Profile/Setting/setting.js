@@ -23,11 +23,17 @@ import { HeaderContainer, BackButtonContainer, NameContainer, Header,ResetButton
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import CribTenantSubscriptionModal from '../../Premium/cribTenantSubscription'
+
 
 export default function SettingScreen({navigation, route}){
+  const {sb, USERID, login} = useContext(UserContext);
+
     const [notificationsEnabled, setNotificationsEnabled] = useState(true)
     const [userData, setUserData] = useState("")
-    const {sb, USERID, login} = useContext(UserContext);
+
+    //Crib tenant premium modal 
+    const [cribtenantSubscriptionModalVisible, setCribTenantSubscriptionModalVisible] = useState(false)
 
     useEffect( ()=>{
       getNotificationStatus()
@@ -104,8 +110,11 @@ export default function SettingScreen({navigation, route}){
     }
   }
   async function getTokens(){
+    console.log(USERID)
+    
     try{
       const accessToken = await EncryptedStorage.getItem("accessToken");
+      console.log(accessToken)
       if(accessToken != undefined){
         fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
           method: 'GET',
@@ -255,9 +264,17 @@ export default function SettingScreen({navigation, route}){
         </UpgradeContainerRight>
       </UpgradeContainer>
 
-      <RowContainer onPress={() => navigation.navigate("ProfileEdit", {userData : userData})}>
+      {/* <RowContainer onPress={() => navigation.navigate("MyReferralCode", {userData: userData})}>
+        <Ionicons name='star' size={22} color='yellow'/>
+        <RowName>Join Crib Gold</RowName>
+      </RowContainer> */}
+      <RowContainer  onPress={() => navigation.navigate("ProfileEdit", {userData : userData})}>
         <Ionicons name='person' size={22} color='black'/>
         <RowName>Profile</RowName>
+      </RowContainer>
+      <RowContainer onPress={() => navigation.navigate("EnterReferralCode", {userData : userData})}>
+        <Ionicons name='barcode' size={22} color='black'/>
+        <RowName>Enter Referral Code</RowName>
       </RowContainer>
       <RowContainer style={{borderBottomWidth: 0}} onPress={onShare}>
         <Ionicons name='share' size={22} color='black'/>
@@ -313,7 +330,7 @@ export default function SettingScreen({navigation, route}){
             <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
           </RowValueContainer>
         </RowContainer> */}
-  
+        <CribTenantSubscriptionModal cribtenantSubscriptionModalVisible={cribtenantSubscriptionModalVisible} close={()=>setCribTenantSubscriptionModalVisible(false)}/>
     </SafeAreaView>
   )
 }

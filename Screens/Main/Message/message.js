@@ -62,7 +62,7 @@ export default function MessageScreen({navigation, route}){
     
     channelHandler.onChannelChanged = channel => {
         fetchConvos()
-      };
+    };
 
     const getFirstName = async()  => {
         try{

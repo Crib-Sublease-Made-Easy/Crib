@@ -62,8 +62,10 @@ export default function PostedPropertyScreen({navigation, route}){
                 setUserData(userData)
 
                 //Load API data if the cached profile pic is null
+                if(userData.postedProperties != undefined && userData.postedProperties.length >= 1){
+                    await fetchPostedProperties(userData.postedProperties[0], accessToken)
+                }
                 
-                await fetchPostedProperties(userData.postedProperties[0], accessToken)
 
                 setLoading(false)
                 
@@ -139,6 +141,7 @@ export default function PostedPropertyScreen({navigation, route}){
     }
 
     function toPostProperty(){
+        console.log(userData.postedProperties)
         if(userData.postedProperties.length >= 1 ){
             alert("As a regular member, you can only post one property.")
         }

@@ -16,8 +16,6 @@ import {
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-const PRIMARYCOLOR = '#8559E3'
-const TEXTINPUTBORDERCOLOR = '#989898'
 
 import styled from 'styled-components/native';
 import { EXTRALIGHT, LIGHTGREY, MEDIUMGREY,  } from '../../../sharedUtils';

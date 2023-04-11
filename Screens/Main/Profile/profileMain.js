@@ -19,6 +19,7 @@ import MessageScreen from '../Message/message.js';
 import ProfileScreen from '../Profile/profile';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CribConnectScreen from '../Premium/CribConnectScreen';
 
 
 
@@ -54,6 +55,10 @@ export default function ProfileTab(){
             iconName = focused ? 'person-circle' : 'person-circle-outline';
             color = focused ? PRIMARYCOLOR : '#A9A9A9'
           }
+          else if (route.name === 'Connect') {
+            iconName = focused ? 'swap-horizontal' : 'swap-horizontal-outline';
+            color = focused ? PRIMARYCOLOR : '#A9A9A9'
+          }
 
           // You can return any component that you like here!
           return <Ionicons name={iconName} size={30} color={color} />;
@@ -79,6 +84,7 @@ export default function ProfileTab(){
               }
          
           })})}/>
+        <Tab.Screen name="Connect" component={CribConnectScreen} />
         <Tab.Screen name="Message" component={MessageScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>

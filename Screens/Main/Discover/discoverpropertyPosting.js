@@ -597,9 +597,11 @@ async function testScraped(){
                         if(response.status == 200){
                             try{
                                 await EncryptedStorage.removeItem("postedProperty")
+                                
                             }
                             catch{
                             }
+                            navigation.goBack()
                         }
                         else{
                            
@@ -618,9 +620,7 @@ async function testScraped(){
                         alert(e)
                     })
 
-                    setTimeout(()=>{
-                        navigation.goBack()
-                    },1000)
+                    
                 
                
             }
@@ -694,21 +694,21 @@ async function testScraped(){
     }
     const startingvalue = HEIGHT * 0.1;
     const [expanded, setexpended] = useState(true)
-    const heighttranslation = useRef(new Animated.Value(startingvalue)).current;
+    // const heighttranslation = useRef(new Animated.Value(startingvalue)).current;
     useEffect(() => {
-        testing();
+        // testing();
         //   getTokens
     }, [expanded])
 
 
-    function testing() {
-        Animated.timing(heighttranslation, {
-            toValue: expanded ? startingvalue : 0,
-            duration: 300,
-            easing: Easing.inOut(Easing.ease),
-            useNativeDriver: false,
-        }).start()
-    }
+    // function testing() {
+    //     Animated.timing(heighttranslation, {
+    //         toValue: expanded ? startingvalue : 0,
+    //         duration: 300,
+    //         easing: Easing.inOut(Easing.ease),
+    //         useNativeDriver: false,
+    //     }).start()
+    // }
 
     async function LocationToLatLong(name){
         let tempLatLong = [];

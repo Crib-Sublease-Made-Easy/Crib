@@ -112,14 +112,13 @@ export default function NotificationModal({notifModalVisible, close}){
                 <ModalView>
                     <View style={{}}>
                     <Lottie source={require('../../../postingfirstpage.json')}  autoPlay loop style={{width:WIDTH*0.5, height: WIDTH*0.5,}}/>
-                    {!notifPermission ? 
+                   
                     <>
                         <SubtitleText>Get notified when subleases are up!</SubtitleText>
                         <ContextText>By enabling notifications, you will be notified right away when people are interested in your sublease.</ContextText>
                     </>
-                    :
-                    <Text>Yes</Text>
-                    }
+                    
+                 
                     </View>
                     <EnableButton onPress={openSettings}>
                         <EnableButtonText >Enable notification</EnableButtonText>

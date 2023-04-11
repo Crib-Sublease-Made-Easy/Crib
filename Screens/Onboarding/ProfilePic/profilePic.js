@@ -15,6 +15,7 @@ import {
     Image
 } from 'react-native';
 
+import notifee, { AuthorizationStatus } from '@notifee/react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -22,9 +23,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-const PRIMARYCOLOR = '#8559E3'
+
 const PRIMARYGREY = '#D9D9D9'
-const TEXTINPUTBORDERCOLOR = '#989898'
+import OneSignal from "react-native-onesignal";
 
 import { Header, TitleText, SubtitleText, ProgressBarContainer, ProfilePicContainer, } from './profilePicStyle';
 
@@ -35,20 +36,44 @@ export default function ProfilePicScreen({navigation, route}){
    
     const [profilePic, setProfilePic] = useState('')
 
-    function checkInput(){
+    async function checkInput(){
        
         if(profilePic == ""){
             alert("User must upload profile picture.")
         }
         else{
-            navigation.navigate("School",
-            {
-                firstName: route.params.firstName, 
-                lastName: route.params.lastName,
-                age: route.params.age,
-                gender: route.params.gender,
-                profilePic: profilePic
-            })
+            // navigation.navigate("School",
+            // {
+            //     firstName: route.params.firstName, 
+            //     lastName: route.params.lastName,
+            //     age: route.params.age,
+            //     gender: route.params.gender,
+            //     profilePic: profilePic
+            // })
+            const settings = await notifee.requestPermission();
+          
+            if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+                navigation.navigate("School",
+                {
+                    firstName: route.params.firstName, 
+                    lastName: route.params.lastName,
+                    age: route.params.age,
+                    gender: route.params.gender,
+                    profilePic: profilePic,
+                  
+                })
+            }
+            else{
+                navigation.navigate("NotificationPrompt",
+                {
+                    firstName: route.params.firstName, 
+                    lastName: route.params.lastName,
+                    age: route.params.age,
+                    gender: route.params.gender,
+                    profilePic: profilePic,
+                  
+                })
+            }
         }
     }
 
@@ -61,6 +86,7 @@ export default function ProfilePicScreen({navigation, route}){
                 compressImageQuality: 0.3
             }).then(image => {
                 setProfilePic(image.path)
+                console.log(image.path)
             }).catch(e=>{
                 console.log("Cancelled")
             })

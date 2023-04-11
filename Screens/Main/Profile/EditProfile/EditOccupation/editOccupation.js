@@ -79,7 +79,7 @@ export default function EditOccupationScreen({navigation, route}){
             <View style={{width:WIDTH, height: HEIGHT*0.03}}/>
             <RowContainer>
                 <CategoryName>Latest Occupation</CategoryName>
-                <PhoneNumberContainer onChangeText={(value)=> setOccupation(value)}  value={occupation} />
+                <PhoneNumberContainer Text={(value)=> setOccupation(value)}  value={occupation} />
             </RowContainer>
            
         </SafeAreaView>

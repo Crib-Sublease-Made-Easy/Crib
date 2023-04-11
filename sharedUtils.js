@@ -11,7 +11,7 @@ import { fab, faBoltLightning, faBottleDroplet, faBottleWater, faBowlFood, faBre
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 //Color 
-export const PRIMARYCOLOR = '#8559E3' //133 89 227
+export const PRIMARYCOLOR = '#2D6674' //133 89 227
 export const OPACITYPRIMARYCOLOR = 'rgba(133, 89, 227, 1)'
 
 //Dark Grey

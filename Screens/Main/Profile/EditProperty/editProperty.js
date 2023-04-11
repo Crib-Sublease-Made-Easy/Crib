@@ -242,8 +242,7 @@ export default function EditPropertyScreen({navigation, route}){
             await EncryptedStorage.removeItem('postedProperty');
             if(res.status == 200){
                 setTimeout(()=>{
-                    
-                    navigation.goBack({postedProperties: null})
+                    navigation.navigate("Profile")
                 },500)
             }
             else{

@@ -64,7 +64,8 @@ export default function PhoneNumberScreen({navigation, route}){
                     gender: route.params.gender,
                     profilePic: route.params.profilePic,
                     school: route.params.school,
-                    occupation: route.params.occupation
+                    occupation: route.params.occupation,
+                    type: route.params.type //new
                 });
             }
             else{
@@ -106,6 +107,7 @@ export default function PhoneNumberScreen({navigation, route}){
                     occupation: route.params.occupation,
                     email: route.params.email,
                     password: route.params.password,
+                    type: route.params.type, // new
                     phoneNumber: passedPhoneNumber,
                     authy_id: id}}]}
                 )
@@ -225,7 +227,7 @@ export default function PhoneNumberScreen({navigation, route}){
             </SignUpHeader>
                 
             <ProgressBarContainer>
-                <ProgressText>Step  8 / 9</ProgressText>
+                <ProgressText>Step  9 / 9</ProgressText>
             </ProgressBarContainer>
            
             <ScrollView scrollEnabled={false}>

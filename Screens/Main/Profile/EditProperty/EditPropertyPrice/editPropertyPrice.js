@@ -38,14 +38,18 @@ const flatListTypes =
 import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header,} from '../../../../../sharedUtils'
 
 import {RowContainer, CategoryName, FollowUpContainer, FollowUpText,PriceContainer, } from './editPropertyPriceStyle';
+
 export default function EditPropertyPriceScreen({navigation, route}){
     const [propertyPrice, setPropertyPrice] = useState(route.params.price.toString())
-    const [securityDeposit,setSecurityDeposit ] = useState(route.params.securityDeposit.toString())
+    const [securityDeposit,setSecurityDeposit ] = useState(route.params.propertyData.securityDeposit == null ? 0 : route.params.propertyData.securityDeposit.toString())
 
     async function update(){
         try{
             const accessToken = await EncryptedStorage.getItem("accessToken");
+           
             if(accessToken != undefined){
+               
+
                 fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
                     method: 'PUT',
                     headers: {
@@ -55,20 +59,14 @@ export default function EditPropertyPriceScreen({navigation, route}){
                     },
                     body: JSON.stringify({
                         price: propertyPrice.split("$")[1],
-                        securityDeposit: securityDeposit.split("$")[1],
+                        securityDeposit:  securityDeposit == 0 ? securityDeposit : securityDeposit.split("$")[1],
                     })
                 })
                 .then((response) => response.json()).then(async data => {
-                    try{
-                        await AsyncStorage.removeItem('postedProperty')
-                    }
-                    catch{
-                        alert("Error. Please try again alter!")
-                    }
-                    
-                    navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
+                    navigation.navigate('Profile', {propertyData: route.params.propertyData})
                 })
                 .catch(e => {
+                    
                     console.log(e)
                 })
             }
@@ -110,8 +108,8 @@ export default function EditPropertyPriceScreen({navigation, route}){
         </RowContainer>
         <RowContainer>
             <CategoryName>Security Deposit</CategoryName>
-            <PriceContainer autoFocus onChangeText={(value)=> setSecurityDeposit(value)}  placeholder={"$" + route.params.securityDeposit.toString()}
-            value={formatPrice(securityDeposit)} placeholderTextColor='black' keyboardType='number-pad'/>
+            <PriceContainer autoFocus onChangeText={(value)=> setSecurityDeposit(value)}  placeholder={"$" + securityDeposit == null ? "0" : securityDeposit.toString()}
+            value={securityDeposit == null ? 0 : formatPrice(securityDeposit)} placeholderTextColor='black' keyboardType='number-pad'/>
         </RowContainer>
         
     </SafeAreaView>   

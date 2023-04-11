@@ -74,6 +74,7 @@
 		5D4F31AB292B342400AEE091 /* Crib180Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Crib180Icon.png; sourceTree = "<group>"; };
 		5D4F31AC292B342400AEE091 /* Crib120Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Crib120Icon.png; sourceTree = "<group>"; };
 		5D4F31B0292B34B900AEE091 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		5D59DE3929D79CA5004AF956 /* lighthouseRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = lighthouseRelease.entitlements; path = lighthouse/lighthouseRelease.entitlements; sourceTree = "<group>"; };
 		5DD4F91829905E5800F8DDAF /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5DE61C0828B30C8A0023B7DA /* EBGaramond-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "EBGaramond-Bold.ttf"; path = "../../assets/fonts/EBGaramond-Bold.ttf"; sourceTree = "<group>"; };
 		5DE61C0A28B30C8A0023B7DA /* EBGaramond-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "EBGaramond-ExtraBold.ttf"; path = "../../assets/fonts/EBGaramond-ExtraBold.ttf"; sourceTree = "<group>"; };
@@ -148,6 +149,7 @@
 		13B07FAE1A68108700A75B9A /* lighthouse */ = {
 			isa = PBXGroup;
 			children = (
+				5D59DE3929D79CA5004AF956 /* lighthouseRelease.entitlements */,
 				5D4F31AC292B342400AEE091 /* Crib120Icon.png */,
 				5D4F31AB292B342400AEE091 /* Crib180Icon.png */,
 				5D4F31B0292B34B900AEE091 /* logo.png */,
@@ -691,7 +693,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = lighthouse/lighthouse.entitlements;
+				CODE_SIGN_ENTITLEMENTS = lighthouse/lighthouseRelease.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R26A35UA9U;
 				INFOPLIST_FILE = lighthouse/Info.plist;

@@ -25,8 +25,10 @@ import ProfilePicScreen from './Screens/Onboarding/ProfilePic/profilePic.js';
 import OccupationScreen from './Screens/Onboarding/Occupation/occupation.js';
 import SchoolScreen from './Screens/Onboarding/School/school.js';
 import EmailScreen from './Screens/Onboarding/Email/email.js';
+import TenantOrSubtenantScreen from './Screens/Onboarding/TenantOrSubtenant/tenantorsubtenant.js'
 import PasswordScreen from './Screens/Onboarding/Password/password.js';
 import PhoneNumberScreen from './Screens/Onboarding/PhoneNumber/phoneNum.js';
+import NotificationPromptScreen from './Screens/Onboarding/NotificationProm/notificationPrompt';
 
 import EmailPasswordScreen from './Screens/Onboarding/emailPassword.js';
 import OTPScreen from './Screens/Onboarding/otp.js';
@@ -66,6 +68,10 @@ import FavoritePropertyScreen from './Screens/Main/Profile/favProperty';
 
 import LoadingScreen from './LoadingScreen';
 
+import MyReferralCodeScreen from './Screens/Main/Premium/ReferalCode/myReferralCode'
+import EnterReferralCodeScreen from './Screens/Main/Profile/Setting/EnterReferralCode/enterReferralCode'
+import PriceBreakDownScreen from './Screens/Main/Premium/PriceBreakdown/priceBreakdown';
+
 //Message
 import MessageTab from './Screens/Main/Message/message.js';
 
@@ -84,6 +90,9 @@ const Stack = createSharedElementStackNavigator();
 const appId = 'EF181665-2473-42C6-9376-A340AF716169';
 import OneSignal from 'react-native-onesignal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CribConnectSubtenantScreen from './Screens/Main/Premium/CribConnectSubtenant/cribconnectsubtenant';
+import CribConnectTenantScreen from './Screens/Main/Premium/CribConnectTenant/cribconnecttenant';
+import CribConnectPreferenceScreen from './Screens/Main/Premium/CribConnectPreference/cribconnectpreference';
 
 
 export default function App() {
@@ -236,9 +245,11 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     }
   }
 
+
   const refreshAccessToken = async () => {
     try{
       const rt = await EncryptedStorage.getItem("refreshToken");
+      
       const id = await EncryptedStorage.getItem("userId");
 
       //If refresh token is undefined, meaning user have not logged in
@@ -295,9 +306,24 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
     setUser(name);
   };
 
-  const logout = () => {
-    setUser(null);
-
+  const logout = async() => {
+    console.log("Logging out")
+    disconnectSendbird()
+    OneSignal.disablePush(true);
+    try{
+      await EncryptedStorage.clear()
+    }
+    catch (err){
+      console.log("Clearing encryted storage", err)
+    }
+    try{
+      await AsyncStorage.clear()
+    }
+    catch (err) {
+      console.log("Clearing encryted storage", err)
+      console.log(err)
+    }
+    login(null)
   };
 
 
@@ -306,6 +332,41 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
       opacity: current.progress,
     },
   });
+
+
+  // async function checkCribConnect(){
+  //   const accessToken = await EncryptedStorage.getItem("accessToken");
+  //   let USERID = await EncryptedStorage.getItem("userId")
+  
+  //   if(accessToken != undefined && USERID != undefined && accessToken != null){
+        
+  //       //Get user favorite properties
+  //       // fetchFavoriteProperties(accessToken)
+        
+  //       await fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+  //       method: 'GET',
+  //       headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Bearer ' + accessToken,
+  //       }
+  //       }) 
+  //       .then(res => res.json()).then(async userData =>{
+            
+  //           if(userData.cribPremium.paymentDetails.status == true){
+  //               setCribPremium(true)
+  //           }
+  //           setUserData(userData)
+  //           if(userData.cribPremium.paymentDetails.status == false){
+  //               checkIfPaid(userData)
+  //           }
+  //       })
+  //       .catch(e=>{
+  //         console.log("Error")
+  //       })
+  //   }
+
+  // }
 
 
 
@@ -321,7 +382,6 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             component={LoadingScreen}
             options={{headerShadowVisible: false,cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter, headerShown:false}}
             />
-
 
             <Stack.Screen
               name="DiscoverTabs"
@@ -519,6 +579,50 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               }}
             />
 
+            <Stack.Screen name="MyReferralCode"
+              component={MyReferralCodeScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="EnterReferralCode"
+              component={EnterReferralCodeScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="CribConnectSubtenant"
+              component={CribConnectSubtenantScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="CribConnectTenant"
+              component={CribConnectTenantScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="CribConnectPreference"
+              component={CribConnectPreferenceScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="CribConnectPriceBreakdown"
+              component={PriceBreakDownScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+              }}
+            />
+
+
 
 
 
@@ -541,7 +645,9 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             <Stack.Screen name="ProfilePic" component={ProfilePicScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Occupation" component={OccupationScreen} options={{ headerShown: false }} />
             <Stack.Screen name="School" component={SchoolScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="NotificationPrompt" component={NotificationPromptScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Email" component={EmailScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="TenantOrSubtenant" component={TenantOrSubtenantScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Password" component={PasswordScreen} options={{ headerShown: false }} />
             <Stack.Screen name="PhoneNumber" component={PhoneNumberScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Login_OTP"

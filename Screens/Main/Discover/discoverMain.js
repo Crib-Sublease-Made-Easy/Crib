@@ -3,6 +3,7 @@ import { createBottomTabNavigator,  } from '@react-navigation/bottom-tabs';
 import DiscoverScreen from './discover';
 import MessageScreen from '../Message/message.js'
 import ProfileScreen from '../Profile/profile';
+import CribConnectScreen from '../Premium/CribConnectScreen'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { PRIMARYCOLOR } from '../../../sharedUtils';
@@ -49,6 +50,10 @@ export default function DiscoverTab({navigation, route}){
               iconName = focused ? 'person-circle' : 'person-circle-outline';
               color = focused ? PRIMARYCOLOR : '#A9A9A9'
             }
+            else if (route.name === 'Connect') {
+              iconName = focused ? 'swap-horizontal' : 'swap-horizontal-outline';
+              color = focused ? PRIMARYCOLOR : '#A9A9A9'
+            }
 
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={30} color={color} />;
@@ -76,6 +81,7 @@ export default function DiscoverTab({navigation, route}){
               
          
           })})}/>
+        <Tab.Screen name="Connect" component={CribConnectScreen} />
         <Tab.Screen name="Message" component={MessageScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
