@@ -10,7 +10,7 @@ import {
     Pressable,
     Linking
 } from 'react-native';
-
+var axios = require('axios');
 import FastImage from 'react-native-fast-image'
 
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -50,7 +50,11 @@ export default function PropertyDetailScreen({navigation, route}){
         });
    
         fetchProperties()
+        
         getTokens()
+        nearestRestaurants()
+        nearestCafes()
+        nearestGroceries()
       
       return unsubscribe
     }, [])
@@ -63,6 +67,9 @@ export default function PropertyDetailScreen({navigation, route}){
     const [liked, setLiked]  = useState()
     const [ownProperty, setOwnProperty] = useState(!route.params.scraped && route.params.data.propertyInfo.postedBy == USERID)
     const [scrapedProfilePic, setScrapedProfiePic] = useState(true)
+    const [numRestaurants, setNumres] = useState(-1)
+    const [numCafes, setNumcaf] = useState(-1)
+    const [numGroceries, setNumgroc] = useState(-1)
     
     const createConversation = async () =>{
         if(USERID == null){
@@ -238,6 +245,234 @@ export default function PropertyDetailScreen({navigation, route}){
     setFlatlistIndex(roundIndex)
     }, []);
 
+    let restaurantList = []
+    var numresults = 0;
+
+    async function nearestRestaurants(){
+        // console.log("long:",propData.loc.coordinates[0])
+        // console.log("lat:",propData.loc.coordinates[1])
+        var config = {
+        method: 'get',
+        url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${propData.loc.coordinates[1]},${propData.loc.coordinates[0]}&radius=804.672&type=restaurant&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        }
+        };
+        
+        let dataLog = null;
+        axios(config)
+        .then(function (response) {
+        // console.log(JSON.stringify(response.data))
+        console.log("results lv 1!!!")
+        dataLog = response.data
+        setNumres(response.data.results.length)
+        })
+        .catch(function (error) {
+        console.log("error in nearestRESTAURANTS");
+        })
+        .finally(() => {
+            if (dataLog.next_page_token) {
+                var config = {
+                method: 'get',
+                url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${dataLog.next_page_token}&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+                };
+                axios(config)
+                .then(function (response) {
+                    console.log("results lv 2!!!")
+                    setNumres(0)
+                    dataLog = response.data;
+                    // console.log(numresults)
+                    // // restaurantList = restaurantList.concat(dataLog.results);
+                    // // console.log("level 2 numresults: ", numresults)
+
+                })
+                .catch(function (error) {
+                    console.log("error in nearest RESTAURANTS second level search");
+                })
+                .finally(() => {
+                    if (dataLog.next_page_token) {
+                        var config = {
+                        method: 'get',
+                        url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${dataLog.next_page_token}&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                        }
+                        };
+                        axios(config)
+                        .then(function (response) { // GOOGLE maps API returns  max 60 properties
+                            console.log("results lv 3!!!")
+                            // numresults += dataLog.results.length
+                            // console.log(numresults)
+                            setNumres(1)
+                            // restaurantList = restaurantList.concat(dataLog.results);
+                            // console.log("level 2 numresults: ", numresults)
+        
+                        })
+                        .catch(function (error) {
+                            console.log("error in nearest RESTAURANTS third level search");
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    async function nearestCafes(){
+        // console.log("long:",propData.loc.coordinates[0])
+        // console.log("lat:",propData.loc.coordinates[1])
+        var config = {
+        method: 'get',
+        url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${propData.loc.coordinates[1]},${propData.loc.coordinates[0]}&radius=804.672&type=cafe&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        }
+        };
+        
+        let dataLog = null;
+        axios(config)
+        .then(function (response) {
+        // console.log(JSON.stringify(response.data))
+        // console.log("results lv 1!!!")
+        dataLog = response.data
+        setNumcaf(response.data.results.length)
+        })
+        .catch(function (error) {
+        console.log("error in nearestRESTAURANTS");
+        })
+        .finally(() => {
+            if (dataLog.next_page_token) {
+                var config = {
+                method: 'get',
+                url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${dataLog.next_page_token}&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+                };
+                axios(config)
+                .then(function (response) {
+                    // console.log("results lv 2!!!")
+                    setNumcaf(0)
+                    dataLog = response.data;
+                    // console.log(numresults)
+                    // // restaurantList = restaurantList.concat(dataLog.results);
+                    // // console.log("level 2 numresults: ", numresults)
+
+                })
+                .catch(function (error) {
+                    console.log("error in nearest RESTAURANTS second level search");
+                })
+                .finally(() => {
+                    if (dataLog.next_page_token) {
+                        var config = {
+                        method: 'get',
+                        url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${dataLog.next_page_token}&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                        }
+                        };
+                        axios(config)
+                        .then(function (response) { // GOOGLE maps API returns  max 60 properties
+                            // console.log("results lv 3!!!")
+                            // numresults += dataLog.results.length
+                            // console.log(numresults)
+                            setNumcaf(1)
+                            // restaurantList = restaurantList.concat(dataLog.results);
+                            // console.log("level 2 numresults: ", numresults)
+        
+                        })
+                        .catch(function (error) {
+                            console.log("error in nearest RESTAURANTS third level search");
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    async function nearestGroceries(){
+        // console.log("long:",propData.loc.coordinates[0])
+        // console.log("lat:",propData.loc.coordinates[1])
+        var config = {
+        method: 'get',
+        url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${propData.loc.coordinates[1]},${propData.loc.coordinates[0]}&radius=804.672&type=supermarket&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        }
+        };
+        
+        let dataLog = null;
+        axios(config)
+        .then(function (response) {
+        console.log(JSON.stringify(response.data))
+        // console.log("results lv 1!!!")
+        dataLog = response.data
+        setNumgroc(response.data.results.length)
+        })
+        .catch(function (error) {
+        console.log("error in nearestRESTAURANTS");
+        })
+        .finally(() => {
+            if (dataLog.next_page_token) {
+                var config = {
+                method: 'get',
+                url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${dataLog.next_page_token}&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+                };
+                axios(config)
+                .then(function (response) {
+                    // console.log("results lv 2!!!")
+                    setNumgroc(0)
+                    dataLog = response.data;
+                    // console.log(numresults)
+                    // // restaurantList = restaurantList.concat(dataLog.results);
+                    // // console.log("level 2 numresults: ", numresults)
+
+                })
+                .catch(function (error) {
+                    console.log("error in nearest RESTAURANTS second level search");
+                })
+                .finally(() => {
+                    if (dataLog.next_page_token) {
+                        var config = {
+                        method: 'get',
+                        url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${dataLog.next_page_token}&key=AIzaSyBbZGuUw4bqWirb1UWSzu9R6_r13rPj-eI`,
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                        }
+                        };
+                        axios(config)
+                        .then(function (response) { // GOOGLE maps API returns  max 60 properties
+                            // console.log("results lv 3!!!")
+                            // numresults += dataLog.results.length
+                            // console.log(numresults)
+                            setNumgroc(1)
+                            // restaurantList = restaurantList.concat(dataLog.results);
+                            // console.log("level 2 numresults: ", numresults)
+        
+                        })
+                        .catch(function (error) {
+                            console.log("error in nearest RESTAURANTS third level search");
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     async function likeProperty(){
         try{
             const accessToken = await EncryptedStorage.getItem("accessToken");
@@ -298,7 +533,7 @@ export default function PropertyDetailScreen({navigation, route}){
       function deg2rad(deg) {
         return deg * (Math.PI/180)
       }
-
+    
     return(
         <View style={{flex: 1, backgroundColor:'white'}}>
             <ScrollView 
@@ -392,6 +627,54 @@ export default function PropertyDetailScreen({navigation, route}){
                         <Ionicons  name="pin" size={20} color='black' style={{paddingRight: WIDTH*0.02}}></Ionicons>
                        
                             <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>{route.params.distance} miles</DistanceText> away from search location</DistanceText>
+                        
+                    </RowContainer>
+                    }
+                    {!ownProperty && (numRestaurants == 0 || numRestaurants == 1) &&
+                    <RowContainer>
+                        <Ionicons  name="restaurant-outline" size={19} color='black' style={{paddingRight: WIDTH*0.02}}></Ionicons>
+                       
+                            <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>{numRestaurants == 0 ? `20+` : `40+`} restaurants </DistanceText>nearby</DistanceText>
+                        
+                    </RowContainer>
+                    }
+                    {!ownProperty && (numRestaurants > 1) &&
+                    <RowContainer>
+                        <Ionicons  name="restaurant-outline" size={19} color='black' style={{paddingRight: WIDTH*0.02}}></Ionicons>
+                       
+                            <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>{numRestaurants} restaurants </DistanceText>nearby</DistanceText>
+                        
+                    </RowContainer>
+                    }
+                    {!ownProperty && (numCafes == 0 || numCafes == 1) &&
+                    <RowContainer>
+                        <Ionicons  name="cafe-outline" size={19} color='black' style={{paddingRight: WIDTH*0.02}}></Ionicons>
+                       
+                            <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>{numCafes == 0 ? `20+` : `40+`} cafes </DistanceText>nearby</DistanceText>
+                        
+                    </RowContainer>
+                    }
+                    {!ownProperty && (numCafes > 1) &&
+                    <RowContainer>
+                        <Ionicons  name="cafe-outline" size={19} color='black' style={{paddingRight: WIDTH*0.02}}></Ionicons>
+                       
+                            <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>{numCafes} cafes </DistanceText>nearby</DistanceText>
+                        
+                    </RowContainer>
+                    }
+                    {!ownProperty && (numGroceries == 0 || numGroceries == 1) &&
+                    <RowContainer>
+                        <Ionicons  name="basket-outline" size={19} color='black' style={{paddingRight: WIDTH*0.02}}></Ionicons>
+                       
+                            <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>{numGroceries == 0 ? `20+` : `40+`} supermarkets</DistanceText> nearby</DistanceText>
+                        
+                    </RowContainer>
+                    }
+                    {!ownProperty && (numGroceries > 1) &&
+                    <RowContainer>
+                        <Ionicons  name="basket-outline" size={19} color='black' style={{paddingRight: WIDTH*0.02}}></Ionicons>
+                       
+                            <DistanceText><DistanceText style={{color: PRIMARYCOLOR}}>{numGroceries} supermarkets </DistanceText>nearby</DistanceText>
                         
                     </RowContainer>
                     }
