@@ -129,6 +129,8 @@ export default function ChatScreen({navigation, route}){
               console.log("Message was successfully sent")
               // console.log(messages[0].text)
               const accessToken = await EncryptedStorage.getItem("accessToken")
+              const uid = await EncryptedStorage.getItem("userId")
+              console.log(uid)
             
               if(accessToken != null){
                 fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
@@ -142,7 +144,7 @@ export default function ChatScreen({navigation, route}){
                 body: JSON.stringify({
                     participant1: groupChannel.members[0].userId,
                     participant2: groupChannel.members[1].userId,
-                    senderId: USERID,
+                    senderId: uid,
                     message: messages[0].text
                 })
                 }).then(async res => {
