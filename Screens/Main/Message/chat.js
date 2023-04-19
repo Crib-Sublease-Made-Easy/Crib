@@ -95,10 +95,10 @@ export default function ChatScreen({navigation, route}){
       if(channel != null && channel.members.length == 2){
         if(channel.members[0].userId == USERID){
           console.log("INSIDEEEE")
-          console.log(channel.members[1])
+        
           setRecipient(channel.members[1].nickname)
         }else{
-          console.log(channel.members[0])
+        
           setRecipient(channel.members[0].nickname)
         }
       } else{
@@ -118,35 +118,37 @@ export default function ChatScreen({navigation, route}){
         }
         else if(groupChannel.members.length ==2){
           await groupChannel.markAsRead()
-          groupChannel.sendUserMessage(params, async function(message, error) {
+          await groupChannel.sendUserMessage(params, async function(message, error) {
             if (error) {
               console.log("ERROR CHANNEL 2")
               console.log(error)
             }else{
+           
             // The message is successfully sent to the channel.
             // The current user can receive messages from other users through the onMessageReceived() method of an event handler.
               console.log("Message was successfully sent")
               // console.log(messages[0].text)
               const accessToken = await EncryptedStorage.getItem("accessToken")
-              console.log(accessToken)
-              // if(accessToken != null){
-              //   fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
-              //   method: 'POST',
-              //   headers: {
-              //     Accept: 'application/json',
-              //     'Content-Type': 'application/json',
-              //     'Authorization': 'bearer ' + accessToken,
+            
+              if(accessToken != null){
+                fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                  'Authorization': 'bearer ' + accessToken,
 
-              //   },
-              //   body: JSON.stringify({
-              //       participant1: groupChannel.members[0].userId,
-              //       participant2: groupChannel.members[1].userId,
-              //       senderId: USERID,
-              //       message: messages[0].text
-              //   })
-              //   }).then(res => {
-              //   })
-              // }
+                },
+                body: JSON.stringify({
+                    participant1: groupChannel.members[0].userId,
+                    participant2: groupChannel.members[1].userId,
+                    senderId: USERID,
+                    message: messages[0].text
+                })
+                }).then(async res => {
+                  
+                })
+              }
           }
           });
         } 
@@ -171,7 +173,6 @@ export default function ChatScreen({navigation, route}){
             await groupChannel.markAsRead();
           setChannel(groupChannel)
           setReceiverID(groupChannel.members[0].userId == USERID ? groupChannel.members[1].userId : groupChannel.members[0].userId)   
-          console.log("GCCCCC", groupChannel)   
           await getPropertyInfo(groupChannel.data, groupChannel)
           var listQuery = groupChannel.createPreviousMessageListQuery();
             setQuery(listQuery);
@@ -205,7 +206,6 @@ export default function ChatScreen({navigation, route}){
     }
 
     const getPropertyInfo = async (propId, gc) =>{
-      console.log("fetchingggg", propId)
       await fetch('https://crib-llc.herokuapp.com/properties/' + propId, {
         method: 'POST',
         headers: {
@@ -214,7 +214,6 @@ export default function ChatScreen({navigation, route}){
         }
       }).then(async e => e.json()).then(async (response) => {
         // console.log(response.propertyInfo.deleted)
-        console.log("ressssss", response[0])
         if(response.propertyInfo.deleted == true){
           if(loading == true){
             onChat = false
@@ -281,7 +280,6 @@ export default function ChatScreen({navigation, route}){
               m.user = {}
               m.user._id = m._sender.userId
               m.user.avatar = m._sender.plainProfileUrl
-              console.log("mesageeee", m._sender.plainProfileUrl)
             })
             setMessages(messages)
            

@@ -110,11 +110,9 @@ export default function SettingScreen({navigation, route}){
     }
   }
   async function getTokens(){
-    console.log(USERID)
     
     try{
       const accessToken = await EncryptedStorage.getItem("accessToken");
-      console.log(accessToken)
       if(accessToken != undefined){
         fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
           method: 'GET',

@@ -12,6 +12,7 @@ import { TitleText, ReferralCodeHelperText, ReferralCodeText } from './cribconne
 import Clipboard from '@react-native-clipboard/clipboard';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {UserContext} from '../../../../UserContext'
+import { faLessThanEqual } from '@fortawesome/free-solid-svg-icons';
 
 
 const randomstring = require("randomstring");
@@ -110,7 +111,6 @@ export default function CribConnectTenantScreen({navigation, route}){
         console.log("checking")
         let at = await EncryptedStorage.getItem("accessToken")
         let uid = await EncryptedStorage.getItem("userId")
-        console.log(at)
         if(data.cribPremium?.paymentDetails?.orderId == undefined){
             console.log("undefined")
             return;
@@ -139,7 +139,6 @@ export default function CribConnectTenantScreen({navigation, route}){
         .catch(e=>{
             console.log("ERROR  ", e)
         })
-        console.log("happy")
     }
 
 
@@ -157,7 +156,7 @@ export default function CribConnectTenantScreen({navigation, route}){
     //This checks if the user already has a premium payment link, if yes, direct to old link, if not, create and direct to new
     async function getPaymentLink(){
         let accessToken = await EncryptedStorage.getItem("accessToken")
-        console.log(accessToken)
+        let uid = await EncryptedStorage.getItem("userId")
 
         if(accessToken == null || accessToken == undefined){
             alert("Please login or sign in to use Crib Connect!")
@@ -174,17 +173,80 @@ export default function CribConnectTenantScreen({navigation, route}){
             navigation.navigate("PropertyPosting")
             return
         }
-
        
         setLoading(true)
+
+        let priceChanged = false;
+
+       
         if(paymentLink!= null){
+            await fetch("https://crib-llc.herokuapp.com/payments/premium/status",{
+                method: "POST",
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken,
+                },
+                body: JSON.stringify({
+                    orderId: userData.cribPremium?.paymentDetails?.orderId,
+                    userId: uid
+                })
+            })
+            .then(async res=> {
+                console.log(res.status)
+                if(res.status == 200){
+                    let data = await res.json();
+                    let diffInAmount = Math.abs(data.order.net_amount_due_money.amount - Number(cribConnectPrice.price).toFixed(2)*1000);
+                    if(diffInAmount > 5){
+                        console.log("gen new link");
+                        await fetch("https://crib-llc.herokuapp.com/payments/premium/generatelink", {
+                            // await fetch("https://crib-llc.herokuapp.com/payments/premium/generatetestinglink", {
+                            method: 'POST',
+                            headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + accessToken,
+                            },
+                            body: JSON.stringify({
+                                referralCode: referralCode,
+                                userId: USERID,
+                                price: Number(cribConnectPrice.price).toFixed(2)
+                            })
+                        })
+                        .then(async res => {
+                            if(res.status == 200){
+                                const data = await res.json()
+                                const supported = await Linking.canOpenURL(data.payment_link.url);
+                                if(supported){
+                                    setPaymentLink(data.payment_link.url)
+                                    await Linking.openURL(data.payment_link.url);
+                                    navigation.goBack()
+                                }
+
+                            }
+                        })
+                        .catch( e => {
+                            setLoading(false)
+                            console.log("Error")
+                        })
+                    }
+                    else{
+                        const supported = await Linking.canOpenURL(paymentLink);
+                        if(supported){
+                            await Linking.openURL(paymentLink);
+                            
+                        }
+                        navigation.goBack()
+
+                    }
+                }
+            })
+            .catch(e=>{
+                setLoading(false)
+                console.log("ERROR  ", e)
+            })
+            setLoading(false)
             
-            const supported = await Linking.canOpenURL(paymentLink);
-            if(supported){
-                await Linking.openURL(paymentLink);
-                
-            }
-            navigation.goBack()
         }
         else{
             //Generate random referral code
@@ -204,7 +266,8 @@ export default function CribConnectTenantScreen({navigation, route}){
                 },
                 body: JSON.stringify({
                     referralCode: referralCode,
-                    userId: USERID
+                    userId: USERID,
+                    price: Number(cribConnectPrice.price).toFixed(2)
                 })
             })
             .then(async res => {

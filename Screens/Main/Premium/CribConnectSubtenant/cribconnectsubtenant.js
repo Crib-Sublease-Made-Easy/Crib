@@ -36,7 +36,6 @@ export default function CribConnectSubtenantScreen({navigation, route}){
     async function checkIfPaid(){
         console.log("checking")
         let at = await EncryptedStorage.getItem("accessToken")
-        console.log(at)
         if(route.params.userData?.cribPremium?.paymentDetails?.orderId == undefined){
             console.log("undefined")
             return;

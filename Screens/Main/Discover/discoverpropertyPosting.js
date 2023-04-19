@@ -12,7 +12,8 @@ import {
     FlatList,
     TouchableOpacity,
     TouchableHighlight,
-    Alert
+    Alert,
+    Linking
 } from 'react-native';
 
 //Icons
@@ -70,7 +71,6 @@ export default function PropertyPostingScreen({ navigation }) {
 
     const flatListdata =
         [{ name: "Room", image: require('../../../assets/room.jpg'), description: "Shared public space" },
-        { name: "House", image: require('../../../assets/house.jpg'), description: "Entire House" },
         { name: "Entire apartment", image: require('../../../assets/apartment.jpg'), description: "2+ Bedroom Apartment" },
         { name: "Studio", image: require('../../../assets/studio.jpg'), description: "Open-styled apartment" }
     ]
@@ -86,6 +86,8 @@ export default function PropertyPostingScreen({ navigation }) {
     const [propertydateFlexible, setpropertydateFlexible] = useState(false)
     const [propertyNumBed, setpropertyNumBed] = useState(0);
     const [propertyNumBath, setpropertyNumBath] = useState(0);
+    const [propertyRoommates, setPropertyRoommates] = useState(false)
+    const [propertySharedRoom, setPropertySharedRoom] = useState(false)
     const [propertyPrice, setpropertyPrice] = useState('');
     const [propertySecurityDeposit, setpropertySecurityDeposit] = useState('');
     const [propertyDescription, setpropertyDescription] = useState('')
@@ -574,13 +576,15 @@ async function testScraped(){
                 propertyAmenities.forEach(element => {
                     postingData.append("amenities", element);
                 });
-               
+                postingData.append("roommates", propertyRoommates);
+                postingData.append("shared", propertySharedRoom);
                 postingData.append("availabilityFlexibility", true);
                
                 if(propertySecurityDeposit != null && propertySecurityDeposit != undefined){
                     postingData.append("securityDeposit", propertySecurityDeposit);
                 }
 
+                console.log(postingData)
 
             
               
@@ -696,19 +700,18 @@ async function testScraped(){
     const [expanded, setexpended] = useState(true)
     // const heighttranslation = useRef(new Animated.Value(startingvalue)).current;
     useEffect(() => {
-        // testing();
         //   getTokens
+        linking()
     }, [expanded])
 
 
-    // function testing() {
-    //     Animated.timing(heighttranslation, {
-    //         toValue: expanded ? startingvalue : 0,
-    //         duration: 300,
-    //         easing: Easing.inOut(Easing.ease),
-    //         useNativeDriver: false,
-    //     }).start()
-    // }
+    async function linking(){
+        let link = await Linking.getInitialURL();
+        console.log(link)
+    }
+
+
+
 
     async function LocationToLatLong(name){
         let tempLatLong = [];
@@ -808,7 +811,7 @@ async function testScraped(){
                     {/* Posting Landing Page */}
                     <PostingSection>
                         <Heading>Sublease your property,</Heading>
-                        <Heading style={{marginTop: HEIGHT*0.01}}>earn up to <Text style={{color: PRIMARYCOLOR}}> $950 </Text> per month</Heading>
+                        <Heading style={{marginTop: HEIGHT*0.01}}>save <Text style={{color: PRIMARYCOLOR}}> thousands </Text> per month</Heading>
 
                         <Subheading>We make subleasing as easy as possible.</Subheading>
 
@@ -1110,6 +1113,14 @@ async function testScraped(){
                             </CounterContainer>
                         
                         </RowContainerCol>
+                        <View style={{marginTop: HEIGHT*0.1, flexDirection: 'row', justifyContent:'space-between', width: WIDTH*0.9, alignItems:'center'}}>
+                            <Subheading style={{marginTop:0}}>Will there be roommates?</Subheading>
+                            <Ionicons name='checkbox' color={propertyRoommates? PRIMARYCOLOR : 'white'} size={30} onPress={()=> setPropertyRoommates(!propertyRoommates)}/>
+                        </View>
+                        <View style={{marginTop: HEIGHT*0.05, flexDirection: 'row', justifyContent:'space-between', width: WIDTH*0.9, alignItems:'center'}}>
+                            <Subheading style={{marginTop:0}}>Is it a shared room?</Subheading>
+                            <Ionicons name='checkbox' color={propertySharedRoom ? PRIMARYCOLOR : 'white'} size={30} onPress={()=>setPropertySharedRoom(!propertySharedRoom)}/>
+                        </View>
 
                     </PostingSection>
 

@@ -176,7 +176,6 @@ export default function ProfileScreen({navigation}){
                             }
                         }
                         if(userData.postedProperties != undefined && userData.postedProperties.length >= 1){
-                            console.log(userData.postedProperties.length >= 1)
                             fetchPostedProperties(userData.postedProperties[0], accessToken)
                         }
                     })
@@ -348,7 +347,6 @@ export default function ProfileScreen({navigation}){
         }
         else if(name == "My Referral Code"){
             // const at = await EncryptedStorage.getItem("accessToken")
-            // console.log(at)
             navigation.navigate("MyReferralCode", {userData : userData})
         }
       

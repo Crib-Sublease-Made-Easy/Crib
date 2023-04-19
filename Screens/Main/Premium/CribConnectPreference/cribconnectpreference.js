@@ -172,12 +172,9 @@ export default function CribConnectPreferenceScreen({navigation, route}){
     }
 
     async function checkIfPaid(user){
-        console.log("checking")
         let at = await EncryptedStorage.getItem("accessToken")
         let uid = await EncryptedStorage.getItem("userId")
-        console.log(at)
         if(user?.cribPremium?.paymentDetails?.orderId == undefined){
-            console.log("undefined")
             return;
         }
         await fetch("https://crib-llc.herokuapp.com/payments/premium/status",{
