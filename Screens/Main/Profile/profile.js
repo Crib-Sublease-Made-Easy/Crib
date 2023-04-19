@@ -78,7 +78,6 @@ export default function ProfileScreen({navigation}){
     const scrollviewRef = useRef(null)
     const {USERID, user} = useContext(UserContext);
 
-
     const [tabPressed, setTabPressed] = useState("Posted")
     const [postedProperties, setPostedProperties] = useState(null)
     const [favoriteProperties, setFavoriteProperties] = useState([])
@@ -99,6 +98,10 @@ export default function ProfileScreen({navigation}){
         {text: 'View saved property', icon: 'heart', color: '#ed3413'},
         {text: 'My Referral Code', icon: 'barcode', color: '#ed3413'},
     ]
+
+    const staticLikes = 10
+    const staticViews = 12
+    
    
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
@@ -397,17 +400,23 @@ export default function ProfileScreen({navigation}){
                     <CribPremiumSubheaderText>Let us do the work! {'\n'}We will find you a reliable {'\n'}tenant so you don't have to.</CribPremiumSubheaderText>
                 </CribPremiumPressableLeft>
                 <Lottie source={require('../../../assets/cribconnecttenantslide3.json')} autoPlay style={{width: WIDTH*0.2}}/>
-
             </CribPremiumPressable>
             <View style={{height: HEIGHT*0.015}}/>
-            <CribPremiumPressable onPress={toPostProperty}>
+            {postedProperties == undefined ? (<CribPremiumPressable onPress={toPostProperty}>
                 <CribPremiumPressableLeft>
                     <CribPremiumHeaderText>Sublease your room</CribPremiumHeaderText>
                     <CribPremiumSubheaderText>Stop paying for an empty {'\n'}room so you can spend it {'\n'}somewhere else!</CribPremiumSubheaderText>
                 </CribPremiumPressableLeft>
                 <Lottie source={require('../../../assets/cibprofilepremium.json')} autoPlay style={{width: WIDTH*0.25}}/>
-
-            </CribPremiumPressable>
+            </CribPremiumPressable>)
+            :
+            (<CribPremiumPressable style={{height: HEIGHT*0.13}} onPress={toPostProperty}>
+                <CribPremiumPressableLeft>
+                    <CribPremiumHeaderText>View Your Property Likes</CribPremiumHeaderText>
+                    <CribPremiumSubheaderText>Your posted property has {staticViews} {'\n'}views and {staticLikes} likes!</CribPremiumSubheaderText>
+                </CribPremiumPressableLeft>
+                <Lottie source={require('../../../assets/propertyLikes.json')} autoPlay style={{width: WIDTH*0.16}}/>
+            </CribPremiumPressable>)}
             
             <View style={{height: HEIGHT*0.025}}/>
 
