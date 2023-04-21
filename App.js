@@ -65,6 +65,7 @@ import EditPropertyAmenitiesScreen from './Screens/Main/Profile/EditProperty/Edi
 
 import PostedPropertyScreen from './Screens/Main/Profile/postedProperty';
 import FavoritePropertyScreen from './Screens/Main/Profile/favProperty';
+import LikeViewScreen from './Screens/Main/Profile/viewLikes';
 
 import LoadingScreen from './LoadingScreen';
 
@@ -566,6 +567,13 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
             <Stack.Screen name="FavoriteProperty"
               component={FavoritePropertyScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen name="LikeProperty"
+              component={LikeViewScreen}
               options={{
                 headerShown: false,
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

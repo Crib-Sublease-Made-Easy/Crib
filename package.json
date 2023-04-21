@@ -40,6 +40,7 @@
     "randomstring": "^1.2.3",
     "react": "17.0.2",
     "react-native": "0.68.2",
+    "react-native-badge-view": "^2.0.1",
     "react-native-check-version": "^1.1.0",
     "react-native-collapsible": "^1.6.0",
     "react-native-date-picker": "^4.2.2",

@@ -5,6 +5,7 @@ import {
   View,
   Text,
   Image,
+  Alert,
   Pressable,
   Animated,
   Share,
@@ -410,7 +411,14 @@ export default function ProfileScreen({navigation}){
                 <Lottie source={require('../../../assets/cibprofilepremium.json')} autoPlay style={{width: WIDTH*0.25}}/>
             </CribPremiumPressable>)
             :
-            (<CribPremiumPressable style={{height: HEIGHT*0.13}} onPress={toPostProperty}>
+            (<CribPremiumPressable style={{height: HEIGHT*0.13}} onPress={(()=>{
+                if (!userData.cribPremium.status) {
+                    navigation.navigate("LikeProperty")
+                }else {
+                    navigation.navigate("Connect", {userData: userData})
+                    Alert.alert("Get Crib Connect!","Only Crib Connect users get to view property views and likes")
+                }
+                })}>
                 <CribPremiumPressableLeft>
                     <CribPremiumHeaderText>View Your Property Likes</CribPremiumHeaderText>
                     <CribPremiumSubheaderText>Your posted property has {staticViews} {'\n'}views and {staticLikes} likes!</CribPremiumSubheaderText>
