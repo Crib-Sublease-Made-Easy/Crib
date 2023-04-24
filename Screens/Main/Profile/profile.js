@@ -412,7 +412,7 @@ export default function ProfileScreen({navigation}){
             </CribPremiumPressable>)
             :
             (<CribPremiumPressable style={{height: HEIGHT*0.13}} onPress={(()=>{
-                if (!userData.cribPremium.status) {
+                if (userData.cribPremium.status) {
                     navigation.navigate("LikeProperty")
                 }else {
                     navigation.navigate("Connect", {userData: userData})
