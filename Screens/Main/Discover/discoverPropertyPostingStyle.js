@@ -42,6 +42,14 @@ export const Subheading = styled.Text`
     marginTop: ${HEIGHT*0.02}px
 `
 
+export const GenderPressable = styled.Pressable`
+    padding-horizontal: ${WIDTH*0.04}px
+    padding-vertical: ${HEIGHT*0.01}px
+    border-color: white
+    border-width: 1px
+    border-radius: 15px
+`
+
 export const CribText = styled.Text`
     font-size: ${HEIGHT*0.035}px;
     font-weight:700;

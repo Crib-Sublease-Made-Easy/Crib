@@ -93,6 +93,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CribConnectSubtenantScreen from './Screens/Main/Premium/CribConnectSubtenant/cribconnectsubtenant';
 import CribConnectTenantScreen from './Screens/Main/Premium/CribConnectTenant/cribconnecttenant';
 import CribConnectPreferenceScreen from './Screens/Main/Premium/CribConnectPreference/cribconnectpreference';
+import CribConnectReviewsScreen from './Screens/Main/Premium/CribConnectReviews/cribconnectreviews';
+import CribConnectSubtenantMatchesScreen from './Screens/Main/Premium/CribConnectSubtenantMatches/cribConnectSubtenantMatches';
 
 
 export default function App() {
@@ -621,6 +623,22 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
                 cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
               }}
             />
+            <Stack.Screen name="CribConnectReviews"
+              component={CribConnectReviewsScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+              }}
+            />
+            <Stack.Screen name="CribConnectSubtenantMatches"
+              component={CribConnectSubtenantMatchesScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+
+          
 
 
 

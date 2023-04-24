@@ -29,9 +29,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 
 import Lottie from 'lottie-react-native';
 
-
-
-;
+const GENDERS = ["Male", "Female", "Both"]
 
 const ImageName = [
     { name: "Bedroom", des: "Image of where subtenants would sleep", icon: "bed-outline" },
@@ -57,7 +55,7 @@ import {
     PricePerMonth, PropertyTypeCard, PriceInputSearchContainer, CategoryName, RowContainer, RowValueContainer, RowName,
     FollowUpContainer, FollowUpText, DateCategoryName, BedroomContaienr, BedroomItemContainer, RowContainerCol,
     ReviewHeading, ReviewLocationContainer, ReviewDateContainer, ImageSelectionContainer, ImageText, CribText,
-    ContinueText, MaxText, ExitButtonContainer, ExitButtonText, ContinueButton, BackNextContainer, BackText, SmallContinueButton, ImageTypeText, PriceInput, DollarSignText, SecurityDepositInputSearchContainer, SecurityDepositInput, CounterContainer, BedroomCountContaienr, BedroomBathroomCountText, AmenitiesName, ReivewImageContainer, ReviewSection, ReviewHeadingAndEditContainer, ReviewButtonContainer,
+    ContinueText, MaxText, ExitButtonContainer, ExitButtonText, ContinueButton, BackNextContainer, BackText, SmallContinueButton, ImageTypeText, PriceInput, DollarSignText, SecurityDepositInputSearchContainer, SecurityDepositInput, CounterContainer, BedroomCountContaienr, BedroomBathroomCountText, AmenitiesName, ReivewImageContainer, ReviewSection, ReviewHeadingAndEditContainer, ReviewButtonContainer, GenderPressable,
 } from './discoverPropertyPostingStyle';
 import Easing from 'react-native/Libraries/Animated/Easing';
 import { DARKGREY, LIGHTGREY, MEDIUMGREY, GetAmenitiesIcon, amenitiesList, HEIGHT, WIDTH, PRIMARYCOLOR, GetFAIcons} from '../../../sharedUtils';
@@ -87,11 +85,14 @@ export default function PropertyPostingScreen({ navigation }) {
     const [propertyNumBed, setpropertyNumBed] = useState(0);
     const [propertyNumBath, setpropertyNumBath] = useState(0);
     const [propertyRoommates, setPropertyRoommates] = useState(false)
+    const [propertyRoommatesGender, setPropertyRoommatesGender] = useState("")
     const [propertySharedRoom, setPropertySharedRoom] = useState(false)
+    const [propertySharedRoomGender, setPropertySharedRoomGender] = useState("")
     const [propertyPrice, setpropertyPrice] = useState('');
     const [propertySecurityDeposit, setpropertySecurityDeposit] = useState('');
     const [propertyDescription, setpropertyDescription] = useState('')
     const [propertyAmenities, setpropertyAmenities] = useState([])
+
 
     const [title, setTitle] = useState("")
 
@@ -281,6 +282,14 @@ export default function PropertyPostingScreen({ navigation }) {
         }
         if(propertyNumBath == 0){
             alert("Please enter a valid bathroom number.")
+            return false;
+        }
+        if(propertyRoommates && propertyRoommatesGender == ""){
+            alert("Please enter gender of roommates.")
+            return false;
+        }
+        if(propertySharedRoom && propertySharedRoomGender == ""){
+            alert("Please enter gender of shared roomamte.")
             return false;
         }
         return true;
@@ -577,8 +586,10 @@ async function testScraped(){
                     postingData.append("amenities", element);
                 });
                 postingData.append("roommates", propertyRoommates);
+                postingData.append("roommatesGender", propertyRoommatesGender)
                 postingData.append("shared", propertySharedRoom);
-                postingData.append("availabilityFlexibility", true);
+                postingData.append("sharedGender", propertySharedRoomGender)
+                postingData.append("availabilityFlexibility", propertydateFlexible);
                
                 if(propertySecurityDeposit != null && propertySecurityDeposit != undefined){
                     postingData.append("securityDeposit", propertySecurityDeposit);
@@ -605,7 +616,7 @@ async function testScraped(){
                             }
                             catch{
                             }
-                            navigation.goBack()
+                            navigation.navigate("Connect")
                         }
                         else{
                            
@@ -939,7 +950,7 @@ async function testScraped(){
 
                     <PostingSection>
                         <Heading>Sublease availability</Heading>
-                        <Subheading>Enter start and end date of sublease </Subheading>
+                        <Subheading>Please enter the maximum range for availabilitys</Subheading>
                            
                         <InputContainer >
                             <DateSelectContainer>
@@ -1113,13 +1124,40 @@ async function testScraped(){
                             </CounterContainer>
                         
                         </RowContainerCol>
-                        <View style={{marginTop: HEIGHT*0.1, flexDirection: 'row', justifyContent:'space-between', width: WIDTH*0.9, alignItems:'center'}}>
+                        <View style={{marginTop: HEIGHT*0.05, flexDirection: 'row', justifyContent:'space-between', width: WIDTH*0.9, alignItems:'center'}}>
                             <Subheading style={{marginTop:0}}>Will there be roommates?</Subheading>
                             <Ionicons name='checkbox' color={propertyRoommates? PRIMARYCOLOR : 'white'} size={30} onPress={()=> setPropertyRoommates(!propertyRoommates)}/>
                         </View>
+                        <View style={{flexDirection:'row', width: WIDTH*0.9, alignItems:'center', justifyContent:'space-between', marginTop: HEIGHT*0.04}}>
+                        {
+                            propertyRoommates && GENDERS.map((item) => {
+                                return(
+                                    <GenderPressable style={{backgroundColor: item == propertyRoommatesGender ? 'white' : null}} onPress={()=>setPropertyRoommatesGender(item)} key={"roommates"+item}>
+                                        <Text style={{color: item == propertyRoommatesGender ? 'black' : 'white'}} >{item}</Text>
+                                    </GenderPressable>
+                                )
+                               
+                            })
+                        }
+                        </View>
+
+                        
+                        
                         <View style={{marginTop: HEIGHT*0.05, flexDirection: 'row', justifyContent:'space-between', width: WIDTH*0.9, alignItems:'center'}}>
                             <Subheading style={{marginTop:0}}>Is it a shared room?</Subheading>
                             <Ionicons name='checkbox' color={propertySharedRoom ? PRIMARYCOLOR : 'white'} size={30} onPress={()=>setPropertySharedRoom(!propertySharedRoom)}/>
+                        </View>
+                        <View style={{flexDirection:'row', width: WIDTH*0.9, alignItems:'center', justifyContent:'space-between', marginTop: HEIGHT*0.04}}>
+                        {
+                            propertySharedRoom && GENDERS.map((item) => {
+                                return(
+                                    <GenderPressable style={{backgroundColor: item == propertySharedRoomGender ? 'white' : null}} onPress={()=>setPropertySharedRoomGender(item)} key={"roommates"+item}>
+                                        <Text style={{color: item == propertySharedRoomGender ? 'black' : 'white'}} >{item}</Text>
+                                    </GenderPressable>
+                                )
+                               
+                            })
+                        }
                         </View>
 
                     </PostingSection>

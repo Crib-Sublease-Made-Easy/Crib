@@ -74,11 +74,16 @@ export default function DiscoverScreen({navigation, route, initialParams}){
 
     //Method for handling notifications received while app in foreground
     OneSignal.setNotificationOpenedHandler(async notification => {
-        console.log(notification)
+      
 
     // console.log("OneSignal: notification opened:", notification);
         await connectSendbird()
-        navigation.navigate("Message")
+        if(notification.notification.additionalData != undefined && notification.notification.additionalData.type == "cribconnect"){
+            navigation.navigate("Connect")
+        }
+        else{
+            navigation.navigate("Message")
+        }
     });
     const connectSendbird = async () => {
         try{

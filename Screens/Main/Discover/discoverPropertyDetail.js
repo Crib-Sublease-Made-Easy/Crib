@@ -63,6 +63,7 @@ export default function PropertyDetailScreen({navigation, route}){
     const [liked, setLiked]  = useState()
     const [ownProperty, setOwnProperty] = useState(!route.params.scraped && route.params.data.propertyInfo.postedBy == USERID)
     const [scrapedProfilePic, setScrapedProfiePic] = useState(true)
+    const [userDate, setUserData] = useState(null)
     
     const createConversation = async () =>{
         if(USERID == null){
@@ -159,6 +160,7 @@ export default function PropertyDetailScreen({navigation, route}){
                 }
                 }) 
                 .then(res => res.json()).then(async userData =>{
+                    setUserData(userData)
                     if(userData.favoriteProperties.indexOf(route.params.data.propertyInfo._id) == -1){
                         setLiked(false)
                     }
@@ -239,8 +241,45 @@ export default function PropertyDetailScreen({navigation, route}){
     }, []);
 
     async function likeProperty(){
+        const accessToken = await EncryptedStorage.getItem("accessToken");
+
+        if(accessToken== undefined || accessToken == null){
+            alert("Sign in to like properties.");
+            navigation.navigate("Landing")
+            return
+        }
+
+        const uid = await EncryptedStorage.getItem("userId")
+        if(liked == false){
+            try{
+                console.log(propData.postedBy)
+                console.log(uid)
+                if(accessToken != null && propData.postedBy != null){
+                    fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
+                    method: 'POST',
+                    headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'bearer ' + accessToken,
+
+                    },
+                    body: JSON.stringify({
+                        participant1: propData.postedBy,
+                        participant2: uid,
+                        senderId: uid,
+                        message: ``,
+                        like: true
+                    })
+                    }).then(async res => {
+                    
+                    })
+                }
+            }
+            catch{
+
+            }
+        }
         try{
-            const accessToken = await EncryptedStorage.getItem("accessToken");
             if(accessToken != undefined){
                 if(accessToken != null){
                     await fetch('https://crib-llc.herokuapp.com/properties/favorite', {
@@ -269,10 +308,7 @@ export default function PropertyDetailScreen({navigation, route}){
                     })
                 }
             }
-            else{
-                alert("Sign in to like properties.");
-                navigation.navigate("Landing")
-            }
+          
         }
         catch{
             console.log("ERROR --- LIKEPROPERTY --- PROPERTYDETAIL")
@@ -308,7 +344,7 @@ export default function PropertyDetailScreen({navigation, route}){
             >
                 <Lottie source={require('../../../ImageLoading.json')} autoPlay   style={{width:WIDTH, height: WIDTH*0.3, position:'absolute', marginTop: HEIGHT*0.025}}/>
 
-                <View style={{height:HEIGHT*0.35, width:WIDTH}}>
+                <View style={{height:HEIGHT*0.45, width:WIDTH}}>
                     <FlatList 
                         onScroll={onScroll}
                         horizontal 
@@ -317,11 +353,11 @@ export default function PropertyDetailScreen({navigation, route}){
                         showsHorizontalScrollIndicator={false}
                         bounces={false}
                         snapToInterval={WIDTH}
-                        style={{position:'absolute', width:WIDTH, height:HEIGHT*0.35, overflow:'hidden'}}
+                        style={{position:'absolute', width:WIDTH, height:HEIGHT*0.45, overflow:'hidden'}}
                         data={route.params.data.propertyInfo.imgList}
                         ref={flatListRef}
                         renderItem={({item})=>(
-                            <View style={{width:WIDTH, height:HEIGHT*0.35,justifyContent:'center'}}>
+                            <View style={{width:WIDTH, height:HEIGHT*0.45,justifyContent:'center'}}>
                                 <FastImage 
                                 source={{
                                     uri: item,

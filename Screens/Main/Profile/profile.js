@@ -9,7 +9,8 @@ import {
   Animated,
   Share,
   ActivityIndicator,
-  AppState
+  AppState,
+  Linking
 } from 'react-native';
 import { UserContext } from '../../../UserContext';
 
@@ -93,9 +94,9 @@ export default function ProfileScreen({navigation}){
 
     const RowOptions = [
         // {text: 'My Referral Code', icon: 'star'},
+        {text: 'Looking for a sublease', icon: 'search', color: '#ed3413'},
         {text: 'Edit Profile', icon: 'create', color: GOOGLEBLUE},
-        {text: 'List a Property', icon: 'home', color: PRIMARYCOLOR},
-        {text: 'View posted property', icon: 'search', color: 'black'},
+        {text: 'View posted property', icon: 'home', color: 'black'},
         {text: 'View saved property', icon: 'heart', color: '#ed3413'},
         {text: 'My Referral Code', icon: 'barcode', color: '#ed3413'},
     ]
@@ -296,7 +297,7 @@ export default function ProfileScreen({navigation}){
 
     //Function to post properties, only if user have no properties 
     async function toPostProperty(){
-              
+        
         if(userData.postedProperties.length > 0){
             alert("As a regular member, you can only post one property.")
         }
@@ -349,6 +350,17 @@ export default function ProfileScreen({navigation}){
             // const at = await EncryptedStorage.getItem("accessToken")
             navigation.navigate("MyReferralCode", {userData : userData})
         }
+        else if(name == "Looking for a sublease"){
+            // const at = await EncryptedStorage.getItem("accessToken")
+            let url = "https://forms.gle/zJji65b1LNu9G4Mh7"
+            const supported = await Linking.canOpenURL(url);
+
+            if (supported) {
+            // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+            // by some browser in the mobile
+            await Linking.openURL(url);
+            }
+        }
       
     }
     return(
@@ -389,7 +401,7 @@ export default function ProfileScreen({navigation}){
             </UpgradeContainer> */}
 
             <View style={{height: HEIGHT*0.03}}/>
-            <CribPremiumPressable  style={{backgroundColor: '#d4af37'}} onPress={(()=>navigation.navigate("CribConnectTenant", {userData: userData}))}>
+            <CribPremiumPressable  style={{backgroundColor: '#d4af37'}} onPress={(()=>navigation.navigate("Connect", {userData: userData}))}>
                 <CribPremiumPressableLeft>
                     <CribPremiumHeaderText>Crib Connect</CribPremiumHeaderText>
                     <CribPremiumSubheaderText>Let us do the work! {'\n'}We will find you a reliable {'\n'}tenant so you don't have to.</CribPremiumSubheaderText>

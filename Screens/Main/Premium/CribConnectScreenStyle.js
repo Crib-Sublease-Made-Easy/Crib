@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, EXTRALIGHT, DARKGREY } from '../../../sharedUtils'
 
 export const CribPremiumSubheaderText = styled.Text`
-  font-size: ${HEIGHT*0.045}px
+  font-size: ${HEIGHT*0.04}px
   font-weight: 500
   margin-top: ${HEIGHT*0.01}px
   width: ${WIDTH*0.9}px;
@@ -25,7 +25,7 @@ export const SubmitButton = styled.Pressable`
     align-self: center
     justify-content: center
     align-items: center
-    margin-top: ${HEIGHT*0.025}px
+    margin-top: ${HEIGHT*0.05}px
 `
 
 export const PreferenceLabel = styled.Text`
@@ -129,8 +129,27 @@ export const CribConnectNotifContentText = styled.Text`
 `
 
 export const EstimatedSavingText = styled.Text`
-  font-size: ${HEIGHT*0.02}px
-  font-weight: 500
-  color: ${DARKGREY}
+  font-size: ${HEIGHT*0.025}px
+  font-weight: 400
   align-self: center
+  text-align: center
+`
+export const CribConnectMatchesContainer = styled.Pressable`
+  width: ${WIDTH*0.9}px
+  padding-vertical: ${HEIGHT*0.015}px
+  border-width: 2px
+  border-color: ${PRIMARYCOLOR}
+  border-radius: 10px
+  justify-content: space-between
+  align-items: center
+  flex-direction: row
+  padding-horizontal: ${WIDTH*0.05}px
+
+`
+
+export const CribConnectMatchesText = styled.Text`
+  font-size: ${HEIGHT*0.02}px
+  font-weight: 600
+  color: ${PRIMARYCOLOR}
+
 `

@@ -11,15 +11,15 @@ export const Header = styled.Text`
 `
 
 export const TitleText = styled.Text`
-    font-size: ${HEIGHT*0.025}px
+    font-size: ${HEIGHT*0.0225}px
     font-weight: 700
-    width: ${WIDTH*0.8}px
+    width: ${WIDTH*0.85}px
     align-self: center
 `
 export const SubtitleText = styled.Text`
     font-size: ${HEIGHT*0.02}px
-    font-weight: 500
-    width: ${WIDTH*0.8}px
+    
+    width: ${WIDTH*0.85}px
     align-self: center
 `
 
@@ -54,7 +54,7 @@ export const PriceText = styled.Text`
 `
 
 export const SubmitButton = styled.Pressable`
-    width: ${WIDTH*0.8}px
+    width: ${WIDTH*0.85}px
     padding-vertical: ${HEIGHT*0.0175}px
     background-color: ${PRIMARYCOLOR}
     border-radius: 15px
@@ -93,7 +93,7 @@ export const PriceAndBreakDownContainer = styled.View`
     flex-direction: row
     justify-content: space-between 
     align-items: center
-    width: ${WIDTH*0.8}px
+    width: ${WIDTH*0.85}px
     align-self: center
     
 `

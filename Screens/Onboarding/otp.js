@@ -51,11 +51,9 @@ export default function OTPScreen({navigation, route}){
 
     useEffect(()=> {
         setauthyID(route.params.authy_id)
-        if(code.length == 6){
-            signupStep3();
-        }
+        
 
-    },[code])
+    },[])
 
     async function signupStep3(){ 
         console.log("hello")

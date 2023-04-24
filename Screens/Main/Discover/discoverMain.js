@@ -51,7 +51,7 @@ export default function DiscoverTab({navigation, route}){
               color = focused ? PRIMARYCOLOR : '#A9A9A9'
             }
             else if (route.name === 'Connect') {
-              iconName = focused ? 'swap-horizontal' : 'swap-horizontal-outline';
+              iconName = focused ? 'earth' : 'earth-outline';
               color = focused ? PRIMARYCOLOR : '#A9A9A9'
             }
 

@@ -58,7 +58,7 @@ export const MoneyBackText = styled.Text`
 `
 export const BottomContainer = styled.View`
     position: absolute
-    bottom: ${HEIGHT*0.1}px
+    bottom: ${HEIGHT*0.075}px
     align-items: center
     justify-content: center
     align-self: center

@@ -16,17 +16,16 @@ import {
 } from 'react-native';
 import Lottie from 'lottie-react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import { UserContext } from '../../../UserContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { HEIGHT, PRIMARYCOLOR, WIDTH } from '../../../sharedUtils';
-import {CribConnectNotifContentText, CribConnectNotifLogoView, CribConnectNotifNameText, CribConnectNotifView, CribPremiumPaidSubheaderText, CribPremiumSubheaderText, EstimatedSavingText, NumberBackground, NumberText, PreferenceLabel, PreferencesInput, ReferralCodeHelperText, SubmitButton, SubmitButtonOutline, SubmitText} from './CribConnectScreenStyle'
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import {CribConnectMatchesContainer, CribConnectMatchesText, CribConnectNotifContentText, CribConnectNotifLogoView, CribConnectNotifNameText, CribConnectNotifView, CribPremiumPaidSubheaderText, CribPremiumSubheaderText, EstimatedSavingText, NumberBackground, NumberText, PreferenceLabel, PreferencesInput, ReferralCodeHelperText, SubmitButton, SubmitButtonOutline, SubmitText} from './CribConnectScreenStyle'
 
 
 
 
 export default function CribConnectScreen({navigation}){
+    
     const appState = useRef(AppState.currentState);
 
     const [userData, setUserData] = useState()
@@ -34,11 +33,7 @@ export default function CribConnectScreen({navigation}){
     const [prefetchCribConnectInterestedNumber, setPrefetchCribConnectInterestedNumber] = useState("A lot of")
     const [cribPremium, setCribPremium] = useState(false)
     const [preference, setPreference] = useState("")
-    const [numberOfViews, setNumberOfViews] = useState(2)
-    const [interestedSubtenant, setInterestedSubtenant] = useState("44")
-    const [estimatedSaving, setEstimatedSaving] = useState("Post a sublease first")
-
-
+    const [estimatedSaving, setEstimatedSaving] = useState("")
 
     useEffect(()=>{
         const unsubscribe = navigation.addListener('focus', () => {
@@ -69,7 +64,6 @@ export default function CribConnectScreen({navigation}){
     async function getTokens(){
        
         const accessToken = await EncryptedStorage.getItem("accessToken");
-        console.log(accessToken)
         let USERID = await EncryptedStorage.getItem("userId")
 
         
@@ -88,7 +82,6 @@ export default function CribConnectScreen({navigation}){
             }
             }) 
             .then(res => res.json()).then(async userData =>{
-                
                 if(userData.cribPremium.paymentDetails.status == true){
                     setCribPremium(true)
                 }
@@ -100,7 +93,6 @@ export default function CribConnectScreen({navigation}){
 
                 let lastSetInterested = await EncryptedStorage.getItem("lastSetInterested")
                 let curTime = new Date().getTime()
-                
                 if(userData.postedProperties != undefined && userData.postedProperties?.length != 0){
                     await fetch('https://crib-llc.herokuapp.com/properties/' + userData.postedProperties[0], {
                     method: 'POST',
@@ -116,9 +108,6 @@ export default function CribConnectScreen({navigation}){
                     .then(async res => {
                         if(res.status == 200){
                             const data = await res.json()
-
-                           
-                            setNumberOfViews(data.propertyInfo.numberOfViews)
 
                             let diff = new Date(data.propertyInfo.availableTo).getTime() - new Date(data.propertyInfo.availableFrom).getTime();
                            
@@ -136,91 +125,80 @@ export default function CribConnectScreen({navigation}){
                             
                            
                            
-                            if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("madison") != -1){
-                                setPrefetchCribConnectInterestedNumber("30+");
-                                if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
-                                    //Allow set the number
-                                    let randomNum = Math.floor(Math.random() * (25 -10) + 10)
-                                    setInterestedSubtenant(randomNum)
-                                    EncryptedStorage.setItem("lastSetInterested", curTime.toString())
-                                }
-                                setSubleaseArea("Madison")
-                            }
-                            else if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("chicago") != -1){
-                                setPrefetchCribConnectInterestedNumber("473+");
-                                if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
-                                    //Allow set the number
-                                    let randomNum = Math.floor(Math.random() * (350 - 170) + 170)
-                                    setInterestedSubtenant(randomNum)
-                                    EncryptedStorage.setItem("lastSetInterested", curTime.toString())
-                                }
+                            // if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("madison") != -1){
+                            //     setPrefetchCribConnectInterestedNumber("30+");
+                            //     if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
+                            //         //Allow set the number
+                            //         let randomNum = Math.floor(Math.random() * (25 -10) + 10)
+                                  
+                            //         EncryptedStorage.setItem("lastSetInterested", curTime.toString())
+                            //     }
+                            //     setSubleaseArea("Madison")
+                            // }
+                            // else if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("chicago") != -1){
+                            //     setPrefetchCribConnectInterestedNumber("473+");
+                            //     if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
+                            //         //Allow set the number
+                                  
+                            //         EncryptedStorage.setItem("lastSetInterested", curTime.toString())
+                            //     }
                                 
-                                setSubleaseArea("Chicago")
-                            }
-                            else if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("newyork") != -1){
-                                setPrefetchCribConnectInterestedNumber("473+");
-                                if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
-                                    //Allow set the number
-                                    let randomNum = Math.floor(Math.random() * (350 - 170) + 170)
-                                    setInterestedSubtenant(randomNum)
-                                    EncryptedStorage.setItem("lastSetInterested", curTime.toString())
-                                }
+                            //     setSubleaseArea("Chicago")
+                            // }
+                            // else if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("newyork") != -1){
+                            //     setPrefetchCribConnectInterestedNumber("473+");
+                            //     if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
+                            //         //Allow set the number
+                            //         EncryptedStorage.setItem("lastSetInterested", curTime.toString())
+                            //     }
                               
-                                setSubleaseArea("New York")
-                            }
-                            else if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("austin") != -1){
-                                setPrefetchCribConnectInterestedNumber("473+");
-                                if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
-                                    //Allow set the number
-                                    let randomNum = Math.floor(Math.random() * (300 - 120) + 120)
-                                    setInterestedSubtenant(randomNum)
-                                    EncryptedStorage.setItem("lastSetInterested", curTime.toString())
-                                }
+                            //     setSubleaseArea("New York")
+                            // }
+                            // else if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("austin") != -1){
+                            //     setPrefetchCribConnectInterestedNumber("473+");
+                            //     if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
+                            //         //Allow set the number
+                            //         EncryptedStorage.setItem("lastSetInterested", curTime.toString())
+                            //     }
                             
-                                setSubleaseArea("Austin")
-                            }
-                            else if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("sanmarcos") != -1){
-                                setPrefetchCribConnectInterestedNumber("236+");
-                                if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
-                                    //Allow set the number
-                                    let randomNum = Math.floor(Math.random() * (150 - 70) + 70)
-                                    setInterestedSubtenant(randomNum)
-                                    EncryptedStorage.setItem("lastSetInterested", curTime.toString())
-                                }
+                            //     setSubleaseArea("Austin")
+                            // }
+                            // else if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("sanmarcos") != -1){
+                            //     setPrefetchCribConnectInterestedNumber("236+");
+                            //     if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
+                            //         //Allow set the number
+                            //         EncryptedStorage.setItem("lastSetInterested", curTime.toString())
+                            //     }
                                 
-                                setSubleaseArea("San Marcos")
-                            }
-                            else if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("seattle") != -1){
-                                setPrefetchCribConnectInterestedNumber("477+");
-                                if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
-                                    //Allow set the number
-                                    let randomNum = Math.floor(Math.random() * (300 - 100) + 100)
-                                    setInterestedSubtenant(randomNum)
-                                    EncryptedStorage.setItem("lastSetInterested", curTime.toString())
-                                }
+                            //     setSubleaseArea("San Marcos")
+                            // }
+                            // else if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("seattle") != -1){
+                            //     setPrefetchCribConnectInterestedNumber("477+");
+                            //     if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
+                            //         //Allow set the number
+                            //         EncryptedStorage.setItem("lastSetInterested", curTime.toString())
+                            //     }
                               
-                                setSubleaseArea("Seattle")
-                            }
-                            else if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("losangeles") != -1){
-                                setPrefetchCribConnectInterestedNumber("565+");
-                                if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
-                                    //Allow set the number
-                                    let randomNum = Math.floor(Math.random() * (400 - 300) + 300)
-                                    setInterestedSubtenant(randomNum)
-                                    EncryptedStorage.setItem("lastSetInterested", curTime.toString())
-                                }
+                            //     setSubleaseArea("Seattle")
+                            // }
+                            // else if(data.propertyInfo.loc.secondaryTxt.toLowerCase().replaceAll(" ","").indexOf("losangeles") != -1){
+                            //     setPrefetchCribConnectInterestedNumber("565+");
+                            //     if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
+                            //         //Allow set the number
+                            //         EncryptedStorage.setItem("lastSetInterested", curTime.toString())
+                            //     }
                               
-                                setSubleaseArea("LA")
-                            }
-                            else{
-                                setPrefetchCribConnectInterestedNumber("Some");
-                                if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
-                                    //Allow set the number
-                                    let randomNum = Math.floor(Math.random() * (50 - 20) + 20)
-                                    setInterestedSubtenant(randomNum)
-                                    EncryptedStorage.setItem("lastSetInterested", curTime.toString())
-                                }
-                            }
+                            //     setSubleaseArea("LA")
+                            // }
+                            // else{
+                            //     setPrefetchCribConnectInterestedNumber("Some");
+                            //     if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
+                            //         //Allow set the number
+                            //         EncryptedStorage.setItem("lastSetInterested", curTime.toString())
+                            //     }
+                            //     setSubleaseArea(data.propertyInfo.loc.secondaryTxt)
+                               
+                            // }
                         }
                         
                     })
@@ -229,12 +207,11 @@ export default function CribConnectScreen({navigation}){
                     })
                 } 
                 else{
+                    setEstimatedSaving("")
                     setPrefetchCribConnectInterestedNumber("A lot of");
                     setSubleaseArea("your area")
                     if(lastSetInterested == undefined || curTime - lastSetInterested > (1000*60*60*24)){
                         //Allow set the number
-                        let randomNum = Math.floor(Math.random() * (150 - 70) + 70)
-                        setInterestedSubtenant(randomNum)
                         EncryptedStorage.setItem("lastSetInterested", curTime.toString())
                     }
                 }
@@ -297,20 +274,44 @@ export default function CribConnectScreen({navigation}){
             navigation.navigate("Profile")
             return
         }
-        else if(userData != undefined && userData.postedProperties?.length == 0){
-            navigation.navigate("PropertyPosting", {userData: userData})
-        }
-        else if(userData != undefined && cribPremium && userData.postedProperties?.length == 0){
+        //Don't have a property posted
+        if(userData != undefined && userData.postedProperties?.length == 0){
             navigation.navigate("PropertyPosting", {userData: userData})
             return
         }
+        //Not a crib connect user yet
         else if(!cribPremium){
+            let uid = await EncryptedStorage.getItem("userId")
+            if(userData.cribConnectEnrolled == false){
+                //Change enroll to true
+                await fetch("https://crib-llc.herokuapp.com/users/enrollCribConnect",{
+                    method: "POST",
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: uid
+                    })
+                })
+                .then(async res => {
+                    if(res.status == 200){
+                        alert("You've enrolled for Crib Connect! \nWe will message you soon.")
+                        getTokens()
+                    }
+                    else{
+                        alert("Error occurs while enrolling. Please try again later!")
+                        return
+                    }
+                })
+            }
             navigation.navigate("CribConnectTenant", {userData: userData, prefetchInterestedNumber: prefetchCribConnectInterestedNumber, subleaseArea: subleaseArea, estimatedSaving: estimatedSaving})
+
         } 
+        //Is a Crib Connect user
         else{
             updatePreference()
         }
-       
     }
 
     async function checkIfPaid(user){
@@ -337,9 +338,6 @@ export default function CribConnectScreen({navigation}){
                 if(data.order.state == "OPEN"){
                     setCribPremium(true)
                 }
-                else{
-                    console.log("unpaid")
-                }
             }
         })
         .catch(e=>{
@@ -350,8 +348,8 @@ export default function CribConnectScreen({navigation}){
 
     return(
         <View style={{height: HEIGHT, width:WIDTH, backgroundColor:'white', flex:1, position:'relative', paddingTop: HEIGHT*0.075}}>
-            <SafeAreaView>
-                <TouchableWithoutFeedback onPress={()=> Keyboard.dismiss()}>
+            <SafeAreaView style={{flex: 1}}>
+               
                     
                     
                     {/* {!cribPremium ? */}
@@ -361,21 +359,27 @@ export default function CribConnectScreen({navigation}){
                     </CribPremiumSubheaderText>
 
 
+                    <Lottie source={require('../../../assets/cribtenantsubscription.json')} autoPlay loop style={{width: WIDTH*0.8,alignSelf:'center',}}/>
+                    {cribPremium || (userData != undefined && userData.cribConnectEnrolled) ?
+                        <></>
+                        :
+                        estimatedSaving != "" ?
 
-                    <View style={{flexDirection:'row', width: WIDTH*0.9, alignSelf:'center', marginTop: HEIGHT*0.025, alignContent:'center', }}>
-                        <Lottie source={require('../../../assets/cribconnectfire.json')} autoPlay loop style={{width: WIDTH*0.15,alignSelf:'center',}}/>
-                        {/* <NumberBackground> */}
-                            {/* <NumberText style={{color:'black', alignSelf:'center'}}>
-                                134+
-                            </NumberText> */}
-                        {/* </NumberBackground> */}
+                        <EstimatedSavingText style={{marginTop: HEIGHT*0.035}}>Don't risk paying{'\n'}<Text style={{fontSize:HEIGHT*0.07, fontWeight:'600'}}>${estimatedSaving}</Text> {'\n'}<Text style={{fontSize:HEIGHT*0.0175}}>when you’re not there.</Text></EstimatedSavingText>
+                        :
+                        <EstimatedSavingText style={{marginTop: HEIGHT*0.035}}>Save thousands in 30 seconds</EstimatedSavingText>
+                    }
+
+                    {/* <View style={{flexDirection:'row', width: WIDTH*0.9, alignSelf:'center', marginTop: HEIGHT*0.025, alignContent:'center', }}>
+                        // <Lottie source={require('../../../assets/cribconnectfire.json')} autoPlay loop style={{width: WIDTH*0.15,alignSelf:'center',}}/>
+                      
                         <View style={{paddingLeft: WIDTH*0.025, alignSelf:'flex-end'}}>
                             <NumberText >
                                 <Text style={{fontWeight:'800', color:'#cdab3e'}}>{prefetchCribConnectInterestedNumber}</Text> people are looking for {'\n'}subleases in {subleaseArea} daily!
                             </NumberText>
                         </View>
-                    </View>     
-                    <View style={{paddingVertical: HEIGHT*0.025, marginTop: HEIGHT*0.025}}>
+                    </View>      */}
+                    {/* <View style={{paddingVertical: HEIGHT*0.025, marginTop: HEIGHT*0.025}}>
                        
                        
                         <CribConnectNotifView style={{marginTop: HEIGHT*0.02}}>
@@ -398,17 +402,24 @@ export default function CribConnectScreen({navigation}){
                                 }
                             </View>
                         </CribConnectNotifView>   
-                    </View>     
-                    {userData == undefined || userData?.postedProperties?.length == 0 ?
+                    </View>      */}
+                    {/* {userData == undefined || userData?.postedProperties?.length == 0 ?
                     <EstimatedSavingText>Estimated savings: Post a sublease first</EstimatedSavingText>
                     :
                     <EstimatedSavingText>Estimated savings: <Text style={{fontSize:HEIGHT*0.025, color: 'black', textDecorationLine:'underline', textDecorationColor:PRIMARYCOLOR}}>${estimatedSaving}</Text></EstimatedSavingText>
-                    }
-                    <ReferralCodeHelperText style={{marginTop: HEIGHT*0.1}}>Get Crib Connect to automatically match {'\n'}with interested and reliable subtenants </ReferralCodeHelperText>
+                    } */}
+                    {/* <ReferralCodeHelperText style={{marginTop: HEIGHT*0.1}}>Get Crib Connect to automatically match {'\n'}with interested and reliable subtenants </ReferralCodeHelperText> */}
 
-                </TouchableWithoutFeedback>
+              
            
-            <View style={{marginTop: HEIGHT*0.03}}>
+            <View style={{position:'absolute', bottom:HEIGHT*0.05, alignSelf:'center'}}>
+            {userData != undefined && userData.cribConnectSubtenants != undefined  && userData.cribConnectEnrolled &&
+                <CribConnectMatchesContainer onPress={()=> navigation.navigate("CribConnectSubtenantMatches", {subtenantMatches: userData.cribConnectSubtenants, paidUser: cribPremium, userData: userData})}>
+                    <Lottie source={require("../../../assets/cribconnectfire.json")} autoPlay loop style={{height:HEIGHT*0.04}}/>
+                    <CribConnectMatchesText>{userData.cribConnectSubtenants.length == 0 ? "" : userData.cribConnectSubtenants.length} {userData.cribConnectSubtenants.length == 0 ? "Finding a subtenant ..." : "subtenant matches"}</CribConnectMatchesText>
+                    <Ionicons name={'arrow-forward'} color={PRIMARYCOLOR} size={HEIGHT*0.02} style={{opacity: userData.cribConnectSubtenants.length == 0 ? 0 : 1}}/>
+                </CribConnectMatchesContainer>
+            }
                 {/* <SubmitButtonOutline  onPress={()=>{!cribPremium ? navigation.navigate("CribConnectSubtenant", {userData: userData, prefetchInterestedNumber: prefetchCribConnectInterestedNumber, subleaseArea: subleaseArea}) : updatePreference()}}>
                     
                     <SubmitText style={{color: PRIMARYCOLOR}} >Find a sublease</SubmitText>           
@@ -417,7 +428,7 @@ export default function CribConnectScreen({navigation}){
 
                 <SubmitButton onPress={handleSubmitClick}>
                     
-                    <SubmitText >{cribPremium ? "Edit my preference" : (userData == undefined || userData?.postedProperties?.length == 0) ? "Post my subleases" : "Check out Crib Connect"}</SubmitText>           
+                    <SubmitText >{cribPremium ? "Edit my preference" : (userData == undefined || userData?.postedProperties?.length == 0) ? "Post my sublease" : (userData != undefined && !userData.cribConnectEnrolled) ? "ENROLL FOR FREE" : "CHECK OUT CRIB CONNECT"}</SubmitText>           
                     
                 </SubmitButton>
             </View>
