@@ -19,7 +19,7 @@ import {
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
   
 const HEIGHT = Dimensions.get('screen').height;

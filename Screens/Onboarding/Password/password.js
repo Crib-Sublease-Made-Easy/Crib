@@ -17,14 +17,14 @@ import {
 import { Header, ProgressBarContainer, TitleText, GeneralTextInput, ContinueButton, ContinueText,
     TextInputContainer, SubtitleText } from './passwordStyle';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {UserContext} from '../../../UserContext'
 
 import Lottie from 'lottie-react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 import { HEIGHT, WIDTH } from '../../../sharedUtils';
 
@@ -56,15 +56,7 @@ export default function PasswordScreen({navigation,route}){
     }
 
     async function signup(){
-      
-        // console.log(route.params.firstName)
-        // console.log(route.params.lastName)
-        // console.log(route.params.gender)
-        // console.log(route.params.school)
-        // console.log(route.params.occupation)
-        // console.log(route.params.email)
-        // console.log(route.params.profilePic)
-        // console.log(password)
+
         
         const formData = new FormData();
 
@@ -85,7 +77,6 @@ export default function PasswordScreen({navigation,route}){
        
         console.log("Tryin to sign up.")
         if(route.params.email != ""){
-            console.log("Inside Signup")
             const res =  await fetch('https://crib-llc.herokuapp.com/users/signup', {
                 method: 'POST',
                 headers: {
@@ -94,21 +85,17 @@ export default function PasswordScreen({navigation,route}){
                 },
                 body: formData
             }).then(res => res.json()).then(async data =>{
-                console.log("User ID");
-                console.log(data)
+          
                 // The USER_ID below should be unique to your Sendbird application.
                 try {
                     console.log("connecting to sendbird")
-                    console.log()
                     sb.connect(data.createdUser._id, function(user, error) {
                         if (error) {
                             // Handle error.
-                            console.log("sendbird error")
                             console.log(err)
                         }
                         else{
                             console.log("sendbird connected")
-                            console.log(user)
                             sb.updateCurrentUserInfo(data.createdUser.firstName, data.createdUser.profilePic, (user, err) => {
                                 if (!err) {
                                     console.log("Successfully updated current user", err)
@@ -124,8 +111,12 @@ export default function PasswordScreen({navigation,route}){
                     // Handle error.
                 }
                 try{
-                    await SecureStorage.setItem("userId", data.createdUser._id)
-                    await SecureStorage.setItem("profilePic", data.createdUser.profilePic)
+                    if(data.createdUser._id != undefined){
+                        await EncryptedStorage.setItem("userId", data.createdUser._id)
+                    }
+                    if( data.createdUser.profilePic != undefined){
+                        await EncryptedStorage.setItem("profilePic", data.createdUser.profilePic)
+                    }
                 }
                 catch{e=>{
                     console.log(e)
@@ -142,22 +133,14 @@ export default function PasswordScreen({navigation,route}){
                 console.log(e)
             )
         }
-        else{
-            console.log("Something is missing.")
-        }
+       
         setTimeout(()=>{
             setLoading(false)
         },2000)
     }
 
     function navigate(){
-        console.log("==========When Load=========")
-        console.log("First Name : " + route.params.firstName)
-        console.log("Last Name : " +route.params.lastName)
-        console.log("Age: " + route.params.age)
-        console.log("Gender: " + route.params.gender)
-        console.log("==========When Load=========")
-        console.log("navigating to otp")
+
         navigation.reset(
             {index: 0 , routes: [{ name: 'PhoneNumber', 
             fistName: route.params.firstName, 

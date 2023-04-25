@@ -17,63 +17,68 @@ import DatePicker from 'react-native-date-picker'
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY} from '../../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
 
 import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header,} from '../../../../../sharedUtils'
 
 import { RowContainer, CategoryName, DateContainer } from './editPropertyAvailStyle';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 export default function EditPropertyAvailScreen({navigation, route}){
     const [availFrom, setAvailFrom] = useState( new Date(route.params.from))
     const [availTo, setAvailTo] = useState( new Date(route.params.to))
     const [openFrom, setOpenFrom] = useState(false);
     const [openTo, setOpenTo] = useState(false)
-    console.log(new Date(route.params.from))
+    const [flexible, setFlexible] = useState(route.params.availabilityFlexibility)
 
     async function update(){
-       
-       
-        const accessToken = await SecureStorage.getItem("accessToken");
-        fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken,
-            },
-            body: JSON.stringify({
-                availableFrom: availFrom,
-                availableTo: availTo
-            })
-        })
-            .then((response) => response.json()).then(data => {
-                console.log("Update type reponse")
-                console.log(data)
-                navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
-            })
-            .catch(e => {
-                console.log(e)
-            })
+
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
+            if(accessToken != undefined){{
+                fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
+                    method: 'PUT',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + accessToken,
+                    },
+                    body: JSON.stringify({
+                        availabilityFlexibility: flexible,
+                        availableFrom: availFrom,
+                        availableTo: availTo
+                    })
+                })
+                .then((response) => response.json()).then(data => {
+                    navigation.navigate('EditProperty', {propertyData: route.params.propertyData})
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+            }}
+        }
+        catch{
+            alert("Error has occured!")
+        }
     }
     
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
         <HeaderContainer>
             <BackButtonContainer>
-                <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                    <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+                <Pressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack()}>
+                    <Ionicons name='close-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                 </Pressable>
             </BackButtonContainer>
             <NameContainer>
                 <Header>Edit Availability</Header>
             </NameContainer>
             <ResetButtonContainer>
-                <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
-                    <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
+                <Pressable hitSlop={WIDTH*0.025} onPress={update}>
+                    <Ionicons name='checkmark' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
                 </Pressable>
             </ResetButtonContainer>
         </HeaderContainer>
@@ -93,6 +98,14 @@ export default function EditPropertyAvailScreen({navigation, route}){
                 </Text>
             </DateContainer>
         </RowContainer>
+        <RowContainer style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: HEIGHT*0.02}}>
+            <CategoryName>Flexible?</CategoryName>
+            <Pressable hitSlop={WIDTH*0.05} onPress={()=>setFlexible(!flexible)}>
+                <Ionicons name='checkbox' color={flexible ? PRIMARYCOLOR : MEDIUMGREY} size={30} />
+            </Pressable>
+        </RowContainer>
+
+
         <DatePicker
            
             modal

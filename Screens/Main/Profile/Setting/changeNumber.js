@@ -14,14 +14,14 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../sharedUtils';
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     RowContainer, CategoryName, PhoneNumberContainer, HelpText } from './changeNumberStyle';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
 
 export default function ChangeNumberScreen({navigation}){
     const [phoneNumber, setPhoneNumber] = useState('')
@@ -29,7 +29,7 @@ export default function ChangeNumberScreen({navigation}){
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
             <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack()}>
                         <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>
@@ -37,7 +37,7 @@ export default function ChangeNumberScreen({navigation}){
                     <Header>Change Phone Number</Header>
                 </NameContainer>
                 <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=>navigation.navigate("OTPEdit")}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={()=>navigation.navigate("OTPEdit")}>
                         <Ionicons name='checkmark-done' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </ResetButtonContainer>

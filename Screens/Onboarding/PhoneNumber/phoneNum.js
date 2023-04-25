@@ -17,9 +17,9 @@ import {
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, ContinueText, ProgressText, DARKGREY, MEDIUMGREY, GOOGLEBLUE, SignUpHeader } from '../../../sharedUtils';
+
+import { HEIGHT, WIDTH, PRIMARYCOLOR, ContinueButton, ContinueText, ProgressText, DARKGREY, MEDIUMGREY, GOOGLEBLUE, SignUpHeader, SignUpBackButtonPressable } from '../../../sharedUtils';
 
 import Lottie from 'lottie-react-native';
 
@@ -32,13 +32,8 @@ export default function PhoneNumberScreen({navigation, route}){
     const [passedPhoneNumber, setPassedPhoneNumber]= useState("")
     const [loading, setLoading] = useState(false)
     const [agreement, setAgreement] = useState(false)
-    const [privacyagreement, setPrivacyAgreement] = useState(false)
-    
-    console.log(passedPhoneNumber)
     async function signupStep1(){
-        console.log("Stepping 1")
-        console.log("PHONENUMBER  ", passedPhoneNumber);
-        console.log("EMAIL  ", route.params.email);
+        console.log("INSIDE STEP 1")
         fetch('https://crib-llc.herokuapp.com/users/OTP/step1', {
             method: 'POST',
             headers: {
@@ -50,33 +45,42 @@ export default function PhoneNumberScreen({navigation, route}){
                 email: route.params.email
             })
         }) 
-        .then(res => res.json()).then(data =>{
-            console.log("STEP1");
-            console.log(data);
-            if(data.error != undefined){
-                if(data.error.error_code == 60027){
-                    alert("Invalid Email Address")
-
-                    navigation.navigate("Email", {
-                        firstName: route.params.firstName, 
-                        lastName: route.params.lastName,
-                        age: route.params.age,
-                        gender: route.params.gender,
-                        profilePic: route.params.profilePic,
-                        school: route.params.school,
-                        occupation: route.params.occupation});
+        .then(async res => {
+            const data = await res.json();
+            if(res.status == 201){
+                if(data.response.user.id != undefined){
+                    signupStep2(data.response.user.id);
+                }
+                else{
+                    alert("An error has occured.")
                 }
             }
-            else{
-                console.log("GOING TO STEP2")
-                signupStep2(data.response.user.id);
+            else if(data.error != undefined){
+                alert("Invalid Email Address")
+                navigation.navigate("Email", {
+                    firstName: route.params.firstName, 
+                    lastName: route.params.lastName,
+                    age: route.params.age,
+                    gender: route.params.gender,
+                    profilePic: route.params.profilePic,
+                    school: route.params.school,
+                    occupation: route.params.occupation,
+                    type: route.params.type //new
+                });
             }
+            else{
+                alert("An error has occured. Please try again later!")
+                navigation.reset(
+                    {index: 0 , routes: [{ name: 'DiscoverTabs'}]}
+                )
+            }
+        })
+        .catch( e => {
 
-        })   
+        })
     }
     function signupStep2(id){
         console.log("STEP2");
-        console.log("ID", id)
         fetch('https://crib-llc.herokuapp.com/users/OTP/step2', {
             method: 'POST',
             headers: {
@@ -87,13 +91,11 @@ export default function PhoneNumberScreen({navigation, route}){
                 authy_id: id
             })
         })
-        .then(res => res.json()).then(data =>{
-            console.log("STEP2 in data");
-            console.log(data);
-            if(data.response.success != true){
-                alert("invalid in step 2.")
-            }
-            else{
+        .then(async res => {
+            const test = await res.json()
+            if(res.status == 201){
+                setLoading(false)
+
                 navigation.reset(
                     {index: 0 , routes: [{ name: 'otp', params:{
                     firstName: route.params.firstName, 
@@ -105,23 +107,28 @@ export default function PhoneNumberScreen({navigation, route}){
                     occupation: route.params.occupation,
                     email: route.params.email,
                     password: route.params.password,
+                    type: route.params.type, // new
                     phoneNumber: passedPhoneNumber,
                     authy_id: id}}]}
                 )
             }
+            else{
+                setLoading(false)
+                alert("An error has occured. Please try again later!")
+                navigation.reset(
+                    {index: 0 , routes: [{ name: 'DiscoverTabs'}]}
+                )
+            }
         })
-        
-        setLoading(false)
+        .catch( e => {
+            alert("An error has occured!")
+        }) 
     }
 
     async function signup(){
-        console.log("Tryin to sign up.")
-        if(!agreement || !privacyagreement){
+        if(!agreement){
             if(!agreement){
-                alert("You have to agree to Crib Terms and Services to proceed.")
-            }
-            else if(!privacyagreement){
-                alert("You have to agree to Crib Privacy Policy to proceed.")
+                alert("You have to agree to Crib Terms and Services and Privacy policy to proceed.")
             }
         }
         else if (passedPhoneNumber.length != 10){
@@ -129,8 +136,7 @@ export default function PhoneNumberScreen({navigation, route}){
         }
         else{
             setLoading(true)
-            console.log("Inside Signup")
-            const res =  await fetch('https://crib-llc.herokuapp.com/users/check', {
+            await fetch('https://crib-llc.herokuapp.com/users/check', {
                 method: 'POST',
                 headers: {
                 Accept: 'application/json',
@@ -139,15 +145,20 @@ export default function PhoneNumberScreen({navigation, route}){
                 body: JSON.stringify({
                     phoneNumber: passedPhoneNumber
                 })
-            }).then(res => res.json()).then(async data =>{
-                if(data.message == 'This is a valid phone number'){
+            }).then(async res => {
+                if(res.status == 200){
                     signupStep1()
                 }
-                else if(data.message == 'User already has an account with this phone number'){
+                else if(res.status == 409){
                     alert("Account with phone number exist, please login.")
+                    setLoading(false)
                     navigation.reset({index: 0 , routes: [{ name: 'ProfileTabs'}]})
                 }
-                console.log(data)
+                else{
+                    alert("An error has occured. Please try again later!")
+                    setLoading(false)
+                    navigation.reset({index: 0 , routes: [{ name: 'ProfileTabs'}]})
+                }
             }).catch(e=>
                 console.log(e)
             )
@@ -208,14 +219,15 @@ export default function PhoneNumberScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
             <SignUpHeader>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
-                   
+                {route.params.wrongPhoneNumber == undefined && 
+                <SignUpBackButtonPressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack() }>
                     <Ionicons name='arrow-back-outline' size={25} />
-                </Pressable>
+                </SignUpBackButtonPressable>
+                }
             </SignUpHeader>
                 
             <ProgressBarContainer>
-                <ProgressText>Step  8 / 9</ProgressText>
+                <ProgressText>Step  9 / 9</ProgressText>
             </ProgressBarContainer>
            
             <ScrollView scrollEnabled={false}>
@@ -228,23 +240,18 @@ export default function PhoneNumberScreen({navigation, route}){
                     
                 </TextInputContainer>
                 <FollowUpContainer>
-                    <Pressable onPress={()=> setAgreement(!agreement)}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={()=> setAgreement(!agreement)}>
                         <Ionicons size={25} name={'checkbox'} color={agreement ? PRIMARYCOLOR : MEDIUMGREY} />
                     </Pressable>
-                    <FollowUpText>I agree to Crib <Text onPress={()=>navigation.navigate('TermsAndService')} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Terms and Services</Text>.</FollowUpText>
+                    <FollowUpText>I agree to Crib <Text onPress={()=>navigation.navigate('TermsAndService')} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Terms and Services</Text> and <Text onPress={()=>navigation.navigate('Privacy')} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Privacy Policy</Text>.</FollowUpText>
                 </FollowUpContainer>
-                <FollowUpContainer>
-                    <Pressable onPress={()=> setPrivacyAgreement(!privacyagreement)}>
-                        <Ionicons size={25} name={'checkbox'} color={privacyagreement ? PRIMARYCOLOR : MEDIUMGREY} />
-                    </Pressable>
-                    <FollowUpText>I agree to Crib <Text onPress={()=>navigation.navigate('Privacy')} style={{textDecorationLine:'underline', color:GOOGLEBLUE}}>Privacy Policy</Text>.</FollowUpText>
-                </FollowUpContainer>
+                
             </ScrollView>
           
 
             <ContinueButton disabled={loading} loading={loading} onPress={signup}>
             {loading ?
-                <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
+                <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.05, height: WIDTH*0.05}}/>
             :
                 <ContinueText>Continue</ContinueText>
             }

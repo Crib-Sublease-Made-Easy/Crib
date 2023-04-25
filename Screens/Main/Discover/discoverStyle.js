@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 
 import styled from 'styled-components/native';
-import { LIGHTGREY, TEXTINPUTBORDERCOLOR, GOOGLEBLUE, PRIMARYCOLOR, DARKGREY, HEIGHT, WIDTH, ROBOTOFONTFAMILY, EXTRALIGHT, MEDIUMGREY } from '../../../sharedUtils';
+import { LIGHTGREY, TEXTINPUTBORDERCOLOR, GOOGLEBLUE, PRIMARYCOLOR, DARKGREY, HEIGHT, WIDTH, EXTRALIGHT, MEDIUMGREY } from '../../../sharedUtils';
 
 
 export const MapContainer = styled.View`
@@ -43,7 +43,8 @@ export const PlaceholderLogoTextContainer  = styled.Text`
 `
 
 export const SearchContainer = styled.Pressable`
-  height: ${HEIGHT*0.065}px
+  padding-vertical: ${HEIGHT*0.01}px
+  padding-horizontal: ${HEIGHT*0.01}px
   width: ${WIDTH*0.9}px
   marginLeft: ${WIDTH*0.05}px
   shadowColor: black
@@ -52,19 +53,16 @@ export const SearchContainer = styled.Pressable`
   shadowOffset: 0 0
   elevation: 7
   backgroundColor: white
-
+  justify-content: space-between
   borderRadius: 30px
 
   flex-direction: row;
   align-items:center
 `
 export const SearchContainerPlaceholderText = styled(Text)`
-  font-family: ${ROBOTOFONTFAMILY}
-  
-  height: ${HEIGHT*0.02}px
-  width: 70% 
+  width: ${WIDTH*0.6}px
   align-items: center
-  padding-horizontal: ${WIDTH*0.01}px
+  padding-horizontal: ${WIDTH*0.005}px
   color : ${props=>(props.locationQuery == "Search Location ..." ? DARKGREY : 'black')}
 `
 
@@ -167,7 +165,7 @@ export const  PreviewBottomContainer = styled.Pressable`
   padding-vertical: ${HEIGHT*0.02}px
   height: ${HEIGHT*0.1}px;
   width: ${WIDTH*0.9}px;
-  padding-horizontal: ${WIDTH*0.02}px;
+  padding-horizontal: ${WIDTH*0.03}px;
   padding-top: ${HEIGHT*0.01}px
   align-self:center
   justify-content: space-around
@@ -182,13 +180,6 @@ export const  PreviewTopContainer = styled.View`
  
 `
 
-export const PreviewCards = styled.Pressable`
-  width: ${WIDTH*0.9}px;
-  height: ${HEIGHT*0.3}px;
-  border-radius:20px;
- 
-`
-
 export const PreviewTopRightContaier = styled.View`
   width: ${WIDTH*0.36}px
   align-items: flex-end
@@ -199,34 +190,26 @@ export const PreviewNameText = styled.Text`
   font-weight: 400
   width: ${WIDTH*0.6}px
 ` 
-export const PreviewPriceText = styled.Text`
-  width: ${WIDTH*0.9}px
-  padding-horizontal: ${WIDTH*0.025}px
-  font-size: ${HEIGHT*0.014}px;
-  color: ${DARKGREY}
-
-`
-export const PreviewLocationText = styled.Text`
+export const PreviewPriceText = styled. Text`
   font-size: ${HEIGHT*0.015}px;
-  font-weight: 500
-  width: ${WIDTH*0.9}px
-  max-height: ${HEIGHT*0.06}px;
-  padding-horizontal: ${WIDTH*0.025}px
-  overflow: hidden
-  
+  color: black
+  font-weight: 600
 `
+
+
 
 export const SeachIconContainer = styled.View`
-  width:15%
+  padding-left: ${WIDTH*0.02}px
   align-items: center;
-  justify-content: flex-end
+  justify-content: center
   flex-direction: row
+
 `
 
 export const DeleteIconContainer = styled.Pressable`
-width:15%
-align-items: center;
-justify-content: center
+  padding: ${WIDTH*0.005}px
+  align-items: center;
+  justify-content: center
 `
 
 export const FilterAppliedIconBackground = styled.View`
@@ -281,3 +264,21 @@ export const SearchHereText = styled.Text`
   color: ${GOOGLEBLUE}
   font-weight: 600
 `
+
+export const PreviewLocationText = styled.Text`
+  font-size: ${HEIGHT*0.015}px;
+  font-weight: 500
+  width: ${WIDTH*0.9}px
+  overflow: hidden
+  color: black
+  
+`
+export const PreviewdetailsText = styled.Text`
+  font-size: ${HEIGHT*0.015}px;
+  color: black
+`
+export const DatePriceContainer = styled.View`
+  flex-direction: row
+  justify-content: space-between
+`
+

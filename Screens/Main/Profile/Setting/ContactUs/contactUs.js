@@ -7,15 +7,15 @@ import {
   View
 } from 'react-native';
 
-import SecureStorage from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
-import { HEIGHT, WIDTH, HeaderContainer, Header,BackButtonContainer,ResetButtonContainer, NameContainer } from '../../../../../sharedUtils';
+import { HEIGHT, WIDTH, HeaderContainer, Header,BackButtonContainer,ResetButtonContainer, NameContainer, EditPagesHeaderContainer, EditPageBackButtonContainer, EditPageForwardButtonContainer, EditPageNameContainer } from '../../../../../sharedUtils';
 
 import { RowContainer,CategoryName, TitleContainer,DescriptionInput  } from './contactusStyle';
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 export default function ContactUsScreen({navigation, route}){
     const [title, setTitle ] = useState("")
@@ -23,53 +23,72 @@ export default function ContactUsScreen({navigation, route}){
     const [description, setDescription] = useState("")
 
     async function send(){
-        const accessToken = await SecureStorage.getItem("accessToken");
-        await fetch('https://crib-llc.herokuapp.com/contact', {
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'bearer ' + accessToken,
-            },
-            
-            body: JSON.stringify({
-                email: email,
-                title: title,
-                description: description
-            })
-        }) 
-        .then(res => {
-            if (res.status == 200){
-                alert("Message successfully sent!")
-                navigation.goBack();
+        if(title.trim() == ""){
+            alert("Please include a title.")
+            return;
+        }
+        if(email.trim() == ""){
+            alert("Please include an email.")
+            return;
+        }
+        if(description.trim() == ""){
+            alert("Please include a valid description.")
+            return;
+        }
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
+            if(accessToken != undefined){
+                await fetch('https://crib-llc.herokuapp.com/contact', {
+                    method: 'POST',
+                    headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'bearer ' + accessToken,
+                    },
+                    
+                    body: JSON.stringify({
+                        email: email,
+                        title: title,
+                        description: description
+                    })
+                }) 
+                .then(res => {
+                    if (res.status == 200){
+                        alert("Message successfully sent!")
+                        navigation.goBack();
+                    }
+                    else{
+                        alert("An error has occured, please try again later!")
+                        navigation.goBack();
+                    }
+                })
+                .catch(e=>{
+                    console.log(e)
+                })
             }
-            else{
-                alert("An error has occured, please try again later!")
-                navigation.goBack();
-            }
-        })
-        .catch(e=>{
-            console.log(e)
-        })
+        }
+        catch{
+            alert("Error. Please try again later!")
+        }
     }
 
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
-            <HeaderContainer>
-                <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
-                        <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+            <EditPagesHeaderContainer style={{borderBottomWidth: 0}}>
+                <EditPageBackButtonContainer>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack()}>
+                        <Ionicons name='arrow-back-outline' size={25}/>
                     </Pressable>
-                </BackButtonContainer>
-                <NameContainer>
+                </EditPageBackButtonContainer>
+                <EditPageNameContainer>
                     <Header>Contact Us</Header>
-                </NameContainer>
-                <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={send}>
-                        <Ionicons name='checkmark' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
+                </EditPageNameContainer>
+                <EditPageForwardButtonContainer>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={send}>
+                        <Ionicons name='checkmark' size={25}/>
                     </Pressable>
-                </ResetButtonContainer>
-            </HeaderContainer>
+                </EditPageForwardButtonContainer>
+            </EditPagesHeaderContainer>
             <RowContainer>
                 <CategoryName>Title</CategoryName>
                 <TitleContainer onChangeText={(value)=> setTitle(value)} value={title} />

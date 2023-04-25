@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
 
-import { WIDTH, HEIGHT, OnlyLetters, ProgressText, ContinueButton, ContinueText, SignUpHeader } from '../../../sharedUtils';
+
+import { WIDTH, HEIGHT, OnlyLetters, ProgressText, ContinueButton, ContinueText, SignUpHeader, SignUpBackButtonPressable } from '../../../sharedUtils';
 
 import { Header, ProgressBarContainer, TitleText, GeneralTextInput, 
     TextInputContainer,} from './firstLastNameStyle';
@@ -59,10 +59,10 @@ export default function FirstLastNameScreen({navigation, route}){
             <KeyboardAvoidingView behavior={'padding'} style={{flex:1}} >
            
             <SignUpHeader>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={backToLanding}>
+                <SignUpBackButtonPressable hitSlop={WIDTH*0.025} onPress={backToLanding}>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
                     <Ionicons name='arrow-back-outline' size={25} />
-                </Pressable>
+                </SignUpBackButtonPressable>
             </SignUpHeader>
             
             <ProgressBarContainer>
@@ -70,7 +70,7 @@ export default function FirstLastNameScreen({navigation, route}){
             </ProgressBarContainer>
 
             <ScrollView scrollEnabled={false}>
-                <TitleText>Tell us a bit about youself ...</TitleText>
+                <TitleText>Tell us a bit about yourself ...</TitleText>
                 <TextInputContainer>
                     <GeneralTextInput value={firstName} onChangeText={(value)=>setFirstName(value)} placeholder="First Name"  />
                     <GeneralTextInput value={lastName} onChangeText={(value)=>setLastName(value)} placeholder="Last Name"  />
@@ -78,11 +78,7 @@ export default function FirstLastNameScreen({navigation, route}){
             </ScrollView>
 
             <ContinueButton loading={loading} onPress={()=> checkInput()}>
-            {loading ?
-            <Lottie source={require('../../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
-            :
-            <ContinueText>Continue</ContinueText>
-            }
+                <ContinueText>Continue</ContinueText>
             </ContinueButton>
             
             </KeyboardAvoidingView>

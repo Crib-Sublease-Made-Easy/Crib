@@ -14,15 +14,14 @@ import Modal from "react-native-modal";
 
 import styled from 'styled-components/native';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
-
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, MEDIUMGREY} from '../../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
 
 const flatListTypes =
 [{ name: "Room", image: require('../../../../../assets/room.jpg'), description: "Shared public space" },
@@ -36,12 +35,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function PropTypesScreen({navigation, route}){
     const [propertyTypes, setPropertyTypes] = useState(route.params.type)
-    console.log(route.params.propertyData)
     async function update(){
-        console.log(propertyTypes)
-        console.log(route.params.uid)
        
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         
         fetch('https://crib-llc.herokuapp.com/properties/' + route.params.uid, {
             method: 'PUT',
@@ -55,8 +51,6 @@ export default function PropTypesScreen({navigation, route}){
             })
         })
             .then((response) => response.json()).then(async data => {
-                console.log("Update type reponse")
-                console.log(data)
                 await AsyncStorage.removeItem('postedProperty')
                 navigation.navigate('EditProperty',{propertyData: route.params.propertyData})
             })
@@ -86,15 +80,15 @@ export default function PropTypesScreen({navigation, route}){
        <SafeAreaView style={{flex: 1, backgroundColor:'white'}}>
             <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.navigate("EditProperty",{propertyData: route.params.propertyData})}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={()=> navigation.navigate("EditProperty",{propertyData: route.params.propertyData})}>
                         <Ionicons name='close-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>
                 <NameContainer>
-                    <Header>Property Type</Header>
+                    <Header>Edit Type</Header>
                 </NameContainer>
                 <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={update}>
                         <Ionicons name='checkmark-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}} color={PRIMARYCOLOR}/>
                     </Pressable>
                 </ResetButtonContainer>

@@ -16,7 +16,7 @@ import {
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-const PRIMARYCOLOR = '#8559E3'
+import {PRIMARYCOLOR} from '../../../sharedUtils'
 const TEXTINPUTBORDERCOLOR = '#989898'
 
 const PRIMARYGREY = '#5e5d5d'

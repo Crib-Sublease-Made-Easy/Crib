@@ -21,19 +21,21 @@ import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from '
 import {GiftedChat, Actions, Bubble , InputToolbar, Send} from 'react-native-gifted-chat';
 import { ifIphoneX , getBottomSpace} from 'react-native-iphone-x-helper'
 
+import FastImage from 'react-native-fast-image'
+
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 import PropertyOptionsModal from './PropertyOptions';
 
-const PRIMARYCOLOR = '#4050B5'
 
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header} from '../../../sharedUtils'
+import { HeaderContainer, BackButtonContainer,  NameContainer, ResetButtonContainer , Header, LIGHTGREY, PRIMARYCOLOR} from '../../../sharedUtils'
 
-import { MessageInput, MessageContainer, SendButton } from './chatStyle';
+import { MessageInput, MessageContainer, SendButton, PreviewContainer, PreviewInfoContainer, PreviewLocaitonText, PreviewDateText } from './chatStyle';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
 
 import { ChatImageSettingContainer } from './chatStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -41,8 +43,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function ChatScreen({navigation, route}){
+ 
     const {sb, USERID} = useContext(UserContext);
-
+  
     const { url, id } = route.params;
 
     const GiftedChatRef = useRef();
@@ -54,6 +57,8 @@ export default function ChatScreen({navigation, route}){
     const [sending, setSending] = useState(false)
     const [recipient, setRecipient] = useState(null)
     const [optionsModal, setOptionsModal] = useState(false)
+
+    
 
     const [channel, setChannel] = useState(null)
 
@@ -78,6 +83,7 @@ export default function ChatScreen({navigation, route}){
         m.user = {}
         m.user._id = m._sender.userId
         m.user.avatar = m._sender.plainProfileUrl
+       
         
         setMessages(previousMessages => GiftedChat.append(previousMessages, [m]))
        
@@ -89,8 +95,10 @@ export default function ChatScreen({navigation, route}){
       if(channel != null && channel.members.length == 2){
         if(channel.members[0].userId == USERID){
           console.log("INSIDEEEE")
+        
           setRecipient(channel.members[1].nickname)
         }else{
+        
           setRecipient(channel.members[0].nickname)
         }
       } else{
@@ -99,7 +107,7 @@ export default function ChatScreen({navigation, route}){
     }
     const onSend = useCallback(async (messages = []) => {
       setSending(true)
-      const accessToken = await SecureStorage.getItem("accessToken");
+      
 
       const params = new sb.UserMessageParams();
       params.message = messages[0].text;
@@ -110,14 +118,20 @@ export default function ChatScreen({navigation, route}){
         }
         else if(groupChannel.members.length ==2){
           await groupChannel.markAsRead()
-          groupChannel.sendUserMessage(params, function(message, error) {
+          await groupChannel.sendUserMessage(params, async function(message, error) {
             if (error) {
               console.log("ERROR CHANNEL 2")
               console.log(error)
             }else{
+           
             // The message is successfully sent to the channel.
             // The current user can receive messages from other users through the onMessageReceived() method of an event handler.
-              // console.log("Message was successfully sent")
+              console.log("Message was successfully sent")
+              // console.log(messages[0].text)
+              const accessToken = await EncryptedStorage.getItem("accessToken")
+              const uid = await EncryptedStorage.getItem("userId")
+              console.log(uid)
+            
               if(accessToken != null){
                 fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
                 method: 'POST',
@@ -130,9 +144,11 @@ export default function ChatScreen({navigation, route}){
                 body: JSON.stringify({
                     participant1: groupChannel.members[0].userId,
                     participant2: groupChannel.members[1].userId,
-                    senderId: USERID,
+                    senderId: uid,
                     message: messages[0].text
                 })
+                }).then(async res => {
+                  
                 })
               }
           }
@@ -158,7 +174,7 @@ export default function ChatScreen({navigation, route}){
           } else{
             await groupChannel.markAsRead();
           setChannel(groupChannel)
-          setReceiverID(groupChannel.members[0].userId == USERID ? groupChannel.members[1].userId : groupChannel.members[0].userId)      
+          setReceiverID(groupChannel.members[0].userId == USERID ? groupChannel.members[1].userId : groupChannel.members[0].userId)   
           await getPropertyInfo(groupChannel.data, groupChannel)
           var listQuery = groupChannel.createPreviousMessageListQuery();
             setQuery(listQuery);
@@ -192,8 +208,6 @@ export default function ChatScreen({navigation, route}){
     }
 
     const getPropertyInfo = async (propId, gc) =>{
-      console.log("getpropertyinfo" , propId)
-      console.log("getpropertyinfo" , gc)
       await fetch('https://crib-llc.herokuapp.com/properties/' + propId, {
         method: 'POST',
         headers: {
@@ -202,7 +216,6 @@ export default function ChatScreen({navigation, route}){
         }
       }).then(async e => e.json()).then(async (response) => {
         // console.log(response.propertyInfo.deleted)
-        
         if(response.propertyInfo.deleted == true){
           if(loading == true){
             onChat = false
@@ -213,6 +226,9 @@ export default function ChatScreen({navigation, route}){
         } else {
           setPropertyInfo(response)
         }
+      })
+      .catch(e=>{
+        console.log("CATCHHHHHH", e)
       })
 
     }
@@ -234,6 +250,8 @@ export default function ChatScreen({navigation, route}){
           m.user = {}
           m.user._id = m._sender.userId
           m.user.avatar = m._sender.plainProfileUrl
+          
+
         })
         setMessages(previousMessages => GiftedChat.append(messages, previousMessages))
         }
@@ -274,7 +292,7 @@ export default function ChatScreen({navigation, route}){
 
     });
   }
-
+ 
     //navigation.navigate("PAGENAME",{userData: userData})
 
     //route.params.userData 
@@ -286,11 +304,17 @@ export default function ChatScreen({navigation, route}){
         alert("You have successfully left this chat.")
         navigation.goBack()
     }
+
+    const optionViewer = {
+      viewProp : () => navigation.navigate("PropertyDetail", {data: propertyInfo}),
+      viewRepUsr: () => navigation.navigate("ReportUser")
+
+    }
     return(
     <SafeAreaView style={{backgroundColor:'white', flex:1}}>
     <HeaderContainer>
           <BackButtonContainer>
-              <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} hitSlop={WIDTH*0.05} onPress={()=> { onChat=false, navigation.goBack()}}>
+              <Pressable hitSlop={WIDTH*0.05} onPress={()=> { onChat=false, navigation.goBack()}}>
                   <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
               </Pressable>
           </BackButtonContainer>
@@ -300,11 +324,43 @@ export default function ChatScreen({navigation, route}){
              
          
           <ChatImageSettingContainer>
-              <Pressable hitSlop={WIDTH*0.05} onPress={()=> setOptionsModal(true)}>
+              <Pressable hitSlop={WIDTH*0.1} onPress={()=> setOptionsModal(true)}>
                 <Ionicons name="ellipsis-horizontal" size={25} />
               </Pressable>
           </ChatImageSettingContainer>
     </HeaderContainer>
+    {propertyInfo != null &&
+    <PreviewContainer onPress={()=>optionViewer.viewProp()}>
+      
+      <FastImage  
+      source={{
+        uri: propertyInfo.propertyInfo.imgList[0],
+        priority: FastImage.priority.high,
+      }}  
+      style={{width:WIDTH*0.15, height:WIDTH*0.15, borderRadius:10, backgroundColor:LIGHTGREY,
+      opacity: 1,
+      }}
+      />
+     
+      <PreviewInfoContainer >
+        <PreviewLocaitonText numberOfLines={1}>{propertyInfo.propertyInfo.loc.secondaryTxt}</PreviewLocaitonText>
+        <PreviewDateText>
+        {new Date(propertyInfo.propertyInfo.availableFrom).toDateString().split(" ")[2]} {}
+        {new Date(propertyInfo.propertyInfo.availableFrom).toDateString().split(" ")[1]} {}
+        {new Date(propertyInfo.propertyInfo.availableFrom).toDateString().split(" ")[3]} {}
+        - {}
+        {new Date(propertyInfo.propertyInfo.availableTo).toDateString().split(" ")[2]} {}
+        {new Date(propertyInfo.propertyInfo.availableTo).toDateString().split(" ")[1]} {}
+        {new Date(propertyInfo.propertyInfo.availableTo).toDateString().split(" ")[3]} {}
+        </PreviewDateText>
+        <PreviewDateText>
+          ${propertyInfo.propertyInfo.price} / month
+        </PreviewDateText>
+      </PreviewInfoContainer>
+
+
+    </PreviewContainer>
+    }
 
     {loading ?
       <ActivityIndicator size="large" color= {PRIMARYCOLOR} style={{marginTop: HEIGHT*0.1}} />
@@ -320,7 +376,7 @@ export default function ChatScreen({navigation, route}){
               <MessageInput multiline value={typingText} onChangeText={(value)=> setTypingText(value)} placeholder="Enter a message ..." />
             
               <TouchableOpacity disabled={sending} hitSlop={WIDTH*0.05} onPress={()=> typingText != "" && props.onSend({text: typingText})}>
-                <Ionicons name="arrow-up-circle" size={40} color='#24a2fe'/>
+                <Ionicons name="arrow-up-circle" size={40} color={PRIMARYCOLOR}/>
               </TouchableOpacity>
               
           </MessageContainer>
@@ -337,7 +393,7 @@ export default function ChatScreen({navigation, route}){
       />  
       
       }
-    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(fgalse)} leaveChat={leaveChat} viewProp={()=> navigation.navigate("PropertyDetail", {data: propertyInfo})}/>
+    <PropertyOptionsModal visible={optionsModal} close={()=>setOptionsModal(false)} leaveChat={leaveChat} optionViewer={optionViewer}/>
     </SafeAreaView>
     )
 }

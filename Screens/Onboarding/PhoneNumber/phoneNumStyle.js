@@ -49,7 +49,7 @@ export const SubtitleText = styled.Text`
 `
 export const GeneralTextInput = styled.TextInput`
     width: ${WIDTH*0.8}px;
-    height: ${HEIGHT*0.075}px
+    height: ${HEIGHT*0.065}px
     font-size: ${HEIGHT*0.025}px
     border-bottom-width: 2px;
     padding-left: ${WIDTH*0.025}px
@@ -85,7 +85,8 @@ export const FollowUpContainer = styled.View`
     
 `
 export const FollowUpText = styled.Text`
-    font-size: ${HEIGHT*0.0175}px;
+    font-size: ${HEIGHT*0.015}px;
     margin-left: ${WIDTH*0.05}px
+    width: ${WIDTH*0.7}px
     color: black
 `

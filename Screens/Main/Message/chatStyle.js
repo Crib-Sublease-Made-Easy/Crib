@@ -25,9 +25,29 @@ export const MessageContainer = styled.View`
 `
 export const MessageInput = styled.TextInput`
     width: ${WIDTH*0.7}px;
-   
-    
     max-height: ${HEIGHT*0.08}px;
+`
+
+export const PreviewContainer = styled.Pressable`
+    padding-vertical: ${HEIGHT*0.015}px;
+    width: ${WIDTH}px
+    flex-direction: row
+    padding-horizontal: ${WIDTH*0.05}px
+`
+
+export const PreviewInfoContainer = styled.View`
+    padding-left: ${WIDTH*0.025}px
+    width: ${WIDTH*0.8}px
+`
+
+export const PreviewLocaitonText = styled.Text`
+    font-weight: 500
+    color: black
+`
+
+export const PreviewDateText = styled.Text`
+    color: ${DARKGREY}
+    margin-top: ${HEIGHT*0.0025}px
 `
 
 export const SendButton = styled.Pressable`

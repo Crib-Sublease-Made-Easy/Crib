@@ -1,4 +1,4 @@
-import React , {useContext, useState, useRef, useEffect} from 'react';
+import React , {setState, useContext, useState, useRef, useEffect} from 'react';
 import {
   SafeAreaView,
   Switch,
@@ -12,14 +12,13 @@ import {
   Alert
 } from 'react-native';
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY} from '../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+// FontAwesome.loadFont()
 
 import ImagePicker from 'react-native-image-crop-picker';
 
@@ -39,7 +38,7 @@ export default function EditPropertyScreen({navigation, route}){
         });
         return unsubscribe; 
     },[navigation, ])
-
+    const [successfulLease, setSuccess] = useState('')
     const [propAPIData, setPropAPIData] = useState('')
     const [propID, setPropID] = useState(route.params.propertyData._id)
     const [propType, setPropType] = useState(route.params.propertyData.type)
@@ -57,8 +56,7 @@ export default function EditPropertyScreen({navigation, route}){
 
     async function getTokens(){
         console.log("refresh")
-        const accessToken = await SecureStorage.getItem("accessToken");
-        const UID = await SecureStorage.getItem("userId");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
 
         fetch('https://crib-llc.herokuapp.com/properties/' + route.params.propId, {
         method: 'POST',
@@ -138,7 +136,7 @@ export default function EditPropertyScreen({navigation, route}){
 
     async function SelectPropPic(index){
        
-        const accessToken = await SecureStorage.getItem("accessToken");
+        const accessToken = await EncryptedStorage.getItem("accessToken");
         ImagePicker.openPicker({
             width: 812,
             height: 812,
@@ -184,33 +182,72 @@ export default function EditPropertyScreen({navigation, route}){
     async function deletePropertyAlert(){
         Alert.alert(
             'Are you sure you want to delete this property?',
-            'This action cannot be reveresed.',
+            'This action cannot be reversed.',
             [
               {text: 'No', onPress: () => {}, style: 'cancel'},
-              {text: 'Delete', onPress: () => deletePropertyRequest(), style: 'destructive'},
+              {text: 'Delete', onPress: () => {checkSuccess()}, style: 'destructive'},
             ],
             { 
               cancelable: true 
             }
           );
     }
+    async function checkSuccess() {
+        Alert.alert(
+            'Were you able to sublease on Crib?',
+            'Let us know, help us make Crib better.',
+            [
+              {text: 'No', onPress: () => {
+                setSuccess(true)
+                deletePropertyRequest()
+              }},
+              {text: 'Yes', onPress: () => {
+                setSuccess(false);
+
+                deletePropertyRequest();
+              }}
+            ]
+          );  
+    }
     async function deletePropertyRequest(){
-        const accessToken = await SecureStorage.getItem("accessToken");
-        fetch('https://crib-llc.herokuapp.com/properties/' + propID, {
+
+        const accessToken = await EncryptedStorage.getItem("accessToken");
+
+        console.log("ACCESS TOKEN ", accessToken, " PROPID ", propID)
+        await fetch('https://crib-llc.herokuapp.com/properties/internal/subleased', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
+            },
+            body:JSON.stringify({
+                propId: propID
+            })
+        }).then(async res => {
+           
+        })
+        .catch((error) => {
+            console.log("ERROR in registered sublease")
+        });
+        
+        await fetch('https://crib-llc.herokuapp.com/properties/' + propID, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + accessToken,
             }
-        }).then(res => {
+        }).then(async res => {
+            await EncryptedStorage.removeItem('postedProperty');
             if(res.status == 200){
-
-                    navigation.goBack()
-                }
-                else{
-                    alert('Unable to delete this property. Please try again later.')
-                }
+                setTimeout(()=>{
+                    navigation.navigate("Profile")
+                },500)
+            }
+            else{
+                alert('Unable to delete this property. Please try again later.')
+            }
             
         })
         .catch((error) => {
@@ -219,7 +256,6 @@ export default function EditPropertyScreen({navigation, route}){
     }   
     
     return(
-      
         <SafeAreaView style={{flex:1, backgroundColor:'white'}} >
             <HeaderContainer>
                 <BackButtonContainer>

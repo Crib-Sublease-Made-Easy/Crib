@@ -16,9 +16,9 @@ import {
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, SignUpHeader, MEDIUMGREY, ContinueButton, ContinueText, ProgressText } from '../../../sharedUtils';
+
+import { HEIGHT, WIDTH, PRIMARYCOLOR, SignUpHeader, MEDIUMGREY, ContinueButton, ContinueText, ProgressText, SignUpBackButtonPressable } from '../../../sharedUtils';
 
 
 const GENDERS = [
@@ -54,10 +54,10 @@ export default function GenderScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior={'padding'} style={{flex:1}}>
             <SignUpHeader>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                <SignUpBackButtonPressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack() }>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
                     <Ionicons name='arrow-back-outline' size={25} />
-                </Pressable>
+                </SignUpBackButtonPressable>
             </SignUpHeader>
                 
             <ProgressBarContainer>

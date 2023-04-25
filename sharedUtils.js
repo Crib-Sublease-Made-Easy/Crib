@@ -11,7 +11,7 @@ import { fab, faBoltLightning, faBottleDroplet, faBottleWater, faBowlFood, faBre
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 //Color 
-export const PRIMARYCOLOR = '#8559E3' //133 89 227
+export const PRIMARYCOLOR = '#2D6674' //133 89 227
 export const OPACITYPRIMARYCOLOR = 'rgba(133, 89, 227, 1)'
 
 //Dark Grey
@@ -35,7 +35,6 @@ export const WIDTH = Dimensions.get('screen').width;
 
 // export const  = 'NotoSerif'
 //Progress Bar
-export const ROBOTOFONTFAMILY= 'Roboto-Regular'
 
 export const ProgressBarCapacity = styled.View`
     width: ${WIDTH*0.8}px;
@@ -89,7 +88,8 @@ export const amenitiesList =
     { name: 'Washer_Dryer', library: 'MaterialCommunityIcons', color: '#00d14d', icon: 'tumble-dryer' },
     { name: 'Gated_Access', library: 'MaterialCommunityIcons', color: '#fa4b4b', icon: 'gate' },
     { name: 'Public_Transportation', library: 'FontAwesome', color: '#57b2f7', icon: 'bus' },
-    { name: 'Heating_Cooling', library: 'Ionicon', color: '#f79c40', icon: 'thermometer' },
+    { name: 'Heating', library: 'Ionicon', color: '#f79c40', icon: 'thermometer' },
+    { name: 'Cooling', library: 'Ionicon', color: '#f79c40', icon: 'wind' },
     { name: 'Microwave', library: 'MaterialCommunityIcons', color: '#57b2f7', icon: 'microwave' },
     { name: 'Grill', library: 'FontAwesome', color: '#fa4b4b', icon: 'bars' },
     { name: 'TV', library: 'Ionicon', color: '#fa4b4b', icon: 'tv-sharp' },
@@ -135,8 +135,11 @@ export const GetFAIcons = (name) =>{
     else if(name=="Public_Transportation"){
         return <FontAwesomeIcon icon={faBus} color='white'/>
     }
-    else if(name=="Heating_Cooling"){
+    else if(name=="Heating"){
         return <FontAwesomeIcon icon={faFire} color='white'/>
+    }
+    else if(name=="Cooling"){
+        return <FontAwesomeIcon icon={faWind} color='white'/>
     }
     else if(name=="Microwave"){
         return <FontAwesomeIcon icon={faBowlFood} color='white'/>
@@ -222,8 +225,11 @@ export const GetFAIconsInBlack = (name) =>{
     else if(name=="Public_Transportation"){
         return <FontAwesomeIcon icon={faBus} color='black'/>
     }
-    else if(name=="Heating_Cooling"){
+    else if(name=="Heating"){
         return <FontAwesomeIcon icon={faFire} color='black'/>
+    }
+    else if(name=="Cooling"){
+        return <FontAwesomeIcon icon={faWind} color='black'/>
     }
     else if(name=="Microwave"){
         return <FontAwesomeIcon icon={faBowlFood} color='black'/>
@@ -319,7 +325,10 @@ export const GetAmenitiesIcon = (name) =>{
     else if (name=="TV"){
         return "tv-outline";
     }
-    else if (name=="Heating and Cooling"){
+    else if (name=="Cooling"){
+        return "wind-outline";
+    }
+    else if (name=="Heating"){
         return "thermometer-outline";
     }
     else if (name=="Garages"){
@@ -382,10 +391,10 @@ export const ProgressText = styled.Text`
 //Continue Button used in sign up 
 export const ContinueButton = styled(Pressable)`
     width: ${WIDTH*0.7}px;
-    height: ${ HEIGHT*0.07}px;
+    padding-vertical: ${HEIGHT*0.02}px
     backgroundColor:  ${props=>(props.loading ? MEDIUMGREY : PRIMARYCOLOR)}}
     align-self: center
-    border-radius: 25px
+    border-radius: 20px
     justify-content: center
     align-items: center
     margin-bottom: ${HEIGHT*0.025}px;
@@ -409,9 +418,42 @@ export const IconPressable = styled.Pressable`
 //Sing up
 export const SignUpHeader = styled.View`
   width: ${WIDTH*0.9}px
-  height: ${HEIGHT*0.075}px
-  padding-vertical: ${HEIGHT*0.01}px
+  padding-vertical: ${HEIGHT*0.02}px
   justify-content: flex-start;
   align-self: center
   flex-direction: row 
+`
+
+//Sign up back button Pressable
+
+export const SignUpBackButtonPressable = styled.Pressable`
+    padding: ${HEIGHT*0.01}px
+`
+
+export const EditPagesHeaderContainer = styled.View`
+    width: ${WIDTH}px;
+    padding-vertical: ${HEIGHT*0.01}px
+    padding-horizontal: ${WIDTH*0.05}px
+    flex-direction: row;
+    border-bottom-width: 0.5px;
+    border-color: #E0E0E0
+    align-self:center
+    aling-items: center
+    justify-content: space-between
+`
+
+export const EditPageBackButtonContainer = styled.View`
+    width: ${WIDTH*0.2}px
+    justify-content: center;
+`
+export const EditPageForwardButtonContainer = styled.View`
+    width: ${WIDTH*0.2}px
+    justify-content: center;
+    align-items: flex-end
+`
+
+export const EditPageNameContainer = styled.View`
+    justify-content: center;
+    align-items:center
+    align-self: center
 `

@@ -15,40 +15,65 @@ import {
     Image
 } from 'react-native';
 
+import notifee, { AuthorizationStatus } from '@notifee/react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
   
 const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
-const PRIMARYCOLOR = '#8559E3'
+
 const PRIMARYGREY = '#D9D9D9'
-const TEXTINPUTBORDERCOLOR = '#989898'
+import OneSignal from "react-native-onesignal";
 
 import { Header, TitleText, SubtitleText, ProgressBarContainer, ProfilePicContainer, } from './profilePicStyle';
 
-import { ContinueButton, ContinueText, ProgressText, SignUpHeader } from '../../../sharedUtils';
+import { ContinueButton, ContinueText, ProgressText, SignUpBackButtonPressable, SignUpHeader } from '../../../sharedUtils';
 import ImagePicker from 'react-native-image-crop-picker';
 
 export default function ProfilePicScreen({navigation, route}){
    
     const [profilePic, setProfilePic] = useState('')
 
-    function checkInput(){
+    async function checkInput(){
        
         if(profilePic == ""){
             alert("User must upload profile picture.")
         }
         else{
-            navigation.navigate("School",
-            {
-                firstName: route.params.firstName, 
-                lastName: route.params.lastName,
-                age: route.params.age,
-                gender: route.params.gender,
-                profilePic: profilePic
-            })
+            // navigation.navigate("School",
+            // {
+            //     firstName: route.params.firstName, 
+            //     lastName: route.params.lastName,
+            //     age: route.params.age,
+            //     gender: route.params.gender,
+            //     profilePic: profilePic
+            // })
+            const settings = await notifee.requestPermission();
+          
+            if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+                navigation.navigate("School",
+                {
+                    firstName: route.params.firstName, 
+                    lastName: route.params.lastName,
+                    age: route.params.age,
+                    gender: route.params.gender,
+                    profilePic: profilePic,
+                  
+                })
+            }
+            else{
+                navigation.navigate("NotificationPrompt",
+                {
+                    firstName: route.params.firstName, 
+                    lastName: route.params.lastName,
+                    age: route.params.age,
+                    gender: route.params.gender,
+                    profilePic: profilePic,
+                  
+                })
+            }
         }
     }
 
@@ -60,8 +85,8 @@ export default function ProfilePicScreen({navigation, route}){
                 cropping:true,
                 compressImageQuality: 0.3
             }).then(image => {
-            
                 setProfilePic(image.path)
+                console.log(image.path)
             }).catch(e=>{
                 console.log("Cancelled")
             })
@@ -73,10 +98,10 @@ export default function ProfilePicScreen({navigation, route}){
     return(
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <SignUpHeader>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                <SignUpBackButtonPressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack() }>
                     {/* <FontAwesome name='arrow-left' size={25} /> */}
                     <Ionicons name='arrow-back-outline' size={25} />
-                </Pressable>
+                </SignUpBackButtonPressable>
             </SignUpHeader>
             <ProgressBarContainer>
                 <ProgressText>Step  4 / 9</ProgressText>

@@ -4,7 +4,7 @@ import {
   Switch,
   Pressable,
   Animated,
-  View, Alert
+  View
 } from 'react-native';
 import { User } from 'realm';
 
@@ -12,9 +12,9 @@ import { User } from 'realm';
 import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY} from '../../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
 
-import SecureStorage, { ACCESS_CONTROL, ACCESSIBLE, AUTHENTICATION_TYPE } from 'react-native-secure-storage'
+
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import { UserContext } from '../../../../../UserContext'
 
@@ -22,7 +22,7 @@ import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButto
     RowContainer, CategoryName, PhoneNumberContainer, HelpText } from './editOccupationStyle';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
 
 export default function EditOccupationScreen({navigation, route}){
     const {USERID} = useContext(UserContext);
@@ -31,56 +31,38 @@ export default function EditOccupationScreen({navigation, route}){
     
 
     async function update(){
-        const accessToken = await SecureStorage.getItem("accessToken");
-        fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken,
-            },
-            body: JSON.stringify({
-                occupation: occupation.trim(),
-            })
-        })
-        .then((response) => response.json()).then(data => {
-            
-            console.log(data)
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
+            if(accessToken != undefined){
+                fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+                    method: 'PUT',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + accessToken,
+                    },
+                    body: JSON.stringify({
+                        occupation: occupation.trim(),
+                    })
+                })
+                .then((response) => response.json()).then(data => {
+                    navigation.navigate('ProfileEdit', {userData:data})
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+            }
+        }
+        catch{
 
-            navigation.navigate('ProfileEdit', {userData:data})
-        })
-        .catch(e => {
-            console.log(e)
-        })
-    }
-
-    function handleBack() {
-      if (!occupation) {
-        navigation.goBack();
-      } else {
-        Alert.alert(
-            'Do you want to save changes before leaving?',
-            null,
-            [
-              {
-                text: 'No',
-                style: 'cancel',
-                onPress: navigation.goBack
-              },
-              {
-                text: 'Save',
-                onPress: update
-              }
-            ]
-        )
-      }
+        }
     }
 
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}}>
           <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={handleBack}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack()}>
                         <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>
@@ -88,7 +70,7 @@ export default function EditOccupationScreen({navigation, route}){
                     <Header>Change Occupation</Header>
                 </NameContainer>
                 <ResetButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={update}>
+                    <Pressable hitSlop={WIDTH*0.025} onPress={update}>
                         <Ionicons name='checkmark' size={25} style={{paddingHorizontal:WIDTH*0.02}} color='black' />
                     </Pressable>
                 </ResetButtonContainer>
@@ -97,7 +79,7 @@ export default function EditOccupationScreen({navigation, route}){
             <View style={{width:WIDTH, height: HEIGHT*0.03}}/>
             <RowContainer>
                 <CategoryName>Latest Occupation</CategoryName>
-                <PhoneNumberContainer onChangeText={(value)=> setOccupation(value)}  value={occupation} />
+                <PhoneNumberContainer Text={(value)=> setOccupation(value)}  value={occupation} />
             </RowContainer>
            
         </SafeAreaView>

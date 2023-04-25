@@ -17,7 +17,7 @@ import {
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 import { HEIGHT, WIDTH, ContinueButton, ContinueText } from '../../sharedUtils';
 
@@ -31,12 +31,12 @@ export default function LoginScreen({navigation, route}){
     const [phoneNumber, setPhoneNumber] = useState("")
     const [passedPhoneNumber, setPassedPhoneNumber]= useState("")
     const [loading, setLoading] = useState(false)
-    console.log(passedPhoneNumber)
+   
 
     async function signupStep1(){
-        console.log("Stepping 1")
         
-        const number = phoneNumber.replace(/[^\d]/g, '');
+        const number = phoneNumber.replace(/[^\d]/g, '').substring(0,10);
+        
       
         await fetch('https://crib-llc.herokuapp.com/users/authy', {
             method: 'POST',
@@ -48,25 +48,41 @@ export default function LoginScreen({navigation, route}){
                 phoneNumber: number,
             })
         }) 
-        .then(res => res.json()).then(async data =>{
-            console.log(" DATA 1", data)
-            if(data.authy_id != undefined){
-                // navigation.navigate('Login_OTP')
-                signupStep2(data.authy_id, number)
+        .then(async res => {
+            
+            if(res.status == 200){
+                const data = await res.json();
+                if(data.authy_id != undefined && number != undefined && number != null){
+                    signupStep2(data.authy_id, number)
+                }
+                else{
+                    alert("An error has occured. Please try again!")
+                }
             }
-            else{
+            else if(res.status == 401){
                 alert("User doesn't exist, please sign up.")
                 setLoading(false)
                 setPhoneNumber("")
+                setPassedPhoneNumber("")
                 navigation.navigate("FirstLastName")
             }
-        })   
+            else{
+                alert("An error has occured. Please try again later!")
+                setLoading(false)
+                setPhoneNumber("")
+                setPassedPhoneNumber("")
+                navigation.reset(
+                    {index: 0 , routes: [{ name: 'DiscoverTabs'}]}
+                )
+            }
+        })
+        .catch( e => {
+            alert("An error has occured. Please try again later!")
+        })
     }
 
     async function signupStep2(authy_id, number){
-        console.log("Stepping 2")
-        console.log(phoneNumber)
-        console.log("PHONE NUMBER", number)
+       
         await fetch('https://crib-llc.herokuapp.com/users/OTP/step2', {
             method: 'POST',
             headers: {
@@ -78,39 +94,37 @@ export default function LoginScreen({navigation, route}){
             })
         }) 
         .then(res => {
-                
-                if(res.status == 201){
-                    console.log("LOGGED INNN")
-                    navigation.reset({index: 0 , routes: [{ name: 'Login_OTP', authy_id: authy_id, phoneNumber: number }]})
-                }
-                else{
-                    alert('ERROR OCCURED')
-                }
-
-                return res.json()
-        }).then (resp => console.log("DATA 2", resp))
+         
+            if(res.status == 201){
+                // console.log("LOGGED INNN")
+                navigation.reset({index: 0 , routes: [{ name: 'Login_OTP', authy_id: authy_id, phoneNumber: number }]})
+            }
+            else{
+                alert('ERROR OCCURED')
+            }
+        })
+        .catch( e => {
+            alert("An error has occured. Please try again later!")
+        })
     }
 
     
 
     function checkInput(){
-        if(passedPhoneNumber.length != 10){
+        if(passedPhoneNumber.length < 10){
             alert("Phone number is invalid")
         }
-       else{
+        else{
             setLoading(true)
-            console.log("Will sign up")
             signupStep1()
-       }
-
-       
-
+        }
     }
 
     const handleInput = (e) => {
         // this is where we'll call our future formatPhoneNumber function that we haven't written yet.
         const formattedPhoneNumber = formatPhoneNumber(e);
         // we'll set the input value using our setInputValue
+
         setPhoneNumber(formattedPhoneNumber)
     };
 
@@ -124,8 +138,6 @@ export default function LoginScreen({navigation, route}){
         // phoneNumberLength is used to know when to apply our formatting for the phone number
         const phoneNumberLength = number.length;
       
-
-
         if (phoneNumberLength < 4) return number;
 
         if (phoneNumberLength < 7) {
@@ -141,7 +153,9 @@ export default function LoginScreen({navigation, route}){
         <SafeAreaView style={{flex: 1, backgroundColor:'white', height:HEIGHT, width:WIDTH}} >
             <KeyboardAvoidingView behavior='padding' style={{flex:1}}>
             <Header>
-                <Pressable style={{height:'50%', width:'50%'}} onPress={()=> navigation.goBack() }>
+                <Pressable hitSlop={WIDTH*0.025} onPress={()=> route.wrongPhoneNumber == undefined ? navigation.goBack() : navigation.reset(
+            {index: 0 , routes: [{ name: 'DiscoverTabs'}]}
+            )}>
                    
                     <Ionicons name='arrow-back-outline' size={25} />
                 </Pressable>
@@ -161,11 +175,10 @@ export default function LoginScreen({navigation, route}){
                     
                 </TextInputContainer>
             </ScrollView>
-          
 
             <ContinueButton disabled={loading} loading={loading} onPress={checkInput}>
             {loading ?
-                <Lottie source={require('../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.2, height: WIDTH*0.2, }}/>
+                <Lottie source={require('../../loadingAnim.json')} autoPlay loop style={{width:WIDTH*0.05, height: WIDTH*0.05, }}/>
             :
                 <ContinueText>Continue</ContinueText>
             }

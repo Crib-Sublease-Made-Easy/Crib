@@ -5,7 +5,8 @@ import {
   View,
   Animated as RNAnimated,
   Image,
-  Pressable
+  Pressable,
+  AppState
 } from 'react-native';
 
 var axios = require('axios');
@@ -23,17 +24,18 @@ import DiscoverFilterScreen from './Filter/discoverFilter'; //onPress Search Fil
 
 import PropertyCard from './propertyCard';  //The slide up screen that shows all properties
 
-import SecureStorage from 'react-native-secure-storage'
-
+import EncryptedStorage from 'react-native-encrypted-storage';
 //Icons
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
-FontAwesome.loadFont()
+
+import DeviceInfo from 'react-native-device-info';
+
+
 
 
 //Style components 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, DARKGREY, EXTRALIGHT } from '../../../sharedUtils';
+import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY} from '../../../sharedUtils';
 
 //Custom components
 import {
@@ -50,61 +52,84 @@ import {
     SearchHerePressable, 
     SearchHereText,
     FilterAppliedIconBackground,
-    NoFilterAppliedIconBackground
+    NoFilterAppliedIconBackground,
+    PreviewdetailsText,
+    DatePriceContainer
 } from './discoverStyle';
 
 //Gesture Handler to control propertycard
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {GestureHandlerRootView, TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 //React Native Map
 import MapView , { Marker }from 'react-native-maps';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import NotificationModal from './notificaitonModal';
+import SubleaseLocationModal from './Modals/userTypeModal'
+import UserTypeModal from './Modals/userTypeModal';
 
 
-export default function DiscoverScreen({navigation}){
+export default function DiscoverScreen({navigation, route, initialParams}){
 
     const {sb, USERID, preloadProperties} = useContext(UserContext);
+    
 
     //Method for handling notifications received while app in foreground
     OneSignal.setNotificationOpenedHandler(async notification => {
+      
+
     // console.log("OneSignal: notification opened:", notification);
         await connectSendbird()
-        navigation.navigate("Message")
+        if(notification.notification.additionalData != undefined && notification.notification.additionalData.type == "cribconnect"){
+            navigation.navigate("Connect")
+        }
+        else{
+            navigation.navigate("Message")
+        }
     });
     const connectSendbird = async () => {
-        const UID = await SecureStorage.getItem("userId");
-        if (UID != undefined) {
-          try {
-            console.log("connecting to sendbird")
-         
-            await sb.connect(UID, function (user, error) {
-              if (error) {
+        try{
+            const UID = await EncryptedStorage.getItem("userId");
+            if (UID != undefined) {
+            try {
+                // console.log("connecting to sendbird")
+                await sb.connect(UID, function (user, error) {
+                if (error) {
+                    // Handle error.
+                    console.log("sendbird error")
+                    console.log(error)
+                }
+                else {
+                    
+                    console.log("sendbird connected")
+                }
+                // The user is connected to Sendbird server.
+                });
+                // The user is connected to the Sendbird server.
+            } catch (err) {
                 // Handle error.
-                console.log("sendbird error")
-                console.log(error)
-              }
-              else {
-                
-                console.log("sendbird connected")
-              }
-              // The user is connected to Sendbird server.
-            });
-            // The user is connected to the Sendbird server.
-          } catch (err) {
-            // Handle error.
-            console.log("SENDBIRD ERROR",err)
-          }
+                console.log("SENDBIRD ERROR",err)
+            }
+            }
+        }
+        catch{
+            console.log("ERROR --- DISCOVER --- CONNECTSENDBIRD")
         }
       }
-
+     
+    //   30.267153,-97.7430608
     //Reference to the MapView
     const mapRef = useRef(null)
     //This controls preview modal open opacity when the location icon in propertycard is pressed
     const opacityTranslation = useRef(new RNAnimated.Value(0)).current;
     //The location in [lat,long] of the user input. It is set as SF in the beginning
-    const [currentLocation, setCurrentLocation] = useState([43.0747,89.3840])
+    let lastLocationCoor = route?.params?.LastSearched;
+    let LastSearchedLocation = route?.params?.LastSearchedLocation;
+    const [currentLocation, setCurrentLocation] = useState(lastLocationCoor == undefined ? [43.0747,-89.3840] : [lastLocationCoor[0], lastLocationCoor[1]])
+    // const [currentLocation, setCurrentLocation] = useState([route.params.LastSearched.split[0],route.params.LastSearched.split[1]])
+
+    // const [currentLocation, setCurrentLocation] = useState()
+
     //The location of the user input in string
-    const [locationQuery, setlocationQuery] = useState("Search Location ...")
+    const [locationQuery, setlocationQuery] = useState(LastSearchedLocation == undefined ? "Search Location ..." : LastSearchedLocation)
     //The data of the pins to acess a field its pinsData.item.field
     const [pinsData, setPinsData] = useState([])
     //Toggle to retrieve more properties
@@ -112,7 +137,7 @@ export default function DiscoverScreen({navigation}){
     //To indicate if user is searching or not
     const [searching, setSearching] = useState(false)
     //Access the fields by selectedPin.item.name
-    const [selectedPin, setSelectedPin] = useState(null)
+    const [selectedPin, setSelectedPin] = useState([])
     //Page number of properties shown, it is called in load more properties, hence initial 1 
     const [propertyPage, setPropertyPage] = useState(1);
     //Controls the filter modal page
@@ -146,8 +171,18 @@ export default function DiscoverScreen({navigation}){
     //Toggle the screen when searchbar is onPress
     const [discoverSearchVisible, setDiscoverSearchVisible] = useState(false)
 
+    const [notifModalVisible, setNotifModalVisible] = useState(false)
+    //Ask if what user's objective is
+    const [userTypeModalVisible, setUserTypeModalVisible]= useState(false)
+
+    //Crib tenant premium modal 
+    const [cribtenantSubscriptionModalVisible, setCribTenantSubscriptionModalVisible] = useState(false)
+
     useEffect(()=>{
+        
         setFlatlistRefreshing(true)
+
+        // checkVersion()
         //Loading initial batch of properties
         loadProperty()
         // Loading the pins on the map with default values
@@ -155,16 +190,24 @@ export default function DiscoverScreen({navigation}){
         //Reset selected pin and preview card visibility
         setPropertyPreviewCard(false)
         setSelectedPin([])
-       
+        // clearData()
         //Disable loading indicator
         let timer1 = setTimeout(() => setFlatlistRefreshing(false), 2000);
         // this will clear Timeout
         // when component unmount like in willComponentUnmount
         // and show will not change to true
+
+        // clearData()
         return () => {
             clearTimeout(timer1);
         };
     },[currentLocation])
+
+    async function clearData (){
+        await EncryptedStorage.removeItem("lastSearchedLocation")
+        await EncryptedStorage.removeItem("lastSearchedCoor")
+    }
+
 
 
     function dateCompare(date1, date2){
@@ -179,6 +222,27 @@ export default function DiscoverScreen({navigation}){
             return false;
         }
     }
+
+    async function checkVersion(){
+        const currentVersion = `${DeviceInfo.getReadableVersion()}-`
+        console.log(currentVersion)
+        const previousVersion = await EncryptedStorage.getItem("appVersion");
+        if (previousVersion) {
+            if (previousVersion !== currentVersion) {
+        
+             //this block of code will run when app will update
+             alert("Please update your app to get the latest functions!")
+
+        
+            }
+          } else {
+            EncryptedStorage.setItem("appVersion", currentVersion);
+          }
+    }
+
+
+    //Check the version of the user app
+ 
 
     //Open the preview card when the map button on the propertycard in flatlsit is pressed 
     function openPreviewCard(){
@@ -205,7 +269,7 @@ export default function DiscoverScreen({navigation}){
     }
 
     //Load initial properties
-    const loadProperty = useCallback(()=> {
+    const loadProperty = useCallback(async ()=> {
         setPropertyPage(1)
         setRetrieveMore(true)
         setLoading(true)
@@ -231,39 +295,58 @@ export default function DiscoverScreen({navigation}){
         s = s + `&priceHigh=${filterPriceHigher}`
         s = s + '&priceLow=0'
 
-        fetch('https://crib-llc.herokuapp.com/properties/query?page=0' + s, {
+        await fetch('https://crib-llc.herokuapp.com/properties/query?page=0' + s, {
             method: 'GET',
             headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
             }
         }) 
-        .then(res => res.json()).then(properties =>{
-            console.log("HAPPY", properties)
-            setFilteredProperties(properties)
-
-            properties.forEach(async propData => {
-
-                let imgList = propData.propertyInfo.imgList
-                imgList.forEach(async element => {
-                    const success = await Image.prefetch(element)
-                    console.log(success)
+        .then(async res =>{
+            //Continue only with good status
+            if(res.status == 200 || res.status == 201){
+                properties = await res.json()
+                properties.forEach(async propData => {
+                    let imgList = propData.propertyInfo.imgList
+                    imgList.forEach(async element => {
+                        await Image.prefetch(element)
+                    });
+                    
+    
                 });
 
-                
-               
-            });
-            
-            
+                //This is when there is no properties in the area and user's notification is not set up 
+                let curTime = new Date();
+                if(properties.length == 0){
+                    let lastNotificationPrompTime = await EncryptedStorage.getItem("notificationPromptTime");
+                    console.log("lastNotificationPrompTime ", lastNotificationPrompTime)
+                    // EncryptedStorage.setItem("notificationPromptTime",new Date(lastNotificationPrompTime).getTime().toString());
+
+
+                    let daysApart = lastNotificationPrompTime == undefined ? null : (curTime.getTime() - lastNotificationPrompTime.toString()) / (1000*60*60*24);
+                   
+                    let device = await OneSignal.getDeviceState();
+                    console.log(daysApart)
+                    if((!device.isSubscribed && (daysApart == null || daysApart > 0.5))){
+                       
+                        setNotifModalVisible(true)
+                        EncryptedStorage.setItem("notificationPromptTime",new Date().getTime().toString());
+                    }
+                    // EncryptedStorage.removeItem("notificationPromptTime")
+                }
+                setFilteredProperties(properties)
+                setLoading(false)
+            }
+            else{
+                alert("Error occured in load")
+                setLoading(false)
+            }
         })
         .catch(e=>{
+            alert("Error occured")
             console.log("ERROR --- DISCOVER --- loadProperty")
-            alert(e)
         })
-       
-        setTimeout(()=>{
-            setLoading(false)
-        },2000)
+        
        
     },[currentLocation])
 
@@ -297,25 +380,32 @@ export default function DiscoverScreen({navigation}){
             await fetch('https://crib-llc.herokuapp.com/properties/query?page=' + propertyPage + s, {
             method: 'GET',
             headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-            }
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+                }
             }) 
-            .then(res => res.json()).then(properties =>{
-
-            if(properties.length == 0){
-                setRetrieveMore(false)
-            }
-                setFilteredProperties([...filteredProperties,...properties])
+            .then(async res => {
+                
+                //Continue with good status
+                if(res.status == 200 || res.status == 201){
+                    const properties = await res.json();
+                    if(properties.length == 0){
+                        setRetrieveMore(false)
+                        return;
+                    }
+                    setFilteredProperties([...filteredProperties,...properties])
+                }
+                else{
+                    console.log("ERROR --- DISCOVER --- loadMoreProperties")
+                }
             })
             .catch(e=>{
                 console.log("ERROR --- DISCOVER --- loadMoreProperties")
-                alert(e)
             })   
         }   
     }
 
-    function retrieveAllPins(lat, long, distance, price, bed, bath, type, amens, from, to ){
+    async function retrieveAllPins(lat, long, distance, price, bed, bath, type, amens, from, to ){
         setPropertyPreviewCard(false)
         let s = "";
         if(type != ""){
@@ -342,24 +432,27 @@ export default function DiscoverScreen({navigation}){
         s = s +`&availableFrom=${from}`
         s = s +`&availableTo=${to}`
 
-        fetch(`https://crib-llc.herokuapp.com/properties/pins?${s}` , {
+        await fetch(`https://crib-llc.herokuapp.com/properties/pins?${s}` , {
             method: 'GET',
             headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
             }
         }) 
-        .then(res => res.json()).then( pins =>{
-            if(pins.length == 0){
-                setPinsData([])
-            }
-            else{
+        .then(async res => {
+            
+            if(res.status == 200 || res.status == 201){
+                const pins = await res.json();
                 setPinsData(pins) 
             }
+            else{
+                alert("Error in pins")
+                console.log("ERROR --- DISCOVER --- retrieveAllPins")
+            }
+            
         })
         .catch(e=>{
             console.log("ERROR --- DISCOVER --- retrieveAllPins")
-            alert(e)
         })
     }
 
@@ -367,13 +460,13 @@ export default function DiscoverScreen({navigation}){
     //Input is an array [lat, long]
     //If only currentLocation is vlaid data, then center the mapview to current location
     //If both the currentLocation and the pinLocation is valid, then use delta to adjust mapview
-    function moveMap(lat,long){  
+    function moveMap(lat,long, marker){ 
         if(currentLocation != ""){
             mapRef.current?.animateToRegion({
                 latitude: lat,
                 longitude: long,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.05,
+                latitudeDelta: marker != undefined ? 0.002 : 0.04,
+                longitudeDelta: marker != undefined ? 0.002 : 0.04,
             })
         }
     }
@@ -384,26 +477,55 @@ export default function DiscoverScreen({navigation}){
     //Empty the autocomplete locations 
     //setSearching to false so to shrink the header
     //Dismiss keyboard
-    function selectCurrentLocation(locationQueryName){
+    async function selectCurrentLocation(locationQueryName){
+
+        const deviceState = await OneSignal.getDeviceState();
+        
         if (locationQueryName != ""){
             setlocationQuery(locationQueryName)
             setSearching(false)
-            let spacelessLocation = locationQueryName.replaceAll(" ", "+");
+            
+            let spacelessLocation = locationQueryName;
             var config = {
-                method: 'get',
-                url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${spacelessLocation}`,
-            };
-            axios(config)
-            .then(async (response)=> {           
-                console.log(JSON.stringify(response))
-                let lat = response.data.lat;
-                let long = response.data.lng;
-                setCurrentLocation([lat,long])
-                moveMap(lat - 0.015, long)
-            })
-            .catch(function (error) {
+                headers:{
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                // method: 'get',
+                // url: `https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${spacelessLocation}`,
+                // body:JSON.stringify({
+                //     userId: USERID,
+                //     oneSignalID: deviceState.userId
+                // }),
+              
                 
-                console.log(error);
+            };
+
+            axios.get(`https://crib-llc.herokuapp.com/autocomplete/geocoding?address=${spacelessLocation}`,{
+                params: {
+                    oneSignalID: deviceState.userId,
+                    userId: USERID,
+                }
+            }, config)
+            .then(async (response)=> {        
+                console.log(response.status)   
+                if(response.status == 200 || response.status == 201){
+                    let lat = response.data.lat;
+                    let long = response.data.lng;
+                    let s = lat + "," + long
+                  
+                    await EncryptedStorage.setItem("lastSearchedCoor", s);
+                   
+                    setCurrentLocation([lat,long])
+                    moveMap(lat - 0.005, long)
+                }
+                else{
+                  
+                    console.log("ERROR --- DISCOVER --- selectCurrentLocation")
+                }
+            })
+            .catch(e=>{
+                console.log("ERROR (CATCH) --- DISCOVER --- selectCurrentLocation")
             });
         }
     }
@@ -431,33 +553,57 @@ export default function DiscoverScreen({navigation}){
     //Function to move map to selected property on map when the location icon is pressed
     //Open the preview card modal 
     async function onMarkerClick(item){
-        setLoading(true)
-        if(item != null && item != undefined){
-            await fetch('https://crib-llc.herokuapp.com/properties/' + item._id, {
-            method: 'POST',
-            headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                viewCount: "false"
-            })
-            }) 
-            .then(res => res.json()).then(property =>{
-                setSelectedPin(property)
-                moveMap(item.loc.coordinates[1] - 0.015, item.loc.coordinates[0])
-            })
-            .catch(e=>{
-                console.log("ERROR --- DISCOVER --- onMarkerClick")
-                alert(e)
-            })
-        }
         
-        //Toggle previewCard modal, but the opcaity is 0 when opened 
-        setPropertyPreviewCard(true)
-        //Function that animates the opcaity of preview caed
-        openPreviewCard()
-        setLoading(false)
+        if(item.postedBy == null){
+            moveMap(item.loc.coordinates[1] , item.loc.coordinates[0], false)
+            //Toggle previewCard modal, but the opcaity is 0 when opened 
+            setPropertyPreviewCard(true)
+            //Function that animates the opcaity of preview caed
+            openPreviewCard()
+        
+            let propertyInfo = item
+
+            setSelectedPin({propertyInfo})
+        }
+        else{
+            if(item != null && item != undefined){
+                await fetch('https://crib-llc.herokuapp.com/properties/' + item._id, {
+                method: 'POST',
+                headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+                },
+               
+                }) 
+                .then(async res =>  {
+                   
+                    const property = await res.json();
+                    if(res.status == 200){
+                        if(property != null && property != undefined && property.propertyInfo.deleted == false){
+                            moveMap(item.loc.coordinates[1] - 0.0005, item.loc.coordinates[0], false)
+                            //Toggle previewCard modal, but the opcaity is 0 when opened 
+                            setPropertyPreviewCard(true)
+                            //Function that animates the opcaity of preview caed
+                            openPreviewCard()
+                            setLoading(false)
+                            setSelectedPin(property)
+                        }
+                        else if(property.propertyInfo.deleted == true){
+                            console.log("ERROR --- DISCOVER --- onMarkerClick")
+                            setLoading(false)
+                        }
+                    }
+                    else{
+                        console.log("ERROR --- DISCOVER --- onMarkerClicks")
+                        setLoading(false)
+                    }
+                })
+                .catch(e=>{
+                    console.log("ERROR --- DISCOVER --- onMarkerClick")
+                    setLoading(false)
+                })
+            }
+        }
     }
 
     //Input is the lat and long location 
@@ -468,18 +614,23 @@ export default function DiscoverScreen({navigation}){
             url: `https://crib-llc.herokuapp.com/autocomplete/reversegeocoding?lat=${loc[0]}&long=${loc[1]}`,
         };
         await axios(config)
-        .then(async (response)=> {           
-            setlocationQuery(response.data.formatted_address)
+        .then(async (response)=> {   
+            if(response.status == 200 || response.status == 201){
+                setlocationQuery(response.data.formatted_address)
+            }
+            else{
+                console.log("ERROR --- DISCOVER --- updateQueryString")
+            }
         })
         .catch(function (error) {
-            console.log(error);
+            console.log("ERROR (CATCH) --- DISCOVER --- updateQueryString")
         });
     }
 
     return(
         <GestureHandlerRootView style={{flex: 1}}>
 
-            <SafeAreaView>
+            <SafeAreaView style={{flex: 1}}>
                 {/* This is the container for the whole map background in discover behind search bar */}
                 {/* Includes the Search Here pressable, map view, markers and preview modal */}
                 <MapContainer>
@@ -488,15 +639,15 @@ export default function DiscoverScreen({navigation}){
                         ref={mapRef}
                         style={{flex:1, position:'relative'}}
                         initialRegion={{
-                        latitude: currentLocation[0], 
-                        longitude: currentLocation[1],
+                        latitude: Number(currentLocation[0]), 
+                        longitude: Number(currentLocation[1]),
                         latitudeDelta: 0.02,
                         longitudeDelta: 0.02,
                         }}
                     >
                         <Marker
                             key={"currentlocationmarker"}
-                            coordinate={{ latitude:currentLocation[0], longitude:currentLocation[1] }}
+                            coordinate={{ latitude:Number(currentLocation[0]), longitude: Number(currentLocation[1]) }}
                             style={{zIndex:1}}
                         ></Marker>
                                 
@@ -532,8 +683,8 @@ export default function DiscoverScreen({navigation}){
                         outputRange: [0, 1],
                     })}}>
                             {/* Checks if any pin is selected for displaying in the preview card */}
-                        {selectedPin != undefined && selectedPin != "" &&
-                        <Pressable disabled={loading}  hitSlop={WIDTH*0.05} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0]))})}}>
+                        {selectedPin != "" && selectedPin != null && selectedPin != undefined &&
+                        <Pressable disabled={loading}  hitSlop={WIDTH*0.05} onPress={()=>{ navigation.navigate("PropertyDetail", {data: selectedPin, uid: USERID, distance: Math.round(getDistanceFromLatLonInMiles(currentLocation[0],currentLocation[1],selectedPin.propertyInfo.loc.coordinates[1], selectedPin.propertyInfo.loc.coordinates[0])), scraped: selectedPin.propertyInfo.postedBy == null ? true : false})}}>
                             <PreviewTopContainer>
                                 <Image source={{uri:selectedPin.propertyInfo.imgList[0]}} style={{width:WIDTH*0.9, height: '100%',borderTopLeftRadius:25, 
                                 borderTopRightRadius:25, backgroundColor: LIGHTGREY, }}/>
@@ -541,34 +692,46 @@ export default function DiscoverScreen({navigation}){
 
                             <PreviewBottomContainer >
                                 <PreviewLocationText>{selectedPin.propertyInfo.loc.secondaryTxt}</PreviewLocationText>
-                                <PreviewPriceText>{new Date(selectedPin.propertyInfo.availableFrom).getDate() + " " +
-                                        new Date(selectedPin.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) 
-                                        }  -  {new Date(selectedPin.propertyInfo.availableTo).getDate() + " " +
-                                        new Date(selectedPin.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })}</PreviewPriceText>
+                                <PreviewdetailsText>{selectedPin.propertyInfo.bed} Bed  •  {selectedPin.propertyInfo.bath} Bath</PreviewdetailsText>
                                 
-                                <PreviewPriceText>${selectedPin.propertyInfo.price}</PreviewPriceText>
+                                <DatePriceContainer>
+                                    <PreviewdetailsText>
+                                        {
+                                            new Date(selectedPin.propertyInfo.availableFrom).toDateString().split(" ")[1] + " " +
+                                            new Date(selectedPin.propertyInfo.availableFrom).toDateString().split(" ")[3]
+                                        }  
+                                        {"  "}-{"  "}
+                                        {
+                                            new Date(selectedPin.propertyInfo.availableTo).toDateString().split(" ")[1] + " " +
+                                            new Date(selectedPin.propertyInfo.availableTo).toDateString().split(" ")[3]
+                                        }
+                                    </PreviewdetailsText>
+
+                                    <PreviewPriceText>${selectedPin.propertyInfo.price} / month</PreviewPriceText>
+
+                                </DatePriceContainer>
                             </ PreviewBottomContainer> 
                         </Pressable>
                         }
 
-                        <FontAwesome  hitSlop={WIDTH*0.05} onPress={()=>closePreviewCard()} name="times-circle" size={25}  color='white' style={{position: 'absolute', right:WIDTH*0.025,
+                        <FontAwesome  hitSlop={WIDTH*0.05} onPress={()=>closePreviewCard()} name="times-circle" size={30}  color='white' style={{position: 'absolute', right:WIDTH*0.03,
                         top: HEIGHT*0.015}}/>
                     </RNAnimated.View>
                 </MapContainer>
                     
                 {/* This sets the container of the search input */}
-                <SearchContainer  hitSlop={WIDTH*0.05}onPress={()=>setDiscoverSearchVisible(true)}>
+                <SearchContainer  onPress={()=>setDiscoverSearchVisible(true)}>
                     {/* The search icon on the search outlien */}
                     <SeachIconContainer>
-                        <Ionicons name='search' size={20}  color={DARKGREY} />
+                        <Ionicons name='search' size={25}  color='black' />
                     </SeachIconContainer>
                     
                     {/* Placeholder for locationquerytext selected in discoversearch */}
                     
-                    <SearchContainerPlaceholderText locationQuery={locationQuery}> {locationQuery}</SearchContainerPlaceholderText>
+                    <SearchContainerPlaceholderText numberOfLines={1} locationQuery={locationQuery}> {locationQuery}</SearchContainerPlaceholderText>
 
                     {/* This is the icon for filters when locationquery is not empty  */}
-                    <DeleteIconContainer hitSlop={WIDTH*0.05} onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
+                    <DeleteIconContainer hitSlop={WIDTH*0.025} onPress={()=> setFilterModal(true)} style={{display: (!searching && locationQuery != "") ? 'flex' : 'none', }} >
                         {(filterType != ''  || filterDistance != 150 || filterBedroom !=="" || filterBathroom != "" || filterPriceLower != 0 || filterPriceHigher != 10000 || filterAmenities.length != 0) || !(dateCompare(new Date(1759190400000), new Date(filterAvailableTo))) || !(dateCompare(new Date(), new Date(filterAvailableFrom)))?
                         <FilterAppliedIconBackground>
                             <Ionicons name="options-sharp" size={20} />
@@ -606,7 +769,13 @@ export default function DiscoverScreen({navigation}){
 
                 {/* Search screen when the search bar is pressed */}
                 <DiscoverSearchScreen open={discoverSearchVisible} close={()=> setDiscoverSearchVisible(false)} selectCurrentLocation={selectCurrentLocation}/>
-                
+                <TouchableWithoutFeedback>
+                    <NotificationModal notifModalVisible={notifModalVisible} close={()=>setNotifModalVisible(false)}/>
+                    <UserTypeModal subleaseTypeModalVisible={userTypeModalVisible} close={()=>setUserTypeModalVisible(false)}/>
+                </TouchableWithoutFeedback>
+
+                {/* Tenant Subscription Modal */}
+                {/* <CribTenantSubscriptionModal cribtenantSubscriptionModalVisible={cribtenantSubscriptionModalVisible} close={()=>setCribTenantSubscriptionModalVisible(false)}/> */}
             </SafeAreaView>  
         </GestureHandlerRootView>
     )

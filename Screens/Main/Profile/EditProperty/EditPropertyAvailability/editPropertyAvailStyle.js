@@ -11,7 +11,7 @@ const HEIGHT = Dimensions.get('screen').height;
 const WIDTH = Dimensions.get('screen').width;
 
 export const RowContainer = styled.View`
-    padding-vertical: ${HEIGHT*0.02}px
+    padding-top: ${HEIGHT*0.02}px
     width: ${WIDTH*0.9}px;
     align-self: center
     

@@ -7,11 +7,15 @@ import {
   Image,
   Pressable,
   Animated,
-  Share
+  Share,
+  ActivityIndicator,
+  AppState,
+  Linking
 } from 'react-native';
 import { UserContext } from '../../../UserContext';
 
-import SecureStorage from 'react-native-secure-storage'
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -19,15 +23,15 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import FastImage from 'react-native-fast-image'
 
-import { PRIMARYCOLOR, Header, HeaderContainer, HEIGHT, WIDTH, MEDIUMGREY } from '../../../sharedUtils';
+import { PRIMARYCOLOR, Header, HEIGHT, WIDTH, MEDIUMGREY } from '../../../sharedUtils';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-FontAwesome.loadFont()
+
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faSquareCheck, faSwimmer, faDog} from '@fortawesome/free-solid-svg-icons'
 library.add(faSquareCheck, faSwimmer, faDog)
 import Ionicons from 'react-native-vector-icons/Ionicons';
-Ionicons.loadFont()
+
 
 import Lottie from 'lottie-react-native';
 
@@ -40,33 +44,37 @@ FavContainer,
 PostedText, 
 FavText,  
 DefaultPostFavText, 
-PostedPropertyInfoContainer,
-PropertyName, 
-DatePriceText,PriceEditContainer, 
-EditPropertyPressable, 
-EditText, 
-FavPropertyCard, 
-FavPropertyCardName, 
-FavPropertyCardContent, 
-FavPropertyCardDateText, 
-FavPropertyCardDateContainer, 
-PostedPropertyCard, 
-HeaderIndividualContainer,
-RowContainer, 
-RowItemName,
-ProfileHeading, 
+CribPremiumPressable,
 NoUserViewContainer, 
 LoginContainer, 
 LoginText, 
 SignupContainer,
 SignupText,
-PostedFavContainer
+PostedFavContainer,
+JoinedDateText,
+HeaderContainer,
+ImageContainer,
+NameDateContainer,
+NameText,
+SettingContainer,
+CribPremiumHeaderText,
+UpgradeView,
+UpgradeImageContainer,
+UpgradeTextContainer,
+UpgradeTextHeader,
+UpgradeText,
+OptionContainer,
+OptionRow,
+OptionName,
+CribPremiumPressableLeft,
+CribPremiumSubheaderText
 } from './profileStyle';
 
 import { EXTRALIGHT, LIGHTGREY, GOOGLEBLUE, DARKGREY } from '../../../sharedUtils';
 
 
 export default function ProfileScreen({navigation}){
+    const appState = useRef(AppState.currentState);
     const insets = useSafeAreaInsets();
     const scrollviewRef = useRef(null)
     const {USERID, user} = useContext(UserContext);
@@ -79,98 +87,109 @@ export default function ProfileScreen({navigation}){
     const translation = useRef(new Animated.Value(0)).current;
 
     const [userData, setUserData] = useState('')
+    const [firstName, setFirstName] = useState('')
 
     const [profilePic, setProfilePic] = useState(null)
+    const [loading, setLoading] = useState(false)
+
+    const RowOptions = [
+        // {text: 'My Referral Code', icon: 'star'},
+        {text: 'Looking for a sublease', icon: 'search', color: '#ed3413'},
+        {text: 'Edit Profile', icon: 'create', color: GOOGLEBLUE},
+        {text: 'View posted property', icon: 'home', color: 'black'},
+        {text: 'View saved property', icon: 'heart', color: '#ed3413'},
+        {text: 'My Referral Code', icon: 'barcode', color: '#ed3413'},
+    ]
    
     useEffect(()=>{
-    
         const unsubscribe = navigation.addListener('focus', () => {
-            console.log("REFRESH --- USEEFFECT")
-            getTokens()              
+            
+            getTokens()
+            fetchFavoriteProperties()
         });
-       
-        return unsubscribe; 
-    }, [navigation])
 
-    //Share the app on app store to freinds throguh message 
-    const onShare = async () => {
-        try {
-          const result = await Share.share({
-            //   'Lighthouse | An app to find short term housing solutions made easy',
-              url: 'https://apps.apple.com/us/app/google-chrome/id535886823'
-          });
-          if (result.action === Share.sharedAction) {
-            if (result.activityType) {
-              // shared with activity type of result.activityType
-            } else {
-              // shared
+        const subscription = AppState.addEventListener('change', nextAppState => {
+            if (
+              appState.current.match(/inactive|background/) &&
+              nextAppState === 'active'
+            ) 
+            {
+                
             }
-          } else if (result.action === Share.dismissedAction) {
-            // dismissed
-          }
-        } catch (error) {
-          alert(error.message);
-        }
-    };
+            getTokens()
+            appState.current = nextAppState;
+        });
+      
+        return () => {
+        subscription.remove();
+        };
+       
+    }, [navigation])   
 
     //Retrieve user info for display and cache for later use
     async function getTokens(){
-       
-        const accessToken = await SecureStorage.getItem("accessToken");
-        const refreshToken = await SecureStorage.getItem("refreshToken");
-        const UID = await SecureStorage.getItem("userId")
+        try{
+            const accessToken = await EncryptedStorage.getItem("accessToken");
 
-        if(refreshToken != undefined){
-            
-            //Get user favorite properties
-            fetchFavoriteProperties(accessToken)
-            if(accessToken != null && UID != null){
-                fetch('https://crib-llc.herokuapp.com/users/' + UID, {
-                method: 'GET',
-                headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken,
+            //This is to set the profile pic from cache
+            let cachedProfilePic;
+            try{
+                cachedProfilePic = await AsyncStorage.getItem("profilePic");
+                let cachedFirstName = await EncryptedStorage.getItem("firstName");
+                setFirstName(cachedFirstName)
+                if(cachedProfilePic != null){
+                    setProfilePic(cachedProfilePic)
                 }
-                }) 
-                .then(res => res.json()).then(async userData =>{
-                    setUserData(userData)
-                    //Load API data if the cached profile pic is null
-                    let cachedProfilePic = await AsyncStorage.getItem("profilePic");
-                    if(profilePic == null){
-                        if(cachedProfilePic != null && cachedProfilePic == userData.profilePic ){
+                console.log("SETPROFILEPIC --- CACHE --- GETTOKEN")
+                console.log("SETFIRSTNAME --- CACHE --- GETTOKEN")
+            }
+            catch{
+                console.log("Error in setting profile pic from cache.")
+            }
+            const uid  = await EncryptedStorage.getItem("userId")
+            if(accessToken != undefined && uid != undefined){
+                
+                //Get user favorite properties
+                if(accessToken != null && uid != null){
+                    fetch('https://crib-llc.herokuapp.com/users/' + uid, {
+                    method: 'GET',
+                    headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken,
+                    }
+                    }) 
+                    .then(res => res.json()).then(async userData =>{
+                        setUserData(userData)
+                      
+                        //Load API data if the cached profile pic is null
                         
-                            console.log("UPDATE --- CACHE --- profilePic")
-                            setProfilePic(cachedProfilePic)
-                        }
-                        else{
-                            console.log("UPDATE --- API --- profilePic")
+                        if(cachedProfilePic == null){
                             setProfilePic(userData.profilePic)
                             try{
-                                await AsyncStorage.setItem("profilePic", userData.profilePic);
+                                console.log("PROFILEPIC --- API --- GETTOKEN")
+                                if(userData.profilePic != undefined && userData.profilePic != null){
+                                    await AsyncStorage.setItem("profilePic", userData.profilePic);
+                                }
                             }
-                            catch{e=>{
+                            catch{
                                 console.log("ERROR --- PROFILE --- GETTOKEN")
                             }
-
-                            }
-                            
                         }
-                    }
-                    if(userData.postedProperties != undefined){
-                        fetchPostedProperties(userData.postedProperties[0], accessToken)
-                    }
-                })
-                .catch(e=>{
-                    console.log("ERROR --- PROFILE --- GETTOKEN")
-                    alert(e)
-                })
+                        if(userData.postedProperties != undefined && userData.postedProperties.length >= 1){
+                            fetchPostedProperties(userData.postedProperties[0], accessToken)
+                        }
+                    })
+                    .catch(e=>{
+                        console.log("ERROR --- PROFILE --- GETTOKEN")
+                        alert(e)
+                    })
+                }
+        
             }
-            else{
-                console.log("hello")
-                console.log(accessToken)
-                console.log(UID)
-            }
+        }
+        catch{
+            console.log("ERROR ---GETTOKENS")
         }
         
     }
@@ -197,14 +216,14 @@ export default function ProfileScreen({navigation}){
                 if(propertyData != undefined){
                     
                     //Returns no prop found when theres nothing 
-                    const tempPropData = await AsyncStorage.getItem('postedProperty')
+                    const tempPropData = await EncryptedStorage.getItem('postedProperty')
                     
                     let compare = (tempPropData === JSON.stringify(propertyData))
                     
                     if(!compare || tempPropData == null) {
-                        console.log("UPDATE --- API --- POSTED PROPERTY")
+                        // console.log("UPDATE --- API --- POSTED PROPERTY")
                         try{
-                            await AsyncStorage.setItem('postedProperty', JSON.stringify(propertyData))
+                            await EncryptedStorage.setItem('postedProperty', JSON.stringify(propertyData))
                         }
                         catch{
                             e=>{
@@ -223,14 +242,14 @@ export default function ProfileScreen({navigation}){
                 }
 
             }).catch(e=>{
-                console.log("ERROR --- PROFILE --- FETCHPOSTEDPROPERTIES")
+                // console.log("ERROR --- PROFILE --- FETCHPOSTEDPROPERTIES")
                 alert(e)
             })
-        
     }
 
     //Function: Fetch favorite properties 
-    function fetchFavoriteProperties(token){
+    async function fetchFavoriteProperties(token){
+        token = await EncryptedStorage.getItem("accessToken")
         fetch('https://crib-llc.herokuapp.com/users/favorites/all', {
             method: 'GET',
             headers: {
@@ -239,47 +258,55 @@ export default function ProfileScreen({navigation}){
             'Authorization': 'Bearer ' + token,
             }
         }).then(res => res.json()).then(async data =>{
+            
             //data.properties get the list of all properties
-            // console.log("DATA", JSON.stringify(data))
             const tempFavProp = await AsyncStorage.getItem("favoriteProperties");
             // console.log("TEMPDATA", tempFavProp)
 
             const compare = tempFavProp === JSON.stringify(data)
-            // console.log(compare)
 
             //If the api data is different from the AyncStorage data
-            if(!compare){
-                //This is that favproperties is not empty so no error later on
-                if(data.length != 0){
-                    console.log("UPDATE --- API --- FAV PROPERTY")
-                    
-                    setFavoriteProperties(data);
-                    try{
-                        await AsyncStorage.setItem("favoriteProperties", JSON.stringify(data) )
-                    }
-                    catch{e=>{
-                        console.log("ERRROR --- PROFILE --- FETCHFAVORITEPROPERTY")
-                    }}
-                }
-                else{
-                    setFavoriteProperties([])
-                }
-            }
-            else{ // The api and cache data is the same
-                console.log("UPDATE --- CACHE --- FAV PROPERTY")
-                setFavoriteProperties(JSON.parse(tempFavProp))
-            }
+            // if(!compare){
+            //     //This is that favproperties is not empty so no error later on
+            //     if(data.length != 0){
+            //         console.log("UPDATE --- API --- FAV PROPERTY")
+            //         console.log(data)
+            //         setFavoriteProperties(data);
+            //         try{
+            //             if(data != undefined){
+            //                 await AsyncStorage.setItem("favoriteProperties", JSON.stringify(data) )
+            //             }
+            //         }
+            //         catch{e=>{
+            //             console.log("ERRROR --- PROFILE --- FETCHFAVORITEPROPERTY")
+            //         }}
+            //     }
+            //     else{
+            //         console.log("no fav")
+            //         setFavoriteProperties([])
+            //     }
+            // }
+            // else{ // The api and cache data is the same
+            //     // console.log("UPDATE --- CACHE --- FAV PROPERTY")
+            //     console.log("no faddv")
+            //     setFavoriteProperties(data)
+            // }
+            setFavoriteProperties(data)
         })
     }
 
     //Function to post properties, only if user have no properties 
-    function toPostProperty(){
-        if(userData.postedProperties.length >= 1 ){
+    async function toPostProperty(){
+        
+        if(userData.postedProperties.length > 0){
             alert("As a regular member, you can only post one property.")
         }
         else{
+            
             navigation.navigate('PropertyPosting')
         }
+       
+       
     }
 
     //Function: animate the process of the sliding half transparant bckground between psoted and favorite 
@@ -304,156 +331,113 @@ export default function ProfileScreen({navigation}){
         }).start()
         scrollviewRef.current.scrollTo({x:WIDTH})
     }
+
+    async function pressOption(name){
+        
+        if(name == "Edit Profile"){
+            navigation.navigate("ProfileEdit", {userData : userData})
+        }
+        else if(name == "List a Property"){
+            toPostProperty()
+        }
+        else if(name == "View posted property"){
+            navigation.navigate("PostedProperty", {postedProperties:postedProperties, userData: userData})
+        }
+        else if(name == "View saved property"){
+            navigation.navigate("FavoriteProperty", {favoriteProperties: favoriteProperties})
+        }
+        else if(name == "My Referral Code"){
+            // const at = await EncryptedStorage.getItem("accessToken")
+            navigation.navigate("MyReferralCode", {userData : userData})
+        }
+        else if(name == "Looking for a sublease"){
+            // const at = await EncryptedStorage.getItem("accessToken")
+            let url = "https://forms.gle/zJji65b1LNu9G4Mh7"
+            const supported = await Linking.canOpenURL(url);
+
+            if (supported) {
+            // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+            // by some browser in the mobile
+            await Linking.openURL(url);
+            }
+        }
+      
+    }
     return(
         <StyledView style={{backgroundColor:'white', flex: 1}} insets={insets}>
-            {/* Check if user is logged in and show differnt page*/}
-            {USERID != null ? 
+        {USERID != null ? 
+        <View>
+            <HeaderContainer>
+                <ImageContainer>
+                    <ActivityIndicator animating={loading}  size='small' color={DARKGREY} />
+                    <FastImage onLoadStart={()=> setLoading(true)}  onLoadEnd={()=>setLoading(false)} source={{uri: profilePic, priority: FastImage.priority.high}} style={{height:'100%', width:'100%', borderRadius:WIDTH*0.125, position:'absolute'}}/>
+                </ImageContainer>
+                <NameDateContainer>
+                    {userData?.cribPremium?.paymentDetails?.status ?
+                    <NameText style={{color: '#FFD700'}}>Premium Connect</NameText>
+                    :
+                    <NameText style={{color: '#D9D9D9'}}>Regular Member</NameText>
+                    }
+                    <NameText>{firstName}</NameText>
+                    <JoinedDateText>Joined 2023</JoinedDateText>
+                </NameDateContainer>
+                <SettingContainer>
+                    <Pressable hitSlop={WIDTH*0.03} onPress={()=>navigation.navigate('Setting',{propID: postedProperties?.propertyInfo._id, authyID: userData?.authy_id})}>
+                        <Ionicons name='cog-outline' size={30}  color='black' />
+                    </Pressable>
+                </SettingContainer>
+            </HeaderContainer>
+
+            {/* <UpgradeContainer>
+                <UpgradeView>
+                    <UpgradeImageContainer>
+
+                    </UpgradeImageContainer>
+                    <UpgradeTextContainer>
+                        <UpgradeTextHeader>Upgrade to premium</UpgradeTextHeader>
+                        <UpgradeText>Be a premium member to post more than one property and use advanced filtered!</UpgradeText>
+                    </UpgradeTextContainer>
+                </UpgradeView>
+            </UpgradeContainer> */}
+
+            <View style={{height: HEIGHT*0.03}}/>
+            <CribPremiumPressable  style={{backgroundColor: '#d4af37'}} onPress={(()=>navigation.navigate("Connect", {userData: userData}))}>
+                <CribPremiumPressableLeft>
+                    <CribPremiumHeaderText>Crib Connect</CribPremiumHeaderText>
+                    <CribPremiumSubheaderText>Let us do the work! {'\n'}We will find you a reliable {'\n'}tenant so you don't have to.</CribPremiumSubheaderText>
+                </CribPremiumPressableLeft>
+                <Lottie source={require('../../../assets/cribconnecttenantslide3.json')} autoPlay style={{width: WIDTH*0.2}}/>
+
+            </CribPremiumPressable>
+            <View style={{height: HEIGHT*0.015}}/>
+            <CribPremiumPressable onPress={toPostProperty}>
+                <CribPremiumPressableLeft>
+                    <CribPremiumHeaderText>Sublease your room</CribPremiumHeaderText>
+                    <CribPremiumSubheaderText>Stop paying for an empty {'\n'}room so you can spend it {'\n'}somewhere else!</CribPremiumSubheaderText>
+                </CribPremiumPressableLeft>
+                <Lottie source={require('../../../assets/cibprofilepremium.json')} autoPlay style={{width: WIDTH*0.25}}/>
+
+            </CribPremiumPressable>
             
-            // This is when user is logged in 
-            <View style={{flex: 1}}>
-                <HeaderContainer style={{borderBottomWidth: 0}}>
-                    <HeaderIndividualContainer style={{justifyContent:'flex-end', width: '15%'}}>
-                        <Pressable  hitSlop={WIDTH*0.05} onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>
-                        <FastImage source={{uri: profilePic, priority: FastImage.priority.high}} 
-                        style={{width:WIDTH*0.1, height: WIDTH*0.1, borderRadius: WIDTH*0.05, alignSelf:'center', backgroundColor:EXTRALIGHT}} />
-                        </Pressable>
-                    </HeaderIndividualContainer> 
-                        
-                    <HeaderIndividualContainer style={{width: '70%'}}>
-                        <Header>{userData.firstName}</Header>
-                    </HeaderIndividualContainer>
+            <View style={{height: HEIGHT*0.025}}/>
 
-                    <HeaderIndividualContainer style={{ width:'15%',justifyContent:'flex-start', }}>
-                        <Pressable onPress={()=>navigation.navigate('Setting')}>
-                            <Ionicons name='cog-outline' size={30} />
-                        </Pressable>
-                    </HeaderIndividualContainer>
-                
-                </HeaderContainer>
-                <ProfileHeading>Profile</ProfileHeading>
-                {/* The Edit Profie, Post a Property and Share a Crib function */}
-                <View>
-                    <RowContainer onPress={()=> navigation.navigate("ProfileEdit", {userData : userData})}>    
-                        <Ionicons name="create"  size={25} color={GOOGLEBLUE}/>
-                        <RowItemName>Edit Profile</RowItemName>
-                    </RowContainer>
-                    <RowContainer onPress={()=> toPostProperty()}>    
-                        <Ionicons name="home"  size={25} color={PRIMARYCOLOR}/>
-                        <RowItemName>Post a property</RowItemName>
-                    </RowContainer>
-                    {/* <RowContainer onPress={()=> onShare()}>    
-                        <Ionicons name="share"  size={25} color={DARKGREY}/>
-                        <RowItemName>Share Crib</RowItemName>
-                    </RowContainer> */}
-                </View>
 
-                <Container>
-                    {/* This is the Slider between Posted and Favorite */}
-                    <SlidingContainer>
-                        <Animated.View style={{width:WIDTH*0.35, height: HEIGHT*0.05, borderRadius: 25, position:'absolute', left:WIDTH*0.05,
-                        backgroundColor:PRIMARYCOLOR, opacity:0.2, transform:[{translateX: translation}]}}></Animated.View>
-                        <PostContainer tabPressed={tabPressed} onPress={()=> {setTabPressed('Posted'), PressPosted()}}>
-                            <FontAwesome name='home'  size={20} color={tabPressed == 'Posted' ? PRIMARYCOLOR : DARKGREY}/>
-                            <PostedText tabPressed={tabPressed} >Posted</PostedText>
-                        </PostContainer>
-                        <FavContainer tabPressed={tabPressed} onPress={()=> {setTabPressed('Fav'), PressFav()}}>
-                            <FontAwesome name='heart' size={20} color={tabPressed == "Fav" ? PRIMARYCOLOR : DARKGREY} />
-                            <FavText tabPressed={tabPressed}>Favorite</FavText>
-                        </FavContainer>
-                    </SlidingContainer>
-
-                    {/* Horizontal scrollview for posted and favorite property */}
-                    <ScrollView ref={scrollviewRef} horizontal snapToAlignment='start' snapToInterval={WIDTH} decelerationRate='fast'
-                        style={{width:WIDTH, maxHeight:HEIGHT*0.45, }} scrollEnabled={false}>
-                        {/* This is the View of posted property */}
-                        <View style={{ width:WIDTH, alignItems:'center' , paddingVertical: HEIGHT*0.02}}>
-                            {/* When user have a property */}
-                            {postedProperties != null ?
-                                <PostedPropertyCard onPress={()=>navigation.navigate("PropertyDetail", {data: postedProperties, uid: userData._id})}>
-                                    <FastImage key={"defaultPropPic"}
-                                    source={{uri: postedProperties == null ? null : postedProperties.propertyInfo.imgList[0], priority: FastImage.priority.medium}} style={{width:WIDTH*0.9, height:HEIGHT*0.25, backgroundColor:LIGHTGREY, alignSelf:'center', borderRadius:10}}/>
-                                    <PostedPropertyInfoContainer>
-                                        <PropertyName>{postedProperties.propertyInfo.loc.streetAddr}</PropertyName>
-                                        <DatePriceText>{postedProperties.propertyInfo.loc.secondaryTxt}</DatePriceText>
-                                        <DatePriceText>
-                                            {new Date(postedProperties.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' })} {""}
-                                            {new Date(postedProperties.propertyInfo.availableFrom).getFullYear()}
-                                            {" "} - {" "}
-                                            {new Date(postedProperties.propertyInfo.availableTo).toLocaleString('default', { month: 'short' })} {""}
-                                            {new Date(postedProperties.propertyInfo.availableTo).getFullYear()}
-                                        </DatePriceText>
-                                        <PriceEditContainer>
-                                            <PropertyName style={{color:'black'}}>${postedProperties.propertyInfo.price} / month</PropertyName>
-                                            <EditPropertyPressable onPress={()=>navigation.navigate("EditProperty", {propertyData: postedProperties.propertyInfo, propId: postedProperties.propertyInfo._id})}>
-                                                <EditText>Edit</EditText>
-                                            </EditPropertyPressable>
-                                        </PriceEditContainer>
-                                    </PostedPropertyInfoContainer>
-                                </PostedPropertyCard>
-                            :
-                                //When user have no property
-                                <Pressable style={{width:WIDTH, height:'100%', alignItems:'center', justifyContent:'center'}}
-                                    onPress={toPostProperty}>
-                                    <Lottie source={require('../../../subleaseProperties.json')} autoPlay loop={20}  style={{width:WIDTH*0.6, height: WIDTH*0.6, }}/>
-                                    {/* <Pressable style={{width:WIDTH*0.5, height:HEIGHT*0.06, borderRadius:30,
-                                    backgroundColor: PRIMARYCOLOR, justifyContent:'center', alignItems:'center'}}>
-                                        <Text style={{color:'white', fontSize:HEIGHT*0.0175, fontWeight:'500'}}>Start Sublease</Text>
-                                    </Pressable> */}
-                                    <DefaultPostFavText>Sublease in just a few steps</ DefaultPostFavText>
-                                </Pressable>
-                            }
+            <OptionContainer>
+                {RowOptions.map((item) => (
+                    <OptionRow key={item.text} onPress={()=>pressOption(item.text)}>
+                        <View style={{flexDirection:'row', alignItems:'center'}}>
+                          <Ionicons name={item.icon} size={25} color='black'/>
+                          <OptionName>{item.text}</OptionName>
                         </View>
+                        <Ionicons name='chevron-forward' size={25} color= {DARKGREY}/>
+                    </OptionRow>
 
-                         {/* This is the View of favorite property */}
-                        <PostedFavContainer>
-                            
-                            {favoriteProperties.length == 0 ?
-                            //When there is no favorite property
-                                <Pressable style={{width:WIDTH, height:'100%',alignItems:'center',justifyContent:'center'}} onPress={()=> navigation.navigate("Discover")}>
-                                    {/* <Lottie source={require('../../../likeanimation.json')} autoPlay loop={20}  style={{width:WIDTH*0.4, height: WIDTH*0.4, }}/> */}
-                                    <DefaultPostFavText>No likes yet. Start discovering...</ DefaultPostFavText>
-                                </Pressable>
-                                :
-                                //When there exist at least 1 fav prop
-                                <ScrollView contentContainerStyle={{alignSelf:'center'}}
-                                style={{alignSelf:'center', width: WIDTH, paddingTop: HEIGHT*0.01}} showsVerticalScrollIndicator={false}>
-                                    {favoriteProperties.map((item, index)=>(
-                                    <FavPropertyCard key={item.propertyInfo._id + index}>
-                                        <Pressable style={{width:'30%', height:'100%', borderRadius:10}} onPress={()=> navigation.navigate("PropertyDetail", {data: item})}>
-                                        <FastImage source={{uri: item.propertyInfo.imgList[0], priority: FastImage.priority.low}} 
-                                        style={{width:'100%', height:'100%', borderTopLeftRadius:10, borderBottomLeftRadius:10}}/>
-                                        </Pressable>
-                                        <FavPropertyCardContent onPress={()=> navigation.navigate("PropertyDetail", {data: item, uid: userData._id})}>
-                                            <FavPropertyCardName>{item.propertyInfo.loc.secondaryTxt}</FavPropertyCardName>
-                                            <FavPropertyCardDateContainer>
-                                                <FavPropertyCardDateText>
-                                                    {new Date(item.propertyInfo.availableFrom).getDate() + " " +
-                                                    new Date(item.propertyInfo.availableFrom).toLocaleString('default', { month: 'short' }) }
-                                                </FavPropertyCardDateText>
-                                                <Ionicons name="arrow-forward-outline" size={15} color={DARKGREY}/>
-                                                <FavPropertyCardDateText>
-                                                {new Date(item.propertyInfo.availableTo).getDate() + " " +
-                                                    new Date(item.propertyInfo.availableTo).toLocaleString('default', { month: 'short' }) }
-                                                </FavPropertyCardDateText>
-                                            </FavPropertyCardDateContainer>
-                                            <FavPropertyCardName>$ {item.propertyInfo.price}</FavPropertyCardName>
-                                        </FavPropertyCardContent>
-                                    </FavPropertyCard>
+                ))}
+            </OptionContainer>
+        </View>
+        :
 
-                                    ))}
-                                    {/* Padding in the bottom so the fav pro wont stick to bottom */}
-                                    <View style={{width:WIDTH*0.9, height: HEIGHT*0.05,}}/>
-                
-                                </ScrollView>
-                            }
-                        </PostedFavContainer>
-                    
-                    </ScrollView>
-                </Container>
-            </View>
-            :
-            // When user is not logged in 
-            <NoUserViewContainer>
+        <NoUserViewContainer>
                 <View style={{width:WIDTH*0.6, height: WIDTH*0.6, }}>
                     <Lottie source={require('../../../notLoggedIn.json')} style={{width:'100%', height: '100%' }}/>
                 </View>
@@ -470,6 +454,7 @@ export default function ProfileScreen({navigation}){
 
             </NoUserViewContainer>
         }
+
         </StyledView>
     )
 }
