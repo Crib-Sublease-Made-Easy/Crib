@@ -116,7 +116,7 @@ export default function App() {
 
 //OneSignal Init Code
 OneSignal.setLogLevel(6, 0);
-OneSignal.setAppId("a979dd6f-dffb-476e-8d0b-bb27863a3c55");
+OneSignal.setAppId("EF181665-2473-42C6-9376-A340AF716169");
 //END OneSignal Init Code
 
 //Prompt for push on iOS

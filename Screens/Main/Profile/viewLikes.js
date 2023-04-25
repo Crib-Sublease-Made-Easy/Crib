@@ -191,7 +191,7 @@ export default function ViewLikeScreen({ navigation, route }) {
                             alert("Property is deleted.")
                             
                         } else {
-                            // console.log(propertyData)
+                          // console.log(propertyData)
                             setPropData(propertyData)
                         }
 
@@ -209,10 +209,48 @@ export default function ViewLikeScreen({ navigation, route }) {
     }
     const createConversation = async (id) =>{
         if(USERID == null){
-            alert("Sign in to contact interested user!");
+            alert("Sign in to contact tenant.");
             navigation.navigate("Landing")
         }
-        else if(!id){
+        else if(id== null){
+            
+            
+            let url = `${propData.propertyInfo.title.split("+")[4]}`
+            let at = await EncryptedStorage.getItem("accessToken")
+            const supported = await Linking.canOpenURL(url);
+    
+            if (supported) {
+            // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+            // by some browser in the mobile
+            
+                fetch('https://crib-llc.herokuapp.com/properties/internal/contact/fb', {
+                    method: 'POST',
+                    headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + at,
+                    },
+                    body: JSON.stringify({
+                        propId: propData.propertyInfo._id,
+                        time: new Date(),
+                        userId: USERID
+                    })
+                    })
+                    // .then(res => console.log(res.status)) 
+                    .catch(e=>{
+                        alert("fuck")
+                    })
+            
+            try{
+                await Linking.openURL(url);
+            }
+            catch{
+                alert("Error occured. Please try again later!")
+            }
+           
+            } else {
+                alert("Error occured. Please try again later!")
+            }
             
         }
         else{
@@ -220,45 +258,12 @@ export default function ViewLikeScreen({ navigation, route }) {
             //Check if the user is signed in or not
             try{
                 const accessToken  = await EncryptedStorage.getItem("accessToken");
-                let url = `${propData.title.split("+")[4]}`
-                let at = await EncryptedStorage.getItem("accessToken")
-                const supported = await Linking.canOpenURL(url);
-        
-                if (supported) {
-                // Opening the link with some app, if the URL scheme is "http" the web link should be opened
-                // by some browser in the mobile
                 
-                    fetch('https://crib-llc.herokuapp.com/properties/internal/contact/fb', {
-                        method: 'POST',
-                        headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + at,
-                        },
-                        body: JSON.stringify({
-                            propId: propData._id,
-                            time: new Date(),
-                            userId: USERID
-                        })
-                        })
-                        // .then(res => console.log(res.status)) 
-                        .catch(e=>{
-                            alert("fuck")
-                        })
-                
-                try{
-                    await Linking.openURL(url);
-                }
-                catch{
-                    alert("Error occured. Please try again later!")
-                }
-               
-            }
-                else if(accessToken != undefined){
-                    var userIds = [USERID, id]
-                    console.log(id)
-                    sb.GroupChannel.createChannelWithUserIds(userIds, true, propData.loc.streetAddr, propData.imgList[0], propData._id, function(groupChannel, error) {
-                        console.log("in")
+                if(accessToken != undefined){
+                    var userIds = [ USERID, id]
+                    console.log(USERID)
+                    console.log(propData.propertyInfo._id)
+                    sb.GroupChannel.createChannelWithUserIds(userIds, false, propData.propertyInfo.loc.streetAddr, propData.propertyInfo.imgList[0],propData.propertyInfo._id, function(groupChannel, error) {
                         if (error) {
                             // Handle error.
                             console.log("Failed To Create Channel")
@@ -269,7 +274,7 @@ export default function ViewLikeScreen({ navigation, route }) {
                             //console.log(groupChannel)
                             // A group channel with additional information is successfully created.
                             var channelUrl = groupChannel.url;
-                            navigation.navigate("Chat", {url:channelUrl, id: id, postedBy:propData.firstName})
+                            navigation.navigate("Chat", {url:channelUrl, id: USERID, postedBy:propData.userInfo.firstName}) // postedBy
                         }
                     });
                 }
@@ -356,7 +361,7 @@ export default function ViewLikeScreen({ navigation, route }) {
 
                             data={likes}
                             renderItem={({ item }) => (
-                            // <Pressable hitSlop={WIDTH * 0.025} onPress={()=>createConversation('642c047ea86d011aa438e57b')}>
+                            <Pressable hitSlop={WIDTH * 0.025} onPress={()=>createConversation(item._id)}>
                                 <TenantInformationContainer style={{ paddingHorizontal: WIDTH * 0.06, paddingVertical: WIDTH * 0.02 }}>
                                     <TenantProfileImageContainr>
                                         <BadgeView parentView={
@@ -375,7 +380,7 @@ export default function ViewLikeScreen({ navigation, route }) {
                                     </TenantNameScollOccupationContainer>
 
                                 </TenantInformationContainer>
-                            // </Pressable>
+                            </Pressable>
                             )}
                         />
                             ) :
@@ -390,6 +395,8 @@ export default function ViewLikeScreen({ navigation, route }) {
 
                             data={userViews}
                             renderItem={({ item }) => (
+                                <Pressable hitSlop={WIDTH * 0.025} onPress={()=>createConversation(item._id)}>
+
                                 <TenantInformationContainer style={{ paddingHorizontal: WIDTH * 0.06, paddingVertical: WIDTH * 0.02 }}>
                                     <TenantProfileImageContainr>
                                         <BadgeView parentView={
@@ -408,6 +415,7 @@ export default function ViewLikeScreen({ navigation, route }) {
                                     </TenantNameScollOccupationContainer>
 
                                 </TenantInformationContainer>
+                                </Pressable>
                             )}
                         />
                             )
