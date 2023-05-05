@@ -49,6 +49,10 @@ export default function CribConnectTab(){
             iconName = focused ? 'person-circle' : 'person-circle-outline';
             color = focused ? PRIMARYCOLOR : '#A9A9A9'
           }
+          else if (route.name === 'Connect') {
+            iconName = focused ? 'earth' : 'earth-outline';
+            color = focused ? PRIMARYCOLOR : '#A9A9A9'
+          }
 
           // You can return any component that you like here!
           return <Ionicons name={iconName} size={30} color={color} />;

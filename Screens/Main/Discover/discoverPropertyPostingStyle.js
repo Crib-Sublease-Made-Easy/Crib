@@ -28,7 +28,7 @@ export const ExitButtonText = styled.Text`
 `
 
 export const Heading = styled.Text`
-    font-size: ${HEIGHT*0.0275}px;
+    font-size: ${HEIGHT*0.0325}px;
     font-weight:700;
     text-align: left;
     width: ${WIDTH*0.9}px;
@@ -535,12 +535,12 @@ export const SmallContinueButton = styled.Pressable`
 `
 
 export const ContinueButton = styled(Pressable)`
-    width: ${WIDTH*0.7}px;
+    width: ${WIDTH*0.9}px;
     max-height: ${HEIGHT*0.07}px
     padding-vertical: ${HEIGHT*0.02}px
     backgroundColor:  ${props=>(props.loading ? MEDIUMGREY : PRIMARYCOLOR)}}
     align-self: center
-    border-radius: 20px
+    border-radius: 15px
     justify-content: center
     align-items: center
     shadow-offset: 0 0

@@ -96,7 +96,7 @@ export default function ProfileScreen({navigation}){
         // {text: 'My Referral Code', icon: 'star'},
         {text: 'Looking for a sublease', icon: 'search', color: '#ed3413'},
         {text: 'Edit Profile', icon: 'create', color: GOOGLEBLUE},
-        {text: 'View posted property', icon: 'home', color: 'black'},
+        // {text: 'View posted property', icon: 'home', color: 'black'},
         {text: 'View saved property', icon: 'heart', color: '#ed3413'},
         {text: 'My Referral Code', icon: 'barcode', color: '#ed3413'},
     ]
@@ -179,6 +179,9 @@ export default function ProfileScreen({navigation}){
                         if(userData.postedProperties != undefined && userData.postedProperties.length >= 1){
                             fetchPostedProperties(userData.postedProperties[0], accessToken)
                         }
+                        else{
+                            setPostedProperties(null)
+                        }
                     })
                     .catch(e=>{
                         console.log("ERROR --- PROFILE --- GETTOKEN")
@@ -216,29 +219,10 @@ export default function ProfileScreen({navigation}){
                 if(propertyData != undefined){
                     
                     //Returns no prop found when theres nothing 
-                    const tempPropData = await EncryptedStorage.getItem('postedProperty')
+                  
                     
-                    let compare = (tempPropData === JSON.stringify(propertyData))
-                    
-                    if(!compare || tempPropData == null) {
-                        // console.log("UPDATE --- API --- POSTED PROPERTY")
-                        try{
-                            await EncryptedStorage.setItem('postedProperty', JSON.stringify(propertyData))
-                        }
-                        catch{
-                            e=>{
-                                console.log(e)
-                            }
-                        }
-                        
-                        if(JSON.stringify(propertyData) != {"Error": "No Property found"}){
-                            setPostedProperties(propertyData)
-                        }
-                    }
-                    else{
-                        console.log("UPDATE --- CACHE --- POSTED PROPERTY")
-                        setPostedProperties(JSON.parse((tempPropData)))
-                    }           
+                    console.log(propertyData)
+                   setPostedProperties(propertyData)
                 }
 
             }).catch(e=>{
@@ -299,7 +283,7 @@ export default function ProfileScreen({navigation}){
     async function toPostProperty(){
         
         if(userData.postedProperties.length > 0){
-            alert("As a regular member, you can only post one property.")
+            navigation.navigate("PostedProperty", {postedProperties:postedProperties, userData: userData})
         }
         else{
             
@@ -401,21 +385,29 @@ export default function ProfileScreen({navigation}){
             </UpgradeContainer> */}
 
             <View style={{height: HEIGHT*0.03}}/>
-            <CribPremiumPressable  style={{backgroundColor: '#d4af37'}} onPress={(()=>navigation.navigate("Connect", {userData: userData}))}>
+            {/* <CribPremiumPressable  style={{backgroundColor: '#d4af37'}} onPress={(()=>navigation.navigate("Connect", {userData: userData}))}>
                 <CribPremiumPressableLeft>
                     <CribPremiumHeaderText>Crib Connect</CribPremiumHeaderText>
                     <CribPremiumSubheaderText>Let us do the work! {'\n'}We will find you a reliable {'\n'}tenant so you don't have to.</CribPremiumSubheaderText>
                 </CribPremiumPressableLeft>
                 <Lottie source={require('../../../assets/cribconnecttenantslide3.json')} autoPlay style={{width: WIDTH*0.2}}/>
 
-            </CribPremiumPressable>
+            </CribPremiumPressable> */}
             <View style={{height: HEIGHT*0.015}}/>
             <CribPremiumPressable onPress={toPostProperty}>
                 <CribPremiumPressableLeft>
-                    <CribPremiumHeaderText>Sublease your room</CribPremiumHeaderText>
-                    <CribPremiumSubheaderText>Stop paying for an empty {'\n'}room so you can spend it {'\n'}somewhere else!</CribPremiumSubheaderText>
+                    <CribPremiumHeaderText style={{color: '#525252', fontWeight:'500'}}>{postedProperties == null || postedProperties == undefined ? "Sublease my room" : "Edit your sublease"}</CribPremiumHeaderText>
+                    {userData == null || postedProperties == null ?
+                    <CribPremiumSubheaderText style={{color: '#525252', fontWeight:'400'}}>Stop paying for an empty {'\n'}room so you can spend it {'\n'}somewhere else!</CribPremiumSubheaderText>
+                    :
+                    <CribPremiumSubheaderText style={{color: '#525252', fontWeight:'400'}}>Make sure your sublease {'\n'}information is accurate so{'\n'}we can find tenants for you!</CribPremiumSubheaderText>
+                    }
                 </CribPremiumPressableLeft>
+                {postedProperties == null || postedProperties == undefined ?
                 <Lottie source={require('../../../assets/cibprofilepremium.json')} autoPlay style={{width: WIDTH*0.25}}/>
+                :
+                <Image source={{uri: postedProperties.propertyInfo.imgList[0]}}  style={{width: WIDTH*0.225, height: WIDTH*0.175, borderRadius: 10}}/>
+                }
 
             </CribPremiumPressable>
             

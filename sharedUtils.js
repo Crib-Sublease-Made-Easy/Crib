@@ -64,7 +64,6 @@ export function ContainsSpace(str){
 export const PROPERTIESTYPES = 
 [
     {type: "Room", icon:'bed'},
-    {type: "House", icon:'home'}, 
     {type: "Apartment", icon: 'building'}, 
     {type:"Studio", icon :'user'}
 ];

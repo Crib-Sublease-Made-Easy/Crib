@@ -72,7 +72,7 @@ export default function CribConnectSubtenantMatchesScreen({navigation, route}){
             await Linking.openURL(`sms:${item.phoneNumber}${getSMSDivider()}body=Hello ${item.name}, this is `)
         }
         else{
-            alert("Get Crib Connect to message tenant.")
+            alert("Get Crib Connect to message verified and interested tenants.")
             navigation.navigate("CribConnectTenant", {userData: route.params.userData})
         }
     }
@@ -115,13 +115,13 @@ export default function CribConnectSubtenantMatchesScreen({navigation, route}){
                                     <SubtenantContainer key={item._id}>
                                         <Text style={{color:'#D4AF37', fontSize: HEIGHT*0.0175, fontWeight: '600'}}>Matched {(new Date().getTime() - new Date(item.createdAt).getTime()) < (1000*60*60*24) ? "today" : (new Date().getTime() - new Date(item.createdAt).getTime()) < (1000*60*60*24*2) ? "yesterday" : `on ${new Date(item.createdAt).toDateString()}`}</Text>
                                         <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                                            <SubtenantNameText>{item.name}  {item.gender}   {item.age}</SubtenantNameText>
+                                            <SubtenantNameText>{item.name.split(" ")[0]}  {item.gender}   {item.age}</SubtenantNameText>
                                             <Pressable onPress={()=>sms(item)} style={{padding: 7, borderRadius:100, backgroundColor:PRIMARYCOLOR}}>
                                                 <Ionicons name="chatbox-ellipses"  size={HEIGHT*0.025} color={'white'}/>
                                             </Pressable>
                                         </View>
                                         <SubtenantDetailText><Text style={{fontWeight:'600'}}>Requested dates:</Text></SubtenantDetailText>
-                                        <SubtenantDetailText style={{marginTop: HEIGHT*0.005}}>{new Date(item.subleaseStart).toDateString().split(" ")[1]} {new Date(item.subleaseStart).toDateString().split(" ")[2]} -  {new Date(item.subleaseStart).toDateString().split(" ")[1]} {new Date(item.subleaseStart).toDateString().split(" ")[2]} {new Date(item.subleaseStart).toDateString().split(" ")[3]}</SubtenantDetailText>
+                                        <SubtenantDetailText style={{marginTop: HEIGHT*0.005}}>{new Date(item.subleaseStart).toDateString().split(" ")[1]} {new Date(item.subleaseStart).toDateString().split(" ")[2]} -  {new Date(item.subleaseEnd).toDateString().split(" ")[1]} {new Date(item.subleaseEnd).toDateString().split(" ")[2]} {new Date(item.subleaseEnd).toDateString().split(" ")[3]} (Flexible)</SubtenantDetailText>
                                         <SubtenantDetailText style={{marginTop: HEIGHT*0.01}}><Text style={{fontWeight:'600'}}>Budget:</Text></SubtenantDetailText>
                                         <SubtenantDetailText style={{marginTop: HEIGHT*0.005}}>${item.budget} /month</SubtenantDetailText>
                                         <SubtenantDetailText style={{marginTop: HEIGHT*0.01}}><Text style={{fontWeight:'600'}}>About me:</Text></SubtenantDetailText>

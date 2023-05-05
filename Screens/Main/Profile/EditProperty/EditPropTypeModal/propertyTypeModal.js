@@ -25,7 +25,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const flatListTypes =
 [{ name: "Room", image: require('../../../../../assets/room.jpg'), description: "Shared public space" },
-{ name: "House", image: require('../../../../../assets/house.jpg'), description: "Entire House" },
 { name: "Apartment", image: require('../../../../../assets/apartment.jpg'), description: "2+ Bedroom Apartment" },
 { name: "Studio", image: require('../../../../../assets/room.jpg'), description: "Open-styled apartment" }
 ]

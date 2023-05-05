@@ -21,16 +21,17 @@ import { UserContext } from '../../../../../UserContext'
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     RowContainer, CategoryName, PhoneNumberContainer, HelpText } from './editOccupationStyle';
 
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 
 export default function EditOccupationScreen({navigation, route}){
+    console.log(occupation)
     const {USERID} = useContext(UserContext);
 
     const [occupation, setOccupation] = useState('')
     
 
     async function update(){
+        console.timeLog("fewfw")
         try{
             const accessToken = await EncryptedStorage.getItem("accessToken");
             if(accessToken != undefined && USERID != undefined && USERID != null){
@@ -81,7 +82,7 @@ export default function EditOccupationScreen({navigation, route}){
             <View style={{width:WIDTH, height: HEIGHT*0.03}}/>
             <RowContainer>
                 <CategoryName>Latest Occupation</CategoryName>
-                <PhoneNumberContainer onChangeText={(value)=> setOccupation(value)}  value={occupation} />
+                <PhoneNumberContainer onChangeText={(value)=> {setOccupation(value), console.log(occupation)}}  value={occupation} />
             </RowContainer>
            
         </SafeAreaView>

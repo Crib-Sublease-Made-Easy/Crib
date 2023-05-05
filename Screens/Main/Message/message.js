@@ -162,7 +162,7 @@ export default function MessageScreen({navigation, route}){
             />
             :
             <View style={{paddingTop:HEIGHT*0.1}}>
-                <Lottie source={require('../../../noMessage.json')} autoPlay loop={false} style={{width:WIDTH*0.3, height: WIDTH*0.3, alignSelf:'center'}}/>
+                <Lottie source={require('../../../assets/nomessagenew.json')} autoPlay loop style={{width:WIDTH*0.3, height: WIDTH*0.3, alignSelf:'center'}}/>
                 <DefaultPostFavText>No messages yet</ DefaultPostFavText>
 
             </View>

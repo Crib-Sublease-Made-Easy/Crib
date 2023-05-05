@@ -405,9 +405,15 @@ export const CribPremiumPressable = styled.Pressable`
   flex-direction: row
   width: ${WIDTH*0.9}px
   padding-vertical: ${HEIGHT*0.025}px
-  background-color: ${PRIMARYCOLOR}
+  background-color: white
   align-self: center
   border-radius: 10px
+  shadow-offset: 0 5px
+  shadow-color: black;
+  shadow-radius: 5px;
+  shadow-opacity: 0.1;
+  border-width: 1px
+  border-color: ${LIGHTGREY}
   padding-horizontal: ${WIDTH*0.075}px
   justify-content: space-between
   align-items: center
@@ -420,8 +426,7 @@ export const CribPremiumPressableLeft = styled.View`
 export const CribPremiumHeaderText = styled.Text`
   font-size: ${HEIGHT*0.02}px
   color: white
-  font-weight: 700
-
+  font-weight: 700  
 `
 export const CribPremiumSubheaderText = styled.Text`
   font-size: ${HEIGHT*0.015}px

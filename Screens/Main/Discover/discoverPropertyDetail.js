@@ -66,6 +66,8 @@ export default function PropertyDetailScreen({navigation, route}){
     const [userDate, setUserData] = useState(null)
     
     const createConversation = async () =>{
+        // navigation.navigate("CribPaidMessaging")
+        // return 
         if(USERID == null){
             alert("Sign in to contact tenant.");
             navigation.navigate("Landing")
@@ -520,7 +522,7 @@ export default function PropertyDetailScreen({navigation, route}){
             <Footer>
                 <PricePerMonth>${propData.price} <Text style={{fontSize: HEIGHT*0.025, fontWeight:'500'}}>/ month</Text></PricePerMonth>
             
-                <ContactTanentButton disabled={ownProperty} ownProperty={ownProperty} hitSlop={WIDTH*0.05} onPress={()=>createConversation()}>
+                <ContactTanentButton disabled={ownProperty} ownProperty={ownProperty} hitSlop={WIDTH*0.05} onPress={createConversation}>
                     <Text style={{color:'white', fontWeight:'700'}}>Contact Tenant</Text>
                 </ContactTanentButton>
             </Footer>

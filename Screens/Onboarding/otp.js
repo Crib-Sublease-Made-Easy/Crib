@@ -15,7 +15,8 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
-  Pressable
+  Pressable,
+  ActivityIndicator
 } from 'react-native';
 import OneSignal from 'react-native-onesignal';
 
@@ -45,7 +46,7 @@ export default function OTPScreen({navigation, route}){
     const [pinReady, setpinReady] = useState(false)
     const [authyID, setauthyID] = useState(route.params.authy_id)
     const [smsErrorModal, setSMSErrorModal] = useState(false)
-    const [laoding, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const MAX_CODE_LENGTH = 6;
 
@@ -279,7 +280,12 @@ export default function OTPScreen({navigation, route}){
                     </Pressable>
                 </ScrollView>
                 <ContinueButton onPress={()=> signupStep3()}>
+                    {loading ? 
+                    <ActivityIndicator size="small" style={{backgroundColor: PRIMARYCOLOR}} />
+                    :
                     <ContinueText>Continue</ContinueText>
+                    }
+                    
                 </ContinueButton>
                 </KeyboardAvoidingView>
             </Container>

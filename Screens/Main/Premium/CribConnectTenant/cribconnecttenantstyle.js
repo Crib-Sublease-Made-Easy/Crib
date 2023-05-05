@@ -3,7 +3,6 @@ import styled from 'styled-components/native';
 import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, EXTRALIGHT, DARKGREY } from '../../../../sharedUtils'
 
 
-
 export const Header = styled.Text`
     font-size: ${HEIGHT*0.02}px;
     font-weight: 700;
@@ -11,7 +10,7 @@ export const Header = styled.Text`
 `
 
 export const TitleText = styled.Text`
-    font-size: ${HEIGHT*0.0225}px
+    font-size: ${HEIGHT*0.025}px
     font-weight: 700
     width: ${WIDTH*0.85}px
     align-self: center
@@ -40,7 +39,7 @@ export const ReferralCodeText = styled.Text`
 
 export const PriceContainer = styled.View`
     width: ${WIDTH*0.9}px
-    padding-top: ${HEIGHT*0.025}px
+    padding-top: ${HEIGHT*0.015}px
     padding-bottom: ${HEIGHT*0.01}px
     border-top-width: 3px
     border-color: ${PRIMARYCOLOR}

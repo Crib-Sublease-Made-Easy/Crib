@@ -69,7 +69,7 @@ import UserTypeModal from './Modals/userTypeModal';
 
 export default function DiscoverScreen({navigation, route, initialParams}){
 
-    const {sb, USERID, preloadProperties} = useContext(UserContext);
+    const {sb, USERID, preloadProperties, numOfSubtenants, setNumOfSubtenants} = useContext(UserContext);
     
 
     //Method for handling notifications received while app in foreground
@@ -123,7 +123,7 @@ export default function DiscoverScreen({navigation, route, initialParams}){
     //The location in [lat,long] of the user input. It is set as SF in the beginning
     let lastLocationCoor = route?.params?.LastSearched;
     let LastSearchedLocation = route?.params?.LastSearchedLocation;
-    const [currentLocation, setCurrentLocation] = useState(lastLocationCoor == undefined ? [43.0747,-89.3840] : [lastLocationCoor[0], lastLocationCoor[1]])
+    const [currentLocation, setCurrentLocation] = useState(lastLocationCoor == undefined ? [40.785091,-73.968285] : [lastLocationCoor[0], lastLocationCoor[1]])
     // const [currentLocation, setCurrentLocation] = useState([route.params.LastSearched.split[0],route.params.LastSearched.split[1]])
 
     // const [currentLocation, setCurrentLocation] = useState()
@@ -181,8 +181,7 @@ export default function DiscoverScreen({navigation, route, initialParams}){
     useEffect(()=>{
         
         setFlatlistRefreshing(true)
-
-        // checkVersion()
+        // checkVersion()   
         //Loading initial batch of properties
         loadProperty()
         // Loading the pins on the map with default values
@@ -203,11 +202,7 @@ export default function DiscoverScreen({navigation, route, initialParams}){
         };
     },[currentLocation])
 
-    async function clearData (){
-        await EncryptedStorage.removeItem("lastSearchedLocation")
-        await EncryptedStorage.removeItem("lastSearchedCoor")
-    }
-
+ 
 
 
     function dateCompare(date1, date2){

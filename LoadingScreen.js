@@ -27,7 +27,6 @@ export default function LoadingScreen({navigation, route}){
     async function useLastLocation(){
         let LastSearched = await EncryptedStorage.getItem("lastSearchedCoor")
         let LastSearchedLocation = await EncryptedStorage.getItem("lastSearchedLocation")
-        console.log("LOADINGGGG", LastSearchedLocation )
       
         navigation.navigate("DiscoverTabs",{LastSearched: LastSearched, LastSearchedLocation: LastSearchedLocation})
     }

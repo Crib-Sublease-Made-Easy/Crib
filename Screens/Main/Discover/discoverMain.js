@@ -4,10 +4,10 @@ import DiscoverScreen from './discover';
 import MessageScreen from '../Message/message.js'
 import ProfileScreen from '../Profile/profile';
 import CribConnectScreen from '../Premium/CribConnectScreen'
-
+import EncryptedStorage from 'react-native-encrypted-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { PRIMARYCOLOR } from '../../../sharedUtils';
-
+import { UserContext } from '../../../UserContext';
 import {
   SafeAreaView,
   Switch,
@@ -25,6 +25,49 @@ const Tab = createBottomTabNavigator();
 
 
 export default function DiscoverTab({navigation, route}){
+const [numOfSubtenants, setNumOfSubtenants] = React.useState(0)
+
+  React.useEffect(()=>{
+    getTokens()
+  },[])
+
+  async function getTokens(){
+       
+    const accessToken = await EncryptedStorage.getItem("accessToken");
+    let USERID = await EncryptedStorage.getItem("userId")
+
+    
+  
+    if(accessToken != undefined && USERID != undefined && accessToken != null){
+       console.log("hedoekdoekdoekdoedkeok")
+        //Get user favorite properties
+        // fetchFavoriteProperties(accessToken)
+
+
+       
+        await fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+        method: 'GET',
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken,
+        }
+        }) 
+        .then(res => res.json()).then(async userData =>{
+          if(userData.cribConnectSubtenants != undefined){
+            console.log("numbersssssss " + userData.cribConnectSubtenants)
+            setNumOfSubtenants(userData.cribConnectSubtenants.length)
+            
+          }
+        })
+        .catch(e=>{
+          console.log("Error")
+        })
+    } 
+
+
+    
+}
 
   // console.log(route.params.LastSearched)
     return(
@@ -62,12 +105,13 @@ export default function DiscoverTab({navigation, route}){
             <Text style={{color: focused ? PRIMARYCOLOR : '#A9A9A9', fontSize: 10, fontWeight:'500'}}>{route.name}</Text>
           ),
           headerShown: false,
+          tabBarBadge: route.name == "Connect" && numOfSubtenants != 0 ? numOfSubtenants : null
           
         })}
       >
         
         <Tab.Screen name="Discover" component={DiscoverScreen}
-        initialParams={{ LastSearchedLocation:  route?.params?.LastSearchedLocation == undefined ? undefined :  route.params.LastSearchedLocation, LastSearched: route?.params?.LastSearched == undefined ? [43.0747,-89.3840] : [route.params.LastSearched.split(",")[0],route.params.LastSearched.split(",")[1]]}}
+        initialParams={{ LastSearchedLocation:  route?.params?.LastSearchedLocation == undefined ? undefined :  route.params.LastSearchedLocation, LastSearched: route?.params?.LastSearched == undefined ? [40.730610, -73.935242] : [route.params.LastSearched.split(",")[0],route.params.LastSearched.split(",")[1]]}}
         options={({ route }) => ({
           tabBarStyle: ((route) => {
               const routeName = getFocusedRouteNameFromRoute(route) ?? ""

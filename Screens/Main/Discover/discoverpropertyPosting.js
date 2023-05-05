@@ -593,11 +593,7 @@ async function testScraped(){
                
                 if(propertySecurityDeposit != null && propertySecurityDeposit != undefined){
                     postingData.append("securityDeposit", propertySecurityDeposit);
-                }
-
-                console.log(postingData)
-
-            
+                }            
               
                     fetch('https://crib-llc.herokuapp.com/properties', {
                         method: 'POST',
@@ -612,11 +608,17 @@ async function testScraped(){
                         if(response.status == 200){
                             try{
                                 await EncryptedStorage.removeItem("postedProperty")
-                                
                             }
                             catch{
                             }
+                            try{
+                                await EncryptedStorage.setItem("postedProperty","true")
+                            }
+                            catch{
+                            }
+
                             navigation.navigate("Connect")
+
                         }
                         else{
                            
@@ -822,9 +824,9 @@ async function testScraped(){
                     {/* Posting Landing Page */}
                     <PostingSection>
                         <Heading>Sublease your property,</Heading>
-                        <Heading style={{marginTop: HEIGHT*0.01}}>save <Text style={{color: PRIMARYCOLOR}}> thousands </Text> per month</Heading>
+                        <Heading style={{marginTop: HEIGHT*0.01}}>save over <Text style={{color: '#ebd426'}}>$1250</Text> per month</Heading>
 
-                        <Subheading>We make subleasing as easy as possible.</Subheading>
+                        <Subheading>We make subleasing as easy as possible!</Subheading>
 
                         <Lottie source={require('../../../postingfirstpage.json')}  autoPlay={scrollviewIndex == 0 ? true : false} loop style={{width:WIDTH*0.9, height: WIDTH*0.9, }}/>
 
@@ -950,7 +952,7 @@ async function testScraped(){
 
                     <PostingSection>
                         <Heading>Sublease availability</Heading>
-                        <Subheading>Please enter the maximum range for availabilitys</Subheading>
+                        <Subheading>Please enter the maximum range for availability</Subheading>
                            
                         <InputContainer >
                             <DateSelectContainer>

@@ -81,8 +81,6 @@ import { createSharedElementStackNavigator } from 'react-navigation-shared-eleme
 import { CardStyleInterpolators } from '@react-navigation/stack';
 
 
-
-
 import SendBird from 'sendbird'
 
 const Stack = createSharedElementStackNavigator();
@@ -95,6 +93,7 @@ import CribConnectTenantScreen from './Screens/Main/Premium/CribConnectTenant/cr
 import CribConnectPreferenceScreen from './Screens/Main/Premium/CribConnectPreference/cribconnectpreference';
 import CribConnectReviewsScreen from './Screens/Main/Premium/CribConnectReviews/cribconnectreviews';
 import CribConnectSubtenantMatchesScreen from './Screens/Main/Premium/CribConnectSubtenantMatches/cribConnectSubtenantMatches';
+import CribPaidMessagingScreen from './Screens/Main/Premium/cribPaidMessaging/cribPaidMessaging';
 
 
 export default function App() {
@@ -108,6 +107,7 @@ export default function App() {
   const [sendBirdConnected, setSendbirdConnection] = useState(false)
   const [preloadProperties, setPreloadProperties] = useState([])
   const [lastSearchedCoor, setLastSearchedCoor] = useState()
+  const [numOfSubtenants, setNumOfSubtenant] = useState(0)
 
 
   const sb = new SendBird({ appId: appId});   // The `localCacheEnabled` is optional. The default is false.
@@ -375,7 +375,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
   return (
 
     <NavigationContainer>
-      <UserContext.Provider value={{ login, logout, sb, USERID: user, preloadProperties: preloadProperties, lastSearchedCoor: lastSearchedCoor}}>
+      <UserContext.Provider value={{ login, logout, sb, USERID: user, preloadProperties: preloadProperties, lastSearchedCoor: lastSearchedCoor, numOfSubtenants: numOfSubtenants, setNumOfSubtenant: setNumOfSubtenant}}>
 
           <Stack.Navigator>
 
@@ -388,19 +388,20 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             <Stack.Screen
               name="DiscoverTabs"
               component={DiscoverTab}
-              options={{headerShadowVisible: false,cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter, headerShown:false}}
+              options={{headerShadowVisible: false,cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter, headerShown:false,  gestureEnabled: false }}
+              
             />
 
             <Stack.Screen
               name="ProfileTabs"
               component={ProfileTab}
-              options={{ headerShown: false, cardStyleInterpolator: forFade }}
+              options={{ headerShown: false, cardStyleInterpolator: forFade,  gestureEnabled: false  }}
             />
 
             <Stack.Screen
               name="MessageTabs"
               component={MessageTab}
-              options={{cardStyleInterpolator: forFade, headerStyle:{backgroundColor:'red'},  }}
+              options={{cardStyleInterpolator: forFade, headerStyle:{backgroundColor:'red'},  gestureEnabled: false  }}
             />
 
 
@@ -607,6 +608,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               options={{
                 headerShown: false,
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                gestureEnabled: false 
               }}
             />
             <Stack.Screen name="CribConnectPreference"
@@ -614,6 +616,7 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
               options={{
                 headerShown: false,
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                
               }}
             />
             <Stack.Screen name="CribConnectPriceBreakdown"
@@ -632,6 +635,14 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
             />
             <Stack.Screen name="CribConnectSubtenantMatches"
               component={CribConnectSubtenantMatchesScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+
+            <Stack.Screen name="CribPaidMessaging"
+              component={CribPaidMessagingScreen}
               options={{
                 headerShown: false,
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

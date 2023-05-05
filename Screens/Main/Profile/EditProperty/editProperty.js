@@ -22,6 +22,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import ImagePicker from 'react-native-image-crop-picker';
 
+import { UserContext } from '../../../../UserContext';
 
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     HeaderImageContainer, PropertyPhotoContainer, PhotoContainer, RowContainer, RowName, CategoryName,
@@ -38,6 +39,7 @@ export default function EditPropertyScreen({navigation, route}){
         });
         return unsubscribe; 
     },[navigation, ])
+    const {numOfSubtenants, setNumOfSubtenants} = useContext(UserContext);
     const [successfulLease, setSuccess] = useState('')
     const [propAPIData, setPropAPIData] = useState('')
     const [propID, setPropID] = useState(route.params.propertyData._id)
@@ -253,13 +255,56 @@ export default function EditPropertyScreen({navigation, route}){
         .catch((error) => {
 
         });
+        const UID = await EncryptedStorage.getItem("userId");
+        if(UID != null && UID != undefined){
+            await fetch('https://crib-llc.herokuapp.com/users/' + UID, {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken,
+                },
+                body: JSON.stringify({
+                    cribConnectSubtenants: []
+                })
+            }).then((res) => {
+                console.log(res.status)
+            })
+            .catch((error) => {
+    
+            });
+        }
+        
+
     }   
+
+    async function editSubtenants(){
+
+        await fetch('https://crib-llc.herokuapp.com/automation/generatesubtenantarrayforuser', {
+        method: 'POST',
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            propId: propID
+        })
+        }).then(async e => {
+            
+        })
+        .catch( e => {
+        console.log("Error in sending message")
+        })
+
+
+        navigation.goBack()
+    }
     
     return(
         <SafeAreaView style={{flex:1, backgroundColor:'white'}} >
             <HeaderContainer>
                 <BackButtonContainer>
-                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={()=> navigation.goBack()}>
+                    <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={editSubtenants}>
                         <Ionicons name='arrow-back-outline' size={25} style={{paddingHorizontal:WIDTH*0.02}}/>
                     </Pressable>
                 </BackButtonContainer>

@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback
 } from 'react-native';
-import { User } from 'realm';
 
 import Modal from  "react-native-modal";
 
@@ -59,6 +58,10 @@ export default function PropertyOptionsModal({navigation,close, visible ,optionV
                 <RowContainer hitSlop={WIDTH*0.025} onPress={() =>{close(), optionViewer.viewRepUsr()}}>
                     <Ionicons name='shield' size={25}  style={{paddingLeft: WIDTH*0.05}} color={PRIMARYCOLOR}/>
                     <RowName>Report User</RowName>
+                </RowContainer>
+                <RowContainer hitSlop={WIDTH*0.025} onPress={leaveChat}>
+                    <Ionicons name='shield' size={25}  style={{paddingLeft: WIDTH*0.05}} color={PRIMARYCOLOR}/>
+                    <RowName>Block User</RowName>
                 </RowContainer>
 
 

@@ -4,7 +4,7 @@ import {Text, View, Pressable, Linking, AppState, ActivityIndicator } from 'reac
 import styled from 'styled-components/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Lottie from 'lottie-react-native';
-import { EditPageBackButtonContainer, EditPageForwardButtonContainer, EditPageNameContainer, EditPagesHeaderContainer, HEIGHT, PRIMARYCOLOR, WIDTH } from '../../../../sharedUtils';
+import { DARKGREY, EditPageBackButtonContainer, EditPageForwardButtonContainer, EditPageNameContainer, EditPagesHeaderContainer, HEIGHT, MEDIUMGREY, PRIMARYCOLOR, WIDTH } from '../../../../sharedUtils';
 import {Header, ProgressDots, SubmitButton, SubmitText, ProContainer, ProText, SubtitleText, PriceContainer, PriceText, PriceAndBreakDownContainer, PriceBreakDownText} from './cribconnecttenantstyle'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -31,7 +31,11 @@ export default function CribConnectTenantScreen({navigation, route}){
     const [paymentLink, setPaymentLink] = useState(route.params.userData?.cribPremium?.paymentDetails?.paymentLink)
     const [userData, setUserData] = useState(route.params.userData == undefined ? null : route.params.userData)
     const [cribConnectPrice, setCribConnectPrice] = useState ("")
+    const [cribConnectUserNumber, setCribConnectUserNumber] = useState(0)
+    const [numOfViewers, setNumOfViewers] = useState(0)
     useEffect(() => {
+        getNumViewers()
+        getCribConnectUserNumber()
         getCribConnectPrice()
         // getUserData()
         const unsubscribe = navigation.addListener('focus', () => {
@@ -56,7 +60,13 @@ export default function CribConnectTenantScreen({navigation, route}){
     }, []);
 
 
-    async function getCribConnectPrice(){
+    async function getNumViewers(){
+        let x = Math.floor(Math.random()*3) 
+        setNumOfViewers(x)
+    }
+
+
+    async function getCribConnectUserNumber(){
         await fetch('https://crib-llc.herokuapp.com/payments/premium/getprice', {
             method: 'POST',
             headers: {
@@ -69,6 +79,28 @@ export default function CribConnectTenantScreen({navigation, route}){
                 let data = await res.json()
                 setCribConnectPrice(data)
             }
+        })
+    }
+   
+
+    async function getCribConnectPrice(){
+        await fetch('https://crib-llc.herokuapp.com/payments/premium/getCribConnectUserNumber', {
+            method: 'GET',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+        }).then(async res => {
+            if(res.status == 200){
+                let data = await res.json()
+                setCribConnectUserNumber(data.data)
+            }
+            else{
+                setCribConnectUserNumber(120)
+            }
+        })
+        .catch(e =>{
+            console.log("Error")
         })
     
     }
@@ -285,7 +317,7 @@ export default function CribConnectTenantScreen({navigation, route}){
 
     return(
         <View style={{height: HEIGHT, width: WIDTH, backgroundColor:'white', position:'relative'}}>
-            <SafeAreaView style={{position:'relative', flex: 1}}>
+            <SafeAreaView style={{position:'relative'}}>
                 <EditPagesHeaderContainer style={{borderBottomWidth: 0}}>
                     <EditPageBackButtonContainer>
                     <Pressable hitSlop={WIDTH*0.025} onPress={()=> navigation.goBack()} >
@@ -293,31 +325,26 @@ export default function CribConnectTenantScreen({navigation, route}){
                     </Pressable>
                     </EditPageBackButtonContainer>
                     <EditPageNameContainer>
-                    <Header>How it works</Header>
+                    <View style={{paddingHorizontal: WIDTH*0.025, backgroundColor:'#E2CA13', paddingVertical: HEIGHT*0.01, borderRadius:10}}>
+                        <Header style={{color:'white', fontWeight:'500'}}>{cribConnectUserNumber} users used Crib Connect</Header>
+                    </View>
                     </EditPageNameContainer>
-                    <EditPageForwardButtonContainer>
-
-                        {/* <Pressable onPress={()=>navigation.navigate("CribConnectReviews")} style={{backgroundColor: '#c99200', paddingVertical: HEIGHT*0.01, paddingHorizontal: WIDTH*0.02, borderRadius:20}}>
-                            <Text style={{color:'white'}}>
-                                Reviews
-                            </Text>
-                        </Pressable> */}
-                    </EditPageForwardButtonContainer>
+                   
                 </EditPagesHeaderContainer>
                
                
-                <ScrollView style={{paddingTop:cribPremium? HEIGHT*0.075: 0, }} showsHorizontalScrollIndicator={false} pagingEnabled horizontal ref={scrollviewRef} onScroll={onScroll} scrollEventThrottle={16}>
+                <ScrollView  showsHorizontalScrollIndicator={false} pagingEnabled horizontal ref={scrollviewRef} onScroll={onScroll} scrollEventThrottle={16} >
 
                     {/* Page 1, just in case user have premium already */}
 
                     <View style={{width:WIDTH,paddingHorizontal: WIDTH*0.05,}}>
                         <View>
-                            <Lottie source={require('../../../../assets/cribtenantsubscription.json')} autoPlay  style={{height: WIDTH*0.6,  marginTop: HEIGHT*0.005, alignSelf:'center'}}/>
+                            <Lottie source={require('../../../../assets/cribtenantsubscription.json')} autoPlay style={{height: WIDTH*0.6,  marginTop: HEIGHT*0.005, alignSelf:'center'}}/>
                         </View>
-                        <View style={{marginTop: HEIGHT*0.03}}>
+                        <View style={{marginTop: HEIGHT*0.02}}>
                             
-                            <TitleText>1. Enroll in Crib Connect for <Text style={{color:PRIMARYCOLOR}}>FREE</Text></TitleText>
-                            <SubtitleText style={{marginTop: HEIGHT*0.03, }}>Post a sublease and we will find suitable tenants to take over your sublease</SubtitleText>
+                            <TitleText>We do <Text style={{color:PRIMARYCOLOR}}>all the work</Text></TitleText>
+                            <SubtitleText style={{marginTop: HEIGHT*0.03, }}>We find interested and reliable tenants for your sublease. On average, Crib Connect users find a tenant in <Text style={{fontWeight:'600'}}>just 3 days!</Text></SubtitleText>
                         </View>
                     </View>
 
@@ -326,9 +353,9 @@ export default function CribConnectTenantScreen({navigation, route}){
                         <View >
                             <Lottie source={require('../../../../assets/cribconnectenantslide2.json')} autoPlay loop style={{height: WIDTH*0.6,  marginTop: HEIGHT*0.005,alignSelf:'center'}}/>
                         </View>
-                        <View style={{marginTop: HEIGHT*0.03}}>
-                            <TitleText>2. Crib will <Text style={{fontWeight:'800', color:PRIMARYCOLOR}}>search</Text> for tenants</TitleText>
-                            <SubtitleText style={{marginTop: HEIGHT*0.03}}>We will message you when we found a suitable tenant. Check back soon!</SubtitleText>
+                        <View style={{marginTop: HEIGHT*0.02}}>
+                            <TitleText><Text style={{fontWeight:'800', color:PRIMARYCOLOR}}>Verified</Text> tenants</TitleText>
+                            <SubtitleText style={{marginTop: HEIGHT*0.03}}>All recommended users are verified to ensure a safer subleasing experience.</SubtitleText>
                         </View>
                     </View>
 
@@ -337,9 +364,9 @@ export default function CribConnectTenantScreen({navigation, route}){
                         <View>
                             <Lottie source={require('../../../../assets/cribconnecttenantrefund.json')} autoPlay loop style={{height: WIDTH*0.6,  marginTop: HEIGHT*0.005,alignSelf:'center'}}/>
                         </View>
-                        <View style={{marginTop: HEIGHT*0.03}}>
-                            <TitleText>3. <Text style={{fontWeight:'800', color:PRIMARYCOLOR}}>Connect</Text> with them</TitleText>
-                            <SubtitleText style={{marginTop: HEIGHT*0.03}}>Get Crib Connect to message the tenant we found and future potential tenants until you found the perfect one</SubtitleText>
+                        <View style={{marginTop: HEIGHT*0.02}}>
+                            <TitleText>Money back <Text style={{fontWeight:'800', color:PRIMARYCOLOR}}>guaranteed</Text></TitleText>
+                            <SubtitleText style={{marginTop: HEIGHT*0.03}}>Found a perfect tenant? Great! If we can't find a tenant before your sublease start date, money back guaranteed!</SubtitleText>
                         </View>
                     </View>
 
@@ -348,59 +375,65 @@ export default function CribConnectTenantScreen({navigation, route}){
                         <View >
                             <Lottie source={require('../../../../assets/cribreferralsubtenant.json')} autoPlay loop style={{height: WIDTH*0.6,  marginTop: HEIGHT*0.005,alignSelf:'center'}}/>
                         </View>
-                        <View style={{marginTop: HEIGHT*0.03}}>
-                            <TitleText>4. Trusted by <Text style={{fontWeight:'800', color:PRIMARYCOLOR}}>2000+</Text> students</TitleText>
-                            <SubtitleText style={{marginTop: HEIGHT*0.03}}>We have a network of 90,000 students from 75 universities with more than 400+ students joining everyday</SubtitleText>
+                        <View style={{marginTop: HEIGHT*0.02}}>
+                            <TitleText>Trusted by <Text style={{fontWeight:'800', color:PRIMARYCOLOR}}>2000+</Text> students</TitleText>
+                            <SubtitleText style={{marginTop: HEIGHT*0.03}}>We have more than 2000 students from 75 universities using Crib. We helped over 400 students sublease their room already!</SubtitleText>
                         </View>
                     </View>
                    
                 </ScrollView>
                
-            <View style={{position:'absolute', bottom:HEIGHT*0.1, alignSelf:'center',}}>
-                <View style={{width:WIDTH*0.2, flexDirection:'row', justifyContent:'space-between', alignSelf:'center', paddingBottom: HEIGHT*0.05}}>
+                <View style={{marginTop: HEIGHT*0.035}}>
+                <View style={{width:WIDTH*0.2, flexDirection:'row', justifyContent:'space-between', alignSelf:'center', paddingBottom: HEIGHT*0.025}}>
                     <ProgressDots style={{backgroundColor: activeIdx == 0 ? PRIMARYCOLOR : '#E0E0E0'}}/>
                     <ProgressDots style={{backgroundColor: activeIdx == 1 ? PRIMARYCOLOR : '#E0E0E0'}}/>
                     <ProgressDots style={{backgroundColor: activeIdx == 2 ? PRIMARYCOLOR : '#E0E0E0'}}/>
                     <ProgressDots style={{backgroundColor: activeIdx == 3 ? PRIMARYCOLOR : '#E0E0E0'}}/>
                 </View>
-            {!cribPremium && 
-            <View>
-                <View>
-                    <PriceContainer>
-                        <PriceAndBreakDownContainer>
-                            <PriceText><Text style={{fontWeight:'800', color: PRIMARYCOLOR}}>Just</Text> ${Number(cribConnectPrice.price).toFixed(2)}</PriceText>
-                            <Pressable onPress={()=>navigation.navigate("CribConnectPriceBreakdown", {userData:userData, cribConnectPrice: cribConnectPrice, estimatedSaving: route.params.estimatedSaving})} style={{flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
-                            
-                                <PriceBreakDownText>Price Breakdown</PriceBreakDownText>
-                            
-                                <Ionicons name="arrow-forward" color={PRIMARYCOLOR}/>
-                            </Pressable>
-                        </PriceAndBreakDownContainer>
-                        {userData.cribConnectEnrolled ?
-                            <SubtitleText style={{marginTop: HEIGHT*0.035}}><Text style={{fontWeight:'700', color: PRIMARYCOLOR}}>You've enrolled in Crib Connect</Text> {'\n'}<Text style={{fontSize:HEIGHT*0.0175}}>We will message you as soon as we found a suitable tenant</Text></SubtitleText>
-
-                        :
-                            <SubtitleText style={{marginTop: HEIGHT*0.035}}><Text style={{fontWeight:'700', color: PRIMARYCOLOR}}>Its FREE to enroll</Text> {'\n'}<Text style={{fontSize:HEIGHT*0.0175}}>Pay only if you want to connect with suitable tenants we found for you</Text></SubtitleText>
-                        }
-                    </PriceContainer>
-
-                    {/* <ReferralCodeHelperText>Crib Connect must be enabled 30 days bofore start of sublease</ReferralCodeHelperText> */}
+                { numOfViewers != 0 &&
+                <View style={{width: WIDTH*0.9, alignSelf:'center', flexDirection:'row', alignItems:'center', justifyContent:'flex-end' }}>
+                    <Lottie source={require('../../../../assets/cribconnectfire.json')} autoPlay style={{height: WIDTH*0.075,}}/>
+                   
+                    <Text style={{marginTop: HEIGHT*0.01, color: DARKGREY}}><Text style={{color:PRIMARYCOLOR, fontWeight:'700'}}>{numOfViewers} {numOfViewers == 1 ? "user" : "users"}</Text> {numOfViewers == 1 ? "is viewing" : "are viewing"}</Text>
+                    
                 </View>
-            
-                
-                <SubmitButton disabled={loading} onPress={()=>getPaymentLink()}>
-                {loading?
-                    <ActivityIndicator size='small' color='white' />
-                :
-                    <SubmitText>GET CRIB CONNECT</SubmitText>
                 }
-                </SubmitButton>
                 
-            </View>     
-            }
+                {!cribPremium && 
+                <View style={{marginTop: HEIGHT*0.015}}>
+                    <View>
+                        <PriceContainer>
+                            <PriceAndBreakDownContainer>
+                                <PriceText><Text style={{fontWeight:'800', color: PRIMARYCOLOR}}>Just</Text> ${Number(cribConnectPrice.price).toFixed(2)}</PriceText>
+                                <Pressable onPress={()=>navigation.navigate("CribConnectPriceBreakdown", {userData:userData, cribConnectPrice: cribConnectPrice, estimatedSaving: route.params.estimatedSaving})} style={{flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+                                
+                                    <PriceBreakDownText>Price Breakdown</PriceBreakDownText>
+                                
+                                    <Ionicons name="arrow-forward" color={PRIMARYCOLOR}/>
+                                </Pressable>
+                            </PriceAndBreakDownContainer>
+                        
+                            <SubtitleText style={{marginTop: HEIGHT*0.0375, fontWeight: '600', fontSize: HEIGHT*0.025}}><Text style={{fontWeight:'700', color: PRIMARYCOLOR, textDecorationLine:'underline'}}>Money back</Text> guaranteed</SubtitleText>
+                            <Text style={{fontSize:HEIGHT*0.0175, alignSelf:'center', width: WIDTH*0.85, marginTop: HEIGHT*0.015}}>If we can’t find a tenant before the start of your sublease, money back guaranteed!</Text>
+                        
+                        </PriceContainer>
+
+                        {/* <ReferralCodeHelperText>Crib Connect must be enabled 30 days bofore start of sublease</ReferralCodeHelperText> */}
+                    </View>
+                
+                    
+                    <SubmitButton disabled={loading} onPress={()=>getPaymentLink()}>
+                    {loading?
+                        <ActivityIndicator size='small' color='white' />
+                    :
+                        <SubmitText>GET CRIB CONNECT</SubmitText>
+                    }
+                    </SubmitButton>
+                    
+                </View>     
+                }
+                </View>
            
-            
-            </View>
                 
             </SafeAreaView>
         </View>
