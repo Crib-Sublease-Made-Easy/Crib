@@ -305,6 +305,8 @@ PODS:
   - React-jsinspector (0.68.2)
   - React-logger (0.68.2):
     - glog
+  - react-native-blur (4.3.2):
+    - React-Core
   - react-native-date-picker (4.2.2):
     - React-Core
   - react-native-encrypted-storage (4.0.3):
@@ -519,6 +521,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-encrypted-storage (from `../node_modules/react-native-encrypted-storage`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
@@ -621,6 +624,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-blur:
+    :path: "../node_modules/@react-native-community/blur"
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
   react-native-encrypted-storage:
@@ -732,6 +737,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b7b553412f2ec768fe6c8f27cd6bafdb9d8719e6
   React-jsinspector: c5989c77cb89ae6a69561095a61cce56a44ae8e8
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
+  react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-date-picker: 9088350e06918f7d842a34c171acadc66583cb94
   react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
   react-native-geolocation: 69f4fd37650b8e7fee91816d395e62dd16f5ab8d
@@ -777,4 +783,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: db39b81262631aa399e03e15d4e5215600ea3e9e
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.1

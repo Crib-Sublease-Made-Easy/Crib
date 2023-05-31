@@ -3,19 +3,22 @@ import styled from 'styled-components/native';
 import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, MEDIUMGREY, EXTRALIGHT, DARKGREY } from '../../../sharedUtils'
 
 export const CribConnectModal = styled.View`
-    width: ${WIDTH*0.8}px;
-    height: ${HEIGHT*0.5}px
+    flex: 1
+    display: flex
     background: white
     border-radius: 20px
     align-slef: center
-    padding-vertical: ${HEIGHT*0.02}px
+    width: ${WIDTH}px
+    background-color: white
+    padding-top: ${HEIGHT*0.025}px
+    padding-horizontal: ${WIDTH*0.05}px
 `
 
 export const CribPremiumSubheaderText = styled.Text`
-  font-size: ${HEIGHT*0.035}px
-  margin-top: ${HEIGHT*0.01}px
-  width: ${WIDTH*0.9}px;
+  font-size: ${HEIGHT*0.025}px
+  color: white
   align-self: center
+  font-weight: 700
 `
 export const CribPremiumPaidSubheaderText = styled.Text`
   font-size: ${HEIGHT*0.04}px
@@ -192,8 +195,10 @@ export const CribConnectModalHeading = styled.Text`
 `
 
 export const CribConnectModalSubheading = styled.Text`
-  font-size: ${HEIGHT*0.0175}px
-  color: ${DARKGREY}
+  font-size: ${HEIGHT*0.025}px
+  font-weight: 600
+  color: #333333
+  text-align: center
 `
 
 export const ProgressDots = styled.View`
@@ -243,5 +248,95 @@ export const CribPremiumSubheadePostingText = styled.Text`
   font-weight: 500
   color: white
   margin-top: ${HEIGHT*0.01}px
+`
 
+export const ContinueButton = styled.Pressable`
+    width: ${WIDTH*0.8}px;
+    padding-vertical: ${HEIGHT*0.02}px
+    backgroundColor:  ${props=>(props.loading ? MEDIUMGREY : PRIMARYCOLOR)}}
+    align-self: center
+    border-radius: 25px
+    justify-content: center
+    align-items: center
+    margin-bottom: ${HEIGHT*0.025}px;
+    shadow-offset: 0 0
+    shadow-color: black;
+    shadow-radius: 5px;
+    shadow-opacity: 0.2;
+    elevation: 5
+`
+//Continue Button Text used in sign up 
+export const ContinueText = styled.Text`
+    font-size: ${ HEIGHT*0.02}px;
+    font-weight: 500
+    color: white
+`
+export const ContinueBallsView = styled.View`
+    width: 10px
+    height: 10px
+    border-radius: 8px
+    align-self: center
+`
+
+export const MatchesNumberContainer = styled.View `
+  padding-horizontal: ${WIDTH*0.075}px
+  border-radius: 35px
+  padding-vertical: ${HEIGHT*0.015}px
+  margin-top: ${HEIGHT*0.03}px
+  background-color: white 
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  `
+
+export const FilterOptionContainer = styled.View`
+  padding-horizontal: ${WIDTH*0.025}px
+  border-radius: 10px
+  border-width: 1px
+  border-color: ${DARKGREY}
+  justify-content: center
+  align-items: center
+  margin-left: ${WIDTH*0.05}px
+`
+
+export const FilterOptionText = styled.Text`
+  font-weight: 600
+`
+
+
+
+
+//Filter Modal
+
+export const FilterModalOptionContainer = styled.View`
+    padding-vertical: ${HEIGHT*0.02}px
+`
+
+export const FilterModalOptionTitle = styled.Text`
+    font-size: ${HEIGHT*0.02}px
+    font-weight: 500
+`
+export const FilterModalGenderOptions = styled.Pressable`
+    padding-vertical: ${HEIGHT*0.0075}px
+    padding-horizontal: ${WIDTH*0.025}px
+    border-radius: 5px
+    border-width: 1px
+    border-color: ${DARKGREY}
+`
+export const FilterModalSubmitButton = styled.Pressable`
+    width: ${WIDTH*0.9}px
+    padding-vertical: ${HEIGHT*0.0175}px
+    background-color: ${PRIMARYCOLOR}
+    border-radius: 15px
+    align-self: center
+    justify-content: center
+    align-items: center
+    position: absolute
+    bottom: ${HEIGHT*0.05}px
+`
+
+export const FilterModalSubmitText = styled.Text`
+    font-size: ${HEIGHT*0.02}px
+    color: white
+    font-weight: 500
 `

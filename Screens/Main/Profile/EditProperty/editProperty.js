@@ -8,13 +8,17 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  Modal,
-  Alert
+  Alert,
+  TextInput,
+  KeyboardAvoidingView,
+  Keyboard
 } from 'react-native';
+
+import Modal from "react-native-modal";
 
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY} from '../../../../sharedUtils'
+import { HEIGHT, WIDTH, PRIMARYCOLOR, DARKGREY, LIGHTGREY, EXTRALIGHT, MEDIUMGREY} from '../../../../sharedUtils'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -26,8 +30,8 @@ import { UserContext } from '../../../../UserContext';
 
 import { HeaderContainer, BackButtonContainer, NameContainer, Header, ResetButtonContainer,
     HeaderImageContainer, PropertyPhotoContainer, PhotoContainer, RowContainer, RowName, CategoryName,
-    DatePriceText, DeleteContainer,DeleteText } from './editPropertyStyle';
-import { ScrollView } from 'react-native-gesture-handler';
+    DatePriceText, DeleteContainer,DeleteText, DeletePropertyModal, DPMHeader, DPMSubHeader, YNContainer, DeletePropertyContainer } from './editPropertyStyle';
+import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -40,7 +44,8 @@ export default function EditPropertyScreen({navigation, route}){
         return unsubscribe; 
     },[navigation, ])
     const {numOfSubtenants, setNumOfSubtenants} = useContext(UserContext);
-    const [successfulLease, setSuccess] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [successfulLease, setSuccess] = useState(null)
     const [propAPIData, setPropAPIData] = useState('')
     const [propID, setPropID] = useState(route.params.propertyData._id)
     const [propType, setPropType] = useState(route.params.propertyData.type)
@@ -51,6 +56,12 @@ export default function EditPropertyScreen({navigation, route}){
     const [propDescription, setPropDescription] = useState(route.params.propertyData.description)
     const [propImg, setPropImg] = useState(route.params.propertyData.imgList)
     const [propAmen, setPropAmen] = useState(route.params.propertyData.amenities)
+    const [moveModal, setMoveModal] = useState(false)
+    const [feedback, setFeedback] = useState("")
+    const [feedbackModalVis, setFeedbackModalVis] = useState(false)
+
+
+    //User feedback
 
     const [propFloorplanImage, setPropFloorplanImage] = useState(null)
 
@@ -187,7 +198,7 @@ export default function EditPropertyScreen({navigation, route}){
             'This action cannot be reversed.',
             [
               {text: 'No', onPress: () => {}, style: 'cancel'},
-              {text: 'Delete', onPress: () => {checkSuccess()}, style: 'destructive'},
+              {text: 'Delete', onPress: () => {setFeedbackModalVis(true)}, style: 'destructive'},
             ],
             { 
               cancelable: true 
@@ -212,7 +223,7 @@ export default function EditPropertyScreen({navigation, route}){
           );  
     }
     async function deletePropertyRequest(){
-
+        setLoading(true)
         const accessToken = await EncryptedStorage.getItem("accessToken");
 
         console.log("ACCESS TOKEN ", accessToken, " PROPID ", propID)
@@ -274,7 +285,7 @@ export default function EditPropertyScreen({navigation, route}){
     
             });
         }
-        
+        setLoading(false)
 
     }   
 
@@ -301,7 +312,9 @@ export default function EditPropertyScreen({navigation, route}){
     }
     
     return(
+        
         <SafeAreaView style={{flex:1, backgroundColor:'white'}} >
+            <KeyboardAvoidingView behavior='position' style={{flex: 1}}>
             <HeaderContainer>
                 <BackButtonContainer>
                     <Pressable style={{height:'50%', width:'50%', alignItems:'center'}} onPress={editSubtenants}>
@@ -387,7 +400,7 @@ export default function EditPropertyScreen({navigation, route}){
                 <Ionicons name='chevron-forward-outline' size={25}  style={{paddingLeft: WIDTH*0.05}}/>
             </RowContainer>
             <CategoryName>Availability</CategoryName>
-            <RowContainer onPress={()=> navigation.navigate("EditPropertyAvail",{from: propDateFrom, to: propDateTo, uid: propID, propertyData: route.params.propertyData})}>
+            <RowContainer onPress={()=> {route.params.cribConnectUser ? alert("Can't adjust availability after Crib Connect payment. Please contact us!") : navigation.navigate("EditPropertyAvail",{from: propDateFrom, to: propDateTo, uid: propID, propertyData: route.params.propertyData})}}>
                 <DatePriceText>
                     {new Date(propDateFrom).getUTCMonth()% 12 + 1}- 
                     {new Date(propDateFrom).getFullYear()}
@@ -414,8 +427,40 @@ export default function EditPropertyScreen({navigation, route}){
         <DeleteContainer onPress={()=> deletePropertyAlert()}>
             <DeleteText>Delete Property</DeleteText>
         </DeleteContainer>
+        
+        <Modal onBackdropPress={()=>{ setFeedbackModalVis(false), setMoveModal(false)}} isVisible={feedbackModalVis} backdropOpacity={0.5} style={{flex: 1, margin: 0, padding: 0,  alignItems:'center', position:'relative'}}>
        
+            <DeletePropertyModal style={{marginBottom: !moveModal ? 0 : HEIGHT*0.35}}>
+                <DPMHeader>Thanks for posting on Crib 🎉</DPMHeader>
+                <DPMSubHeader style={{marginTop: HEIGHT*0.025, fontWeight: '600'}}>Are you able to successfully sublease?</DPMSubHeader>
+                <View style={{flexDirection:'row', justifyContent:'space-between', marginTop: HEIGHT*0.02}}>
+                    <YNContainer onPress={()=>setSuccess(true)} style={{backgroundColor: successfulLease ? PRIMARYCOLOR : EXTRALIGHT}}>
+                        <DPMSubHeader style={{fontWeight: '600', color: successfulLease ? 'white' : DARKGREY}}>Yes</DPMSubHeader>
+
+                    </YNContainer>
+                    <YNContainer onPress={()=>setSuccess(false)}  style={{backgroundColor: !successfulLease && successfulLease != null ? PRIMARYCOLOR : EXTRALIGHT}}>
+                        <DPMSubHeader style={{fontWeight: '600', color: !successfulLease && successfulLease != null ? 'white' : DARKGREY}}>No</DPMSubHeader>
+                    </YNContainer>
+                </View>
+                <View style={{marginTop: HEIGHT*0.025}}>
+                    <DPMSubHeader style={{fontWeight: '600'}}>
+                        We are always improving. Do you have any feedback or comments?
+                    </DPMSubHeader>
+                    <TextInput onChangeText={(val)=>setFeedback(val)} onPressIn={()=>setMoveModal(true)} onEndEditing={()=> {Keyboard.dismiss(), setMoveModal(false)}}  multiline style={{height: HEIGHT*0.1, width: '100%', borderRadius: 5, marginTop: HEIGHT*0.015, borderWidth: 1, borderColor: MEDIUMGREY, backgroundColor: EXTRALIGHT, textAlignVertical: 'top', paddingHorizontal: WIDTH*0.025, paddingVertical:HEIGHT*0.02}}/>
+                </View>
+
+                <DeletePropertyContainer disabled={loading} onPress={deletePropertyRequest}>
+                    <Text style={{color: 'white', fontWeight:'600'}}>Delete</Text>
+                </DeletePropertyContainer>
+            </DeletePropertyModal>
+
+            
+        </Modal>
+        
+        </KeyboardAvoidingView>
         </SafeAreaView>
+       
       
+
     )
 }

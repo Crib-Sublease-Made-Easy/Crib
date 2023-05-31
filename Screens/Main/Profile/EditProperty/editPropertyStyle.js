@@ -101,3 +101,40 @@ export const DeleteText = styled.Text`
     color: red
     margin-bottom: ${HEIGHT*0.05}px
 `
+
+export const DeletePropertyModal = styled.View`
+    width: ${WIDTH*0.8}px
+    background-color: white
+    border-radius: 20px
+    padding-horizontal: ${WIDTH*0.05}px
+    padding-vertical: ${HEIGHT*0.03}px
+`
+
+export const DPMHeader = styled.Text`
+    font-size: ${HEIGHT*0.0225}px
+    font-weight: 500
+`
+
+export const DPMSubHeader = styled.Text`
+    font-size: ${HEIGHT*0.0175}px
+`
+
+export const YNContainer = styled.Pressable`
+    width: ${WIDTH*0.3}px
+    padding-vertical: ${HEIGHT*0.0125}px
+    border-radius: 10px
+    justify-content: center
+    align-items: center
+    border-width: 1px
+    border-color: ${MEDIUMGREY}
+`
+
+export const DeletePropertyContainer = styled.Pressable`
+    width: 100%
+    padding-vertical: ${HEIGHT*0.015}px
+    margin-top: ${HEIGHT*0.025}px
+    background-color: ${PRIMARYCOLOR}
+    justify-content: center
+    align-items: center
+    border-radius: 25px
+`
