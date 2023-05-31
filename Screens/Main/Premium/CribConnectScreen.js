@@ -55,7 +55,6 @@ export default function CribConnectScreen({navigation}){
     const [filterOccupy, setFilterOccupy] = useState(50)
 
 
-
     useEffect(()=>{
         getTokens()
         const unsubscribe = navigation.addListener('focus', () => {
@@ -456,7 +455,7 @@ export default function CribConnectScreen({navigation}){
                 />
                 <View style={{position:'absolute', bottom: HEIGHT*0.0225}}>
                     <CribPremiumSubheaderText>🎉 Crib Connect</CribPremiumSubheaderText>
-                    <Text style={{alignSelf:'center', fontSize: HEIGHT*0.0175, textAlign:'center', color:'white'}}>Sublease easier than ever!</Text>
+                            <Text style={{alignSelf:'center', fontSize: HEIGHT*0.0175, textAlign:'center', color:'white'}}>Sublease easier than ever!</Text>
                     <MatchesNumberContainer>
                         {userData != undefined ?
                             <Text style={{fontWeight: '700'}}>{userData.cribConnectSubtenants.length == 0 ? "no matches yet" : userData.postedProperties.length == 0 ? "Post a sublease first" : `${userData.cribConnectSubtenants.length} matches`}</Text>
@@ -508,7 +507,7 @@ export default function CribConnectScreen({navigation}){
                     renderItem={(item, index) => {
                         if(!item.item.deleted){
                             return (
-                                <CribConnectScreenTenantCard data={item} cribConnectUser={userData.cribPremium.paymentDetails.status} nav={()=>navigation.navigate("CribConnectTenant", {userData: userData, prefetchInterestedNumber: prefetchCribConnectInterestedNumber, subleaseArea: subleaseArea, estimatedSaving: estimatedSaving})}/>   
+                                <CribConnectScreenTenantCard data={item} cribConnectUser={userData.cribPremium.paymentDetails.status} nav={()=>{ alert("Get Crib Connect to message interested tenants."), navigation.navigate("CribConnectTenant", {userData: userData, prefetchInterestedNumber: prefetchCribConnectInterestedNumber, subleaseArea: subleaseArea, estimatedSaving: estimatedSaving})}}/>   
                             )
                         }
                         else{
@@ -617,8 +616,14 @@ export default function CribConnectScreen({navigation}){
                 {/* <Modal isVisible={true} style={{flex: 1, justifyContent:'center', alignItems:'center'}}> */}
             
                 <View style={{position:'relative', height: HEIGHT*0.3, alignSelf:'center', width: WIDTH, justifyContent:'center', alignItems:'center'}}>
-                    <Image source={require('../../../assets/nynight.png')} style={{width:WIDTH*1.1, height:HEIGHT*0.3, position:'absolute', top: 0}}></Image>
-                    <Text style={{color:'white', fontSize: HEIGHT*0.0375, fontWeight:'700', textAlign:'center', }}>Sublease your room {'\n'}faster and easier</Text>
+                    <Image source={require('../../../assets/nynight.png')} style={{width:WIDTH, height:HEIGHT*0.3, position:'absolute', top: 0}}></Image>
+                            <Text style={{color:'white', fontSize: HEIGHT*0.035, fontWeight:'700', textAlign:'center', alignSelf:'center' }}>Sublease your room {'\n'}faster and easier</Text>
+                        {/* <View style={{width: WIDTH*0.8, justifyContent:'center', alignItems:'center'}}>
+                            <Text style={{color:'white', fontSize: HEIGHT*0.03, fontWeight:'700', textAlign:'center', alignSelf:'center' }}>Priorize your sublease to show interested tenant</Text>
+                        </View>
+                        <View style={{width: WIDTH*0.8, justifyContent:'center', alignItems:'center'}}>
+                            <Text style={{color:'white', fontSize: HEIGHT*0.03, fontWeight:'700', textAlign:'center', alignSelf:'center' }}>Advertise your sublease on all our platforms</Text>
+                        </View> */}
                     <Text style={{position:'absolute', bottom: HEIGHT*0.015, color:'white', fontWeight:'700', }}>Crib Connect</Text>
                     
                 </View>
@@ -628,7 +633,7 @@ export default function CribConnectScreen({navigation}){
                         <CribConnectModalSubheading style={{marginTop: HEIGHT*0.005}}>match with them instantly</CribConnectModalSubheading>
                         
                         {
-                            twoSubtenants.map((subtenant, index) => {
+                            twoSubtenants != undefined && twoSubtenants.map((subtenant, index) => {
                                 return (
                                     <SubtenantCard key={index} data={subtenant} />
                                 )

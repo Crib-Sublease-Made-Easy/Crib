@@ -351,7 +351,7 @@ export default function PropertyDetailScreen({navigation, route}){
                         onScroll={onScroll}
                         horizontal 
                         snapToAlignment="center"
-                        decelerationRate={"fast"}
+                        decelerationRate={"medium"}
                         showsHorizontalScrollIndicator={false}
                         bounces={false}
                         snapToInterval={WIDTH}

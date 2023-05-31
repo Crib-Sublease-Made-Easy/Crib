@@ -99,6 +99,7 @@ export default function CribConnectScreenTenantCard(props){
             await Linking.openURL(`sms:${item.phoneNumber}${getSMSDivider()}body=Hello ${item.name}, this is `)
         }
         else{
+            alert("Get Crib Connect to message interested tenants.")
             props.nav()
         }
         setSubtenantModalVis(false)

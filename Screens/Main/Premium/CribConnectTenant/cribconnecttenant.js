@@ -158,7 +158,7 @@ export default function CribConnectTenantScreen({navigation, route}){
         .then(async res=> {
             if(res.status == 200){
                 let data = await res.json();
-                if(data.order.state == "OPEN"){
+                if(data.order.state == "OPEN" &&  data.order.net_amount_due_money.amount == 0){
                     setCribPremium(true)
                 }
             }
@@ -344,7 +344,7 @@ export default function CribConnectTenantScreen({navigation, route}){
                         <View style={{marginTop: HEIGHT*0.02}}>
                             
                             <TitleText>We do <Text style={{color:PRIMARYCOLOR}}>all the work</Text></TitleText>
-                            <SubtitleText style={{marginTop: HEIGHT*0.03, }}>We find interested and reliable tenants for your sublease. On average, Crib Connect users find a tenant in <Text style={{fontWeight:'600'}}>just 3 days!</Text></SubtitleText>
+                            <SubtitleText style={{marginTop: HEIGHT*0.03, }}>We advertise your sublease in all of our groups. Instantly access contact info to thousands of users in our database. </SubtitleText>
                         </View>
                     </View>
 
@@ -354,8 +354,8 @@ export default function CribConnectTenantScreen({navigation, route}){
                             <Lottie source={require('../../../../assets/cribconnectenantslide2.json')} autoPlay loop style={{height: WIDTH*0.6,  marginTop: HEIGHT*0.005,alignSelf:'center'}}/>
                         </View>
                         <View style={{marginTop: HEIGHT*0.02}}>
-                            <TitleText><Text style={{fontWeight:'800', color:PRIMARYCOLOR}}>Verified</Text> tenants</TitleText>
-                            <SubtitleText style={{marginTop: HEIGHT*0.03}}>All recommended users are verified to ensure a safer subleasing experience.</SubtitleText>
+                            <TitleText><Text style={{fontWeight:'800', color:PRIMARYCOLOR}}>Get notified </Text>right away</TitleText>
+                            <SubtitleText style={{marginTop: HEIGHT*0.03}}>We immediately recommend your sublease to all new members. Be the first post they see when they look for a sublease</SubtitleText>
                         </View>
                     </View>
 
@@ -366,7 +366,7 @@ export default function CribConnectTenantScreen({navigation, route}){
                         </View>
                         <View style={{marginTop: HEIGHT*0.02}}>
                             <TitleText>Money back <Text style={{fontWeight:'800', color:PRIMARYCOLOR}}>guaranteed</Text></TitleText>
-                            <SubtitleText style={{marginTop: HEIGHT*0.03}}>Found a perfect tenant? Great! If we can't find a tenant before your sublease start date, money back guaranteed!</SubtitleText>
+                            <SubtitleText style={{marginTop: HEIGHT*0.03}}>Found a perfect tenant? Great! If we can't help you save more than what you paid for, money back guaranteed!</SubtitleText>
                         </View>
                     </View>
 
@@ -376,8 +376,8 @@ export default function CribConnectTenantScreen({navigation, route}){
                             <Lottie source={require('../../../../assets/cribreferralsubtenant.json')} autoPlay loop style={{height: WIDTH*0.6,  marginTop: HEIGHT*0.005,alignSelf:'center'}}/>
                         </View>
                         <View style={{marginTop: HEIGHT*0.02}}>
-                            <TitleText>Trusted by <Text style={{fontWeight:'800', color:PRIMARYCOLOR}}>2000+</Text> students</TitleText>
-                            <SubtitleText style={{marginTop: HEIGHT*0.03}}>We have more than 2000 students from 75 universities using Crib. We helped over 400 students sublease their room already!</SubtitleText>
+                            <TitleText><Text style={{fontWeight:'800', color:PRIMARYCOLOR}}>Maximize </Text>your savings</TitleText>
+                            <SubtitleText style={{marginTop: HEIGHT*0.03}}>We prioritize tenants who can cover your entire sublease, so you can save maximize savings and spend it elsewhere.</SubtitleText>
                         </View>
                     </View>
                    
@@ -390,14 +390,22 @@ export default function CribConnectTenantScreen({navigation, route}){
                     <ProgressDots style={{backgroundColor: activeIdx == 2 ? PRIMARYCOLOR : '#E0E0E0'}}/>
                     <ProgressDots style={{backgroundColor: activeIdx == 3 ? PRIMARYCOLOR : '#E0E0E0'}}/>
                 </View>
+                <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center',width: WIDTH*0.9, alignSelf:'center' }}>
+                <Pressable onPress={()=>navigation.navigate("CribConnectFAQ")} style={{flexDirection: 'row', alignItems:'center', paddingVertical: 5, paddingHorizontal:10, backgroundColor: PRIMARYCOLOR, borderRadius:5, marginTop: HEIGHT*0.01}}>
+                    <Ionicons name="help-circle-outline" color="white" size={HEIGHT*0.02}/>
+                    <Text style={{color: 'white', fontWeight:'600', marginLeft:5}}>
+                        FAQ
+                    </Text>
+                </Pressable>
                 { numOfViewers != 0 &&
-                <View style={{width: WIDTH*0.9, alignSelf:'center', flexDirection:'row', alignItems:'center', justifyContent:'flex-end' }}>
+                <View style={{alignSelf:'center', flexDirection:'row', alignItems:'center', justifyContent:'flex-end' }}>
                     <Lottie source={require('../../../../assets/cribconnectfire.json')} autoPlay style={{height: WIDTH*0.075,}}/>
                    
                     <Text style={{marginTop: HEIGHT*0.01, color: DARKGREY}}><Text style={{color:PRIMARYCOLOR, fontWeight:'700'}}>{numOfViewers} {numOfViewers == 1 ? "user" : "users"}</Text> {numOfViewers == 1 ? "is viewing" : "are viewing"}</Text>
                     
                 </View>
                 }
+                </View>
                 
                 {!cribPremium && 
                 <View style={{marginTop: HEIGHT*0.015}}>
@@ -414,7 +422,7 @@ export default function CribConnectTenantScreen({navigation, route}){
                             </PriceAndBreakDownContainer>
                         
                             <SubtitleText style={{marginTop: HEIGHT*0.0375, fontWeight: '600', fontSize: HEIGHT*0.025}}><Text style={{fontWeight:'700', color: PRIMARYCOLOR, textDecorationLine:'underline'}}>Money back</Text> guaranteed</SubtitleText>
-                            <Text style={{fontSize:HEIGHT*0.0175, alignSelf:'center', width: WIDTH*0.85, marginTop: HEIGHT*0.015}}>If we can’t find a tenant before the start of your sublease, money back guaranteed!</Text>
+                            <Text style={{fontSize:HEIGHT*0.0175, alignSelf:'center', width: WIDTH*0.85, marginTop: HEIGHT*0.015}}>If we can’t find a tenant for your sublease, money back guaranteed!</Text>
                         
                         </PriceContainer>
 

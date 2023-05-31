@@ -92,7 +92,7 @@ export const DatePriceText = styled.Text`
 `
 
 export const DeleteContainer = styled.Pressable`
-   
+   margin-top: ${HEIGHT*0.025}px
 `
 
 export const DeleteText = styled.Text`

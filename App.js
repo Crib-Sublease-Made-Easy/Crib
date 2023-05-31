@@ -81,6 +81,7 @@ import { createSharedElementStackNavigator } from 'react-navigation-shared-eleme
 import { CardStyleInterpolators } from '@react-navigation/stack';
 
 
+
 import SendBird from 'sendbird'
 
 const Stack = createSharedElementStackNavigator();
@@ -94,6 +95,7 @@ import CribConnectPreferenceScreen from './Screens/Main/Premium/CribConnectPrefe
 import CribConnectReviewsScreen from './Screens/Main/Premium/CribConnectReviews/cribconnectreviews';
 import CribConnectSubtenantMatchesScreen from './Screens/Main/Premium/CribConnectSubtenantMatches/cribConnectSubtenantMatches';
 import CribPaidMessagingScreen from './Screens/Main/Premium/cribPaidMessaging/cribPaidMessaging';
+import CribConnectFAQScreen from './Screens/Main/Premium/CribConnectFAQ/cribConnectFAQ';
 
 
 export default function App() {
@@ -643,6 +645,14 @@ OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent =
 
             <Stack.Screen name="CribPaidMessaging"
               component={CribPaidMessagingScreen}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+
+            <Stack.Screen name="CribConnectFAQ"
+              component={CribConnectFAQScreen}
               options={{
                 headerShown: false,
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

@@ -303,7 +303,7 @@ export default function SettingScreen({navigation, route}){
         </RowContainer>
         <RowContainer style={{borderBottomWidth: 0}}  onPress={() => navigation.navigate('TermsAndService')}>
           <Ionicons name='bookmarks' size={22} color='black'/>
-          <RowName>Terms and services</RowName>
+          <RowName>Terms of services</RowName>
         </RowContainer>
         <RowContainer style={{borderBottomWidth: 0}} onPress={() => navigation.navigate('Privacy')}>
           <Ionicons name='shield' size={22} color='black'/>

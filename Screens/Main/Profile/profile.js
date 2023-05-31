@@ -336,7 +336,7 @@ export default function ProfileScreen({navigation}){
         }
         else if(name == "Looking for a sublease"){
             // const at = await EncryptedStorage.getItem("accessToken")
-            let url = "https://forms.gle/zJji65b1LNu9G4Mh7"
+            let url = "https://subtenant-form.herokuapp.com"
             const supported = await Linking.canOpenURL(url);
 
             if (supported) {
