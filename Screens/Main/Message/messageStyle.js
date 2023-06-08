@@ -7,12 +7,37 @@ import { HEIGHT, WIDTH, PRIMARYCOLOR, LIGHTGREY, EXTRALIGHT, MEDIUMGREY, DARKGRE
 const PRIMARYGREY = '#5e5d5d'
 
 
+export const SubleaseRequestContainer = styled.Pressable`
+  width: ${WIDTH*0.9}px
+  padding-vertical: ${HEIGHT*0.02}px
+  border-radius: 10px
+  shadow-offset: 0 0
+  shadow-color: black;
+  shadow-radius: 5px;
+  shadow-opacity: 0.1;
+  elevation: 5
+  background-color: white
+  align-self: center
+  margin-top: ${HEIGHT*0.02}px
+  padding-horizontal: ${WIDTH*0.05}px
+`
+export const SubleaseRequestSubtitle = styled.Text`
+  font-size: ${HEIGHT*0.02}px
+  font-weight: 600
+`
+export const SubleaseRequestText = styled.Text`
+  font-size: ${HEIGHT*0.015}px
+  color: ${DARKGREY}
+
+`
+
+
 export const InboxTitle = styled.Text`
-    width: ${WIDTH*0.9}px;
-    align-self: center;
-    font-size: ${HEIGHT*0.035}px
-    margin-top: ${HEIGHT*0.05}px
-    font-weight: 500
+  width: ${WIDTH*0.9}px;
+  align-self: center;
+  font-size: ${HEIGHT*0.035}px
+  margin-top: ${HEIGHT*0.05}px
+  font-weight: 500
 `
 
 export const FlatlistItemContainer = styled.TouchableOpacity`

@@ -83,7 +83,6 @@ export default function PostedPropertyScreen({navigation, route}){
 
     //Funciton: Get user's posted proeprty
     async function fetchPostedProperties(id, token){
-        console.log("oops")
         await fetch('https://crib-llc.herokuapp.com/properties/' + id, {
         method: 'POST',
         headers: {
@@ -101,7 +100,6 @@ export default function PostedPropertyScreen({navigation, route}){
                 return res.json()
             }
         }).then(async propertyData =>{
-            console.log("oops", propertyData)
             if(propertyData != undefined){
                 
                 //Returns no prop found when theres nothing 
@@ -141,7 +139,6 @@ export default function PostedPropertyScreen({navigation, route}){
     }
 
     function toPostProperty(){
-        console.log(userData.postedProperties)
         if(userData.postedProperties.length >= 1 ){
             alert("As a regular member, you can only post one property.")
         }

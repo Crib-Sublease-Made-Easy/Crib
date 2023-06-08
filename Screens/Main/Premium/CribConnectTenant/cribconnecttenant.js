@@ -110,7 +110,6 @@ export default function CribConnectTenantScreen({navigation, route}){
         let uid = await EncryptedStorage.getItem("userId")
 
         if(accessToken != undefined && uid != undefined && accessToken != null){
-            console.log("feting")
             //Get user favorite properties
             // fetchFavoriteProperties(accessToken)
         

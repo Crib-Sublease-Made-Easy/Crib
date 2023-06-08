@@ -57,7 +57,6 @@ export default function OTPScreen({navigation, route}){
     },[])
 
     async function signupStep3(){ 
-        console.log("hello")
         setLoading(true)
         try{
             let oneSignalUserId = await EncryptedStorage.getItem('oneSignalUserID');
@@ -76,6 +75,7 @@ export default function OTPScreen({navigation, route}){
                 formData.append("authy_id", route.params.authy_id);      
                 formData.append("oneSignalUserId", oneSignalUserId);    
                 formData.append("type", route.params.type)  
+                formData.append("countryCode", route.params.countryCode)  
 
         
                 var array = route.params.profilePic.split(".");
@@ -298,7 +298,7 @@ export default function OTPScreen({navigation, route}){
                         Is this number correct?
                     </ModalHeaderText>
                     <UserNumberText>
-                        +1 ({route.params.phoneNumber.slice(0, 3)})-{route.params.phoneNumber.slice(3,6)}-{route.params.phoneNumber.slice(6, 10)}
+                        +{route.params.countryCode} {route.params.phoneNumber}
                     </UserNumberText>
                     <ModalOptionContainer>
                         <ModalOption onPress={()=> {setSMSErrorModal(false), backToPhoneNumber()}}>

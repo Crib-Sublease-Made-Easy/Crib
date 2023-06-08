@@ -237,7 +237,7 @@ export default function Login_OTP({navigation, route}){
                         Is this number correct?
                     </ModalHeaderText>
                     <UserNumberText>
-                        +1 ({route.phoneNumber.slice(0, 3)})-{route.phoneNumber.slice(3,6)}-{route.phoneNumber.slice(6, 10)}
+                        +{route.countryCode[0]} {route.phoneNumber}
                     </UserNumberText>
                     <ModalOptionContainer>
                         <ModalOption onPress={()=> {setSMSErrorModal(false),  backToLogin()}}>

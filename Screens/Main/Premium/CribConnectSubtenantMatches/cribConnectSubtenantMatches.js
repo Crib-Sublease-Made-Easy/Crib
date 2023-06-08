@@ -34,8 +34,7 @@ export default function CribConnectSubtenantMatchesScreen({navigation, route}){
        
         let curTime = new Date().getTime();
         let itemTime = new Date(item.createdAt).getTime();
-        console.log(curTime)
-        console.log(curTime - itemTime)
+
         if(curTime - itemTime < 1000*60*60*24){
             return 1;
         }

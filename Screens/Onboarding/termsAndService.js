@@ -39,7 +39,6 @@ export default function TermsAndService({navigation, route}){
     async function getTermsOfServices(){
         let resp = await fetch("https://crib-llc.herokuapp.com/web/termsofservicesdetails")
         let data = await resp.json();
-        console.log(data)
         setTermsOfServices(data)
     }
 

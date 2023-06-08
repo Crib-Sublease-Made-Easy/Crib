@@ -39,12 +39,7 @@ const [numOfSubtenants, setNumOfSubtenants] = React.useState(0)
     
   
     if(accessToken != undefined && USERID != undefined && accessToken != null){
-       console.log("hedoekdoekdoekdoedkeok")
-        //Get user favorite properties
-        // fetchFavoriteProperties(accessToken)
 
-
-       
         await fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
         method: 'GET',
         headers: {
@@ -55,9 +50,7 @@ const [numOfSubtenants, setNumOfSubtenants] = React.useState(0)
         }) 
         .then(res => res.json()).then(async userData =>{
           if(userData.cribConnectSubtenants != undefined){
-            console.log("numbersssssss " + userData.cribConnectSubtenants)
             setNumOfSubtenants(userData.cribConnectSubtenants.length)
-            
           }
         })
         .catch(e=>{

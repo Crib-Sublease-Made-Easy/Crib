@@ -65,7 +65,6 @@ export default function ChatScreen({navigation, route}){
     const [receiverID, setReceiverID] = useState('')
 
     useEffect(()=>{
-      console.log("USE_EFFECT CHAT")
       onChat = true
       getGroupChannel()
      
@@ -130,7 +129,6 @@ export default function ChatScreen({navigation, route}){
               // console.log(messages[0].text)
               const accessToken = await EncryptedStorage.getItem("accessToken")
               const uid = await EncryptedStorage.getItem("userId")
-              console.log(uid)
             
               if(accessToken != null){
                 fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {

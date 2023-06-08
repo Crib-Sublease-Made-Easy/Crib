@@ -92,11 +92,9 @@ export default function NotificationModal({notifModalVisible, close}){
     },[AppState.currentState])
 
     async function getNotificationStatus(){
-        console.log("hello")
         const device = await OneSignal.getDeviceState();
         setNotifPermission(device.isSubscribed)
         if(device.isSubscribed){
-            console.log("hello")
             close()
         }
     }

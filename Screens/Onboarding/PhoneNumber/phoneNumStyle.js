@@ -43,18 +43,37 @@ export const TitleText = styled.Text`
 export const SubtitleText = styled.Text`
     width: ${WIDTH*0.8}px;
     margin-top: ${HEIGHT*0.025}px
-    font-size: ${HEIGHT*0.02}px;
+    font-size: ${HEIGHT*0.0175}px;
     align-self: center
     
 `
-export const GeneralTextInput = styled.TextInput`
-    width: ${WIDTH*0.8}px;
-    height: ${HEIGHT*0.065}px
+
+export const CountryCodeText = styled.Text`
     font-size: ${HEIGHT*0.025}px
-    border-bottom-width: 2px;
+`
+export const CountryCodeContainer = styled.View`
+    width: ${WIDTH*0.8}px;
+    height: ${HEIGHT*0.06}px
+    flex-direction: row
+    align-self: center
+    border-width: 1px;
+    padding-left: ${WIDTH*0.025}px
+    border-color: ${TEXTINPUTBORDERCOLOR}
+    border-radius: 10px
+    jusify-content: center
+    align-items: center
+    margin-top: ${HEIGHT*0.01}px
+    
+`
+export const GeneralTextInput = styled.TextInput`
+width: ${WIDTH*0.8}px;
+height: ${HEIGHT*0.06}px
+    font-size: ${HEIGHT*0.025}px
+    border-width: 1px;
     padding-left: ${WIDTH*0.025}px
     border-color: ${TEXTINPUTBORDERCOLOR}
     align-self: center   
+    border-radius: 10px
     
 `
 export const TextInputContainer = styled.View`

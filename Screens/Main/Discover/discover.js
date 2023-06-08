@@ -220,7 +220,6 @@ export default function DiscoverScreen({navigation, route, initialParams}){
 
     async function checkVersion(){
         const currentVersion = `${DeviceInfo.getReadableVersion()}-`
-        console.log(currentVersion)
         const previousVersion = await EncryptedStorage.getItem("appVersion");
         if (previousVersion) {
             if (previousVersion !== currentVersion) {
@@ -314,14 +313,12 @@ export default function DiscoverScreen({navigation, route, initialParams}){
                 let curTime = new Date();
                 if(properties.length == 0){
                     let lastNotificationPrompTime = await EncryptedStorage.getItem("notificationPromptTime");
-                    console.log("lastNotificationPrompTime ", lastNotificationPrompTime)
                     // EncryptedStorage.setItem("notificationPromptTime",new Date(lastNotificationPrompTime).getTime().toString());
 
 
                     let daysApart = lastNotificationPrompTime == undefined ? null : (curTime.getTime() - lastNotificationPrompTime.toString()) / (1000*60*60*24);
                    
                     let device = await OneSignal.getDeviceState();
-                    console.log(daysApart)
                     if((!device.isSubscribed && (daysApart == null || daysApart > 0.5))){
                        
                         setNotifModalVisible(true)
@@ -503,7 +500,6 @@ export default function DiscoverScreen({navigation, route, initialParams}){
                 }
             }, config)
             .then(async (response)=> {        
-                console.log(response.status)   
                 if(response.status == 200 || response.status == 201){
                     let lat = response.data.lat;
                     let long = response.data.lng;

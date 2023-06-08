@@ -68,9 +68,7 @@ export default function EditPropertyScreen({navigation, route}){
 
 
     async function getTokens(){
-        console.log("refresh")
         const accessToken = await EncryptedStorage.getItem("accessToken");
-        console.log(accessToken)
         fetch('https://crib-llc.herokuapp.com/properties/' + route.params.propId, {
         method: 'POST',
         headers: {
@@ -179,7 +177,6 @@ export default function EditPropertyScreen({navigation, route}){
             .then(res => res.json()).then(async data=>{
                 setPropImg([...propImg.slice(0, index),data.propertyImage,...propImg.slice(index + 1),])
                 await AsyncStorage.removeItem('postedProperty')
-                console.log(data)
             })
             .catch((error) => {
                 console.log(error)
@@ -230,7 +227,6 @@ export default function EditPropertyScreen({navigation, route}){
         setLoading(true)
         const accessToken = await EncryptedStorage.getItem("accessToken");
 
-        console.log("ACCESS TOKEN ", accessToken, " PROPID ", propID)
         await fetch('https://crib-llc.herokuapp.com/properties/internal/subleasedwithcomments', {
             method: 'POST',
             headers: {
@@ -243,8 +239,6 @@ export default function EditPropertyScreen({navigation, route}){
                 success: successfulLease,
                 comments: feedback,
             })
-        }).then(async res => {
-           console.log(res.status)
         })
         .catch((error) => {
             alert("errpr")

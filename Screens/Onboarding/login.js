@@ -15,6 +15,7 @@ import {
     TextInput
 } from 'react-native';
 
+import { CountryCode } from '../../countryTypes';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -25,17 +26,42 @@ import Lottie from 'lottie-react-native';
 
 
 import {Header, ProgressBarContainer, SubtitleText, TitleText,
-    GeneralTextInput, TextInputContainer} from './loginStyle';
+    GeneralTextInput, TextInputContainer, CountryCodeText, CountryCodeContainer} from './loginStyle';
+
+import CountryPicker from 'react-native-country-picker-modal'
+
+
 
 export default function LoginScreen({navigation, route}){
     const [phoneNumber, setPhoneNumber] = useState("")
     const [passedPhoneNumber, setPassedPhoneNumber]= useState("")
     const [loading, setLoading] = useState(false)
-   
+    const [countryCode, setCountryCode] = useState('US')
+    const [withFlag, setWithFlag] = useState(true)
+  const [withEmoji, setWithEmoji] = useState(true)
+  const [withFilter, setWithFilter] = useState(true)
+  const [withAlphaFilter, setWithAlphaFilter] = useState(false)
+  const [withCallingCode, setWithCallingCode] = useState(false)
+  const [withCountryNameButton, setWithCountryNameButton] = useState(false)
+  const [country, setCountry] = useState(null)
+  const [countryCallingCode, setCountryCallingCode] = useState("1")
+
+
+  const onSelect = (country) => {
+    setCountryCode(country.cca2)
+    setCountry(country)
+    setCountryCallingCode(country.callingCode)
+  }
 
     async function signupStep1(){
-        
-        const number = phoneNumber.replace(/[^\d]/g, '').substring(0,10);
+        let number;
+        if(countryCallingCode == 1){
+            number = phoneNumber.replace(/[^\d]/g, '').substring(0,10);
+        }
+        else{
+            number = passedPhoneNumber
+        }
+           
         
       
         await fetch('https://crib-llc.herokuapp.com/users/authy', {
@@ -97,7 +123,7 @@ export default function LoginScreen({navigation, route}){
          
             if(res.status == 201){
                 // console.log("LOGGED INNN")
-                navigation.reset({index: 0 , routes: [{ name: 'Login_OTP', authy_id: authy_id, phoneNumber: number }]})
+                navigation.reset({index: 0 , routes: [{ name: 'Login_OTP', authy_id: authy_id, phoneNumber: number, countryCode: countryCallingCode }]})
             }
             else{
                 alert('ERROR OCCURED')
@@ -111,7 +137,7 @@ export default function LoginScreen({navigation, route}){
     
 
     function checkInput(){
-        if(passedPhoneNumber.length < 10){
+        if(countryCallingCode == 1 && passedPhoneNumber.length < 10){
             alert("Phone number is invalid")
         }
         else{
@@ -121,11 +147,18 @@ export default function LoginScreen({navigation, route}){
     }
 
     const handleInput = (e) => {
-        // this is where we'll call our future formatPhoneNumber function that we haven't written yet.
-        const formattedPhoneNumber = formatPhoneNumber(e);
-        // we'll set the input value using our setInputValue
+        if(countryCallingCode != 1){
+            setPhoneNumber(e)
+            setPassedPhoneNumber(e)
+        }
+        else{
+            // this is where we'll call our future formatPhoneNumber function that we haven't written yet.
+            const formattedPhoneNumber = formatPhoneNumber(e);
+            // we'll set the input value using our setInputValue
 
-        setPhoneNumber(formattedPhoneNumber)
+            setPhoneNumber(formattedPhoneNumber)
+        }
+        
     };
 
 
@@ -161,18 +194,35 @@ export default function LoginScreen({navigation, route}){
                 </Pressable>
             </Header>
                 
-            <ProgressBarContainer>
-
-            </ProgressBarContainer>
+            
            
             <ScrollView scrollEnabled={false}>
                 <TitleText>Login with your phone number</TitleText>
                 <SubtitleText>We will send you a one time password to verify your number</SubtitleText>
+               
+                <Text style={{width:WIDTH*0.8, alignSelf:'center', marginTop: HEIGHT*0.025}}>Click flag to change country code</Text>
+                <CountryCodeContainer>
+                    <CountryPicker
+                        
+                        {...{
+                        countryCode,
+                        withFilter,
+                        withFlag,
+                        withCountryNameButton,
+                        withAlphaFilter,
+                        withCallingCode,
+                        withEmoji,
+                        onSelect,
+                        }}
+                    
+                    />
+            
+                       
+                    <CountryCodeText>+{countryCallingCode}</CountryCodeText>
+                </CountryCodeContainer>
                 <TextInputContainer>
                     <GeneralTextInput editable={!loading} value={phoneNumber} onChangeText={(value)=> handleInput(value)}
                     keyboardType = "number-pad" placeholder="xxx-xxx-xxxx"/>
-                        
-                    
                 </TextInputContainer>
             </ScrollView>
 

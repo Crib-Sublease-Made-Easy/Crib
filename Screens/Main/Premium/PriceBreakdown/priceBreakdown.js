@@ -52,13 +52,11 @@ export default function PriceBreakDownScreen({navigation, route}){
                 })
             })
             .then(async res=> {
-                console.log(res.status)
                 if(res.status == 200){
                     let data = await res.json();
                     let diffInAmount = Math.abs(data.order.net_amount_due_money.amount - Number(route.params.cribConnectPrice.price).toFixed(2)*1000);
                     if(diffInAmount > 5){
                         let referralCode = randomstring.generate(7);
-                        console.log("gen new link");
                         await fetch("https://crib-llc.herokuapp.com/payments/premium/generatelink", {
                             // await fetch("https://crib-llc.herokuapp.com/payments/premium/generatetestinglink", {
                             method: 'POST',
@@ -115,7 +113,6 @@ export default function PriceBreakDownScreen({navigation, route}){
            
             const at = await EncryptedStorage.getItem("accessToken")
             let USERID = await EncryptedStorage.getItem("userId")
-            console.log(route.params.cribConnectPrice.price)
             
             await fetch("https://crib-llc.herokuapp.com/payments/premium/generatelink", {
                 // await fetch("https://crib-llc.herokuapp.com/payments/premium/generatetestinglink", {

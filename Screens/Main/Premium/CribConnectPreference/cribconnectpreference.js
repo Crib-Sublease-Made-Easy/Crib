@@ -190,7 +190,6 @@ export default function CribConnectPreferenceScreen({navigation, route}){
             })
         })
         .then(async res=> {
-            console.log(res.status)
             if(res.status == 200){
                 let data = await res.json();
                 if(data.order.state == "OPEN"){

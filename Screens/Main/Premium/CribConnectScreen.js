@@ -277,7 +277,21 @@ export default function CribConnectScreen({navigation}){
             }
         })
         .then((data) => {
-            setCribConnectSubtenants(data)
+
+            let temp = [];
+
+            setCribConnectSubtenants(data.filter((item)=> {
+                if(new Date(item.subleaseStart).getTime() < new Date().getTime()){
+                    return false
+                }
+                if(temp.includes(item.phoneNumber)){
+                    return false
+                }
+                else{
+                    temp.push(item.phoneNumber)
+                    return true
+                }
+            }) )
         })
         .catch( e => {
             console.log("Error")
@@ -456,13 +470,22 @@ export default function CribConnectScreen({navigation}){
                 <View style={{position:'absolute', bottom: HEIGHT*0.0225}}>
                     <CribPremiumSubheaderText>🎉 Crib Connect</CribPremiumSubheaderText>
                             <Text style={{alignSelf:'center', fontSize: HEIGHT*0.0175, textAlign:'center', color:'white'}}>Sublease easier than ever!</Text>
-                    <MatchesNumberContainer>
-                        {userData != undefined ?
-                            <Text style={{fontWeight: '700'}}>{userData.cribConnectSubtenants.length == 0 ? "no matches yet" : userData.postedProperties.length == 0 ? "Post a sublease first" : `${userData.cribConnectSubtenants.length} matches`}</Text>
-                            :
-                            <Text style={{fontWeight: '700'}}>Waiting ...</Text>
-                        }
-                    </MatchesNumberContainer>
+                    <View style={{flexDirection:'row', justifyContent:'center', width: WIDTH*0.9}}>
+                        <MatchesNumberContainer>
+                            {userData != undefined ?
+                                <Text style={{fontWeight: '700'}}>{userData.cribConnectSubtenants.length == 0 ? "no matches yet" : userData.postedProperties.length == 0 ? "Post a sublease first" : `${cribConnectSubtenants.length} matches`}</Text>
+                                :
+                                <Text style={{fontWeight: '700'}}>Waiting ...</Text>
+                            }
+                        </MatchesNumberContainer>
+                        {/* <MatchesNumberContainer>
+                            {userData != undefined ?
+                                <Text style={{fontWeight: '700'}}>{userData.cribConnectSubtenants.length == 0 ? "no matches yet" : userData.postedProperties.length == 0 ? "Post a sublease first" : `${userData.contactedBy.length} requests`}</Text>
+                                :
+                                <Text style={{fontWeight: '700'}}>Waiting ...</Text>
+                            }
+                        </MatchesNumberContainer> */}
+                    </View>
                 </View>
                 
             </View>

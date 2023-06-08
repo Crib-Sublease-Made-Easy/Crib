@@ -92,6 +92,7 @@ export default function PropertyPostingScreen({ navigation }) {
     const [propertySecurityDeposit, setpropertySecurityDeposit] = useState('');
     const [propertyDescription, setpropertyDescription] = useState('')
     const [propertyAmenities, setpropertyAmenities] = useState([])
+    const [propertyPreferenceGender, setPropertyPreferenceGender] = useState(null)
 
 
     const [title, setTitle] = useState("")
@@ -161,12 +162,47 @@ export default function PropertyPostingScreen({ navigation }) {
                 return;
             }
         }
+        if(val == 7){
+            if(!propertyAmenities.includes("Utilities_Included")){
+                Alert.alert(
+                    'Are utilities included?',
+                    'If it is, tenants are more likely to be interested',
+                    [
+                      {text: 'Yes', onPress: () => updateAmenities("Utilities_Included"), style: 'cancel'},
+                      {text: 'No', onPress: () => {}, style: 'destructive'},
+                    ],
+                    { 
+                      cancelable: true 
+                    }
+                );
+            }
+            if(!propertyAmenities.includes("Wifi")){
+                Alert.alert(
+                    'Is Wifi included?',
+                    'If it is, tenants are more likely to be interested',
+                    [
+                      {text: 'Yes', onPress: () => updateAmenities("Wifi"), style: 'cancel'},
+                      {text: 'No', onPress: () => {}, style: 'destructive'},
+                    ],
+                    { 
+                      cancelable: true 
+                    }
+                );
+            }
+        }
         if(val == 8){
             const success = await checkPropertyBedBath();
             if(!success){
                 setLoading(false)
                 return;
             }
+        }
+        if(val == 10){
+           if(propertyPreferenceGender == null){
+            setLoading(false)
+            alert("Please select your preferences")
+            return
+           }
         }
 
         if(val == 10){
@@ -590,6 +626,7 @@ async function testScraped(){
                 postingData.append("shared", propertySharedRoom);
                 postingData.append("sharedGender", propertySharedRoomGender)
                 postingData.append("availabilityFlexibility", propertydateFlexible);
+                postingData.append("preferenceGender", propertyPreferenceGender);
                
                 if(propertySecurityDeposit != null && propertySecurityDeposit != undefined){
                     postingData.append("securityDeposit", propertySecurityDeposit);
@@ -836,7 +873,9 @@ async function testScraped(){
                     {/* Choose apartment type  */}
                     <PostingSection>
                         <Heading>Property type</Heading>
-                        <Subheading>Choose the type of sublease.</Subheading>
+                        <Subheading>Please choose the type of sublease you're posting.</Subheading>
+                        <Subheading>What are you trying to sublease?</Subheading>
+
 
 
                         <View style={{ marginTop: HEIGHT * 0.05}}>
@@ -891,7 +930,8 @@ async function testScraped(){
                     <PostingSection>
                         <ScrollView showsVerticalScrollIndicator={false}>
                         <Heading>Sublease images</Heading>
-                        <Subheading>Upload images for tenants to better understand the sublease property</Subheading>
+                        {/* <Subheading>Upload images for tenants to better understand the sublease property</Subheading> */}
+                        <Subheading>Uploading <Text style={{fontWeight:'700'}}>actual images of your sublease right now</Text> (rather than stock image) increases chances of success by 70%.</Subheading>
                             {
                                 ImageName.map((value) => (
                                     <ImageSelectionContainer key={"Image" + value.name}>
@@ -1066,7 +1106,7 @@ async function testScraped(){
                                     justifyContent:'space-between'}}>
                                         <View style={{flexDirection:'row'}}>
                                             {GetFAIcons(value.name)}
-                                            <AmenitiesName>{value.name.replace("_", " ")}</AmenitiesName>
+                                            <AmenitiesName>{value.name.replaceAll("_", " ")}</AmenitiesName>
                                         </View>
                                         <Ionicons name='checkbox' color={propertyAmenities.indexOf(value.name) == -1 ? 'white' : PRIMARYCOLOR} size={27}/>
                                     </Pressable>
@@ -1079,7 +1119,8 @@ async function testScraped(){
 
                     <PostingSection>
                         <Heading>Property Details</Heading>
-                        <Subheading>Enter details of what tenant have access to</Subheading>
+                        <Subheading>How many bedrooms and bathrooms are in the entire property? If studio, please enter 1 bed and 1 bath.</Subheading>
+
                         <RowContainerCol>
                             <View style={{flexDirection: 'row', alignItems:'center'}}>
                             <FontAwesomeIcon icon={faBed} color='white' size={20}/>
@@ -1177,10 +1218,27 @@ async function testScraped(){
 
 
                     <PostingSection>
-                        <Heading>One <Text style={{color: PRIMARYCOLOR}}>last</Text> step,</Heading>
+                        <Heading>One last step,</Heading>
                         <Heading>you're almost done!</Heading>
+                        <Subheading>What genders are you comfortable in subleasing to? (Selecting "Both" increases chances of success by 50%)</Subheading>
+
+                        <View style={{flexDirection:'row', justifyContent:'space-between', marginTop: HEIGHT*0.05}}>
+                        {
+                            GENDERS.map((item)=>{
+                                return (
+                                    <GenderPressable onPress={()=>setPropertyPreferenceGender(item)} style={{backgroundColor: propertyPreferenceGender == item ? PRIMARYCOLOR : 'black'}} key={"preferenceGender" + item}>
+                                        <Text style={{color: 'white'}} >{item}</Text>
+                                    </GenderPressable>
+                                )
+                            } )
+                        }
+                        </View>
+
                         
-                        <Lottie source={require('../../../postingfirstpage.json')}  autoPlay={scrollviewIndex == 0 ? true : false} loop style={{marginTop: HEIGHT*0.025, width:WIDTH*0.9, height: WIDTH*0.9, }}/>
+
+                        
+                        
+                        {/* <Lottie source={require('../../../postingfirstpage.json')}  autoPlay={scrollviewIndex == 0 ? true : false} loop style={{marginTop: HEIGHT*0.025, width:WIDTH*0.9, height: WIDTH*0.9, }}/> */}
 
                     </PostingSection>
 
@@ -1315,6 +1373,21 @@ async function testScraped(){
                                             <ReviewInfoText style={{ marginLeft: WIDTH * 0.05, paddingTop:0 }}>{value.replaceAll("_", " ")}</ReviewInfoText>
                                         </ReviewLocationContainer>
                                     ))}
+                                </View>
+                            </ReviewSectionContainer>
+                            <ReviewSectionContainer style={{borderBottomWidth: 0}}>
+                                <ReviewHeadingAndEditContainer>
+                                    <ReviewHeading>Preference</ReviewHeading>
+                                    <Ionicons name="create-outline" hitSlop={WIDTH*0.05} color='white' size={25}  onPress={()=>moveScrollView(9)}/>
+                                </ReviewHeadingAndEditContainer>
+                                <View>
+                                {propertyPreferenceGender == "Both" ?
+                                    <ReviewInfoText style={{}}>I am open to either genders for tenants.</ReviewInfoText>
+                                    :
+                                    <ReviewInfoText>I prefer {propertyPreferenceGender} tenants.</ReviewInfoText>
+                                }
+
+                                   
                                 </View>
                             </ReviewSectionContainer>
                            

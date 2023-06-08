@@ -74,6 +74,8 @@ const SubtenantRowSection = styled.View`
 export default function CribConnectScreenTenantCard(props){
     let subtenant = props.data.item;
     const [subtenantModalVis, setSubtenantModalVis] = useState(false)
+
+
     async function sms(item){
        
         if(props.cribConnectUser){
@@ -96,7 +98,15 @@ export default function CribConnectScreenTenantCard(props){
             .catch( e => {
                 console.log("Error")
             })
-            await Linking.openURL(`sms:${item.phoneNumber}${getSMSDivider()}body=Hello ${item.name}, this is `)
+            let pn_length = item.phoneNumber.toString().length;
+            let firstName = await EncryptedStorage.getItem("firstName")
+            if(pn_length == 10){
+                
+                await Linking.openURL(`sms:+1${item.phoneNumber}${getSMSDivider()}body=Hello ${item.name}, this is ${firstName}. I saw from Crib that you're looking for a sublease from ${new Date(subtenant.subleaseStart).toLocaleString().split(",")[0]} - ${new Date(subtenant.subleaseEnd).toLocaleString().split(",")[0]}. May I ask are you still looking? `)
+            }
+            else{
+                await Linking.openURL(`sms:+${item.phoneNumber}${getSMSDivider()}body=Hello ${item.name}, this is `)
+            }
         }
         else{
             alert("Get Crib Connect to message interested tenants.")

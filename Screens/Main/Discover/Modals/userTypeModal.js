@@ -120,11 +120,9 @@ export default function UserTypeModal({subleaseTypeModalVisible, close}){
     },[AppState.currentState])
 
     async function getNotificationStatus(){
-        console.log("hello")
         const device = await OneSignal.getDeviceState();
         setNotifPermission(device.isSubscribed)
         if(device.isSubscribed){
-            console.log("hello")
             close()
         }
     }
@@ -135,7 +133,6 @@ export default function UserTypeModal({subleaseTypeModalVisible, close}){
     }
     
     async function handleSubmit(){
-        console.log("Hello")
         close()
     }
     return (

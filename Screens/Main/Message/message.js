@@ -29,7 +29,7 @@ const WIDTH = Dimensions.get('screen').width;
 
 import { InboxTitle, FlatlistItemContainer, FlatlistUnread, FlatlistLeft, FlatlistRight, 
     LocationText,TextAndTime, LastMessageTime, DefaultPostFavText, NoUserViewContainer,
-LoginContainer, SignupContainer, LoginText, SignupText, NoUserText, StyledView } from './messageStyle';
+LoginContainer, SignupContainer, LoginText, SignupText, NoUserText, StyledView, SubleaseRequestContainer, SubleaseRequestSubtitle, SubleaseRequestText } from './messageStyle';
 
 export default function MessageScreen({navigation, route}){
     const insets = useSafeAreaInsets();
@@ -39,16 +39,16 @@ export default function MessageScreen({navigation, route}){
     const [userId, setUserId] = useState('')
     const [receiverName, setReceiverName] = useState('')
     const [firstName, setFirstName] = useState('')
+    const [contactedBy, setContactedBy] = useState([])
 
 
 
     useEffect(()=>{
+        // getContactByNumber()
         const unsubscribe = navigation.addListener('focus', () => {
             onChat = false
             fetchConvos()
             getFirstName()
-            
-            
         });
         sb.addChannelHandler('channels', channelHandler);
 
@@ -57,6 +57,9 @@ export default function MessageScreen({navigation, route}){
         // return unsubscribe;
 
     }, [navigation, convoList])
+
+
+
 
     const channelHandler = new sb.ChannelHandler();
     
@@ -79,6 +82,48 @@ export default function MessageScreen({navigation, route}){
         }
         
     }
+
+    // async function getContactByNumber(){
+       
+       
+    //         const accessToken = await EncryptedStorage.getItem("accessToken");
+    //         let USERID = await EncryptedStorage.getItem("userId")
+    
+    //         if(accessToken != undefined && USERID != undefined && accessToken != null){
+
+    //             await fetch('https://crib-llc.herokuapp.com/users/' + USERID, {
+    //                 method: 'GET',
+    //                 headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': 'Bearer ' + accessToken,
+    //                 }
+    //             }) 
+    //             .then(res => res.json()).then(async userData =>{
+    //                 let contactBy = userData.contactedBy;
+    //                 let temp = [];
+    //                 setContactedBy(
+    //                     contactBy.filter((item)=> {
+    //                         if(item.phoneNumber == ""){
+    //                             return false;
+    //                         }
+    //                         if(temp.includes(item.phoneNumber)){
+    //                             return false
+    //                         }
+    //                         temp.push(item.phoneNumber)
+    //                         return true;
+    //                     })
+    //                 )
+    //             })
+    //         }
+    
+    // }
+
+
+
+
+
+
     const fetchConvos = useCallback(async() => {
         try{
             const accessToken = await EncryptedStorage.getItem("accessToken");
@@ -119,6 +164,10 @@ export default function MessageScreen({navigation, route}){
             {USERID != null ?
             <View style={{flex: 1}}>
                 <InboxTitle>Messages</InboxTitle>
+            {/* <SubleaseRequestContainer onPress={()=> navigation.navigate("CribConnectSubtenantMatches")}>
+                <SubleaseRequestSubtitle>{contactedBy.length} Sublease requests </SubleaseRequestSubtitle>
+                <SubleaseRequestText style={{marginTop: HEIGHT*0.01}}>These people saw your sublease and have specifically requested to book it. Get Crib Connect to connect with them.</SubleaseRequestText>
+            </SubleaseRequestContainer> */}
             {convoList != null && convoList.length != 0 ?
             <FlatList
                 style={{marginTop:HEIGHT*0.015}}

@@ -48,10 +48,8 @@ export default function MyReferralCodeScreen({navigation, route}){
     }, []);
 
     async function checkIfPaid(){
-        console.log("checking")
         let at = await EncryptedStorage.getItem("accessToken")
         if(route.params.userData?.cribPremium?.paymentDetails?.orderId == undefined){
-            console.log("undefined")
             return;
         }
         await fetch("https://crib-llc.herokuapp.com/payments/premium/status",{
@@ -67,7 +65,6 @@ export default function MyReferralCodeScreen({navigation, route}){
             })
         })
         .then(async res=> {
-            console.log(res.status)
             if(res.status == 200){
                 let data = await res.json();
                 if(data.order.state == "OPEN"){

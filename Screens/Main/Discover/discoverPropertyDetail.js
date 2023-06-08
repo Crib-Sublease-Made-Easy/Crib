@@ -254,8 +254,6 @@ export default function PropertyDetailScreen({navigation, route}){
         const uid = await EncryptedStorage.getItem("userId")
         if(liked == false){
             try{
-                console.log(propData.postedBy)
-                console.log(uid)
                 if(accessToken != null && propData.postedBy != null){
                     fetch('https://crib-llc.herokuapp.com/notifications/sendMessage', {
                     method: 'POST',

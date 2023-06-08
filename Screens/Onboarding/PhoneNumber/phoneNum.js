@@ -16,6 +16,9 @@ import {
 } from 'react-native';
 
 
+import CountryPicker from 'react-native-country-picker-modal'
+
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
@@ -25,14 +28,33 @@ import Lottie from 'lottie-react-native';
 
 
 import {Header, ProgressBarContainer, SubtitleText, TitleText, 
-    GeneralTextInput, TextInputContainer, FollowUpContainer, FollowUpText} from './phoneNumStyle';
+    GeneralTextInput, TextInputContainer, FollowUpContainer, FollowUpText, CountryCodeContainer, CountryCodeText} from './phoneNumStyle';
 
 export default function PhoneNumberScreen({navigation, route}){
     const [phoneNumber, setPhoneNumber] = useState("")
     const [passedPhoneNumber, setPassedPhoneNumber]= useState("")
     const [loading, setLoading] = useState(false)
     const [agreement, setAgreement] = useState(false)
+
+
+    const [countryCode, setCountryCode] = useState('US')
+    const [withFlag, setWithFlag] = useState(true)
+  const [withEmoji, setWithEmoji] = useState(true)
+  const [withFilter, setWithFilter] = useState(true)
+  const [withAlphaFilter, setWithAlphaFilter] = useState(false)
+  const [withCallingCode, setWithCallingCode] = useState(false)
+  const [withCountryNameButton, setWithCountryNameButton] = useState(false)
+  const [country, setCountry] = useState(null)
+  const [countryCallingCode, setCountryCallingCode] = useState("1")
+
+  const onSelect = (country) => {
+    setCountryCode(country.cca2)
+    setCountry(country)
+    setCountryCallingCode(country.callingCode)
+  }
+
     async function signupStep1(){
+
         console.log("INSIDE STEP 1")
         fetch('https://crib-llc.herokuapp.com/users/OTP/step1', {
             method: 'POST',
@@ -42,7 +64,8 @@ export default function PhoneNumberScreen({navigation, route}){
             },
             body: JSON.stringify({
                 phoneNumber: passedPhoneNumber,
-                email: route.params.email
+                email: route.params.email,
+                countryCode: countryCallingCode[0]
             })
         }) 
         .then(async res => {
@@ -109,6 +132,7 @@ export default function PhoneNumberScreen({navigation, route}){
                     password: route.params.password,
                     type: route.params.type, // new
                     phoneNumber: passedPhoneNumber,
+                    countryCode: countryCallingCode[0],
                     authy_id: id}}]}
                 )
             }
@@ -131,7 +155,7 @@ export default function PhoneNumberScreen({navigation, route}){
                 alert("You have to agree to Crib Terms and Services and Privacy policy to proceed.")
             }
         }
-        else if (passedPhoneNumber.length != 10){
+        else if (countryCallingCode == 1 && passedPhoneNumber.length != 10){
             alert("Incorrect phone number.")
         }
         else{
@@ -186,10 +210,18 @@ export default function PhoneNumberScreen({navigation, route}){
     }
 
     const handleInput = (e) => {
-        // this is where we'll call our future formatPhoneNumber function that we haven't written yet.
-        const formattedPhoneNumber = formatPhoneNumber(e);
-        // we'll set the input value using our setInputValue
-        setPhoneNumber(formattedPhoneNumber)
+        if(countryCallingCode != 1){
+            setPhoneNumber(e)
+            setPassedPhoneNumber(e)
+            
+        }
+        else{
+            // this is where we'll call our future formatPhoneNumber function that we haven't written yet.
+            const formattedPhoneNumber = formatPhoneNumber(e);
+            // we'll set the input value using our setInputValue
+            setPhoneNumber(formattedPhoneNumber)
+        }
+       
     };
 
 
@@ -231,8 +263,27 @@ export default function PhoneNumberScreen({navigation, route}){
             </ProgressBarContainer>
            
             <ScrollView scrollEnabled={false}>
-                <TitleText>Enter your phone number</TitleText>
-                <SubtitleText>We will send you a one time password</SubtitleText>
+                <TitleText>Verify phone number</TitleText>
+                <SubtitleText>Press flag to change country code</SubtitleText>
+                <CountryCodeContainer>
+                    <CountryPicker
+                        
+                        {...{
+                        countryCode,
+                        withFilter,
+                        withFlag,
+                        withCountryNameButton,
+                        withAlphaFilter,
+                        withCallingCode,
+                        withEmoji,
+                        onSelect,
+                        }}
+                    
+                    />
+            
+                       
+                    <CountryCodeText>+{countryCallingCode}</CountryCodeText>
+                </CountryCodeContainer>
                 <TextInputContainer>
                     <GeneralTextInput editable={!loading} value={phoneNumber} onChangeText={(value)=> handleInput(value)}
                     keyboardType = "number-pad" placeholder="xxx-xxx-xxxx"/>

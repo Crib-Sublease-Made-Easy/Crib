@@ -49,18 +49,39 @@ export const SubtitleText = styled.Text`
     align-self: center
     
 `
-export const GeneralTextInput = styled.TextInput`
+export const CountryCodeContainer = styled.View`
     width: ${WIDTH*0.8}px;
-    height: ${HEIGHT*0.075}px
-    font-size: ${HEIGHT*0.03}px
-    border-bottom-width: 2px;
+    height: ${HEIGHT*0.06}px
+    flex-direction: row
+    align-self: center
+    border-width: 1px;
     padding-left: ${WIDTH*0.025}px
     border-color: ${TEXTINPUTBORDERCOLOR}
-    align-self: center   
+    border-radius: 10px
+    jusify-content: center
+    align-items: center
+    margin-top: ${HEIGHT*0.01}px
     
+`
+export const GeneralTextInput = styled.TextInput`
+    width: ${WIDTH*0.8}px;
+    height: ${HEIGHT*0.06}px
+    font-size: ${HEIGHT*0.03}px
+    border-width: 1px;
+    padding-left: ${WIDTH*0.025}px
+    border-color: ${TEXTINPUTBORDERCOLOR}
+    border-radius: 10px
+    align-self: center   
+`
+export const CountryCodeText = styled.Text`
+    font-size: ${HEIGHT*0.025}px
 `
 export const TextInputContainer = styled.View`
     padding-top: ${HEIGHT*0.025}px
+    flex-direction: row
+   
+    justify-content :center
+    align-items: center
 `
 
 export const ContinueText = styled.Text`

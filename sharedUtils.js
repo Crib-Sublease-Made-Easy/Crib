@@ -390,7 +390,7 @@ export const ProgressText = styled.Text`
 //Continue Button used in sign up 
 export const ContinueButton = styled(Pressable)`
     width: ${WIDTH*0.7}px;
-    padding-vertical: ${HEIGHT*0.02}px
+    padding-vertical: ${HEIGHT*0.015}px
     backgroundColor:  ${props=>(props.loading ? MEDIUMGREY : PRIMARYCOLOR)}}
     align-self: center
     border-radius: 20px
